@@ -238,11 +238,15 @@ class Booking(BaseModel):
     tutor_id: str
     consumer_id: str
     student_id: str
+    market_id: str  # Market at time of booking
+    currency: str  # USD, INR
     start_at: datetime
     end_at: datetime
     status: str  # hold, booked, confirmed, completed, canceled_by_consumer, canceled_by_provider
     price_snapshot: float
+    amount_cents: int  # Price in minor units for currency precision
     policy_snapshot: Dict[str, Any]
+    pricing_policy_snapshot: Optional[Dict[str, Any]] = None  # Snapshot of market pricing policy
     intake_response: Optional[IntakeResponse] = None
     payment_id: Optional[str] = None
     created_at: datetime
