@@ -253,6 +253,13 @@ export default function HomeScreen() {
           </View>
         </View>
       </ScrollView>
+
+      {/* Market Selection Modal */}
+      <MarketSelectionModal
+        visible={showMarketModal}
+        onClose={() => setShowMarketModal(false)}
+        canDismiss={false}
+      />
     </SafeAreaView>
   );
 }
