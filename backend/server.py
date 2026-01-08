@@ -34,6 +34,47 @@ STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY', 'pk_test_place
 # Resend Config (placeholder)
 RESEND_API_KEY = os.environ.get('RESEND_API_KEY', 're_placeholder')
 
+# ============== FEATURE FLAGS ==============
+FEATURE_FLAGS = {
+    "CROSS_BORDER_ONLINE_ENABLED": False,
+    "MARKET_SWITCHING_ENABLED": True,
+    "IN_MARKET_ONLY_BOOKING_ENFORCED": True,
+}
+
+# ============== MARKET CONFIGURATION ==============
+MARKETS_CONFIG = {
+    "US_USD": {
+        "market_id": "US_USD",
+        "country": "US",
+        "currency": "USD",
+        "currency_symbol": "$",
+        "default_timezone": "America/New_York",
+        "is_enabled": True,
+        "payment_provider_key": "stripe_us",
+        "min_price": 10,
+        "max_price": 500,
+    },
+    "IN_INR": {
+        "market_id": "IN_INR",
+        "country": "IN",
+        "currency": "INR",
+        "currency_symbol": "₹",
+        "default_timezone": "Asia/Kolkata",
+        "is_enabled": True,
+        "payment_provider_key": "stripe_in",
+        "min_price": 200,
+        "max_price": 10000,
+    }
+}
+
+# Country to Market mapping
+COUNTRY_TO_MARKET = {
+    "US": "US_USD",
+    "IN": "IN_INR",
+    # Default fallback
+    "default": "US_USD"
+}
+
 # Create the main app
 app = FastAPI(title="Acharyaly API", version="1.0.0")
 api_router = APIRouter(prefix="/api")
