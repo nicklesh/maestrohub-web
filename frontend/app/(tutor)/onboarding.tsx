@@ -103,6 +103,7 @@ export default function TutorOnboarding() {
 
     setLoading(true);
     try {
+      // Create tutor profile
       await api.post('/tutors/profile', {
         bio: bio.trim(),
         categories: selectedCategories,
@@ -111,12 +112,20 @@ export default function TutorOnboarding() {
         modality: selectedModalities,
         base_price: parseFloat(basePrice),
         duration_minutes: parseInt(duration),
+        payout_country: payoutCountry,
         policies: {
           cancel_window_hours: 24,
           no_show_policy: 'Full charge for no-shows',
           late_arrival_policy: 'Lesson time not extended',
         },
       });
+
+      // Set provider market based on payout country
+      try {
+        await api.post('/providers/market', { payout_country: payoutCountry });
+      } catch (e) {
+        console.log('Could not set provider market');
+      }
 
       Alert.alert(
         'Profile Created!',
