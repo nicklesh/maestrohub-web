@@ -5,10 +5,10 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  TextInput,
   FlatList,
   ActivityIndicator,
   RefreshControl,
+  useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -39,10 +39,17 @@ interface Tutor {
 export default function HomeScreen() {
   const { user } = useAuth();
   const router = useRouter();
+  const { width } = useWindowDimensions();
   const [categories, setCategories] = useState<Category[]>([]);
   const [featuredTutors, setFeaturedTutors] = useState<Tutor[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+
+  // Responsive breakpoints
+  const isTablet = width >= 768;
+  const isDesktop = width >= 1024;
+  const isWide = width >= 1280;
+  const containerMaxWidth = isWide ? 1200 : isDesktop ? 960 : isTablet ? 720 : undefined;
 
   useEffect(() => {
     loadData();
@@ -52,7 +59,7 @@ export default function HomeScreen() {
     try {
       const [catRes, tutorRes] = await Promise.all([
         api.get('/categories'),
-        api.get('/tutors/search?limit=6'),
+        api.get('/tutors/search?limit=8'),
       ]);
       setCategories(catRes.data.categories);
       setFeaturedTutors(tutorRes.data.tutors);
@@ -69,42 +76,59 @@ export default function HomeScreen() {
     loadData();
   };
 
-  const renderCategoryCard = (category: Category) => (
+  const getCategoryIcon = (categoryId: string) => {
+    switch (categoryId) {
+      case 'academic': return 'school';
+      case 'music': return 'musical-notes';
+      default: return 'game-controller';
+    }
+  };
+
+  const renderCategoryCard = (category: Category, index: number) => (
     <TouchableOpacity
       key={category.id}
-      style={styles.categoryCard}
+      style={[
+        styles.categoryCard,
+        isTablet && styles.categoryCardTablet,
+        { width: isDesktop ? '31%' : isTablet ? '48%' : '100%' },
+      ]}
       onPress={() => router.push(`/(consumer)/search?category=${category.id}`)}
     >
-      <Ionicons
-        name={
-          category.id === 'academic'
-            ? 'school'
-            : category.id === 'music'
-            ? 'musical-notes'
-            : 'game-controller'
-        }
-        size={32}
-        color={colors.primary}
-      />
-      <Text style={styles.categoryName}>{category.name}</Text>
-      <Text style={styles.categorySubjects}>
-        {category.subjects.slice(0, 3).join(', ')}
-      </Text>
+      <View style={[styles.categoryIcon, isTablet && styles.categoryIconTablet]}>
+        <Ionicons
+          name={getCategoryIcon(category.id) as any}
+          size={isTablet ? 36 : 32}
+          color={colors.primary}
+        />
+      </View>
+      <View style={styles.categoryInfo}>
+        <Text style={[styles.categoryName, isTablet && styles.categoryNameTablet]}>
+          {category.name}
+        </Text>
+        <Text style={styles.categorySubjects}>
+          {category.subjects.slice(0, 3).join(', ')}
+        </Text>
+      </View>
+      <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
     </TouchableOpacity>
   );
 
   const renderTutorCard = ({ item }: { item: Tutor }) => (
     <TouchableOpacity
-      style={styles.tutorCard}
+      style={[
+        styles.tutorCard,
+        isTablet && styles.tutorCardTablet,
+        isDesktop && styles.tutorCardDesktop,
+      ]}
       onPress={() => router.push(`/(consumer)/tutor/${item.tutor_id}`)}
     >
-      <View style={styles.tutorAvatar}>
-        <Text style={styles.tutorInitial}>
+      <View style={[styles.tutorAvatar, isTablet && styles.tutorAvatarTablet]}>
+        <Text style={[styles.tutorInitial, isTablet && styles.tutorInitialTablet]}>
           {item.user_name?.charAt(0)?.toUpperCase() || 'T'}
         </Text>
       </View>
       <View style={styles.tutorInfo}>
-        <Text style={styles.tutorName} numberOfLines={1}>
+        <Text style={[styles.tutorName, isTablet && styles.tutorNameTablet]} numberOfLines={1}>
           {item.user_name}
         </Text>
         <Text style={styles.tutorSubjects} numberOfLines={1}>
@@ -117,7 +141,9 @@ export default function HomeScreen() {
               {item.rating_avg > 0 ? item.rating_avg.toFixed(1) : 'New'}
             </Text>
           </View>
-          <Text style={styles.price}>${item.base_price}/hr</Text>
+          <Text style={[styles.price, isTablet && styles.priceTablet]}>
+            ${item.base_price}/hr
+          </Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -136,59 +162,85 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[
+          styles.scrollContent,
+          isTablet && styles.scrollContentTablet,
+        ]}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        {/* Header */}
-        <View style={styles.header}>
-          <View>
-            <Text style={styles.greeting}>Hello, {user?.name?.split(' ')[0] || 'there'}!</Text>
-            <Text style={styles.tagline}>The easiest way to book a tutor.</Text>
-          </View>
-        </View>
-
-        {/* Search Bar */}
-        <TouchableOpacity
-          style={styles.searchBar}
-          onPress={() => router.push('/(consumer)/search')}
-        >
-          <Ionicons name="search" size={20} color={colors.textMuted} />
-          <Text style={styles.searchPlaceholder}>Search for tutors...</Text>
-        </TouchableOpacity>
-
-        {/* Categories */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Browse Categories</Text>
-          <View style={styles.categoriesGrid}>
-            {categories.map(renderCategoryCard)}
-          </View>
-        </View>
-
-        {/* Featured Tutors */}
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Featured Tutors</Text>
-            <TouchableOpacity onPress={() => router.push('/(consumer)/search')}>
-              <Text style={styles.seeAll}>See All</Text>
-            </TouchableOpacity>
-          </View>
-          {featuredTutors.length > 0 ? (
-            <FlatList
-              data={featuredTutors}
-              renderItem={renderTutorCard}
-              keyExtractor={(item) => item.tutor_id}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.tutorList}
-            />
-          ) : (
-            <View style={styles.emptyState}>
-              <Ionicons name="people-outline" size={48} color={colors.textMuted} />
-              <Text style={styles.emptyText}>No tutors available yet</Text>
+        <View style={[styles.contentWrapper, containerMaxWidth ? { maxWidth: containerMaxWidth } : undefined]}>
+          {/* Header */}
+          <View style={[styles.header, isTablet && styles.headerTablet]}>
+            <View>
+              <Text style={[styles.greeting, isDesktop && styles.greetingDesktop]}>
+                Hello, {user?.name?.split(' ')[0] || 'there'}!
+              </Text>
+              <Text style={[styles.tagline, isDesktop && styles.taglineDesktop]}>
+                The easiest way to book a tutor.
+              </Text>
             </View>
-          )}
+          </View>
+
+          {/* Search Bar */}
+          <TouchableOpacity
+            style={[styles.searchBar, isTablet && styles.searchBarTablet]}
+            onPress={() => router.push('/(consumer)/search')}
+          >
+            <Ionicons name="search" size={20} color={colors.textMuted} />
+            <Text style={styles.searchPlaceholder}>Search for tutors...</Text>
+          </TouchableOpacity>
+
+          {/* Categories */}
+          <View style={styles.section}>
+            <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>
+              Browse Categories
+            </Text>
+            <View style={[styles.categoriesGrid, isTablet && styles.categoriesGridTablet]}>
+              {categories.map((cat, index) => renderCategoryCard(cat, index))}
+            </View>
+          </View>
+
+          {/* Featured Tutors */}
+          <View style={styles.section}>
+            <View style={[styles.sectionHeader, isTablet && styles.sectionHeaderTablet]}>
+              <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>
+                Featured Tutors
+              </Text>
+              <TouchableOpacity onPress={() => router.push('/(consumer)/search')}>
+                <Text style={styles.seeAll}>See All</Text>
+              </TouchableOpacity>
+            </View>
+            {featuredTutors.length > 0 ? (
+              isTablet ? (
+                <View style={styles.tutorsGrid}>
+                  {featuredTutors.map((tutor) => (
+                    <View 
+                      key={tutor.tutor_id} 
+                      style={{ width: isDesktop ? '24%' : '48%', marginBottom: 16 }}
+                    >
+                      {renderTutorCard({ item: tutor })}
+                    </View>
+                  ))}
+                </View>
+              ) : (
+                <FlatList
+                  data={featuredTutors}
+                  renderItem={renderTutorCard}
+                  keyExtractor={(item) => item.tutor_id}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.tutorList}
+                />
+              )
+            ) : (
+              <View style={styles.emptyState}>
+                <Ionicons name="people-outline" size={48} color={colors.textMuted} />
+                <Text style={styles.emptyText}>No tutors available yet</Text>
+              </View>
+            )}
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -208,6 +260,13 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: 24,
   },
+  scrollContentTablet: {
+    alignItems: 'center',
+  },
+  contentWrapper: {
+    width: '100%',
+    alignSelf: 'center',
+  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -216,15 +275,25 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 8,
   },
+  headerTablet: {
+    paddingTop: 32,
+    paddingBottom: 16,
+  },
   greeting: {
     fontSize: 24,
     fontWeight: 'bold',
     color: colors.text,
   },
+  greetingDesktop: {
+    fontSize: 32,
+  },
   tagline: {
     fontSize: 14,
     color: colors.textMuted,
     marginTop: 4,
+  },
+  taglineDesktop: {
+    fontSize: 16,
   },
   searchBar: {
     flexDirection: 'row',
@@ -238,6 +307,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     gap: 12,
+  },
+  searchBarTablet: {
+    marginHorizontal: 20,
+    paddingVertical: 16,
+    borderRadius: 16,
   },
   searchPlaceholder: {
     color: colors.textMuted,
@@ -253,6 +327,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginBottom: 16,
   },
+  sectionHeaderTablet: {
+    marginBottom: 20,
+  },
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
@@ -260,43 +337,77 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginBottom: 16,
   },
+  sectionTitleDesktop: {
+    fontSize: 22,
+  },
   seeAll: {
     fontSize: 14,
     color: colors.primary,
     fontWeight: '500',
   },
   categoriesGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingHorizontal: 12,
+    paddingHorizontal: 20,
     gap: 12,
   },
+  categoriesGridTablet: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
   categoryCard: {
-    flex: 1,
-    minWidth: '28%',
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: colors.surface,
     borderRadius: 16,
     padding: 16,
-    alignItems: 'center',
     borderWidth: 1,
     borderColor: colors.border,
-    marginHorizontal: 4,
+    marginBottom: 12,
+  },
+  categoryCardTablet: {
+    padding: 20,
+    borderRadius: 20,
+    marginBottom: 16,
+  },
+  categoryIcon: {
+    width: 56,
+    height: 56,
+    borderRadius: 16,
+    backgroundColor: colors.primaryLight,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  categoryIconTablet: {
+    width: 64,
+    height: 64,
+    borderRadius: 20,
+  },
+  categoryInfo: {
+    flex: 1,
   },
   categoryName: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '600',
     color: colors.text,
-    marginTop: 8,
+  },
+  categoryNameTablet: {
+    fontSize: 18,
   },
   categorySubjects: {
-    fontSize: 11,
+    fontSize: 13,
     color: colors.textMuted,
     marginTop: 4,
-    textAlign: 'center',
   },
   tutorList: {
     paddingHorizontal: 16,
     gap: 12,
+  },
+  tutorsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: 20,
+    justifyContent: 'space-between',
   },
   tutorCard: {
     backgroundColor: colors.surface,
@@ -307,6 +418,15 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     marginHorizontal: 4,
   },
+  tutorCardTablet: {
+    width: '100%',
+    padding: 20,
+    borderRadius: 20,
+    marginHorizontal: 0,
+  },
+  tutorCardDesktop: {
+    padding: 24,
+  },
   tutorAvatar: {
     width: 56,
     height: 56,
@@ -316,10 +436,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 12,
   },
+  tutorAvatarTablet: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    marginBottom: 16,
+  },
   tutorInitial: {
     fontSize: 24,
     fontWeight: '600',
     color: colors.primary,
+  },
+  tutorInitialTablet: {
+    fontSize: 28,
   },
   tutorInfo: {
     flex: 1,
@@ -328,6 +457,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: colors.text,
+  },
+  tutorNameTablet: {
+    fontSize: 16,
   },
   tutorSubjects: {
     fontSize: 12,
@@ -354,6 +486,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
     color: colors.primary,
+  },
+  priceTablet: {
+    fontSize: 14,
   },
   emptyState: {
     alignItems: 'center',
