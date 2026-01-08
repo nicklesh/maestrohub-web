@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   RefreshControl,
+  useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -31,9 +32,15 @@ interface FeeEvent {
 }
 
 export default function BillingScreen() {
+  const { width } = useWindowDimensions();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [summary, setSummary] = useState<BillingSummary | null>(null);
+
+  // Responsive breakpoints
+  const isTablet = width >= 768;
+  const isDesktop = width >= 1024;
+  const contentMaxWidth = isDesktop ? 720 : isTablet ? 600 : undefined;
 
   useEffect(() => {
     loadBilling();
@@ -69,86 +76,88 @@ export default function BillingScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, isTablet && styles.scrollContentTablet]}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        <View style={styles.header}>
-          <Text style={styles.title}>Billing</Text>
-          <Text style={styles.subtitle}>Scheduling, enrollment, and payments for tutors.</Text>
-        </View>
-
-        {/* Trial Status */}
-        {summary?.trial_status === 'active' && (
-          <View style={styles.trialCard}>
-            <Ionicons name="gift" size={24} color={colors.success} />
-            <View style={styles.trialInfo}>
-              <Text style={styles.trialTitle}>Free Trial Active</Text>
-              <Text style={styles.trialText}>
-                {summary.trial_days_remaining} days remaining
-              </Text>
-            </View>
+        <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
+          <View style={styles.header}>
+            <Text style={[styles.title, isDesktop && styles.titleDesktop]}>Billing</Text>
+            <Text style={[styles.subtitle, isDesktop && styles.subtitleDesktop]}>Scheduling, enrollment, and payments for tutors.</Text>
           </View>
-        )}
 
-        {/* Earnings Summary */}
-        <View style={styles.earningsCard}>
-          <Text style={styles.cardTitle}>Total Earnings</Text>
-          <Text style={styles.earningsAmount}>${summary?.total_earnings || 0}</Text>
-          <Text style={styles.earningsSubtext}>
-            from {summary?.completed_lessons || 0} completed lessons
-          </Text>
-        </View>
-
-        {/* Pending Fees */}
-        <View style={styles.card}>
-          <View style={styles.cardHeader}>
-            <Text style={styles.cardTitle}>Platform Fees</Text>
-          </View>
-          <View style={styles.feeRow}>
-            <Text style={styles.feeLabel}>Pending Fees</Text>
-            <Text style={styles.feeValue}>
-              ${((summary?.pending_fees_cents || 0) / 100).toFixed(2)}
-            </Text>
-          </View>
-          <Text style={styles.feeNote}>
-            Fees are automatically deducted from your payouts.
-          </Text>
-        </View>
-
-        {/* Fee Events */}
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Recent Fee Activity</Text>
-          {summary?.fee_events?.length === 0 ? (
-            <Text style={styles.emptyText}>No fee activity yet</Text>
-          ) : (
-            summary?.fee_events?.map((event) => (
-              <View key={event.event_id} style={styles.eventItem}>
-                <View style={styles.eventInfo}>
-                  <Text style={styles.eventType}>{event.event_type}</Text>
-                  <Text style={styles.eventStatus}>{event.status}</Text>
-                </View>
-                <Text style={styles.eventAmount}>
-                  ${(event.amount_cents / 100).toFixed(2)}
+          {/* Trial Status */}
+          {summary?.trial_status === 'active' && (
+            <View style={[styles.trialCard, isTablet && styles.trialCardTablet]}>
+              <Ionicons name="gift" size={isTablet ? 28 : 24} color={colors.success} />
+              <View style={styles.trialInfo}>
+                <Text style={[styles.trialTitle, isDesktop && styles.trialTitleDesktop]}>Free Trial Active</Text>
+                <Text style={styles.trialText}>
+                  {summary.trial_days_remaining} days remaining
                 </Text>
               </View>
-            ))
+            </View>
           )}
-        </View>
 
-        {/* Payment Methods */}
-        <View style={styles.card}>
-          <View style={styles.cardHeader}>
-            <Text style={styles.cardTitle}>Payout Account</Text>
+          {/* Earnings Summary */}
+          <View style={[styles.earningsCard, isTablet && styles.earningsCardTablet]}>
+            <Text style={styles.cardTitle}>Total Earnings</Text>
+            <Text style={[styles.earningsAmount, isDesktop && styles.earningsAmountDesktop]}>${summary?.total_earnings || 0}</Text>
+            <Text style={[styles.earningsSubtext, isDesktop && styles.earningsSubtextDesktop]}>
+              from {summary?.completed_lessons || 0} completed lessons
+            </Text>
           </View>
-          <TouchableOpacity style={styles.setupButton}>
-            <Ionicons name="add-circle-outline" size={20} color={colors.primary} />
-            <Text style={styles.setupButtonText}>Connect Stripe Account</Text>
-          </TouchableOpacity>
-          <Text style={styles.stripeNote}>
-            Stripe Connect integration coming soon. Payouts will be processed automatically.
-          </Text>
+
+          {/* Pending Fees */}
+          <View style={[styles.card, isTablet && styles.cardTablet]}>
+            <View style={styles.cardHeader}>
+              <Text style={[styles.cardTitle, { marginBottom: 0 }]}>Platform Fees</Text>
+            </View>
+            <View style={styles.feeRow}>
+              <Text style={[styles.feeLabel, isDesktop && styles.feeLabelDesktop]}>Pending Fees</Text>
+              <Text style={[styles.feeValue, isDesktop && styles.feeValueDesktop]}>
+                ${((summary?.pending_fees_cents || 0) / 100).toFixed(2)}
+              </Text>
+            </View>
+            <Text style={styles.feeNote}>
+              Fees are automatically deducted from your payouts.
+            </Text>
+          </View>
+
+          {/* Fee Events */}
+          <View style={[styles.card, isTablet && styles.cardTablet]}>
+            <Text style={[styles.cardTitle, isDesktop && styles.cardTitleDesktop]}>Recent Fee Activity</Text>
+            {summary?.fee_events?.length === 0 ? (
+              <Text style={styles.emptyText}>No fee activity yet</Text>
+            ) : (
+              summary?.fee_events?.map((event) => (
+                <View key={event.event_id} style={[styles.eventItem, isTablet && styles.eventItemTablet]}>
+                  <View style={styles.eventInfo}>
+                    <Text style={[styles.eventType, isDesktop && styles.eventTypeDesktop]}>{event.event_type}</Text>
+                    <Text style={styles.eventStatus}>{event.status}</Text>
+                  </View>
+                  <Text style={[styles.eventAmount, isDesktop && styles.eventAmountDesktop]}>
+                    ${(event.amount_cents / 100).toFixed(2)}
+                  </Text>
+                </View>
+              ))
+            )}
+          </View>
+
+          {/* Payment Methods */}
+          <View style={[styles.card, isTablet && styles.cardTablet]}>
+            <View style={styles.cardHeader}>
+              <Text style={[styles.cardTitle, { marginBottom: 0 }]}>Payout Account</Text>
+            </View>
+            <TouchableOpacity style={[styles.setupButton, isTablet && styles.setupButtonTablet]}>
+              <Ionicons name="add-circle-outline" size={20} color={colors.primary} />
+              <Text style={[styles.setupButtonText, isTablet && styles.setupButtonTextTablet]}>Connect Stripe Account</Text>
+            </TouchableOpacity>
+            <Text style={styles.stripeNote}>
+              Stripe Connect integration coming soon. Payouts will be processed automatically.
+            </Text>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -168,6 +177,12 @@ const styles = StyleSheet.create({
   scrollContent: {
     padding: 20,
   },
+  scrollContentTablet: {
+    padding: 32,
+  },
+  contentWrapper: {
+    flex: 1,
+  },
   header: {
     marginBottom: 24,
   },
@@ -176,10 +191,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: colors.text,
   },
+  titleDesktop: {
+    fontSize: 32,
+  },
   subtitle: {
     fontSize: 14,
     color: colors.textMuted,
     marginTop: 4,
+  },
+  subtitleDesktop: {
+    fontSize: 16,
   },
   trialCard: {
     flexDirection: 'row',
@@ -190,6 +211,10 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     gap: 12,
   },
+  trialCardTablet: {
+    borderRadius: 20,
+    padding: 20,
+  },
   trialInfo: {
     flex: 1,
   },
@@ -197,6 +222,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: colors.success,
+  },
+  trialTitleDesktop: {
+    fontSize: 18,
   },
   trialText: {
     fontSize: 14,
@@ -208,15 +236,25 @@ const styles = StyleSheet.create({
     padding: 24,
     marginBottom: 16,
   },
+  earningsCardTablet: {
+    borderRadius: 20,
+    padding: 32,
+  },
   earningsAmount: {
     fontSize: 40,
     fontWeight: 'bold',
     color: '#fff',
     marginVertical: 8,
   },
+  earningsAmountDesktop: {
+    fontSize: 48,
+  },
   earningsSubtext: {
     fontSize: 14,
     color: 'rgba(255,255,255,0.8)',
+  },
+  earningsSubtextDesktop: {
+    fontSize: 16,
   },
   card: {
     backgroundColor: colors.surface,
@@ -225,6 +263,10 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderWidth: 1,
     borderColor: colors.border,
+  },
+  cardTablet: {
+    borderRadius: 20,
+    padding: 24,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -238,6 +280,9 @@ const styles = StyleSheet.create({
     color: colors.text,
     marginBottom: 16,
   },
+  cardTitleDesktop: {
+    fontSize: 18,
+  },
   feeRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -250,10 +295,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.text,
   },
+  feeLabelDesktop: {
+    fontSize: 16,
+  },
   feeValue: {
     fontSize: 16,
     fontWeight: '600',
     color: colors.text,
+  },
+  feeValueDesktop: {
+    fontSize: 18,
   },
   feeNote: {
     fontSize: 12,
@@ -274,6 +325,9 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: colors.border,
   },
+  eventItemTablet: {
+    paddingVertical: 16,
+  },
   eventInfo: {
     flex: 1,
   },
@@ -281,6 +335,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
     color: colors.text,
+  },
+  eventTypeDesktop: {
+    fontSize: 16,
   },
   eventStatus: {
     fontSize: 12,
@@ -292,6 +349,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: colors.text,
   },
+  eventAmountDesktop: {
+    fontSize: 16,
+  },
   setupButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -301,10 +361,17 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primaryLight,
     borderRadius: 12,
   },
+  setupButtonTablet: {
+    padding: 18,
+    borderRadius: 14,
+  },
   setupButtonText: {
     fontSize: 16,
     fontWeight: '500',
     color: colors.primary,
+  },
+  setupButtonTextTablet: {
+    fontSize: 17,
   },
   stripeNote: {
     fontSize: 12,

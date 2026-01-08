@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Alert,
+  useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -33,6 +34,7 @@ const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const TIME_SLOTS = Array.from({ length: 13 }, (_, i) => `${(i + 8).toString().padStart(2, '0')}:00`);
 
 export default function CalendarScreen() {
+  const { width } = useWindowDimensions();
   const [loading, setLoading] = useState(true);
   const [rules, setRules] = useState<AvailabilityRule[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -40,6 +42,11 @@ export default function CalendarScreen() {
   const [editMode, setEditMode] = useState(false);
   const [selectedSlots, setSelectedSlots] = useState<Set<string>>(new Set());
   const [saving, setSaving] = useState(false);
+
+  // Responsive breakpoints
+  const isTablet = width >= 768;
+  const isDesktop = width >= 1024;
+  const contentMaxWidth = isDesktop ? 800 : isTablet ? 680 : undefined;
 
   useEffect(() => {
     loadData();
@@ -154,133 +161,138 @@ export default function CalendarScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.title}>Availability</Text>
-          <TouchableOpacity
-            style={styles.editButton}
-            onPress={() => (editMode ? saveAvailability() : setEditMode(true))}
-            disabled={saving}
-          >
-            {saving ? (
-              <ActivityIndicator size="small" color={colors.primary} />
-            ) : (
-              <Text style={styles.editButtonText}>{editMode ? 'Save' : 'Edit'}</Text>
-            )}
-          </TouchableOpacity>
-        </View>
-
-        {/* Week View */}
-        <View style={styles.weekView}>
-          {DAYS.map((day, index) => (
+      <ScrollView contentContainerStyle={[styles.scrollContent, isTablet && styles.scrollContentTablet]}>
+        <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
+          {/* Header */}
+          <View style={[styles.header, isTablet && styles.headerTablet]}>
+            <Text style={[styles.title, isDesktop && styles.titleDesktop]}>Availability</Text>
             <TouchableOpacity
-              key={day}
-              style={[
-                styles.dayTab,
-                selectedDay === index && styles.dayTabActive,
-              ]}
-              onPress={() => setSelectedDay(index)}
+              style={[styles.editButton, isTablet && styles.editButtonTablet]}
+              onPress={() => (editMode ? saveAvailability() : setEditMode(true))}
+              disabled={saving}
             >
-              <Text
-                style={[
-                  styles.dayTabText,
-                  selectedDay === index && styles.dayTabTextActive,
-                ]}
-              >
-                {day}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-
-        {/* Time Grid */}
-        {editMode ? (
-          <View style={styles.timeGrid}>
-            <Text style={styles.gridTitle}>Set availability for {DAYS[selectedDay]}</Text>
-            <View style={styles.slotsGrid}>
-              {TIME_SLOTS.map((time) => {
-                const key = `${selectedDay}-${time}`;
-                const isSelected = selectedSlots.has(key);
-                return (
-                  <TouchableOpacity
-                    key={time}
-                    style={[
-                      styles.slotButton,
-                      isSelected && styles.slotButtonSelected,
-                    ]}
-                    onPress={() => toggleSlot(selectedDay, time)}
-                  >
-                    <Text
-                      style={[
-                        styles.slotText,
-                        isSelected && styles.slotTextSelected,
-                      ]}
-                    >
-                      {time}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
-          </View>
-        ) : (
-          <View style={styles.scheduleView}>
-            <Text style={styles.gridTitle}>{DAYS[selectedDay]}'s Schedule</Text>
-            
-            {/* Show availability */}
-            <View style={styles.availabilitySection}>
-              <Text style={styles.sectionLabel}>Available Times</Text>
-              {rules.filter((r) => r.day_of_week === selectedDay).length === 0 ? (
-                <Text style={styles.emptyText}>No availability set</Text>
+              {saving ? (
+                <ActivityIndicator size="small" color={colors.primary} />
               ) : (
-                rules
-                  .filter((r) => r.day_of_week === selectedDay)
-                  .map((rule) => (
-                    <View key={rule.rule_id} style={styles.availabilityItem}>
-                      <Ionicons name="time-outline" size={18} color={colors.success} />
-                      <Text style={styles.availabilityText}>
-                        {rule.start_time} - {rule.end_time}
+                <Text style={[styles.editButtonText, isTablet && styles.editButtonTextTablet]}>{editMode ? 'Save' : 'Edit'}</Text>
+              )}
+            </TouchableOpacity>
+          </View>
+
+          {/* Week View */}
+          <View style={[styles.weekView, isTablet && styles.weekViewTablet]}>
+            {DAYS.map((day, index) => (
+              <TouchableOpacity
+                key={day}
+                style={[
+                  styles.dayTab,
+                  isTablet && styles.dayTabTablet,
+                  selectedDay === index && styles.dayTabActive,
+                ]}
+                onPress={() => setSelectedDay(index)}
+              >
+                <Text
+                  style={[
+                    styles.dayTabText,
+                    isTablet && styles.dayTabTextTablet,
+                    selectedDay === index && styles.dayTabTextActive,
+                  ]}
+                >
+                  {day}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          {/* Time Grid */}
+          {editMode ? (
+            <View style={[styles.timeGrid, isTablet && styles.timeGridTablet]}>
+              <Text style={[styles.gridTitle, isDesktop && styles.gridTitleDesktop]}>Set availability for {DAYS[selectedDay]}</Text>
+              <View style={[styles.slotsGrid, isTablet && styles.slotsGridTablet]}>
+                {TIME_SLOTS.map((time) => {
+                  const key = `${selectedDay}-${time}`;
+                  const isSelected = selectedSlots.has(key);
+                  return (
+                    <TouchableOpacity
+                      key={time}
+                      style={[
+                        styles.slotButton,
+                        isTablet && styles.slotButtonTablet,
+                        isSelected && styles.slotButtonSelected,
+                      ]}
+                      onPress={() => toggleSlot(selectedDay, time)}
+                    >
+                      <Text
+                        style={[
+                          styles.slotText,
+                          isSelected && styles.slotTextSelected,
+                        ]}
+                      >
+                        {time}
                       </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            </View>
+          ) : (
+            <View style={[styles.scheduleView, isTablet && styles.scheduleViewTablet]}>
+              <Text style={[styles.gridTitle, isDesktop && styles.gridTitleDesktop]}>{DAYS[selectedDay]}'s Schedule</Text>
+              
+              {/* Show availability */}
+              <View style={styles.availabilitySection}>
+                <Text style={styles.sectionLabel}>Available Times</Text>
+                {rules.filter((r) => r.day_of_week === selectedDay).length === 0 ? (
+                  <Text style={styles.emptyText}>No availability set</Text>
+                ) : (
+                  rules
+                    .filter((r) => r.day_of_week === selectedDay)
+                    .map((rule) => (
+                      <View key={rule.rule_id} style={styles.availabilityItem}>
+                        <Ionicons name="time-outline" size={18} color={colors.success} />
+                        <Text style={[styles.availabilityText, isDesktop && styles.availabilityTextDesktop]}>
+                          {rule.start_time} - {rule.end_time}
+                        </Text>
+                      </View>
+                    ))
+                )}
+              </View>
+
+              {/* Show bookings for next 7 days of this weekday */}
+              <View style={styles.bookingsSection}>
+                <Text style={styles.sectionLabel}>Upcoming Bookings</Text>
+                {getBookingsForDay(selectedDay).length === 0 ? (
+                  <Text style={styles.emptyText}>No bookings</Text>
+                ) : (
+                  getBookingsForDay(selectedDay).map((booking) => (
+                    <View key={booking.booking_id} style={[styles.bookingItem, isTablet && styles.bookingItemTablet]}>
+                      <View style={styles.bookingDot} />
+                      <View style={styles.bookingInfo}>
+                        <Text style={[styles.bookingTime, isDesktop && styles.bookingTimeDesktop]}>
+                          {format(parseISO(booking.start_at), 'h:mm a')} -{' '}
+                          {format(parseISO(booking.end_at), 'h:mm a')}
+                        </Text>
+                        <Text style={styles.bookingStudent}>{booking.student_name}</Text>
+                      </View>
                     </View>
                   ))
-              )}
+                )}
+              </View>
             </View>
+          )}
 
-            {/* Show bookings for next 7 days of this weekday */}
-            <View style={styles.bookingsSection}>
-              <Text style={styles.sectionLabel}>Upcoming Bookings</Text>
-              {getBookingsForDay(selectedDay).length === 0 ? (
-                <Text style={styles.emptyText}>No bookings</Text>
-              ) : (
-                getBookingsForDay(selectedDay).map((booking) => (
-                  <View key={booking.booking_id} style={styles.bookingItem}>
-                    <View style={styles.bookingDot} />
-                    <View style={styles.bookingInfo}>
-                      <Text style={styles.bookingTime}>
-                        {format(parseISO(booking.start_at), 'h:mm a')} -{' '}
-                        {format(parseISO(booking.end_at), 'h:mm a')}
-                      </Text>
-                      <Text style={styles.bookingStudent}>{booking.student_name}</Text>
-                    </View>
-                  </View>
-                ))
-              )}
-            </View>
-          </View>
-        )}
-
-        {editMode && (
-          <TouchableOpacity
-            style={styles.cancelButton}
-            onPress={() => {
-              setEditMode(false);
-              loadData();
-            }}
-          >
-            <Text style={styles.cancelButtonText}>Cancel</Text>
-          </TouchableOpacity>
-        )}
+          {editMode && (
+            <TouchableOpacity
+              style={[styles.cancelButton, isTablet && styles.cancelButtonTablet]}
+              onPress={() => {
+                setEditMode(false);
+                loadData();
+              }}
+            >
+              <Text style={styles.cancelButtonText}>Cancel</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -299,16 +311,28 @@ const styles = StyleSheet.create({
   scrollContent: {
     padding: 20,
   },
+  scrollContentTablet: {
+    padding: 24,
+  },
+  contentWrapper: {
+    flex: 1,
+  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 20,
   },
+  headerTablet: {
+    marginBottom: 24,
+  },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
     color: colors.text,
+  },
+  titleDesktop: {
+    fontSize: 32,
   },
   editButton: {
     paddingHorizontal: 16,
@@ -316,14 +340,26 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primaryLight,
     borderRadius: 20,
   },
+  editButtonTablet: {
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 24,
+  },
   editButtonText: {
     color: colors.primary,
     fontWeight: '600',
+  },
+  editButtonTextTablet: {
+    fontSize: 16,
   },
   weekView: {
     flexDirection: 'row',
     gap: 4,
     marginBottom: 20,
+  },
+  weekViewTablet: {
+    gap: 8,
+    marginBottom: 24,
   },
   dayTab: {
     flex: 1,
@@ -334,6 +370,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
+  dayTabTablet: {
+    paddingVertical: 16,
+    borderRadius: 12,
+  },
   dayTabActive: {
     backgroundColor: colors.primary,
     borderColor: colors.primary,
@@ -342,6 +382,9 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '500',
     color: colors.textMuted,
+  },
+  dayTabTextTablet: {
+    fontSize: 15,
   },
   dayTabTextActive: {
     color: '#fff',
@@ -353,16 +396,26 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
+  timeGridTablet: {
+    borderRadius: 20,
+    padding: 24,
+  },
   gridTitle: {
     fontSize: 16,
     fontWeight: '600',
     color: colors.text,
     marginBottom: 16,
   },
+  gridTitleDesktop: {
+    fontSize: 18,
+  },
   slotsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
+  },
+  slotsGridTablet: {
+    gap: 12,
   },
   slotButton: {
     paddingHorizontal: 16,
@@ -371,6 +424,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     minWidth: 70,
     alignItems: 'center',
+  },
+  slotButtonTablet: {
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    borderRadius: 10,
+    minWidth: 80,
   },
   slotButtonSelected: {
     backgroundColor: colors.primary,
@@ -389,6 +448,10 @@ const styles = StyleSheet.create({
     padding: 20,
     borderWidth: 1,
     borderColor: colors.border,
+  },
+  scheduleViewTablet: {
+    borderRadius: 20,
+    padding: 24,
   },
   availabilitySection: {
     marginBottom: 24,
@@ -415,6 +478,9 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: colors.text,
   },
+  availabilityTextDesktop: {
+    fontSize: 17,
+  },
   bookingsSection: {},
   bookingItem: {
     flexDirection: 'row',
@@ -422,6 +488,9 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
+  },
+  bookingItemTablet: {
+    paddingVertical: 16,
   },
   bookingDot: {
     width: 8,
@@ -436,6 +505,9 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: colors.text,
   },
+  bookingTimeDesktop: {
+    fontSize: 16,
+  },
   bookingStudent: {
     fontSize: 13,
     color: colors.textMuted,
@@ -445,6 +517,9 @@ const styles = StyleSheet.create({
     marginTop: 16,
     padding: 16,
     alignItems: 'center',
+  },
+  cancelButtonTablet: {
+    marginTop: 20,
   },
   cancelButtonText: {
     fontSize: 16,

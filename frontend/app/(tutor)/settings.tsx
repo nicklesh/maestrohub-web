@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Alert,
+  useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -31,9 +32,15 @@ interface TutorProfile {
 export default function TutorSettings() {
   const { user, logout } = useAuth();
   const router = useRouter();
+  const { width } = useWindowDimensions();
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<TutorProfile | null>(null);
   const [toggling, setToggling] = useState(false);
+
+  // Responsive breakpoints
+  const isTablet = width >= 768;
+  const isDesktop = width >= 1024;
+  const contentMaxWidth = isDesktop ? 640 : isTablet ? 560 : undefined;
 
   useEffect(() => {
     loadProfile();
@@ -93,117 +100,120 @@ export default function TutorSettings() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Profile Header */}
-        <View style={styles.profileHeader}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>
-              {user?.name?.charAt(0)?.toUpperCase() || 'T'}
-            </Text>
-          </View>
-          <Text style={styles.userName}>{user?.name}</Text>
-          <Text style={styles.userEmail}>{user?.email}</Text>
-          {profile && (
-            <View
-              style={[
-                styles.statusBadge,
-                profile.status === 'approved'
-                  ? styles.statusApproved
-                  : profile.status === 'pending'
-                  ? styles.statusPending
-                  : styles.statusSuspended,
-              ]}
-            >
-              <Text style={styles.statusText}>
-                {profile.status === 'approved'
-                  ? 'Approved'
-                  : profile.status === 'pending'
-                  ? 'Pending Review'
-                  : 'Suspended'}
+      <ScrollView contentContainerStyle={[styles.scrollContent, isTablet && styles.scrollContentTablet]}>
+        <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
+          {/* Profile Header */}
+          <View style={[styles.profileHeader, isTablet && styles.profileHeaderTablet]}>
+            <View style={[styles.avatar, isDesktop && styles.avatarDesktop]}>
+              <Text style={[styles.avatarText, isDesktop && styles.avatarTextDesktop]}>
+                {user?.name?.charAt(0)?.toUpperCase() || 'T'}
               </Text>
             </View>
-          )}
-        </View>
-
-        {/* Profile Summary */}
-        {profile && (
-          <View style={styles.card}>
-            <View style={styles.cardHeader}>
-              <Text style={styles.cardTitle}>Profile Summary</Text>
-              <TouchableOpacity onPress={() => router.push('/(tutor)/onboarding')}>
-                <Text style={styles.editLink}>Edit</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>Categories</Text>
-              <Text style={styles.infoValue}>{profile.categories.join(', ')}</Text>
-            </View>
-            <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>Subjects</Text>
-              <Text style={styles.infoValue}>{profile.subjects.join(', ')}</Text>
-            </View>
-            <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>Rate</Text>
-              <Text style={styles.infoValue}>
-                ${profile.base_price}/{profile.duration_minutes}min
-              </Text>
-            </View>
-            <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>Modality</Text>
-              <Text style={styles.infoValue}>{profile.modality.join(', ')}</Text>
-            </View>
-          </View>
-        )}
-
-        {/* Publish Toggle */}
-        {profile && profile.status === 'approved' && (
-          <View style={styles.card}>
-            <View style={styles.publishRow}>
-              <View>
-                <Text style={styles.publishTitle}>Listing Status</Text>
-                <Text style={styles.publishSubtitle}>
-                  {profile.is_published ? 'Your profile is visible to students' : 'Your profile is hidden'}
+            <Text style={[styles.userName, isDesktop && styles.userNameDesktop]}>{user?.name}</Text>
+            <Text style={[styles.userEmail, isDesktop && styles.userEmailDesktop]}>{user?.email}</Text>
+            {profile && (
+              <View
+                style={[
+                  styles.statusBadge,
+                  profile.status === 'approved'
+                    ? styles.statusApproved
+                    : profile.status === 'pending'
+                    ? styles.statusPending
+                    : styles.statusSuspended,
+                ]}
+              >
+                <Text style={styles.statusText}>
+                  {profile.status === 'approved'
+                    ? 'Approved'
+                    : profile.status === 'pending'
+                    ? 'Pending Review'
+                    : 'Suspended'}
                 </Text>
               </View>
-              <TouchableOpacity
-                style={[
-                  styles.publishToggle,
-                  profile.is_published && styles.publishToggleActive,
-                ]}
-                onPress={togglePublish}
-                disabled={toggling}
-              >
-                {toggling ? (
-                  <ActivityIndicator size="small" color="#fff" />
-                ) : (
-                  <Text style={styles.publishToggleText}>
-                    {profile.is_published ? 'Published' : 'Publish'}
-                  </Text>
-                )}
-              </TouchableOpacity>
-            </View>
+            )}
           </View>
-        )}
 
-        {/* Menu Items */}
-        <View style={styles.menu}>
-          <TouchableOpacity style={styles.menuItem}>
-            <Ionicons name="notifications-outline" size={22} color={colors.primary} />
-            <Text style={styles.menuItemText}>Notifications</Text>
-            <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
-            <Ionicons name="help-circle-outline" size={22} color={colors.primary} />
-            <Text style={styles.menuItemText}>Help & Support</Text>
-            <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+          {/* Profile Summary */}
+          {profile && (
+            <View style={[styles.card, isTablet && styles.cardTablet]}>
+              <View style={styles.cardHeader}>
+                <Text style={[styles.cardTitle, isDesktop && styles.cardTitleDesktop]}>Profile Summary</Text>
+                <TouchableOpacity onPress={() => router.push('/(tutor)/onboarding')}>
+                  <Text style={styles.editLink}>Edit</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.infoRow}>
+                <Text style={[styles.infoLabel, isDesktop && styles.infoLabelDesktop]}>Categories</Text>
+                <Text style={[styles.infoValue, isDesktop && styles.infoValueDesktop]}>{profile.categories.join(', ')}</Text>
+              </View>
+              <View style={styles.infoRow}>
+                <Text style={[styles.infoLabel, isDesktop && styles.infoLabelDesktop]}>Subjects</Text>
+                <Text style={[styles.infoValue, isDesktop && styles.infoValueDesktop]}>{profile.subjects.join(', ')}</Text>
+              </View>
+              <View style={styles.infoRow}>
+                <Text style={[styles.infoLabel, isDesktop && styles.infoLabelDesktop]}>Rate</Text>
+                <Text style={[styles.infoValue, isDesktop && styles.infoValueDesktop]}>
+                  ${profile.base_price}/{profile.duration_minutes}min
+                </Text>
+              </View>
+              <View style={styles.infoRow}>
+                <Text style={[styles.infoLabel, isDesktop && styles.infoLabelDesktop]}>Modality</Text>
+                <Text style={[styles.infoValue, isDesktop && styles.infoValueDesktop]}>{profile.modality.join(', ')}</Text>
+              </View>
+            </View>
+          )}
+
+          {/* Publish Toggle */}
+          {profile && profile.status === 'approved' && (
+            <View style={[styles.card, isTablet && styles.cardTablet]}>
+              <View style={styles.publishRow}>
+                <View>
+                  <Text style={[styles.publishTitle, isDesktop && styles.publishTitleDesktop]}>Listing Status</Text>
+                  <Text style={styles.publishSubtitle}>
+                    {profile.is_published ? 'Your profile is visible to students' : 'Your profile is hidden'}
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  style={[
+                    styles.publishToggle,
+                    isTablet && styles.publishToggleTablet,
+                    profile.is_published && styles.publishToggleActive,
+                  ]}
+                  onPress={togglePublish}
+                  disabled={toggling}
+                >
+                  {toggling ? (
+                    <ActivityIndicator size="small" color="#fff" />
+                  ) : (
+                    <Text style={styles.publishToggleText}>
+                      {profile.is_published ? 'Published' : 'Publish'}
+                    </Text>
+                  )}
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+
+          {/* Menu Items */}
+          <View style={[styles.menu, isTablet && styles.menuTablet]}>
+            <TouchableOpacity style={[styles.menuItem, isTablet && styles.menuItemTablet]}>
+              <Ionicons name="notifications-outline" size={isTablet ? 24 : 22} color={colors.primary} />
+              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Notifications</Text>
+              <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.menuItem, isTablet && styles.menuItemTablet]}>
+              <Ionicons name="help-circle-outline" size={isTablet ? 24 : 22} color={colors.primary} />
+              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Help & Support</Text>
+              <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
+          </View>
+
+          {/* Logout */}
+          <TouchableOpacity style={[styles.logoutButton, isTablet && styles.logoutButtonTablet]} onPress={handleLogout}>
+            <Ionicons name="log-out-outline" size={22} color={colors.error} />
+            <Text style={styles.logoutText}>Logout</Text>
           </TouchableOpacity>
         </View>
-
-        {/* Logout */}
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Ionicons name="log-out-outline" size={22} color={colors.error} />
-          <Text style={styles.logoutText}>Logout</Text>
-        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
@@ -222,12 +232,26 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: 32,
   },
+  scrollContentTablet: {
+    paddingVertical: 32,
+  },
+  contentWrapper: {
+    flex: 1,
+  },
   profileHeader: {
     alignItems: 'center',
     paddingVertical: 32,
     backgroundColor: colors.surface,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
+  },
+  profileHeaderTablet: {
+    borderRadius: 20,
+    marginHorizontal: 20,
+    marginBottom: 8,
+    borderBottomWidth: 0,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   avatar: {
     width: 80,
@@ -238,20 +262,34 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 12,
   },
+  avatarDesktop: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+  },
   avatarText: {
     fontSize: 32,
     fontWeight: '600',
     color: colors.primary,
+  },
+  avatarTextDesktop: {
+    fontSize: 40,
   },
   userName: {
     fontSize: 22,
     fontWeight: '600',
     color: colors.text,
   },
+  userNameDesktop: {
+    fontSize: 26,
+  },
   userEmail: {
     fontSize: 14,
     color: colors.textMuted,
     marginTop: 4,
+  },
+  userEmailDesktop: {
+    fontSize: 16,
   },
   statusBadge: {
     marginTop: 12,
@@ -281,6 +319,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
+  cardTablet: {
+    borderRadius: 20,
+    padding: 24,
+  },
   cardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -291,6 +333,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: colors.text,
+  },
+  cardTitleDesktop: {
+    fontSize: 18,
   },
   editLink: {
     fontSize: 14,
@@ -308,12 +353,18 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.textMuted,
   },
+  infoLabelDesktop: {
+    fontSize: 16,
+  },
   infoValue: {
     fontSize: 14,
     fontWeight: '500',
     color: colors.text,
     maxWidth: '60%',
     textAlign: 'right',
+  },
+  infoValueDesktop: {
+    fontSize: 16,
   },
   publishRow: {
     flexDirection: 'row',
@@ -325,6 +376,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: colors.text,
   },
+  publishTitleDesktop: {
+    fontSize: 18,
+  },
   publishSubtitle: {
     fontSize: 13,
     color: colors.textMuted,
@@ -335,6 +389,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
+  },
+  publishToggleTablet: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 24,
   },
   publishToggleActive: {
     backgroundColor: colors.success,
@@ -353,6 +412,9 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     overflow: 'hidden',
   },
+  menuTablet: {
+    borderRadius: 20,
+  },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -361,10 +423,16 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.border,
     gap: 12,
   },
+  menuItemTablet: {
+    padding: 20,
+  },
   menuItemText: {
     flex: 1,
     fontSize: 15,
     color: colors.text,
+  },
+  menuItemTextDesktop: {
+    fontSize: 17,
   },
   logoutButton: {
     flexDirection: 'row',
@@ -375,6 +443,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.errorLight,
     borderRadius: 12,
     gap: 8,
+  },
+  logoutButtonTablet: {
+    padding: 18,
+    borderRadius: 14,
   },
   logoutText: {
     fontSize: 16,
