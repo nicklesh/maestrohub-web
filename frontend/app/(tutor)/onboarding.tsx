@@ -738,6 +738,52 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontWeight: '500',
   },
+  countryOptions: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 24,
+  },
+  countryOptionsTablet: {
+    gap: 16,
+  },
+  countryCard: {
+    flex: 1,
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: colors.surface,
+    borderRadius: 16,
+    borderWidth: 2,
+    borderColor: colors.border,
+  },
+  countryCardTablet: {
+    padding: 20,
+    borderRadius: 20,
+  },
+  countryCardSelected: {
+    borderColor: colors.primary,
+    backgroundColor: colors.primaryLight,
+  },
+  countryFlag: {
+    fontSize: 32,
+    marginBottom: 8,
+  },
+  countryName: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.text,
+    textAlign: 'center',
+  },
+  countryNameSelected: {
+    color: colors.primary,
+  },
+  countryCurrency: {
+    fontSize: 12,
+    color: colors.textMuted,
+    marginTop: 4,
+  },
+  countryCurrencySelected: {
+    color: colors.primary,
+  },
   inputLabel: {
     fontSize: 14,
     fontWeight: '500',
