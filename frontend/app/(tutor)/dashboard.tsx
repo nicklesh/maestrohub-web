@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   RefreshControl,
-  FlatList,
+  useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -37,11 +37,17 @@ interface TutorStats {
 export default function TutorDashboard() {
   const { user } = useAuth();
   const router = useRouter();
+  const { width } = useWindowDimensions();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [hasProfile, setHasProfile] = useState(false);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [stats, setStats] = useState<TutorStats | null>(null);
+
+  // Responsive breakpoints
+  const isTablet = width >= 768;
+  const isDesktop = width >= 1024;
+  const contentMaxWidth = isDesktop ? 960 : isTablet ? 720 : undefined;
 
   useEffect(() => {
     loadData();
@@ -127,17 +133,17 @@ export default function TutorDashboard() {
   if (!hasProfile) {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.onboardingPrompt}>
-          <Ionicons name="school-outline" size={64} color={colors.primary} />
-          <Text style={styles.onboardingTitle}>Complete Your Profile</Text>
-          <Text style={styles.onboardingText}>
+        <View style={[styles.onboardingPrompt, contentMaxWidth ? { maxWidth: contentMaxWidth } : undefined]}>
+          <Ionicons name="school-outline" size={isTablet ? 80 : 64} color={colors.primary} />
+          <Text style={[styles.onboardingTitle, isDesktop && styles.onboardingTitleDesktop]}>Complete Your Profile</Text>
+          <Text style={[styles.onboardingText, isDesktop && styles.onboardingTextDesktop]}>
             Create your tutor profile to start receiving bookings.
           </Text>
           <TouchableOpacity
-            style={styles.primaryButton}
+            style={[styles.primaryButton, isTablet && styles.primaryButtonTablet]}
             onPress={() => router.push('/(tutor)/onboarding')}
           >
-            <Text style={styles.primaryButtonText}>Create Profile</Text>
+            <Text style={[styles.primaryButtonText, isTablet && styles.primaryButtonTextTablet]}>Create Profile</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -147,105 +153,107 @@ export default function TutorDashboard() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, isTablet && styles.scrollContentTablet]}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        {/* Header */}
-        <View style={styles.header}>
-          <View>
-            <Text style={styles.greeting}>Welcome back,</Text>
-            <Text style={styles.userName}>{user?.name?.split(' ')[0]}</Text>
+        <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
+          {/* Header */}
+          <View style={styles.header}>
+            <View>
+              <Text style={styles.greeting}>Welcome back,</Text>
+              <Text style={[styles.userName, isDesktop && styles.userNameDesktop]}>{user?.name?.split(' ')[0]}</Text>
+            </View>
           </View>
-        </View>
 
-        {/* Stats */}
-        <View style={styles.statsGrid}>
-          <View style={styles.statCard}>
-            <Text style={styles.statValue}>{stats?.completed_lessons || 0}</Text>
-            <Text style={styles.statLabel}>Lessons</Text>
-          </View>
-          <View style={styles.statCard}>
-            <Text style={styles.statValue}>${stats?.total_earnings || 0}</Text>
-            <Text style={styles.statLabel}>Earned</Text>
-          </View>
-          <View style={styles.statCard}>
-            <View style={styles.ratingRow}>
-              <Ionicons name="star" size={16} color={colors.accent} />
-              <Text style={styles.statValue}>
-                {stats?.rating_avg ? stats.rating_avg.toFixed(1) : 'New'}
+          {/* Stats */}
+          <View style={[styles.statsGrid, isTablet && styles.statsGridTablet]}>
+            <View style={[styles.statCard, isTablet && styles.statCardTablet]}>
+              <Text style={[styles.statValue, isDesktop && styles.statValueDesktop]}>{stats?.completed_lessons || 0}</Text>
+              <Text style={styles.statLabel}>Lessons</Text>
+            </View>
+            <View style={[styles.statCard, isTablet && styles.statCardTablet]}>
+              <Text style={[styles.statValue, isDesktop && styles.statValueDesktop]}>${stats?.total_earnings || 0}</Text>
+              <Text style={styles.statLabel}>Earned</Text>
+            </View>
+            <View style={[styles.statCard, isTablet && styles.statCardTablet]}>
+              <View style={styles.ratingRow}>
+                <Ionicons name="star" size={16} color={colors.accent} />
+                <Text style={[styles.statValue, isDesktop && styles.statValueDesktop]}>
+                  {stats?.rating_avg ? stats.rating_avg.toFixed(1) : 'New'}
+                </Text>
+              </View>
+              <Text style={styles.statLabel}>
+                {stats?.rating_count || 0} reviews
               </Text>
             </View>
-            <Text style={styles.statLabel}>
-              {stats?.rating_count || 0} reviews
-            </Text>
-          </View>
-        </View>
-
-        {/* Upcoming Bookings */}
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Upcoming Lessons</Text>
-            <TouchableOpacity onPress={() => router.push('/(tutor)/calendar')}>
-              <Text style={styles.seeAll}>See All</Text>
-            </TouchableOpacity>
           </View>
 
-          {upcomingBookings.length === 0 ? (
-            <View style={styles.emptyCard}>
-              <Ionicons name="calendar-outline" size={32} color={colors.textMuted} />
-              <Text style={styles.emptyText}>No upcoming lessons</Text>
+          {/* Upcoming Bookings */}
+          <View style={[styles.section, isTablet && styles.sectionTablet]}>
+            <View style={styles.sectionHeader}>
+              <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>Upcoming Lessons</Text>
+              <TouchableOpacity onPress={() => router.push('/(tutor)/calendar')}>
+                <Text style={styles.seeAll}>See All</Text>
+              </TouchableOpacity>
             </View>
-          ) : (
-            upcomingBookings.map((booking) => (
-              <View key={booking.booking_id} style={styles.bookingCard}>
-                <View style={styles.bookingInfo}>
-                  <Text style={styles.bookingDate}>
-                    {formatDate(booking.start_at)}
-                  </Text>
-                  <Text style={styles.bookingTime}>
-                    {format(parseISO(booking.start_at), 'h:mm a')} -{' '}
-                    {format(parseISO(booking.end_at), 'h:mm a')}
-                  </Text>
-                  <Text style={styles.studentName}>{booking.student_name}</Text>
-                </View>
-                <TouchableOpacity
-                  style={styles.completeButton}
-                  onPress={() => markComplete(booking.booking_id)}
-                >
-                  <Ionicons name="checkmark" size={20} color={colors.success} />
-                </TouchableOpacity>
-              </View>
-            ))
-          )}
-        </View>
 
-        {/* Quick Actions */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Quick Actions</Text>
-          <View style={styles.actionsGrid}>
-            <TouchableOpacity
-              style={styles.actionCard}
-              onPress={() => router.push('/(tutor)/calendar')}
-            >
-              <Ionicons name="calendar" size={24} color={colors.primary} />
-              <Text style={styles.actionText}>Availability</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.actionCard}
-              onPress={() => router.push('/(tutor)/settings')}
-            >
-              <Ionicons name="person" size={24} color={colors.primary} />
-              <Text style={styles.actionText}>Profile</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.actionCard}
-              onPress={() => router.push('/(tutor)/billing')}
-            >
-              <Ionicons name="card" size={24} color={colors.primary} />
-              <Text style={styles.actionText}>Billing</Text>
-            </TouchableOpacity>
+            {upcomingBookings.length === 0 ? (
+              <View style={[styles.emptyCard, isTablet && styles.emptyCardTablet]}>
+                <Ionicons name="calendar-outline" size={32} color={colors.textMuted} />
+                <Text style={styles.emptyText}>No upcoming lessons</Text>
+              </View>
+            ) : (
+              upcomingBookings.map((booking) => (
+                <View key={booking.booking_id} style={[styles.bookingCard, isTablet && styles.bookingCardTablet]}>
+                  <View style={styles.bookingInfo}>
+                    <Text style={[styles.bookingDate, isDesktop && styles.bookingDateDesktop]}>
+                      {formatDate(booking.start_at)}
+                    </Text>
+                    <Text style={styles.bookingTime}>
+                      {format(parseISO(booking.start_at), 'h:mm a')} -{' '}
+                      {format(parseISO(booking.end_at), 'h:mm a')}
+                    </Text>
+                    <Text style={styles.studentName}>{booking.student_name}</Text>
+                  </View>
+                  <TouchableOpacity
+                    style={[styles.completeButton, isTablet && styles.completeButtonTablet]}
+                    onPress={() => markComplete(booking.booking_id)}
+                  >
+                    <Ionicons name="checkmark" size={20} color={colors.success} />
+                  </TouchableOpacity>
+                </View>
+              ))
+            )}
+          </View>
+
+          {/* Quick Actions */}
+          <View style={[styles.section, isTablet && styles.sectionTablet]}>
+            <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>Quick Actions</Text>
+            <View style={[styles.actionsGrid, isDesktop && styles.actionsGridDesktop]}>
+              <TouchableOpacity
+                style={[styles.actionCard, isTablet && styles.actionCardTablet]}
+                onPress={() => router.push('/(tutor)/calendar')}
+              >
+                <Ionicons name="calendar" size={isTablet ? 28 : 24} color={colors.primary} />
+                <Text style={[styles.actionText, isDesktop && styles.actionTextDesktop]}>Availability</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.actionCard, isTablet && styles.actionCardTablet]}
+                onPress={() => router.push('/(tutor)/settings')}
+              >
+                <Ionicons name="person" size={isTablet ? 28 : 24} color={colors.primary} />
+                <Text style={[styles.actionText, isDesktop && styles.actionTextDesktop]}>Profile</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.actionCard, isTablet && styles.actionCardTablet]}
+                onPress={() => router.push('/(tutor)/billing')}
+              >
+                <Ionicons name="card" size={isTablet ? 28 : 24} color={colors.primary} />
+                <Text style={[styles.actionText, isDesktop && styles.actionTextDesktop]}>Billing</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </ScrollView>
@@ -268,12 +276,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 32,
+    alignSelf: 'center',
   },
   onboardingTitle: {
     fontSize: 24,
     fontWeight: 'bold',
     color: colors.text,
     marginTop: 24,
+  },
+  onboardingTitleDesktop: {
+    fontSize: 28,
   },
   onboardingText: {
     fontSize: 16,
@@ -282,19 +294,36 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginBottom: 32,
   },
+  onboardingTextDesktop: {
+    fontSize: 18,
+  },
   primaryButton: {
     backgroundColor: colors.primary,
     paddingHorizontal: 32,
     paddingVertical: 16,
     borderRadius: 12,
   },
+  primaryButtonTablet: {
+    paddingHorizontal: 40,
+    paddingVertical: 18,
+    borderRadius: 14,
+  },
   primaryButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
   },
+  primaryButtonTextTablet: {
+    fontSize: 18,
+  },
   scrollContent: {
     paddingBottom: 32,
+  },
+  scrollContentTablet: {
+    paddingHorizontal: 24,
+  },
+  contentWrapper: {
+    flex: 1,
   },
   header: {
     padding: 20,
@@ -308,10 +337,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: colors.text,
   },
+  userNameDesktop: {
+    fontSize: 32,
+  },
   statsGrid: {
     flexDirection: 'row',
     paddingHorizontal: 16,
     gap: 12,
+  },
+  statsGridTablet: {
+    paddingHorizontal: 0,
+    gap: 16,
   },
   statCard: {
     flex: 1,
@@ -322,10 +358,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
+  statCardTablet: {
+    borderRadius: 20,
+    padding: 20,
+  },
   statValue: {
     fontSize: 24,
     fontWeight: 'bold',
     color: colors.text,
+  },
+  statValueDesktop: {
+    fontSize: 28,
   },
   statLabel: {
     fontSize: 12,
@@ -341,6 +384,9 @@ const styles = StyleSheet.create({
     marginTop: 24,
     paddingHorizontal: 20,
   },
+  sectionTablet: {
+    paddingHorizontal: 0,
+  },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -351,6 +397,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: colors.text,
+  },
+  sectionTitleDesktop: {
+    fontSize: 20,
   },
   seeAll: {
     fontSize: 14,
@@ -364,6 +413,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderColor: colors.border,
+  },
+  emptyCardTablet: {
+    borderRadius: 20,
+    padding: 40,
   },
   emptyText: {
     marginTop: 8,
@@ -380,6 +433,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
+  bookingCardTablet: {
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 12,
+  },
   bookingInfo: {
     flex: 1,
   },
@@ -387,6 +445,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: colors.text,
+  },
+  bookingDateDesktop: {
+    fontSize: 18,
   },
   bookingTime: {
     fontSize: 14,
@@ -406,10 +467,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  completeButtonTablet: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+  },
   actionsGrid: {
     flexDirection: 'row',
     gap: 12,
     marginTop: 12,
+  },
+  actionsGridDesktop: {
+    gap: 16,
   },
   actionCard: {
     flex: 1,
@@ -420,10 +489,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
+  actionCardTablet: {
+    borderRadius: 16,
+    padding: 24,
+  },
   actionText: {
     fontSize: 13,
     fontWeight: '500',
     color: colors.text,
     marginTop: 8,
+  },
+  actionTextDesktop: {
+    fontSize: 15,
   },
 });

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
+  useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -25,8 +26,14 @@ interface Student {
 export default function ProfileScreen() {
   const { user, logout, updateRole } = useAuth();
   const router = useRouter();
+  const { width } = useWindowDimensions();
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Responsive breakpoints
+  const isTablet = width >= 768;
+  const isDesktop = width >= 1024;
+  const contentMaxWidth = isDesktop ? 640 : isTablet ? 560 : undefined;
 
   useEffect(() => {
     loadStudents();
@@ -85,10 +92,10 @@ export default function ProfileScreen() {
     onPress?: () => void;
     rightElement?: React.ReactNode;
   }) => (
-    <TouchableOpacity style={styles.menuItem} onPress={onPress} disabled={!onPress}>
+    <TouchableOpacity style={[styles.menuItem, isTablet && styles.menuItemTablet]} onPress={onPress} disabled={!onPress}>
       <View style={styles.menuItemLeft}>
-        <Ionicons name={icon as any} size={22} color={colors.primary} />
-        <Text style={styles.menuItemLabel}>{label}</Text>
+        <Ionicons name={icon as any} size={isTablet ? 24 : 22} color={colors.primary} />
+        <Text style={[styles.menuItemLabel, isDesktop && styles.menuItemLabelDesktop]}>{label}</Text>
       </View>
       {rightElement || <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />}
     </TouchableOpacity>
@@ -96,94 +103,96 @@ export default function ProfileScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Profile Header */}
-        <View style={styles.header}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>
-              {user?.name?.charAt(0)?.toUpperCase() || 'U'}
-            </Text>
-          </View>
-          <Text style={styles.userName}>{user?.name}</Text>
-          <Text style={styles.userEmail}>{user?.email}</Text>
-          <View style={styles.roleBadge}>
-            <Text style={styles.roleText}>
-              {user?.role === 'consumer' ? 'Parent' : user?.role}
-            </Text>
-          </View>
-        </View>
-
-        {/* Students Section */}
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>My Students</Text>
-            <TouchableOpacity onPress={() => router.push('/(consumer)/students')}>
-              <Text style={styles.sectionAction}>Manage</Text>
-            </TouchableOpacity>
-          </View>
-          {loading ? (
-            <ActivityIndicator color={colors.primary} />
-          ) : students.length === 0 ? (
-            <TouchableOpacity
-              style={styles.addStudentCard}
-              onPress={() => router.push('/(consumer)/students')}
-            >
-              <Ionicons name="add-circle-outline" size={32} color={colors.primary} />
-              <Text style={styles.addStudentText}>Add a student</Text>
-            </TouchableOpacity>
-          ) : (
-            <View style={styles.studentsList}>
-              {students.slice(0, 3).map((student) => (
-                <View key={student.student_id} style={styles.studentCard}>
-                  <View style={styles.studentAvatar}>
-                    <Text style={styles.studentInitial}>
-                      {student.name.charAt(0).toUpperCase()}
-                    </Text>
-                  </View>
-                  <View>
-                    <Text style={styles.studentName}>{student.name}</Text>
-                    {student.grade && (
-                      <Text style={styles.studentGrade}>Grade {student.grade}</Text>
-                    )}
-                  </View>
-                </View>
-              ))}
+      <ScrollView contentContainerStyle={[styles.scrollContent, isTablet && styles.scrollContentTablet]}>
+        <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
+          {/* Profile Header */}
+          <View style={[styles.header, isTablet && styles.headerTablet]}>
+            <View style={[styles.avatar, isDesktop && styles.avatarDesktop]}>
+              <Text style={[styles.avatarText, isDesktop && styles.avatarTextDesktop]}>
+                {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+              </Text>
             </View>
-          )}
-        </View>
-
-        {/* Menu Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Account</Text>
-          <View style={styles.menuCard}>
-            <MenuItem
-              icon="person-outline"
-              label="Edit Profile"
-              onPress={() => {}}
-            />
-            <MenuItem
-              icon="notifications-outline"
-              label="Notifications"
-              onPress={() => {}}
-            />
-            <MenuItem
-              icon="card-outline"
-              label="Payment Methods"
-              onPress={() => {}}
-            />
-            <MenuItem
-              icon="school-outline"
-              label="Become a Tutor"
-              onPress={handleSwitchToTutor}
-            />
+            <Text style={[styles.userName, isDesktop && styles.userNameDesktop]}>{user?.name}</Text>
+            <Text style={[styles.userEmail, isDesktop && styles.userEmailDesktop]}>{user?.email}</Text>
+            <View style={styles.roleBadge}>
+              <Text style={styles.roleText}>
+                {user?.role === 'consumer' ? 'Parent' : user?.role}
+              </Text>
+            </View>
           </View>
-        </View>
 
-        {/* Logout */}
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Ionicons name="log-out-outline" size={22} color={colors.error} />
-          <Text style={styles.logoutText}>Logout</Text>
-        </TouchableOpacity>
+          {/* Students Section */}
+          <View style={[styles.section, isTablet && styles.sectionTablet]}>
+            <View style={styles.sectionHeader}>
+              <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>My Students</Text>
+              <TouchableOpacity onPress={() => router.push('/(consumer)/students')}>
+                <Text style={styles.sectionAction}>Manage</Text>
+              </TouchableOpacity>
+            </View>
+            {loading ? (
+              <ActivityIndicator color={colors.primary} />
+            ) : students.length === 0 ? (
+              <TouchableOpacity
+                style={[styles.addStudentCard, isTablet && styles.addStudentCardTablet]}
+                onPress={() => router.push('/(consumer)/students')}
+              >
+                <Ionicons name="add-circle-outline" size={isTablet ? 40 : 32} color={colors.primary} />
+                <Text style={styles.addStudentText}>Add a student</Text>
+              </TouchableOpacity>
+            ) : (
+              <View style={styles.studentsList}>
+                {students.slice(0, 3).map((student) => (
+                  <View key={student.student_id} style={[styles.studentCard, isTablet && styles.studentCardTablet]}>
+                    <View style={[styles.studentAvatar, isTablet && styles.studentAvatarTablet]}>
+                      <Text style={[styles.studentInitial, isTablet && styles.studentInitialTablet]}>
+                        {student.name.charAt(0).toUpperCase()}
+                      </Text>
+                    </View>
+                    <View>
+                      <Text style={[styles.studentName, isDesktop && styles.studentNameDesktop]}>{student.name}</Text>
+                      {student.grade && (
+                        <Text style={styles.studentGrade}>Grade {student.grade}</Text>
+                      )}
+                    </View>
+                  </View>
+                ))}
+              </View>
+            )}
+          </View>
+
+          {/* Menu Section */}
+          <View style={[styles.section, isTablet && styles.sectionTablet]}>
+            <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>Account</Text>
+            <View style={[styles.menuCard, isTablet && styles.menuCardTablet]}>
+              <MenuItem
+                icon="person-outline"
+                label="Edit Profile"
+                onPress={() => {}}
+              />
+              <MenuItem
+                icon="notifications-outline"
+                label="Notifications"
+                onPress={() => {}}
+              />
+              <MenuItem
+                icon="card-outline"
+                label="Payment Methods"
+                onPress={() => {}}
+              />
+              <MenuItem
+                icon="school-outline"
+                label="Become a Tutor"
+                onPress={handleSwitchToTutor}
+              />
+            </View>
+          </View>
+
+          {/* Logout */}
+          <TouchableOpacity style={[styles.logoutButton, isTablet && styles.logoutButtonTablet]} onPress={handleLogout}>
+            <Ionicons name="log-out-outline" size={22} color={colors.error} />
+            <Text style={styles.logoutText}>Logout</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -197,12 +206,26 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: 32,
   },
+  scrollContentTablet: {
+    paddingVertical: 32,
+  },
+  contentWrapper: {
+    flex: 1,
+  },
   header: {
     alignItems: 'center',
     paddingVertical: 32,
     backgroundColor: colors.surface,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
+  },
+  headerTablet: {
+    borderRadius: 20,
+    marginHorizontal: 20,
+    marginBottom: 8,
+    borderBottomWidth: 0,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   avatar: {
     width: 80,
@@ -213,20 +236,34 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 12,
   },
+  avatarDesktop: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+  },
   avatarText: {
     fontSize: 32,
     fontWeight: '600',
     color: colors.primary,
+  },
+  avatarTextDesktop: {
+    fontSize: 40,
   },
   userName: {
     fontSize: 22,
     fontWeight: '600',
     color: colors.text,
   },
+  userNameDesktop: {
+    fontSize: 26,
+  },
   userEmail: {
     fontSize: 14,
     color: colors.textMuted,
     marginTop: 4,
+  },
+  userEmailDesktop: {
+    fontSize: 16,
   },
   roleBadge: {
     marginTop: 12,
@@ -245,6 +282,9 @@ const styles = StyleSheet.create({
     marginTop: 24,
     paddingHorizontal: 20,
   },
+  sectionTablet: {
+    marginTop: 20,
+  },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -256,6 +296,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: colors.text,
     marginBottom: 12,
+  },
+  sectionTitleDesktop: {
+    fontSize: 18,
   },
   sectionAction: {
     fontSize: 14,
@@ -270,6 +313,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     borderStyle: 'dashed',
+  },
+  addStudentCardTablet: {
+    padding: 32,
+    borderRadius: 16,
   },
   addStudentText: {
     marginTop: 8,
@@ -290,6 +337,10 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     gap: 12,
   },
+  studentCardTablet: {
+    padding: 16,
+    borderRadius: 16,
+  },
   studentAvatar: {
     width: 40,
     height: 40,
@@ -298,15 +349,26 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  studentAvatarTablet: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+  },
   studentInitial: {
     fontSize: 16,
     fontWeight: '600',
     color: '#fff',
   },
+  studentInitialTablet: {
+    fontSize: 18,
+  },
   studentName: {
     fontSize: 14,
     fontWeight: '500',
     color: colors.text,
+  },
+  studentNameDesktop: {
+    fontSize: 16,
   },
   studentGrade: {
     fontSize: 12,
@@ -319,6 +381,9 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     overflow: 'hidden',
   },
+  menuCardTablet: {
+    borderRadius: 16,
+  },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -326,6 +391,9 @@ const styles = StyleSheet.create({
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
+  },
+  menuItemTablet: {
+    padding: 18,
   },
   menuItemLeft: {
     flexDirection: 'row',
@@ -335,6 +403,9 @@ const styles = StyleSheet.create({
   menuItemLabel: {
     fontSize: 15,
     color: colors.text,
+  },
+  menuItemLabelDesktop: {
+    fontSize: 17,
   },
   logoutButton: {
     flexDirection: 'row',
@@ -346,6 +417,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.errorLight,
     borderRadius: 12,
     gap: 8,
+  },
+  logoutButtonTablet: {
+    padding: 18,
+    borderRadius: 14,
   },
   logoutText: {
     fontSize: 16,
