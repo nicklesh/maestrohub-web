@@ -375,11 +375,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  contentWrapper: {
+    flex: 1,
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 16,
+  },
+  headerTablet: {
+    paddingHorizontal: 24,
+    paddingVertical: 20,
   },
   backButton: {
     width: 40,
@@ -394,11 +401,17 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: colors.text,
   },
+  headerTitleDesktop: {
+    fontSize: 22,
+  },
   progress: {
     flexDirection: 'row',
     paddingHorizontal: 20,
     gap: 8,
     marginBottom: 24,
+  },
+  progressTablet: {
+    marginBottom: 32,
   },
   progressStep: {
     flex: 1,
@@ -424,11 +437,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: colors.text,
   },
+  stepTitleDesktop: {
+    fontSize: 28,
+  },
   stepSubtitle: {
     fontSize: 14,
     color: colors.textMuted,
     marginTop: 4,
     marginBottom: 24,
+  },
+  stepSubtitleDesktop: {
+    fontSize: 16,
+    marginBottom: 32,
   },
   noStudents: {
     alignItems: 'center',
@@ -446,10 +466,18 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 12,
   },
+  addStudentButtonTablet: {
+    paddingHorizontal: 32,
+    paddingVertical: 16,
+    borderRadius: 14,
+  },
   addStudentButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  addStudentButtonTextTablet: {
+    fontSize: 18,
   },
   studentsList: {
     gap: 12,
@@ -464,6 +492,10 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     gap: 12,
   },
+  studentCardTablet: {
+    padding: 20,
+    borderRadius: 16,
+  },
   studentCardSelected: {
     borderColor: colors.primary,
   },
@@ -475,10 +507,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  studentAvatarTablet: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+  },
   studentInitial: {
     fontSize: 20,
     fontWeight: '600',
     color: '#fff',
+  },
+  studentInitialTablet: {
+    fontSize: 24,
   },
   studentInfo: {
     flex: 1,
@@ -487,6 +527,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
     color: colors.text,
+  },
+  studentNameDesktop: {
+    fontSize: 18,
   },
   studentGrade: {
     fontSize: 14,
@@ -498,6 +541,9 @@ const styles = StyleSheet.create({
     color: colors.text,
     marginBottom: 8,
   },
+  inputLabelDesktop: {
+    fontSize: 16,
+  },
   input: {
     backgroundColor: colors.surface,
     borderWidth: 1,
@@ -507,6 +553,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.text,
     marginBottom: 20,
+  },
+  inputTablet: {
+    padding: 18,
+    fontSize: 17,
+    borderRadius: 14,
   },
   textArea: {
     backgroundColor: colors.surface,
@@ -519,6 +570,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     minHeight: 100,
     textAlignVertical: 'top',
+  },
+  textAreaTablet: {
+    padding: 18,
+    fontSize: 17,
+    borderRadius: 14,
+    minHeight: 120,
   },
   checkboxRow: {
     flexDirection: 'row',
@@ -545,6 +602,10 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
     lineHeight: 20,
   },
+  checkboxLabelDesktop: {
+    fontSize: 15,
+    lineHeight: 22,
+  },
   summaryCard: {
     backgroundColor: colors.surface,
     borderRadius: 16,
@@ -552,6 +613,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     marginBottom: 16,
+  },
+  summaryCardTablet: {
+    borderRadius: 20,
+    padding: 24,
   },
   summaryRow: {
     flexDirection: 'row',
@@ -568,10 +633,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.textMuted,
   },
+  summaryLabelDesktop: {
+    fontSize: 16,
+  },
   summaryValue: {
     fontSize: 14,
     fontWeight: '500',
     color: colors.text,
+  },
+  summaryValueDesktop: {
+    fontSize: 16,
   },
   summaryLabelTotal: {
     fontSize: 16,
@@ -583,6 +654,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: colors.primary,
   },
+  summaryValueTotalDesktop: {
+    fontSize: 28,
+  },
   paymentNote: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -592,16 +666,27 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: 24,
   },
+  paymentNoteTablet: {
+    padding: 16,
+    borderRadius: 14,
+  },
   paymentNoteText: {
     flex: 1,
     fontSize: 13,
     color: colors.primaryDark,
+  },
+  paymentNoteTextDesktop: {
+    fontSize: 14,
   },
   primaryButton: {
     backgroundColor: colors.primary,
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
+  },
+  primaryButtonTablet: {
+    borderRadius: 14,
+    padding: 18,
   },
   buttonDisabled: {
     backgroundColor: colors.gray300,
@@ -610,5 +695,8 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  primaryButtonTextTablet: {
+    fontSize: 18,
   },
 });
