@@ -333,17 +333,51 @@ export default function TutorOnboarding() {
   const renderStep4 = () => (
     <View style={styles.stepContent}>
       <Text style={[styles.stepTitle, isDesktop && styles.stepTitleDesktop]}>Set your pricing</Text>
-      <Text style={[styles.stepSubtitle, isDesktop && styles.stepSubtitleDesktop]}>How much do you charge per lesson?</Text>
+      <Text style={[styles.stepSubtitle, isDesktop && styles.stepSubtitleDesktop]}>Where will you receive payments?</Text>
 
-      <Text style={[styles.inputLabel, isDesktop && styles.inputLabelDesktop]}>Hourly rate ($)</Text>
+      {/* Payout Country Selection */}
+      <Text style={[styles.inputLabel, isDesktop && styles.inputLabelDesktop]}>Payout Country</Text>
+      <View style={[styles.countryOptions, isTablet && styles.countryOptionsTablet]}>
+        {PAYOUT_COUNTRIES.map((country) => (
+          <TouchableOpacity
+            key={country.id}
+            style={[
+              styles.countryCard,
+              isTablet && styles.countryCardTablet,
+              payoutCountry === country.id && styles.countryCardSelected,
+            ]}
+            onPress={() => {
+              setPayoutCountry(country.id);
+              // Set default price based on country
+              if (country.id === 'IN') {
+                setBasePrice('500'); // Default INR price
+              } else {
+                setBasePrice('50'); // Default USD price
+              }
+            }}
+          >
+            <Text style={styles.countryFlag}>{country.flag}</Text>
+            <Text style={[styles.countryName, payoutCountry === country.id && styles.countryNameSelected]}>
+              {country.name}
+            </Text>
+            <Text style={[styles.countryCurrency, payoutCountry === country.id && styles.countryCurrencySelected]}>
+              {country.symbol} {country.currency}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      <Text style={[styles.inputLabel, isDesktop && styles.inputLabelDesktop]}>
+        Hourly rate ({currencySymbol})
+      </Text>
       <View style={[styles.priceInputContainer, isTablet && styles.priceInputContainerTablet]}>
-        <Text style={[styles.dollarSign, isDesktop && styles.dollarSignDesktop]}>$</Text>
+        <Text style={[styles.dollarSign, isDesktop && styles.dollarSignDesktop]}>{currencySymbol}</Text>
         <TextInput
           style={[styles.priceInput, isDesktop && styles.priceInputDesktop]}
           value={basePrice}
           onChangeText={setBasePrice}
           keyboardType="numeric"
-          placeholder="50"
+          placeholder={payoutCountry === 'IN' ? '500' : '50'}
           placeholderTextColor={colors.textMuted}
         />
         <Text style={styles.perHour}>/hour</Text>
