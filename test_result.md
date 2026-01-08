@@ -225,6 +225,90 @@ backend:
         agent: "testing"
         comment: "Categories endpoint working correctly. Returns structured data with categories, levels, and modalities for the platform."
 
+  - task: "Market Configuration API (MKT-01)"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "All market configuration endpoints working correctly. GET /api/markets returns US_USD and IN_INR markets. Individual market endpoints return proper market details with currency info. Invalid market requests properly return 404."
+
+  - task: "Geo Detection API (MKT-02)"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "Geo detection endpoint working correctly. GET /api/geo/detect returns detected country (US), suggested market (US_USD), IP address, and detection source (ip-api). Proper fallback to US market for localhost/private IPs."
+
+  - task: "Consumer Market Selection (MKT-02)"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "Consumer market selection flow working perfectly. New consumers show needs_selection: true initially. POST /api/me/market successfully sets market to US_USD. GET /api/me/market after selection shows correct market_id and needs_selection: false."
+
+  - task: "Provider Market Selection (MKT-03)"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "Provider market selection working correctly. Tutor registration and profile creation successful. POST /api/providers/market with payout_country 'IN' correctly sets market to IN_INR. GET /api/providers/market returns correct market_id and payout_country."
+
+  - task: "Pricing Policies API (MKT-06)"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "Pricing policies endpoints working correctly. Both GET /api/pricing-policies/US_USD and GET /api/pricing-policies/IN_INR return proper pricing policies with market_id and trial_days (90 days) configuration."
+
+  - task: "Search with Market Filter (MKT-04)"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "Tutor search with market filtering working correctly. As US consumer, GET /api/tutors/search returns only US market tutors (currently 0 tutors as expected since new profiles are pending approval). Market filtering logic is properly implemented."
+
+  - task: "Admin Market Endpoints"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "Admin market endpoints working correctly. GET /api/admin/markets returns 2 markets with comprehensive stats including tutor counts, consumer counts, bookings, and revenue. GET /api/admin/analytics/markets also implemented and returning analytics data."
+
 frontend:
   # No frontend testing performed as per instructions
 
