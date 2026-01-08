@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   FlatList,
+  useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
@@ -53,12 +54,18 @@ interface TimeSlot {
 export default function TutorProfileScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { width } = useWindowDimensions();
   const [tutor, setTutor] = useState<TutorProfile | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [slots, setSlots] = useState<TimeSlot[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
+
+  // Responsive breakpoints
+  const isTablet = width >= 768;
+  const isDesktop = width >= 1024;
+  const contentMaxWidth = isDesktop ? 960 : isTablet ? 720 : undefined;
 
   useEffect(() => {
     loadTutorData();
@@ -124,7 +131,11 @@ export default function TutorProfileScreen() {
           const isSelected = format(item, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd');
           return (
             <TouchableOpacity
-              style={[styles.dateItem, isSelected && styles.dateItemSelected]}
+              style={[
+                styles.dateItem,
+                isTablet && styles.dateItemTablet,
+                isSelected && styles.dateItemSelected,
+              ]}
               onPress={() => {
                 setSelectedDate(item);
                 setSelectedSlot(null);
@@ -133,7 +144,7 @@ export default function TutorProfileScreen() {
               <Text style={[styles.dateDayName, isSelected && styles.dateTextSelected]}>
                 {format(item, 'EEE')}
               </Text>
-              <Text style={[styles.dateDay, isSelected && styles.dateTextSelected]}>
+              <Text style={[styles.dateDay, isTablet && styles.dateDayTablet, isSelected && styles.dateTextSelected]}>
                 {format(item, 'd')}
               </Text>
             </TouchableOpacity>
@@ -160,13 +171,17 @@ export default function TutorProfileScreen() {
     }
 
     return (
-      <View style={styles.slotsGrid}>
+      <View style={[styles.slotsGrid, isTablet && styles.slotsGridTablet]}>
         {daySlots.map((slot) => {
           const isSelected = selectedSlot?.start_at === slot.start_at;
           return (
             <TouchableOpacity
               key={slot.start_at}
-              style={[styles.slotItem, isSelected && styles.slotItemSelected]}
+              style={[
+                styles.slotItem,
+                isTablet && styles.slotItemTablet,
+                isSelected && styles.slotItemSelected,
+              ]}
               onPress={() => setSelectedSlot(slot)}
             >
               <Text style={[styles.slotText, isSelected && styles.slotTextSelected]}>
@@ -201,139 +216,159 @@ export default function TutorProfileScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={24} color={colors.text} />
-          </TouchableOpacity>
-        </View>
-
-        {/* Profile Card */}
-        <View style={styles.profileCard}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>
-              {tutor.user_name?.charAt(0)?.toUpperCase() || 'T'}
-            </Text>
+      <ScrollView
+        contentContainerStyle={[
+          styles.scrollContent,
+          isTablet && styles.scrollContentTablet,
+        ]}
+      >
+        <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
+          {/* Header */}
+          <View style={styles.header}>
+            <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+              <Ionicons name="arrow-back" size={24} color={colors.text} />
+            </TouchableOpacity>
           </View>
-          <Text style={styles.tutorName}>{tutor.user_name}</Text>
-          <View style={styles.ratingRow}>
-            <Ionicons name="star" size={18} color={colors.accent} />
-            <Text style={styles.ratingText}>
-              {tutor.rating_avg > 0
-                ? `${tutor.rating_avg.toFixed(1)} (${tutor.rating_count} reviews)`
-                : 'New Tutor'}
-            </Text>
-          </View>
-          <View style={styles.tagsRow}>
-            {tutor.modality.map((m) => (
-              <View key={m} style={styles.tag}>
-                <Ionicons
-                  name={m === 'online' ? 'videocam' : 'location'}
-                  size={14}
-                  color={colors.primary}
-                />
-                <Text style={styles.tagText}>{m === 'online' ? 'Online' : 'In-Person'}</Text>
-              </View>
-            ))}
-          </View>
-          <Text style={styles.priceText}>${tutor.base_price}/hr</Text>
-        </View>
 
-        {/* About */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>About</Text>
-          <Text style={styles.bioText}>{tutor.bio}</Text>
-        </View>
-
-        {/* Subjects */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Subjects</Text>
-          <View style={styles.chipsList}>
-            {tutor.subjects.map((s) => (
-              <View key={s} style={styles.chip}>
-                <Text style={styles.chipText}>{s}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
-
-        {/* Levels */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Levels Taught</Text>
-          <View style={styles.chipsList}>
-            {tutor.levels.map((l) => (
-              <View key={l} style={styles.chip}>
-                <Text style={styles.chipText}>{l.replace('_', ' ')}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
-
-        {/* Policies */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Policies</Text>
-          <View style={styles.policyItem}>
-            <Ionicons name="time-outline" size={18} color={colors.textMuted} />
-            <Text style={styles.policyText}>
-              Cancel {tutor.policies.cancel_window_hours}h before for full refund
-            </Text>
-          </View>
-          <View style={styles.policyItem}>
-            <Ionicons name="alert-circle-outline" size={18} color={colors.textMuted} />
-            <Text style={styles.policyText}>{tutor.policies.no_show_policy}</Text>
-          </View>
-        </View>
-
-        {/* Availability */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Book a Session</Text>
-          {renderDateSelector()}
-          {renderSlots()}
-        </View>
-
-        {/* Reviews */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Reviews ({reviews.length})</Text>
-          {reviews.length === 0 ? (
-            <Text style={styles.noReviewsText}>No reviews yet</Text>
-          ) : (
-            reviews.slice(0, 5).map((review) => (
-              <View key={review.review_id} style={styles.reviewCard}>
-                <View style={styles.reviewHeader}>
-                  <Text style={styles.reviewerName}>{review.student_name}</Text>
-                  <View style={styles.reviewRating}>
-                    <Ionicons name="star" size={14} color={colors.accent} />
-                    <Text style={styles.reviewRatingText}>{review.rating}</Text>
-                  </View>
+          {/* Profile Card */}
+          <View style={[styles.profileCard, isTablet && styles.profileCardTablet]}>
+            <View style={[styles.avatar, isDesktop && styles.avatarDesktop]}>
+              <Text style={[styles.avatarText, isDesktop && styles.avatarTextDesktop]}>
+                {tutor.user_name?.charAt(0)?.toUpperCase() || 'T'}
+              </Text>
+            </View>
+            <Text style={[styles.tutorName, isDesktop && styles.tutorNameDesktop]}>{tutor.user_name}</Text>
+            <View style={styles.ratingRow}>
+              <Ionicons name="star" size={18} color={colors.accent} />
+              <Text style={styles.ratingText}>
+                {tutor.rating_avg > 0
+                  ? `${tutor.rating_avg.toFixed(1)} (${tutor.rating_count} reviews)`
+                  : 'New Tutor'}
+              </Text>
+            </View>
+            <View style={styles.tagsRow}>
+              {tutor.modality.map((m) => (
+                <View key={m} style={styles.tag}>
+                  <Ionicons
+                    name={m === 'online' ? 'videocam' : 'location'}
+                    size={14}
+                    color={colors.primary}
+                  />
+                  <Text style={styles.tagText}>{m === 'online' ? 'Online' : 'In-Person'}</Text>
                 </View>
-                {review.comment && (
-                  <Text style={styles.reviewComment}>{review.comment}</Text>
-                )}
-                <Text style={styles.reviewDate}>
-                  {format(parseISO(review.created_at), 'MMM d, yyyy')}
-                </Text>
+              ))}
+            </View>
+            <Text style={[styles.priceText, isDesktop && styles.priceTextDesktop]}>${tutor.base_price}/hr</Text>
+          </View>
+
+          {/* Two Column Layout for Tablet/Desktop */}
+          <View style={isTablet ? styles.twoColumnLayout : undefined}>
+            <View style={isTablet ? styles.leftColumn : undefined}>
+              {/* About */}
+              <View style={[styles.section, isTablet && styles.sectionTablet]}>
+                <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>About</Text>
+                <Text style={[styles.bioText, isDesktop && styles.bioTextDesktop]}>{tutor.bio}</Text>
               </View>
-            ))
-          )}
+
+              {/* Subjects */}
+              <View style={[styles.section, isTablet && styles.sectionTablet]}>
+                <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>Subjects</Text>
+                <View style={styles.chipsList}>
+                  {tutor.subjects.map((s) => (
+                    <View key={s} style={[styles.chip, isTablet && styles.chipTablet]}>
+                      <Text style={styles.chipText}>{s}</Text>
+                    </View>
+                  ))}
+                </View>
+              </View>
+
+              {/* Levels */}
+              <View style={[styles.section, isTablet && styles.sectionTablet]}>
+                <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>Levels Taught</Text>
+                <View style={styles.chipsList}>
+                  {tutor.levels.map((l) => (
+                    <View key={l} style={[styles.chip, isTablet && styles.chipTablet]}>
+                      <Text style={styles.chipText}>{l.replace('_', ' ')}</Text>
+                    </View>
+                  ))}
+                </View>
+              </View>
+
+              {/* Policies */}
+              <View style={[styles.section, isTablet && styles.sectionTablet]}>
+                <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>Policies</Text>
+                <View style={styles.policyItem}>
+                  <Ionicons name="time-outline" size={18} color={colors.textMuted} />
+                  <Text style={styles.policyText}>
+                    Cancel {tutor.policies.cancel_window_hours}h before for full refund
+                  </Text>
+                </View>
+                <View style={styles.policyItem}>
+                  <Ionicons name="alert-circle-outline" size={18} color={colors.textMuted} />
+                  <Text style={styles.policyText}>{tutor.policies.no_show_policy}</Text>
+                </View>
+              </View>
+            </View>
+
+            <View style={isTablet ? styles.rightColumn : undefined}>
+              {/* Availability */}
+              <View style={[styles.section, isTablet && styles.sectionTablet, isTablet && styles.bookingCard]}>
+                <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>Book a Session</Text>
+                {renderDateSelector()}
+                {renderSlots()}
+              </View>
+
+              {/* Reviews */}
+              <View style={[styles.section, isTablet && styles.sectionTablet]}>
+                <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>Reviews ({reviews.length})</Text>
+                {reviews.length === 0 ? (
+                  <Text style={styles.noReviewsText}>No reviews yet</Text>
+                ) : (
+                  reviews.slice(0, 5).map((review) => (
+                    <View key={review.review_id} style={[styles.reviewCard, isTablet && styles.reviewCardTablet]}>
+                      <View style={styles.reviewHeader}>
+                        <Text style={styles.reviewerName}>{review.student_name}</Text>
+                        <View style={styles.reviewRating}>
+                          <Ionicons name="star" size={14} color={colors.accent} />
+                          <Text style={styles.reviewRatingText}>{review.rating}</Text>
+                        </View>
+                      </View>
+                      {review.comment && (
+                        <Text style={styles.reviewComment}>{review.comment}</Text>
+                      )}
+                      <Text style={styles.reviewDate}>
+                        {format(parseISO(review.created_at), 'MMM d, yyyy')}
+                      </Text>
+                    </View>
+                  ))
+                )}
+              </View>
+            </View>
+          </View>
         </View>
       </ScrollView>
 
       {/* Book Button */}
-      <View style={styles.bookBar}>
-        <View style={styles.bookBarInfo}>
-          <Text style={styles.bookBarPrice}>${tutor.base_price}</Text>
-          <Text style={styles.bookBarDuration}>/ {tutor.duration_minutes} min</Text>
+      <View style={[styles.bookBar, isTablet && styles.bookBarTablet]}>
+        <View style={[styles.bookBarInner, contentMaxWidth ? { maxWidth: contentMaxWidth, width: '100%' } : undefined]}>
+          <View style={styles.bookBarInfo}>
+            <Text style={[styles.bookBarPrice, isDesktop && styles.bookBarPriceDesktop]}>${tutor.base_price}</Text>
+            <Text style={styles.bookBarDuration}>/ {tutor.duration_minutes} min</Text>
+          </View>
+          <TouchableOpacity
+            style={[
+              styles.bookButton,
+              isTablet && styles.bookButtonTablet,
+              !selectedSlot && styles.bookButtonDisabled,
+            ]}
+            onPress={handleBook}
+            disabled={!selectedSlot}
+          >
+            <Text style={[styles.bookButtonText, isTablet && styles.bookButtonTextTablet]}>
+              {selectedSlot ? 'Book Now' : 'Select a Time'}
+            </Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={[styles.bookButton, !selectedSlot && styles.bookButtonDisabled]}
-          onPress={handleBook}
-          disabled={!selectedSlot}
-        >
-          <Text style={styles.bookButtonText}>
-            {selectedSlot ? 'Book Now' : 'Select a Time'}
-          </Text>
-        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -352,6 +387,12 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: 100,
   },
+  scrollContentTablet: {
+    paddingHorizontal: 24,
+  },
+  contentWrapper: {
+    flex: 1,
+  },
   header: {
     padding: 16,
   },
@@ -368,6 +409,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 24,
   },
+  profileCardTablet: {
+    backgroundColor: colors.surface,
+    borderRadius: 20,
+    padding: 32,
+    marginBottom: 24,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
   avatar: {
     width: 96,
     height: 96,
@@ -377,15 +426,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
   },
+  avatarDesktop: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+  },
   avatarText: {
     fontSize: 40,
     fontWeight: '600',
     color: colors.primary,
   },
+  avatarTextDesktop: {
+    fontSize: 48,
+  },
   tutorName: {
     fontSize: 24,
     fontWeight: 'bold',
     color: colors.text,
+  },
+  tutorNameDesktop: {
+    fontSize: 28,
   },
   ratingRow: {
     flexDirection: 'row',
@@ -422,11 +482,37 @@ const styles = StyleSheet.create({
     color: colors.primary,
     marginTop: 16,
   },
+  priceTextDesktop: {
+    fontSize: 32,
+  },
+  twoColumnLayout: {
+    flexDirection: 'row',
+    gap: 24,
+  },
+  leftColumn: {
+    flex: 1,
+  },
+  rightColumn: {
+    flex: 1,
+  },
   section: {
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderTopWidth: 1,
     borderTopColor: colors.border,
+  },
+  sectionTablet: {
+    backgroundColor: colors.surface,
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderTopWidth: 1,
+  },
+  bookingCard: {
+    borderWidth: 2,
+    borderColor: colors.primary,
   },
   sectionTitle: {
     fontSize: 18,
@@ -434,10 +520,17 @@ const styles = StyleSheet.create({
     color: colors.text,
     marginBottom: 12,
   },
+  sectionTitleDesktop: {
+    fontSize: 20,
+  },
   bioText: {
     fontSize: 14,
     color: colors.textMuted,
     lineHeight: 22,
+  },
+  bioTextDesktop: {
+    fontSize: 16,
+    lineHeight: 26,
   },
   chipsList: {
     flexDirection: 'row',
@@ -449,6 +542,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 16,
+  },
+  chipTablet: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
   },
   chipText: {
     fontSize: 13,
@@ -480,6 +577,10 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     marginRight: 8,
   },
+  dateItemTablet: {
+    width: 64,
+    height: 72,
+  },
   dateItemSelected: {
     backgroundColor: colors.primary,
     borderColor: colors.primary,
@@ -493,6 +594,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: colors.text,
   },
+  dateDayTablet: {
+    fontSize: 20,
+  },
   dateTextSelected: {
     color: '#fff',
   },
@@ -501,6 +605,9 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 8,
   },
+  slotsGridTablet: {
+    gap: 12,
+  },
   slotItem: {
     paddingHorizontal: 16,
     paddingVertical: 10,
@@ -508,6 +615,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: colors.border,
+  },
+  slotItemTablet: {
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 10,
   },
   slotItemSelected: {
     backgroundColor: colors.primary,
@@ -536,6 +648,10 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     borderWidth: 1,
     borderColor: colors.border,
+  },
+  reviewCardTablet: {
+    backgroundColor: colors.gray100,
+    borderWidth: 0,
   },
   reviewHeader: {
     flexDirection: 'row',
@@ -578,11 +694,20 @@ const styles = StyleSheet.create({
     right: 0,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     padding: 16,
     backgroundColor: colors.surface,
     borderTopWidth: 1,
     borderTopColor: colors.border,
+  },
+  bookBarTablet: {
+    paddingHorizontal: 24,
+  },
+  bookBarInner: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   bookBarInfo: {
     flexDirection: 'row',
@@ -592,6 +717,9 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: colors.text,
+  },
+  bookBarPriceDesktop: {
+    fontSize: 28,
   },
   bookBarDuration: {
     fontSize: 14,
@@ -604,6 +732,11 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 12,
   },
+  bookButtonTablet: {
+    paddingHorizontal: 40,
+    paddingVertical: 16,
+    borderRadius: 14,
+  },
   bookButtonDisabled: {
     backgroundColor: colors.gray300,
   },
@@ -611,5 +744,8 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  bookButtonTextTablet: {
+    fontSize: 18,
   },
 });

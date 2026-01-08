@@ -11,6 +11,7 @@ import {
   Modal,
   KeyboardAvoidingView,
   Platform,
+  useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -28,6 +29,7 @@ interface Student {
 
 export default function StudentsScreen() {
   const router = useRouter();
+  const { width } = useWindowDimensions();
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
@@ -39,6 +41,12 @@ export default function StudentsScreen() {
   const [age, setAge] = useState('');
   const [grade, setGrade] = useState('');
   const [notes, setNotes] = useState('');
+
+  // Responsive breakpoints
+  const isTablet = width >= 768;
+  const isDesktop = width >= 1024;
+  const contentMaxWidth = isDesktop ? 800 : isTablet ? 680 : undefined;
+  const numColumns = isDesktop ? 2 : 1;
 
   useEffect(() => {
     loadStudents();
@@ -132,13 +140,25 @@ export default function StudentsScreen() {
     );
   };
 
-  const renderStudentCard = ({ item }: { item: Student }) => (
-    <View style={styles.studentCard}>
-      <View style={styles.studentAvatar}>
-        <Text style={styles.studentInitial}>{item.name.charAt(0).toUpperCase()}</Text>
+  const renderStudentCard = ({ item, index }: { item: Student; index: number }) => (
+    <View
+      style={[
+        styles.studentCard,
+        isTablet && styles.studentCardTablet,
+        isDesktop && {
+          marginRight: index % 2 === 0 ? 12 : 0,
+          marginLeft: index % 2 === 1 ? 12 : 0,
+          flex: 1,
+        },
+      ]}
+    >
+      <View style={[styles.studentAvatar, isTablet && styles.studentAvatarTablet]}>
+        <Text style={[styles.studentInitial, isTablet && styles.studentInitialTablet]}>
+          {item.name.charAt(0).toUpperCase()}
+        </Text>
       </View>
       <View style={styles.studentInfo}>
-        <Text style={styles.studentName}>{item.name}</Text>
+        <Text style={[styles.studentName, isDesktop && styles.studentNameDesktop]}>{item.name}</Text>
         <Text style={styles.studentMeta}>
           {[item.age && `${item.age} years`, item.grade && `Grade ${item.grade}`]
             .filter(Boolean)
@@ -146,11 +166,11 @@ export default function StudentsScreen() {
         </Text>
       </View>
       <View style={styles.studentActions}>
-        <TouchableOpacity style={styles.actionButton} onPress={() => openEditModal(item)}>
-          <Ionicons name="pencil" size={18} color={colors.primary} />
+        <TouchableOpacity style={[styles.actionButton, isTablet && styles.actionButtonTablet]} onPress={() => openEditModal(item)}>
+          <Ionicons name="pencil" size={isTablet ? 20 : 18} color={colors.primary} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.actionButton} onPress={() => handleDelete(item)}>
-          <Ionicons name="trash-outline" size={18} color={colors.error} />
+        <TouchableOpacity style={[styles.actionButton, isTablet && styles.actionButtonTablet]} onPress={() => handleDelete(item)}>
+          <Ionicons name="trash-outline" size={isTablet ? 20 : 18} color={colors.error} />
         </TouchableOpacity>
       </View>
     </View>
@@ -168,37 +188,41 @@ export default function StudentsScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color={colors.text} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>My Students</Text>
-        <TouchableOpacity style={styles.addButton} onPress={openAddModal}>
-          <Ionicons name="add" size={24} color={colors.primary} />
-        </TouchableOpacity>
-      </View>
-
-      {students.length === 0 ? (
-        <View style={styles.emptyContainer}>
-          <Ionicons name="people-outline" size={64} color={colors.textMuted} />
-          <Text style={styles.emptyTitle}>No students yet</Text>
-          <Text style={styles.emptyText}>
-            Add your children or students to easily book lessons for them.
-          </Text>
-          <TouchableOpacity style={styles.ctaButton} onPress={openAddModal}>
-            <Ionicons name="add" size={20} color="#fff" />
-            <Text style={styles.ctaButtonText}>Add Student</Text>
+      <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
+        {/* Header */}
+        <View style={[styles.header, isTablet && styles.headerTablet]}>
+          <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+            <Ionicons name="arrow-back" size={24} color={colors.text} />
+          </TouchableOpacity>
+          <Text style={[styles.headerTitle, isDesktop && styles.headerTitleDesktop]}>My Students</Text>
+          <TouchableOpacity style={[styles.addButton, isTablet && styles.addButtonTablet]} onPress={openAddModal}>
+            <Ionicons name="add" size={24} color={colors.primary} />
           </TouchableOpacity>
         </View>
-      ) : (
-        <FlatList
-          data={students}
-          renderItem={renderStudentCard}
-          keyExtractor={(item) => item.student_id}
-          contentContainerStyle={styles.listContent}
-        />
-      )}
+
+        {students.length === 0 ? (
+          <View style={styles.emptyContainer}>
+            <Ionicons name="people-outline" size={isTablet ? 80 : 64} color={colors.textMuted} />
+            <Text style={[styles.emptyTitle, isDesktop && styles.emptyTitleDesktop]}>No students yet</Text>
+            <Text style={[styles.emptyText, isDesktop && styles.emptyTextDesktop]}>
+              Add your children or students to easily book lessons for them.
+            </Text>
+            <TouchableOpacity style={[styles.ctaButton, isTablet && styles.ctaButtonTablet]} onPress={openAddModal}>
+              <Ionicons name="add" size={20} color="#fff" />
+              <Text style={[styles.ctaButtonText, isTablet && styles.ctaButtonTextTablet]}>Add Student</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <FlatList
+            data={students}
+            renderItem={renderStudentCard}
+            keyExtractor={(item) => item.student_id}
+            contentContainerStyle={[styles.listContent, isTablet && styles.listContentTablet]}
+            numColumns={numColumns}
+            key={numColumns}
+          />
+        )}
+      </View>
 
       {/* Add/Edit Modal */}
       <Modal
@@ -211,61 +235,65 @@ export default function StudentsScreen() {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.modalContainer}
         >
-          <View style={styles.modalHeader}>
-            <TouchableOpacity onPress={() => setModalVisible(false)}>
-              <Text style={styles.modalCancel}>Cancel</Text>
-            </TouchableOpacity>
-            <Text style={styles.modalTitle}>
-              {editingStudent ? 'Edit Student' : 'Add Student'}
-            </Text>
-            <TouchableOpacity onPress={handleSave} disabled={saving}>
-              {saving ? (
-                <ActivityIndicator size="small" color={colors.primary} />
-              ) : (
-                <Text style={styles.modalSave}>Save</Text>
-              )}
-            </TouchableOpacity>
-          </View>
+          <View style={[styles.modalContent, isTablet && styles.modalContentTablet]}>
+            <View style={[styles.modalInner, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
+              <View style={styles.modalHeader}>
+                <TouchableOpacity onPress={() => setModalVisible(false)}>
+                  <Text style={styles.modalCancel}>Cancel</Text>
+                </TouchableOpacity>
+                <Text style={[styles.modalTitle, isDesktop && styles.modalTitleDesktop]}>
+                  {editingStudent ? 'Edit Student' : 'Add Student'}
+                </Text>
+                <TouchableOpacity onPress={handleSave} disabled={saving}>
+                  {saving ? (
+                    <ActivityIndicator size="small" color={colors.primary} />
+                  ) : (
+                    <Text style={styles.modalSave}>Save</Text>
+                  )}
+                </TouchableOpacity>
+              </View>
 
-          <View style={styles.modalContent}>
-            <Text style={styles.inputLabel}>Name *</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Student's name"
-              placeholderTextColor={colors.textMuted}
-              value={name}
-              onChangeText={setName}
-            />
+              <View style={styles.formContent}>
+                <Text style={styles.inputLabel}>Name *</Text>
+                <TextInput
+                  style={[styles.input, isTablet && styles.inputTablet]}
+                  placeholder="Student's name"
+                  placeholderTextColor={colors.textMuted}
+                  value={name}
+                  onChangeText={setName}
+                />
 
-            <Text style={styles.inputLabel}>Age</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Age"
-              placeholderTextColor={colors.textMuted}
-              value={age}
-              onChangeText={setAge}
-              keyboardType="number-pad"
-            />
+                <Text style={styles.inputLabel}>Age</Text>
+                <TextInput
+                  style={[styles.input, isTablet && styles.inputTablet]}
+                  placeholder="Age"
+                  placeholderTextColor={colors.textMuted}
+                  value={age}
+                  onChangeText={setAge}
+                  keyboardType="number-pad"
+                />
 
-            <Text style={styles.inputLabel}>Grade</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="e.g., 5th, 8th, 10th"
-              placeholderTextColor={colors.textMuted}
-              value={grade}
-              onChangeText={setGrade}
-            />
+                <Text style={styles.inputLabel}>Grade</Text>
+                <TextInput
+                  style={[styles.input, isTablet && styles.inputTablet]}
+                  placeholder="e.g., 5th, 8th, 10th"
+                  placeholderTextColor={colors.textMuted}
+                  value={grade}
+                  onChangeText={setGrade}
+                />
 
-            <Text style={styles.inputLabel}>Notes</Text>
-            <TextInput
-              style={[styles.input, styles.textArea]}
-              placeholder="Any special needs or notes..."
-              placeholderTextColor={colors.textMuted}
-              value={notes}
-              onChangeText={setNotes}
-              multiline
-              numberOfLines={3}
-            />
+                <Text style={styles.inputLabel}>Notes</Text>
+                <TextInput
+                  style={[styles.input, styles.textArea, isTablet && styles.inputTablet]}
+                  placeholder="Any special needs or notes..."
+                  placeholderTextColor={colors.textMuted}
+                  value={notes}
+                  onChangeText={setNotes}
+                  multiline
+                  numberOfLines={3}
+                />
+              </View>
+            </View>
           </View>
         </KeyboardAvoidingView>
       </Modal>
@@ -283,11 +311,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  contentWrapper: {
+    flex: 1,
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 16,
+  },
+  headerTablet: {
+    paddingHorizontal: 24,
+    paddingVertical: 20,
   },
   backButton: {
     width: 40,
@@ -302,6 +337,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: colors.text,
   },
+  headerTitleDesktop: {
+    fontSize: 22,
+  },
   addButton: {
     width: 40,
     height: 40,
@@ -310,8 +348,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  addButtonTablet: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+  },
   listContent: {
     padding: 20,
+  },
+  listContentTablet: {
+    padding: 24,
   },
   studentCard: {
     flexDirection: 'row',
@@ -323,6 +369,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
+  studentCardTablet: {
+    padding: 20,
+    borderRadius: 20,
+  },
   studentAvatar: {
     width: 48,
     height: 48,
@@ -331,10 +381,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  studentAvatarTablet: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+  },
   studentInitial: {
     fontSize: 20,
     fontWeight: '600',
     color: '#fff',
+  },
+  studentInitialTablet: {
+    fontSize: 24,
   },
   studentInfo: {
     flex: 1,
@@ -344,6 +402,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: colors.text,
+  },
+  studentNameDesktop: {
+    fontSize: 18,
   },
   studentMeta: {
     fontSize: 14,
@@ -362,6 +423,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  actionButtonTablet: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+  },
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -374,12 +440,18 @@ const styles = StyleSheet.create({
     color: colors.text,
     marginTop: 16,
   },
+  emptyTitleDesktop: {
+    fontSize: 24,
+  },
   emptyText: {
     fontSize: 14,
     color: colors.textMuted,
     textAlign: 'center',
     marginTop: 8,
     marginBottom: 24,
+  },
+  emptyTextDesktop: {
+    fontSize: 16,
   },
   ctaButton: {
     flexDirection: 'row',
@@ -390,14 +462,31 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     gap: 8,
   },
+  ctaButtonTablet: {
+    paddingHorizontal: 32,
+    paddingVertical: 16,
+    borderRadius: 14,
+  },
   ctaButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
   },
+  ctaButtonTextTablet: {
+    fontSize: 18,
+  },
   modalContainer: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+  modalContent: {
+    flex: 1,
+  },
+  modalContentTablet: {
+    paddingHorizontal: 24,
+  },
+  modalInner: {
+    flex: 1,
   },
   modalHeader: {
     flexDirection: 'row',
@@ -416,12 +505,15 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: colors.text,
   },
+  modalTitleDesktop: {
+    fontSize: 22,
+  },
   modalSave: {
     fontSize: 16,
     fontWeight: '600',
     color: colors.primary,
   },
-  modalContent: {
+  formContent: {
     padding: 20,
   },
   inputLabel: {
@@ -439,6 +531,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.text,
     marginBottom: 20,
+  },
+  inputTablet: {
+    padding: 18,
+    fontSize: 17,
+    borderRadius: 14,
   },
   textArea: {
     minHeight: 100,

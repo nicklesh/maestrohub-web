@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   Alert,
   TextInput,
+  useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
@@ -48,6 +49,7 @@ const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
 export default function BookingDetailScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { width } = useWindowDimensions();
   const [booking, setBooking] = useState<Booking | null>(null);
   const [loading, setLoading] = useState(true);
   const [canceling, setCanceling] = useState(false);
@@ -55,6 +57,11 @@ export default function BookingDetailScreen() {
   const [rating, setRating] = useState(5);
   const [reviewComment, setReviewComment] = useState('');
   const [submittingReview, setSubmittingReview] = useState(false);
+
+  // Responsive breakpoints
+  const isTablet = width >= 768;
+  const isDesktop = width >= 1024;
+  const contentMaxWidth = isDesktop ? 640 : isTablet ? 560 : undefined;
 
   useEffect(() => {
     loadBooking();
@@ -141,166 +148,173 @@ export default function BookingDetailScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={24} color={colors.text} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Booking Details</Text>
-          <View style={styles.backButton} />
-        </View>
-
-        {/* Status Badge */}
-        <View style={styles.statusContainer}>
-          <View style={[styles.statusBadge, { backgroundColor: statusStyle.bg }]}>
-            <Text style={[styles.statusText, { color: statusStyle.text }]}>{statusText}</Text>
+      <ScrollView
+        contentContainerStyle={[
+          styles.scrollContent,
+          isTablet && styles.scrollContentTablet,
+        ]}
+      >
+        <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
+          {/* Header */}
+          <View style={styles.header}>
+            <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+              <Ionicons name="arrow-back" size={24} color={colors.text} />
+            </TouchableOpacity>
+            <Text style={[styles.headerTitle, isDesktop && styles.headerTitleDesktop]}>Booking Details</Text>
+            <View style={styles.backButton} />
           </View>
-        </View>
 
-        {/* Date/Time Card */}
-        <View style={styles.card}>
-          <View style={styles.dateTimeRow}>
-            <View style={styles.dateContainer}>
-              <Ionicons name="calendar-outline" size={24} color={colors.primary} />
-              <View style={styles.dateInfo}>
-                <Text style={styles.dateLabel}>Date</Text>
-                <Text style={styles.dateValue}>
-                  {format(parseISO(booking.start_at), 'EEEE, MMMM d, yyyy')}
-                </Text>
-              </View>
+          {/* Status Badge */}
+          <View style={styles.statusContainer}>
+            <View style={[styles.statusBadge, { backgroundColor: statusStyle.bg }]}>
+              <Text style={[styles.statusText, { color: statusStyle.text }]}>{statusText}</Text>
             </View>
           </View>
-          <View style={styles.dateTimeRow}>
-            <View style={styles.dateContainer}>
-              <Ionicons name="time-outline" size={24} color={colors.primary} />
-              <View style={styles.dateInfo}>
-                <Text style={styles.dateLabel}>Time</Text>
-                <Text style={styles.dateValue}>
-                  {format(parseISO(booking.start_at), 'h:mm a')} - {format(parseISO(booking.end_at), 'h:mm a')}
-                </Text>
-              </View>
-            </View>
-          </View>
-        </View>
 
-        {/* Tutor Info */}
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Tutor</Text>
-          <TouchableOpacity
-            style={styles.personRow}
-            onPress={() => router.push(`/(consumer)/tutor/${booking.tutor_id}`)}
-          >
-            <View style={styles.personAvatar}>
-              <Text style={styles.personInitial}>
-                {booking.tutor_name?.charAt(0)?.toUpperCase() || 'T'}
-              </Text>
-            </View>
-            <Text style={styles.personName}>{booking.tutor_name}</Text>
-            <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
-          </TouchableOpacity>
-        </View>
-
-        {/* Student Info */}
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Student</Text>
-          <View style={styles.personRow}>
-            <View style={[styles.personAvatar, { backgroundColor: colors.accent }]}>
-              <Text style={styles.personInitial}>
-                {booking.student_name?.charAt(0)?.toUpperCase() || 'S'}
-              </Text>
-            </View>
-            <Text style={styles.personName}>{booking.student_name}</Text>
-          </View>
-        </View>
-
-        {/* Intake Info */}
-        {booking.intake_response && (
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>Lesson Goals</Text>
-            <Text style={styles.intakeText}>{booking.intake_response.goals}</Text>
-            <Text style={styles.intakeLabel}>Level: {booking.intake_response.current_level}</Text>
-            {booking.intake_response.notes && (
-              <Text style={styles.intakeText}>{booking.intake_response.notes}</Text>
-            )}
-          </View>
-        )}
-
-        {/* Price */}
-        <View style={styles.card}>
-          <View style={styles.priceRow}>
-            <Text style={styles.priceLabel}>Total Paid</Text>
-            <Text style={styles.priceValue}>${booking.price_snapshot}</Text>
-          </View>
-        </View>
-
-        {/* Actions */}
-        {isUpcoming && (
-          <TouchableOpacity
-            style={styles.cancelButton}
-            onPress={handleCancel}
-            disabled={canceling}
-          >
-            {canceling ? (
-              <ActivityIndicator color={colors.error} />
-            ) : (
-              <>
-                <Ionicons name="close-circle-outline" size={20} color={colors.error} />
-                <Text style={styles.cancelButtonText}>Cancel Booking</Text>
-              </>
-            )}
-          </TouchableOpacity>
-        )}
-
-        {/* Review Section */}
-        {canReview && (
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>Leave a Review</Text>
-            {showReview ? (
-              <View>
-                <View style={styles.ratingRow}>
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <TouchableOpacity key={star} onPress={() => setRating(star)}>
-                      <Ionicons
-                        name={star <= rating ? 'star' : 'star-outline'}
-                        size={32}
-                        color={colors.accent}
-                      />
-                    </TouchableOpacity>
-                  ))}
+          {/* Date/Time Card */}
+          <View style={[styles.card, isTablet && styles.cardTablet]}>
+            <View style={styles.dateTimeRow}>
+              <View style={styles.dateContainer}>
+                <Ionicons name="calendar-outline" size={24} color={colors.primary} />
+                <View style={styles.dateInfo}>
+                  <Text style={styles.dateLabel}>Date</Text>
+                  <Text style={[styles.dateValue, isDesktop && styles.dateValueDesktop]}>
+                    {format(parseISO(booking.start_at), 'EEEE, MMMM d, yyyy')}
+                  </Text>
                 </View>
-                <TextInput
-                  style={styles.reviewInput}
-                  placeholder="Share your experience (optional)"
-                  placeholderTextColor={colors.textMuted}
-                  value={reviewComment}
-                  onChangeText={setReviewComment}
-                  multiline
-                  numberOfLines={3}
-                />
-                <TouchableOpacity
-                  style={styles.submitReviewButton}
-                  onPress={handleSubmitReview}
-                  disabled={submittingReview}
-                >
-                  {submittingReview ? (
-                    <ActivityIndicator color="#fff" />
-                  ) : (
-                    <Text style={styles.submitReviewText}>Submit Review</Text>
-                  )}
-                </TouchableOpacity>
               </View>
-            ) : (
-              <TouchableOpacity
-                style={styles.writeReviewButton}
-                onPress={() => setShowReview(true)}
-              >
-                <Ionicons name="create-outline" size={20} color={colors.primary} />
-                <Text style={styles.writeReviewText}>Write a Review</Text>
-              </TouchableOpacity>
-            )}
+            </View>
+            <View style={styles.dateTimeRow}>
+              <View style={styles.dateContainer}>
+                <Ionicons name="time-outline" size={24} color={colors.primary} />
+                <View style={styles.dateInfo}>
+                  <Text style={styles.dateLabel}>Time</Text>
+                  <Text style={[styles.dateValue, isDesktop && styles.dateValueDesktop]}>
+                    {format(parseISO(booking.start_at), 'h:mm a')} - {format(parseISO(booking.end_at), 'h:mm a')}
+                  </Text>
+                </View>
+              </View>
+            </View>
           </View>
-        )}
+
+          {/* Tutor Info */}
+          <View style={[styles.card, isTablet && styles.cardTablet]}>
+            <Text style={styles.cardTitle}>Tutor</Text>
+            <TouchableOpacity
+              style={styles.personRow}
+              onPress={() => router.push(`/(consumer)/tutor/${booking.tutor_id}`)}
+            >
+              <View style={styles.personAvatar}>
+                <Text style={styles.personInitial}>
+                  {booking.tutor_name?.charAt(0)?.toUpperCase() || 'T'}
+                </Text>
+              </View>
+              <Text style={[styles.personName, isDesktop && styles.personNameDesktop]}>{booking.tutor_name}</Text>
+              <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
+          </View>
+
+          {/* Student Info */}
+          <View style={[styles.card, isTablet && styles.cardTablet]}>
+            <Text style={styles.cardTitle}>Student</Text>
+            <View style={styles.personRow}>
+              <View style={[styles.personAvatar, { backgroundColor: colors.accent }]}>
+                <Text style={styles.personInitial}>
+                  {booking.student_name?.charAt(0)?.toUpperCase() || 'S'}
+                </Text>
+              </View>
+              <Text style={[styles.personName, isDesktop && styles.personNameDesktop]}>{booking.student_name}</Text>
+            </View>
+          </View>
+
+          {/* Intake Info */}
+          {booking.intake_response && (
+            <View style={[styles.card, isTablet && styles.cardTablet]}>
+              <Text style={styles.cardTitle}>Lesson Goals</Text>
+              <Text style={[styles.intakeText, isDesktop && styles.intakeTextDesktop]}>{booking.intake_response.goals}</Text>
+              <Text style={styles.intakeLabel}>Level: {booking.intake_response.current_level}</Text>
+              {booking.intake_response.notes && (
+                <Text style={[styles.intakeText, isDesktop && styles.intakeTextDesktop]}>{booking.intake_response.notes}</Text>
+              )}
+            </View>
+          )}
+
+          {/* Price */}
+          <View style={[styles.card, isTablet && styles.cardTablet]}>
+            <View style={styles.priceRow}>
+              <Text style={[styles.priceLabel, isDesktop && styles.priceLabelDesktop]}>Total Paid</Text>
+              <Text style={[styles.priceValue, isDesktop && styles.priceValueDesktop]}>${booking.price_snapshot}</Text>
+            </View>
+          </View>
+
+          {/* Actions */}
+          {isUpcoming && (
+            <TouchableOpacity
+              style={[styles.cancelButton, isTablet && styles.cancelButtonTablet]}
+              onPress={handleCancel}
+              disabled={canceling}
+            >
+              {canceling ? (
+                <ActivityIndicator color={colors.error} />
+              ) : (
+                <>
+                  <Ionicons name="close-circle-outline" size={20} color={colors.error} />
+                  <Text style={styles.cancelButtonText}>Cancel Booking</Text>
+                </>
+              )}
+            </TouchableOpacity>
+          )}
+
+          {/* Review Section */}
+          {canReview && (
+            <View style={[styles.card, isTablet && styles.cardTablet]}>
+              <Text style={styles.cardTitle}>Leave a Review</Text>
+              {showReview ? (
+                <View>
+                  <View style={styles.ratingRow}>
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <TouchableOpacity key={star} onPress={() => setRating(star)}>
+                        <Ionicons
+                          name={star <= rating ? 'star' : 'star-outline'}
+                          size={isTablet ? 40 : 32}
+                          color={colors.accent}
+                        />
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                  <TextInput
+                    style={[styles.reviewInput, isTablet && styles.reviewInputTablet]}
+                    placeholder="Share your experience (optional)"
+                    placeholderTextColor={colors.textMuted}
+                    value={reviewComment}
+                    onChangeText={setReviewComment}
+                    multiline
+                    numberOfLines={3}
+                  />
+                  <TouchableOpacity
+                    style={[styles.submitReviewButton, isTablet && styles.submitReviewButtonTablet]}
+                    onPress={handleSubmitReview}
+                    disabled={submittingReview}
+                  >
+                    {submittingReview ? (
+                      <ActivityIndicator color="#fff" />
+                    ) : (
+                      <Text style={[styles.submitReviewText, isTablet && styles.submitReviewTextTablet]}>Submit Review</Text>
+                    )}
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <TouchableOpacity
+                  style={[styles.writeReviewButton, isTablet && styles.writeReviewButtonTablet]}
+                  onPress={() => setShowReview(true)}
+                >
+                  <Ionicons name="create-outline" size={20} color={colors.primary} />
+                  <Text style={styles.writeReviewText}>Write a Review</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          )}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -318,6 +332,12 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingBottom: 32,
+  },
+  scrollContentTablet: {
+    paddingVertical: 32,
+  },
+  contentWrapper: {
+    flex: 1,
   },
   header: {
     flexDirection: 'row',
@@ -337,6 +357,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: colors.text,
+  },
+  headerTitleDesktop: {
+    fontSize: 22,
   },
   statusContainer: {
     alignItems: 'center',
@@ -359,6 +382,10 @@ const styles = StyleSheet.create({
     padding: 20,
     borderWidth: 1,
     borderColor: colors.border,
+  },
+  cardTablet: {
+    borderRadius: 20,
+    padding: 24,
   },
   cardTitle: {
     fontSize: 14,
@@ -389,6 +416,9 @@ const styles = StyleSheet.create({
     color: colors.text,
     marginTop: 2,
   },
+  dateValueDesktop: {
+    fontSize: 18,
+  },
   personRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -413,11 +443,18 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: colors.text,
   },
+  personNameDesktop: {
+    fontSize: 18,
+  },
   intakeText: {
     fontSize: 14,
     color: colors.text,
     lineHeight: 22,
     marginBottom: 8,
+  },
+  intakeTextDesktop: {
+    fontSize: 16,
+    lineHeight: 26,
   },
   intakeLabel: {
     fontSize: 14,
@@ -433,10 +470,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.text,
   },
+  priceLabelDesktop: {
+    fontSize: 18,
+  },
   priceValue: {
     fontSize: 24,
     fontWeight: 'bold',
     color: colors.primary,
+  },
+  priceValueDesktop: {
+    fontSize: 28,
   },
   cancelButton: {
     flexDirection: 'row',
@@ -447,6 +490,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.errorLight,
     borderRadius: 12,
     gap: 8,
+  },
+  cancelButtonTablet: {
+    padding: 18,
+    borderRadius: 14,
   },
   cancelButtonText: {
     fontSize: 16,
@@ -469,16 +516,29 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
     marginBottom: 16,
   },
+  reviewInputTablet: {
+    borderRadius: 14,
+    padding: 20,
+    fontSize: 17,
+    minHeight: 120,
+  },
   submitReviewButton: {
     backgroundColor: colors.primary,
     borderRadius: 12,
     padding: 14,
     alignItems: 'center',
   },
+  submitReviewButtonTablet: {
+    padding: 16,
+    borderRadius: 14,
+  },
   submitReviewText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  submitReviewTextTablet: {
+    fontSize: 18,
   },
   writeReviewButton: {
     flexDirection: 'row',
@@ -488,6 +548,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primaryLight,
     borderRadius: 12,
     gap: 8,
+  },
+  writeReviewButtonTablet: {
+    padding: 16,
+    borderRadius: 14,
   },
   writeReviewText: {
     color: colors.primary,
