@@ -1332,6 +1332,452 @@ async def get_categories():
         ]
     }
 
+# ============== MARKET ROUTES ==============
+
+@api_router.get("/markets")
+async def get_markets():
+    """Get all available markets"""
+    markets = []
+    for market_id, config in MARKETS_CONFIG.items():
+        if config["is_enabled"]:
+            markets.append(Market(**config))
+    return {"markets": markets}
+
+@api_router.get("/markets/{market_id}")
+async def get_market(market_id: str):
+    """Get a specific market configuration"""
+    if market_id not in MARKETS_CONFIG:
+        raise HTTPException(status_code=404, detail="Market not found")
+    
+    config = MARKETS_CONFIG[market_id]
+    if not config["is_enabled"]:
+        raise HTTPException(status_code=404, detail="Market is disabled")
+    
+    return Market(**config)
+
+@api_router.get("/geo/detect")
+async def detect_country_from_ip(request: Request):
+    """Detect country from IP address using free geolocation API"""
+    # Get client IP
+    client_ip = request.headers.get("X-Forwarded-For", request.client.host)
+    if client_ip and "," in client_ip:
+        client_ip = client_ip.split(",")[0].strip()
+    
+    # Skip for localhost/private IPs
+    if client_ip in ["127.0.0.1", "localhost"] or client_ip.startswith("192.168.") or client_ip.startswith("10."):
+        return {
+            "detected_country": "US",
+            "suggested_market_id": "US_USD",
+            "ip": client_ip,
+            "source": "default"
+        }
+    
+    try:
+        # Use ip-api.com free service (no API key required)
+        async with httpx.AsyncClient() as client:
+            response = await client.get(f"http://ip-api.com/json/{client_ip}?fields=status,countryCode")
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("status") == "success":
+                    country_code = data.get("countryCode", "US")
+                    market_id = COUNTRY_TO_MARKET.get(country_code, COUNTRY_TO_MARKET["default"])
+                    return {
+                        "detected_country": country_code,
+                        "suggested_market_id": market_id,
+                        "ip": client_ip,
+                        "source": "ip-api"
+                    }
+    except Exception as e:
+        logger.error(f"IP geolocation failed: {e}")
+    
+    # Fallback to US
+    return {
+        "detected_country": "US",
+        "suggested_market_id": "US_USD",
+        "ip": client_ip,
+        "source": "default"
+    }
+
+@api_router.post("/me/market")
+async def set_consumer_market(data: MarketSetRequest, request: Request):
+    """Set or update consumer's market"""
+    user = await require_auth(request)
+    
+    # Validate market exists and is enabled
+    if data.market_id not in MARKETS_CONFIG:
+        raise HTTPException(status_code=400, detail="Invalid market ID")
+    
+    if not MARKETS_CONFIG[data.market_id]["is_enabled"]:
+        raise HTTPException(status_code=400, detail="Market is not available")
+    
+    # Check if market switching is allowed (if user already has a market)
+    existing_user = await db.users.find_one({"user_id": user.user_id})
+    if existing_user.get("market_id") and not FEATURE_FLAGS["MARKET_SWITCHING_ENABLED"]:
+        raise HTTPException(status_code=400, detail="Market switching is not allowed")
+    
+    market_config = MARKETS_CONFIG[data.market_id]
+    
+    # Update user's market
+    await db.users.update_one(
+        {"user_id": user.user_id},
+        {"$set": {
+            "market_id": data.market_id,
+            "country": market_config["country"],
+            "timezone": market_config["default_timezone"],
+            "market_updated_at": datetime.now(timezone.utc)
+        }}
+    )
+    
+    # Log the action
+    await db.audit_logs.insert_one({
+        "action": "set_consumer_market",
+        "target_id": user.user_id,
+        "actor_id": user.user_id,
+        "market_id": data.market_id,
+        "previous_market_id": existing_user.get("market_id"),
+        "created_at": datetime.now(timezone.utc)
+    })
+    
+    return {
+        "message": "Market updated successfully",
+        "market_id": data.market_id,
+        "market": Market(**market_config)
+    }
+
+@api_router.get("/me/market")
+async def get_consumer_market(request: Request):
+    """Get current consumer's market"""
+    user = await require_auth(request)
+    
+    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    market_id = user_doc.get("market_id")
+    
+    if not market_id:
+        return {
+            "market_id": None,
+            "market": None,
+            "needs_selection": True
+        }
+    
+    if market_id in MARKETS_CONFIG:
+        return {
+            "market_id": market_id,
+            "market": Market(**MARKETS_CONFIG[market_id]),
+            "needs_selection": False
+        }
+    
+    return {
+        "market_id": market_id,
+        "market": None,
+        "needs_selection": True
+    }
+
+@api_router.post("/providers/market")
+async def set_provider_market(data: ProviderMarketSetRequest, request: Request):
+    """Set provider's market based on payout country"""
+    user = await require_auth(request)
+    
+    # Validate payout country
+    payout_country = data.payout_country.upper()
+    if payout_country not in COUNTRY_TO_MARKET:
+        raise HTTPException(status_code=400, detail="Invalid payout country. Supported: US, IN")
+    
+    market_id = COUNTRY_TO_MARKET[payout_country]
+    market_config = MARKETS_CONFIG[market_id]
+    
+    # Check if user has a tutor profile
+    tutor = await db.tutors.find_one({"user_id": user.user_id})
+    
+    if tutor:
+        # Update existing tutor profile
+        await db.tutors.update_one(
+            {"user_id": user.user_id},
+            {"$set": {
+                "payout_country": payout_country,
+                "market_id": market_id,
+                "timezone": market_config["default_timezone"],
+                "market_updated_at": datetime.now(timezone.utc)
+            }}
+        )
+    else:
+        raise HTTPException(status_code=404, detail="Tutor profile not found. Create a profile first.")
+    
+    # Log the action
+    await db.audit_logs.insert_one({
+        "action": "set_provider_market",
+        "target_id": user.user_id,
+        "actor_id": user.user_id,
+        "payout_country": payout_country,
+        "market_id": market_id,
+        "created_at": datetime.now(timezone.utc)
+    })
+    
+    return {
+        "message": "Provider market updated successfully",
+        "market_id": market_id,
+        "payout_country": payout_country,
+        "market": Market(**market_config)
+    }
+
+@api_router.get("/providers/market")
+async def get_provider_market(request: Request):
+    """Get current provider's market"""
+    user = await require_auth(request)
+    
+    tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Tutor profile not found")
+    
+    market_id = tutor.get("market_id")
+    payout_country = tutor.get("payout_country")
+    
+    if not market_id:
+        return {
+            "market_id": None,
+            "payout_country": None,
+            "market": None,
+            "needs_selection": True
+        }
+    
+    if market_id in MARKETS_CONFIG:
+        return {
+            "market_id": market_id,
+            "payout_country": payout_country,
+            "market": Market(**MARKETS_CONFIG[market_id]),
+            "needs_selection": False
+        }
+    
+    return {
+        "market_id": market_id,
+        "payout_country": payout_country,
+        "market": None,
+        "needs_selection": True
+    }
+
+# ============== ADMIN MARKET ROUTES ==============
+
+@api_router.get("/admin/markets")
+async def admin_get_markets(request: Request):
+    """Admin: Get all markets with stats"""
+    await require_admin(request)
+    
+    markets_with_stats = []
+    for market_id, config in MARKETS_CONFIG.items():
+        # Get stats for this market
+        tutor_count = await db.tutors.count_documents({"market_id": market_id, "is_published": True})
+        consumer_count = await db.users.count_documents({"market_id": market_id, "role": "consumer"})
+        booking_count = await db.bookings.count_documents({"market_id": market_id})
+        
+        # Get revenue
+        bookings = await db.bookings.find(
+            {"market_id": market_id, "status": "completed"},
+            {"price_snapshot": 1}
+        ).to_list(10000)
+        total_revenue = sum(b.get("price_snapshot", 0) for b in bookings)
+        
+        markets_with_stats.append({
+            **config,
+            "stats": {
+                "published_tutors": tutor_count,
+                "consumers": consumer_count,
+                "total_bookings": booking_count,
+                "total_revenue": total_revenue
+            }
+        })
+    
+    return {"markets": markets_with_stats}
+
+@api_router.post("/admin/markets/{market_id}/toggle")
+async def admin_toggle_market(market_id: str, request: Request):
+    """Admin: Enable/disable a market"""
+    user = await require_admin(request)
+    
+    if market_id not in MARKETS_CONFIG:
+        raise HTTPException(status_code=404, detail="Market not found")
+    
+    # Note: In production, this would update a database. For now, we log the intent.
+    current_status = MARKETS_CONFIG[market_id]["is_enabled"]
+    
+    await db.audit_logs.insert_one({
+        "action": "toggle_market",
+        "target_id": market_id,
+        "actor_id": user.user_id,
+        "from_enabled": current_status,
+        "to_enabled": not current_status,
+        "created_at": datetime.now(timezone.utc)
+    })
+    
+    return {
+        "message": f"Market toggle logged. Restart required to apply changes.",
+        "market_id": market_id,
+        "current_status": current_status
+    }
+
+@api_router.post("/admin/providers/{tutor_id}/market")
+async def admin_override_provider_market(tutor_id: str, data: MarketSetRequest, reason: str = "", request: Request = None):
+    """Admin: Override a provider's market (with audit log)"""
+    user = await require_admin(request)
+    
+    tutor = await db.tutors.find_one({"tutor_id": tutor_id})
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Tutor not found")
+    
+    if data.market_id not in MARKETS_CONFIG:
+        raise HTTPException(status_code=400, detail="Invalid market ID")
+    
+    old_market_id = tutor.get("market_id")
+    
+    await db.tutors.update_one(
+        {"tutor_id": tutor_id},
+        {"$set": {
+            "market_id": data.market_id,
+            "market_override": True,
+            "market_updated_at": datetime.now(timezone.utc)
+        }}
+    )
+    
+    await db.audit_logs.insert_one({
+        "action": "admin_override_provider_market",
+        "target_id": tutor_id,
+        "actor_id": user.user_id,
+        "from_market_id": old_market_id,
+        "to_market_id": data.market_id,
+        "reason": reason,
+        "created_at": datetime.now(timezone.utc)
+    })
+    
+    return {
+        "message": "Provider market updated by admin",
+        "tutor_id": tutor_id,
+        "old_market_id": old_market_id,
+        "new_market_id": data.market_id
+    }
+
+# ============== PRICING POLICY ROUTES ==============
+
+@api_router.get("/pricing-policies")
+async def get_pricing_policies():
+    """Get pricing policies for all markets"""
+    policies = await db.pricing_policies.find({}, {"_id": 0}).to_list(100)
+    return {"policies": policies}
+
+@api_router.get("/pricing-policies/{market_id}")
+async def get_pricing_policy(market_id: str):
+    """Get pricing policy for a specific market"""
+    policy = await db.pricing_policies.find_one({"market_id": market_id}, {"_id": 0})
+    if not policy:
+        # Return default policy
+        return {
+            "policy_id": f"policy_{market_id}",
+            "market_id": market_id,
+            "trial_days": 90,
+            "trial_free_until_first_booking": True,
+            "nsf_amount_cents": 500 if market_id == "US_USD" else 500,
+            "provider_fee_percent": 0.0,
+            "consumer_fee_percent": 0.0,
+            "pro_subscription_price_cents": None
+        }
+    return policy
+
+@api_router.post("/admin/pricing-policies/{market_id}")
+async def admin_update_pricing_policy(market_id: str, request: Request):
+    """Admin: Update pricing policy for a market"""
+    user = await require_admin(request)
+    
+    if market_id not in MARKETS_CONFIG:
+        raise HTTPException(status_code=404, detail="Market not found")
+    
+    body = await request.json()
+    
+    policy_id = f"policy_{market_id}"
+    policy_doc = {
+        "policy_id": policy_id,
+        "market_id": market_id,
+        "trial_days": body.get("trial_days", 90),
+        "trial_free_until_first_booking": body.get("trial_free_until_first_booking", True),
+        "nsf_amount_cents": body.get("nsf_amount_cents", 500),
+        "provider_fee_percent": body.get("provider_fee_percent", 0.0),
+        "consumer_fee_percent": body.get("consumer_fee_percent", 0.0),
+        "pro_subscription_price_cents": body.get("pro_subscription_price_cents"),
+        "updated_at": datetime.now(timezone.utc),
+        "updated_by": user.user_id
+    }
+    
+    await db.pricing_policies.update_one(
+        {"market_id": market_id},
+        {"$set": policy_doc},
+        upsert=True
+    )
+    
+    return {"message": "Pricing policy updated", "policy": policy_doc}
+
+# ============== MARKET ANALYTICS ROUTES ==============
+
+@api_router.get("/admin/analytics/markets")
+async def admin_get_market_analytics(request: Request, market_id: Optional[str] = None):
+    """Admin: Get market analytics dashboard data"""
+    await require_admin(request)
+    
+    markets_to_analyze = [market_id] if market_id else list(MARKETS_CONFIG.keys())
+    
+    analytics = {}
+    for mid in markets_to_analyze:
+        if mid not in MARKETS_CONFIG:
+            continue
+        
+        # Supply metrics
+        published_tutors = await db.tutors.count_documents({"market_id": mid, "is_published": True, "status": "approved"})
+        pending_tutors = await db.tutors.count_documents({"market_id": mid, "status": "pending"})
+        
+        # Count tutors with availability in next 7 days
+        # (simplified - in production would check availability_rules)
+        active_tutors = published_tutors
+        
+        # Demand metrics
+        total_consumers = await db.users.count_documents({"market_id": mid, "role": "consumer"})
+        
+        # Booking funnel
+        total_bookings = await db.bookings.count_documents({"market_id": mid})
+        completed_bookings = await db.bookings.count_documents({"market_id": mid, "status": "completed"})
+        canceled_bookings = await db.bookings.count_documents({
+            "market_id": mid, 
+            "status": {"$in": ["canceled_by_consumer", "canceled_by_provider"]}
+        })
+        
+        # Revenue
+        revenue_pipeline = [
+            {"$match": {"market_id": mid, "status": "completed"}},
+            {"$group": {"_id": None, "total": {"$sum": "$price_snapshot"}}}
+        ]
+        revenue_result = await db.bookings.aggregate(revenue_pipeline).to_list(1)
+        total_revenue = revenue_result[0]["total"] if revenue_result else 0
+        
+        analytics[mid] = {
+            "market_id": mid,
+            "market_name": MARKETS_CONFIG[mid]["country"],
+            "currency": MARKETS_CONFIG[mid]["currency"],
+            "supply": {
+                "published_tutors": published_tutors,
+                "pending_tutors": pending_tutors,
+                "active_tutors_with_availability": active_tutors
+            },
+            "demand": {
+                "total_consumers": total_consumers
+            },
+            "bookings": {
+                "total": total_bookings,
+                "completed": completed_bookings,
+                "canceled": canceled_bookings,
+                "completion_rate": round(completed_bookings / total_bookings * 100, 1) if total_bookings > 0 else 0
+            },
+            "revenue": {
+                "total": total_revenue,
+                "currency": MARKETS_CONFIG[mid]["currency"]
+            }
+        }
+    
+    return {"analytics": analytics}
+
 # ============== HEALTH CHECK ==============
 
 @api_router.get("/")
