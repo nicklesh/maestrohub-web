@@ -224,12 +224,12 @@ export default function BookingScreen() {
       style={styles.keyboardView}
     >
       <ScrollView style={styles.stepContent} contentContainerStyle={styles.intakeScroll}>
-        <Text style={styles.stepTitle}>Learning Goals</Text>
-        <Text style={styles.stepSubtitle}>Help the tutor prepare for the session</Text>
+        <Text style={[styles.stepTitle, isDesktop && styles.stepTitleDesktop]}>Learning Goals</Text>
+        <Text style={[styles.stepSubtitle, isDesktop && styles.stepSubtitleDesktop]}>Help the tutor prepare for the session</Text>
         
-        <Text style={styles.inputLabel}>What do you want to learn? *</Text>
+        <Text style={[styles.inputLabel, isDesktop && styles.inputLabelDesktop]}>What do you want to learn? *</Text>
         <TextInput
-          style={styles.textArea}
+          style={[styles.textArea, isTablet && styles.textAreaTablet]}
           placeholder="e.g., Need help with algebra equations, preparing for SAT math..."
           placeholderTextColor={colors.textMuted}
           value={goals}
@@ -238,18 +238,18 @@ export default function BookingScreen() {
           numberOfLines={3}
         />
         
-        <Text style={styles.inputLabel}>Current level *</Text>
+        <Text style={[styles.inputLabel, isDesktop && styles.inputLabelDesktop]}>Current level *</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, isTablet && styles.inputTablet]}
           placeholder="e.g., 8th grade, Beginner, Intermediate..."
           placeholderTextColor={colors.textMuted}
           value={currentLevel}
           onChangeText={setCurrentLevel}
         />
         
-        <Text style={styles.inputLabel}>Additional notes (optional)</Text>
+        <Text style={[styles.inputLabel, isDesktop && styles.inputLabelDesktop]}>Additional notes (optional)</Text>
         <TextInput
-          style={styles.textArea}
+          style={[styles.textArea, isTablet && styles.textAreaTablet]}
           placeholder="Anything else the tutor should know..."
           placeholderTextColor={colors.textMuted}
           value={notes}
@@ -265,13 +265,13 @@ export default function BookingScreen() {
           <View style={[styles.checkbox, policyAcknowledged && styles.checkboxChecked]}>
             {policyAcknowledged && <Ionicons name="checkmark" size={16} color="#fff" />}
           </View>
-          <Text style={styles.checkboxLabel}>
+          <Text style={[styles.checkboxLabel, isDesktop && styles.checkboxLabelDesktop]}>
             I acknowledge the tutor's cancellation policy ({tutor?.policies.cancel_window_hours}h notice required)
           </Text>
         </TouchableOpacity>
         
-        <TouchableOpacity style={styles.primaryButton} onPress={handleIntakeSubmit}>
-          <Text style={styles.primaryButtonText}>Continue to Review</Text>
+        <TouchableOpacity style={[styles.primaryButton, isTablet && styles.primaryButtonTablet]} onPress={handleIntakeSubmit}>
+          <Text style={[styles.primaryButtonText, isTablet && styles.primaryButtonTextTablet]}>Continue to Review</Text>
         </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>
