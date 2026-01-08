@@ -174,18 +174,18 @@ export default function BookingScreen() {
 
   const renderStudentStep = () => (
     <View style={styles.stepContent}>
-      <Text style={styles.stepTitle}>Select Student</Text>
-      <Text style={styles.stepSubtitle}>Who will be taking this lesson?</Text>
+      <Text style={[styles.stepTitle, isDesktop && styles.stepTitleDesktop]}>Select Student</Text>
+      <Text style={[styles.stepSubtitle, isDesktop && styles.stepSubtitleDesktop]}>Who will be taking this lesson?</Text>
       
       {students.length === 0 ? (
         <View style={styles.noStudents}>
-          <Ionicons name="person-add-outline" size={48} color={colors.textMuted} />
+          <Ionicons name="person-add-outline" size={isTablet ? 56 : 48} color={colors.textMuted} />
           <Text style={styles.noStudentsText}>No students added yet</Text>
           <TouchableOpacity
-            style={styles.addStudentButton}
+            style={[styles.addStudentButton, isTablet && styles.addStudentButtonTablet]}
             onPress={() => router.push('/(consumer)/students')}
           >
-            <Text style={styles.addStudentButtonText}>Add Student</Text>
+            <Text style={[styles.addStudentButtonText, isTablet && styles.addStudentButtonTextTablet]}>Add Student</Text>
           </TouchableOpacity>
         </View>
       ) : (
@@ -195,16 +195,17 @@ export default function BookingScreen() {
               key={student.student_id}
               style={[
                 styles.studentCard,
+                isTablet && styles.studentCardTablet,
                 selectedStudent?.student_id === student.student_id && styles.studentCardSelected,
               ]}
               onPress={() => handleSelectStudent(student)}
               disabled={submitting}
             >
-              <View style={styles.studentAvatar}>
-                <Text style={styles.studentInitial}>{student.name.charAt(0).toUpperCase()}</Text>
+              <View style={[styles.studentAvatar, isTablet && styles.studentAvatarTablet]}>
+                <Text style={[styles.studentInitial, isTablet && styles.studentInitialTablet]}>{student.name.charAt(0).toUpperCase()}</Text>
               </View>
               <View style={styles.studentInfo}>
-                <Text style={styles.studentName}>{student.name}</Text>
+                <Text style={[styles.studentName, isDesktop && styles.studentNameDesktop]}>{student.name}</Text>
                 {student.grade && <Text style={styles.studentGrade}>Grade {student.grade}</Text>}
               </View>
               {submitting && selectedStudent?.student_id === student.student_id && (
