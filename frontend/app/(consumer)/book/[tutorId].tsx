@@ -279,52 +279,52 @@ export default function BookingScreen() {
 
   const renderConfirmStep = () => (
     <View style={styles.stepContent}>
-      <Text style={styles.stepTitle}>Confirm Booking</Text>
-      <Text style={styles.stepSubtitle}>Review your booking details</Text>
+      <Text style={[styles.stepTitle, isDesktop && styles.stepTitleDesktop]}>Confirm Booking</Text>
+      <Text style={[styles.stepSubtitle, isDesktop && styles.stepSubtitleDesktop]}>Review your booking details</Text>
       
-      <View style={styles.summaryCard}>
+      <View style={[styles.summaryCard, isTablet && styles.summaryCardTablet]}>
         <View style={styles.summaryRow}>
-          <Text style={styles.summaryLabel}>Tutor</Text>
-          <Text style={styles.summaryValue}>{tutor?.user_name}</Text>
+          <Text style={[styles.summaryLabel, isDesktop && styles.summaryLabelDesktop]}>Tutor</Text>
+          <Text style={[styles.summaryValue, isDesktop && styles.summaryValueDesktop]}>{tutor?.user_name}</Text>
         </View>
         <View style={styles.summaryRow}>
-          <Text style={styles.summaryLabel}>Student</Text>
-          <Text style={styles.summaryValue}>{selectedStudent?.name}</Text>
+          <Text style={[styles.summaryLabel, isDesktop && styles.summaryLabelDesktop]}>Student</Text>
+          <Text style={[styles.summaryValue, isDesktop && styles.summaryValueDesktop]}>{selectedStudent?.name}</Text>
         </View>
         <View style={styles.summaryRow}>
-          <Text style={styles.summaryLabel}>Date</Text>
-          <Text style={styles.summaryValue}>
+          <Text style={[styles.summaryLabel, isDesktop && styles.summaryLabelDesktop]}>Date</Text>
+          <Text style={[styles.summaryValue, isDesktop && styles.summaryValueDesktop]}>
             {format(parseISO(startAt!), 'EEEE, MMMM d, yyyy')}
           </Text>
         </View>
         <View style={styles.summaryRow}>
-          <Text style={styles.summaryLabel}>Time</Text>
-          <Text style={styles.summaryValue}>
+          <Text style={[styles.summaryLabel, isDesktop && styles.summaryLabelDesktop]}>Time</Text>
+          <Text style={[styles.summaryValue, isDesktop && styles.summaryValueDesktop]}>
             {format(parseISO(startAt!), 'h:mm a')} - {format(parseISO(endAt!), 'h:mm a')}
           </Text>
         </View>
         <View style={[styles.summaryRow, styles.summaryRowTotal]}>
           <Text style={styles.summaryLabelTotal}>Total</Text>
-          <Text style={styles.summaryValueTotal}>${tutor?.base_price}</Text>
+          <Text style={[styles.summaryValueTotal, isDesktop && styles.summaryValueTotalDesktop]}>${tutor?.base_price}</Text>
         </View>
       </View>
       
-      <View style={styles.paymentNote}>
+      <View style={[styles.paymentNote, isTablet && styles.paymentNoteTablet]}>
         <Ionicons name="information-circle" size={20} color={colors.primary} />
-        <Text style={styles.paymentNoteText}>
+        <Text style={[styles.paymentNoteText, isDesktop && styles.paymentNoteTextDesktop]}>
           Payment will be processed when you confirm the booking.
         </Text>
       </View>
       
       <TouchableOpacity
-        style={[styles.primaryButton, submitting && styles.buttonDisabled]}
+        style={[styles.primaryButton, isTablet && styles.primaryButtonTablet, submitting && styles.buttonDisabled]}
         onPress={handleConfirmBooking}
         disabled={submitting}
       >
         {submitting ? (
           <ActivityIndicator color="#fff" />
         ) : (
-          <Text style={styles.primaryButtonText}>Confirm & Pay ${tutor?.base_price}</Text>
+          <Text style={[styles.primaryButtonText, isTablet && styles.primaryButtonTextTablet]}>Confirm & Pay ${tutor?.base_price}</Text>
         )}
       </TouchableOpacity>
     </View>
