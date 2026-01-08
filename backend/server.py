@@ -628,6 +628,7 @@ async def unpublish_tutor_profile(request: Request):
 
 @api_router.get("/tutors/search")
 async def search_tutors(
+    request: Request,
     category: Optional[str] = None,
     subject: Optional[str] = None,
     level: Optional[str] = None,
@@ -639,6 +640,19 @@ async def search_tutors(
     limit: int = 20
 ):
     query = {"is_published": True, "status": "approved"}
+    
+    # Get consumer's market for filtering
+    try:
+        user = await require_auth(request)
+        user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+        consumer_market_id = user_doc.get("market_id") if user_doc else None
+        
+        # Enforce market filtering if market is set
+        if consumer_market_id:
+            query["market_id"] = consumer_market_id
+    except:
+        # Allow unauthenticated browsing without market filter
+        pass
     
     if category:
         query["categories"] = category
@@ -667,10 +681,14 @@ async def search_tutors(
     for tutor in tutors:
         user = await db.users.find_one({"user_id": tutor["user_id"]}, {"_id": 0})
         if user:
+            # Include market info in results
+            market_info = MARKETS_CONFIG.get(tutor.get("market_id"), {})
             results.append({
                 **tutor,
                 "user_name": user["name"],
-                "user_picture": user.get("picture")
+                "user_picture": user.get("picture"),
+                "currency": market_info.get("currency", "USD"),
+                "currency_symbol": market_info.get("currency_symbol", "$")
             })
     
     total = await db.tutors.count_documents(query)
@@ -678,17 +696,44 @@ async def search_tutors(
     return {"tutors": results, "total": total, "page": page, "limit": limit}
 
 @api_router.get("/tutors/{tutor_id}")
-async def get_tutor(tutor_id: str):
+async def get_tutor(tutor_id: str, request: Request = None):
     tutor = await db.tutors.find_one({"tutor_id": tutor_id}, {"_id": 0})
     if not tutor:
         raise HTTPException(status_code=404, detail="Tutor not found")
     
+    # Check if consumer is accessing a tutor from a different market
+    if request:
+        try:
+            user = await require_auth(request)
+            user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+            consumer_market_id = user_doc.get("market_id") if user_doc else None
+            tutor_market_id = tutor.get("market_id")
+            
+            if consumer_market_id and tutor_market_id and consumer_market_id != tutor_market_id:
+                # Return tutor info with cross-market warning
+                market_info = MARKETS_CONFIG.get(tutor_market_id, {})
+                user_info = await db.users.find_one({"user_id": tutor["user_id"]}, {"_id": 0})
+                return {
+                    **tutor,
+                    "user_name": user_info["name"] if user_info else "Unknown",
+                    "user_picture": user_info.get("picture") if user_info else None,
+                    "currency": market_info.get("currency", "USD"),
+                    "currency_symbol": market_info.get("currency_symbol", "$"),
+                    "cross_market_warning": True,
+                    "message": "This tutor is not available in your region. Switch markets to book."
+                }
+        except:
+            pass
+    
     user = await db.users.find_one({"user_id": tutor["user_id"]}, {"_id": 0})
+    market_info = MARKETS_CONFIG.get(tutor.get("market_id"), {})
     
     return {
         **tutor,
         "user_name": user["name"] if user else "Unknown",
-        "user_picture": user.get("picture") if user else None
+        "user_picture": user.get("picture") if user else None,
+        "currency": market_info.get("currency", "USD"),
+        "currency_symbol": market_info.get("currency_symbol", "$")
     }
 
 # ============== AVAILABILITY ROUTES ==============
