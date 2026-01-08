@@ -985,17 +985,51 @@ async def create_booking(data: BookingCreate, request: Request):
     if not student or student["user_id"] != user.user_id:
         raise HTTPException(status_code=404, detail="Student not found")
     
+    # Get consumer's market
+    consumer_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    consumer_market_id = consumer_doc.get("market_id")
+    tutor_market_id = tutor.get("market_id")
+    
+    # Enforce same-market booking (if feature flag is on)
+    if FEATURE_FLAGS["IN_MARKET_ONLY_BOOKING_ENFORCED"]:
+        if consumer_market_id and tutor_market_id and consumer_market_id != tutor_market_id:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Cross-market booking not allowed. Consumer market: {consumer_market_id}, Tutor market: {tutor_market_id}"
+            )
+    
+    # Determine market and currency for booking
+    booking_market_id = tutor_market_id or consumer_market_id or "US_USD"
+    market_config = MARKETS_CONFIG.get(booking_market_id, MARKETS_CONFIG["US_USD"])
+    
+    # Get pricing policy snapshot
+    pricing_policy = await db.pricing_policies.find_one({"market_id": booking_market_id}, {"_id": 0})
+    if not pricing_policy:
+        pricing_policy = {
+            "market_id": booking_market_id,
+            "trial_days": 90,
+            "provider_fee_percent": 0.0,
+            "consumer_fee_percent": 0.0
+        }
+    
+    # Calculate amount in cents
+    amount_cents = int(tutor["base_price"] * 100)
+    
     booking_id = f"booking_{uuid.uuid4().hex[:12]}"
     booking_doc = {
         "booking_id": booking_id,
         "tutor_id": hold["tutor_id"],
         "consumer_id": user.user_id,
         "student_id": data.student_id,
+        "market_id": booking_market_id,
+        "currency": market_config["currency"],
         "start_at": hold["start_at"],
         "end_at": hold["end_at"],
         "status": "booked",
         "price_snapshot": tutor["base_price"],
-        "policy_snapshot": tutor["policies"],
+        "amount_cents": amount_cents,
+        "policy_snapshot": tutor.get("policies", {}),
+        "pricing_policy_snapshot": pricing_policy,
         "intake_response": data.intake.dict(),
         "payment_id": f"pay_{uuid.uuid4().hex[:12]}",  # Placeholder
         "created_at": datetime.now(timezone.utc)
@@ -1013,7 +1047,7 @@ async def create_booking(data: BookingCreate, request: Request):
         )
     
     # TODO: Send confirmation emails via Resend
-    # TODO: Process payment via Stripe
+    # TODO: Process payment via Stripe with market-specific currency
     
     return booking_doc
 
