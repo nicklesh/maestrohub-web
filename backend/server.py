@@ -141,6 +141,9 @@ class UserLogin(BaseModel):
 class User(UserBase):
     user_id: str
     role: str
+    market_id: Optional[str] = None  # US_USD, IN_INR
+    country: Optional[str] = None  # ISO country code
+    timezone: Optional[str] = None  # IANA timezone
     devices: List[DeviceInfo] = []
     created_at: datetime
 
