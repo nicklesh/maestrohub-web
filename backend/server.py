@@ -86,6 +86,36 @@ logger = logging.getLogger(__name__)
 
 # ============== MODELS ==============
 
+# Market Models
+class Market(BaseModel):
+    market_id: str  # US_USD, IN_INR
+    country: str  # ISO code: US, IN
+    currency: str  # ISO code: USD, INR
+    currency_symbol: str  # $, ₹
+    default_timezone: str  # IANA timezone
+    is_enabled: bool = True
+    payment_provider_key: str
+    min_price: float
+    max_price: float
+
+class PricingPolicy(BaseModel):
+    policy_id: str
+    market_id: str
+    trial_days: int = 90
+    trial_free_until_first_booking: bool = True
+    nsf_amount_cents: int = 500  # No-show fee
+    provider_fee_percent: float = 0.0  # Platform fee percentage
+    consumer_fee_percent: float = 0.0
+    pro_subscription_price_cents: Optional[int] = None
+    created_at: datetime
+    updated_at: datetime
+
+class MarketSetRequest(BaseModel):
+    market_id: str
+
+class ProviderMarketSetRequest(BaseModel):
+    payout_country: str  # US or IN
+
 class DeviceInfo(BaseModel):
     device_id: str
     device_name: Optional[str] = None
