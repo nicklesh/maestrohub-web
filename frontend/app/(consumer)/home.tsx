@@ -14,6 +14,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
+import { useMarket } from '@/src/context/MarketContext';
+import MarketSelectionModal from '@/src/components/MarketSelectionModal';
 import { api } from '@/src/services/api';
 import { colors } from '@/src/theme/colors';
 
@@ -34,16 +36,20 @@ interface Tutor {
   rating_avg: number;
   rating_count: number;
   modality: string[];
+  currency?: string;
+  currency_symbol?: string;
 }
 
 export default function HomeScreen() {
   const { user } = useAuth();
+  const { currentMarket, needsSelection } = useMarket();
   const router = useRouter();
   const { width } = useWindowDimensions();
   const [categories, setCategories] = useState<Category[]>([]);
   const [featuredTutors, setFeaturedTutors] = useState<Tutor[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [showMarketModal, setShowMarketModal] = useState(false);
 
   // Responsive breakpoints
   const isTablet = width >= 768;
