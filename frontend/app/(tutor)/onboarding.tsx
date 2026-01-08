@@ -43,6 +43,11 @@ const MODALITIES = [
   { id: 'in_person', name: 'In-Person', icon: 'location' },
 ];
 
+const PAYOUT_COUNTRIES = [
+  { id: 'US', name: 'United States', currency: 'USD', symbol: '$', flag: '🇺🇸' },
+  { id: 'IN', name: 'India', currency: 'INR', symbol: '₹', flag: '🇮🇳' },
+];
+
 export default function TutorOnboarding() {
   const router = useRouter();
   const { width } = useWindowDimensions();
@@ -62,6 +67,7 @@ export default function TutorOnboarding() {
   const [selectedModalities, setSelectedModalities] = useState<string[]>(['online']);
   const [basePrice, setBasePrice] = useState('50');
   const [duration, setDuration] = useState('60');
+  const [payoutCountry, setPayoutCountry] = useState<string>('US');  // New: payout country
 
   const toggleSelection = (list: string[], setList: (v: string[]) => void, item: string) => {
     if (list.includes(item)) {
@@ -72,6 +78,10 @@ export default function TutorOnboarding() {
   };
 
   const availableSubjects = selectedCategories.flatMap((cat) => SUBJECTS[cat] || []);
+
+  // Get currency based on selected payout country
+  const selectedCountry = PAYOUT_COUNTRIES.find(c => c.id === payoutCountry);
+  const currencySymbol = selectedCountry?.symbol || '$';
 
   const handleSubmit = async () => {
     if (!bio.trim()) {
