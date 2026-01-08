@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
+  useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -44,8 +45,14 @@ const MODALITIES = [
 
 export default function TutorOnboarding() {
   const router = useRouter();
+  const { width } = useWindowDimensions();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+
+  // Responsive breakpoints
+  const isTablet = width >= 768;
+  const isDesktop = width >= 1024;
+  const contentMaxWidth = isDesktop ? 560 : isTablet ? 480 : undefined;
 
   // Form state
   const [bio, setBio] = useState('');
@@ -115,11 +122,11 @@ export default function TutorOnboarding() {
 
   const renderStep1 = () => (
     <View style={styles.stepContent}>
-      <Text style={styles.stepTitle}>Tell us about yourself</Text>
-      <Text style={styles.stepSubtitle}>Write a bio that introduces you to students</Text>
+      <Text style={[styles.stepTitle, isDesktop && styles.stepTitleDesktop]}>Tell us about yourself</Text>
+      <Text style={[styles.stepSubtitle, isDesktop && styles.stepSubtitleDesktop]}>Write a bio that introduces you to students</Text>
 
       <TextInput
-        style={styles.bioInput}
+        style={[styles.bioInput, isTablet && styles.bioInputTablet]}
         placeholder="Hi! I'm a passionate educator with experience in..."
         placeholderTextColor={colors.textMuted}
         value={bio}
@@ -129,26 +136,27 @@ export default function TutorOnboarding() {
       />
 
       <TouchableOpacity
-        style={[styles.nextButton, !bio.trim() && styles.buttonDisabled]}
+        style={[styles.nextButton, isTablet && styles.nextButtonTablet, !bio.trim() && styles.buttonDisabled]}
         onPress={() => setStep(2)}
         disabled={!bio.trim()}
       >
-        <Text style={styles.nextButtonText}>Continue</Text>
+        <Text style={[styles.nextButtonText, isTablet && styles.nextButtonTextTablet]}>Continue</Text>
       </TouchableOpacity>
     </View>
   );
 
   const renderStep2 = () => (
     <View style={styles.stepContent}>
-      <Text style={styles.stepTitle}>What do you teach?</Text>
-      <Text style={styles.stepSubtitle}>Select your categories</Text>
+      <Text style={[styles.stepTitle, isDesktop && styles.stepTitleDesktop]}>What do you teach?</Text>
+      <Text style={[styles.stepSubtitle, isDesktop && styles.stepSubtitleDesktop]}>Select your categories</Text>
 
-      <View style={styles.optionsGrid}>
+      <View style={[styles.optionsGrid, isTablet && styles.optionsGridTablet]}>
         {CATEGORIES.map((cat) => (
           <TouchableOpacity
             key={cat.id}
             style={[
               styles.optionCard,
+              isTablet && styles.optionCardTablet,
               selectedCategories.includes(cat.id) && styles.optionCardSelected,
             ]}
             onPress={() => {
@@ -159,7 +167,7 @@ export default function TutorOnboarding() {
           >
             <Ionicons
               name={cat.icon as any}
-              size={28}
+              size={isTablet ? 32 : 28}
               color={selectedCategories.includes(cat.id) ? colors.primary : colors.textMuted}
             />
             <Text
@@ -176,13 +184,14 @@ export default function TutorOnboarding() {
 
       {selectedCategories.length > 0 && (
         <>
-          <Text style={styles.subTitle}>Select subjects</Text>
+          <Text style={[styles.subTitle, isDesktop && styles.subTitleDesktop]}>Select subjects</Text>
           <View style={styles.chipsContainer}>
             {availableSubjects.map((subject) => (
               <TouchableOpacity
                 key={subject}
                 style={[
                   styles.chip,
+                  isTablet && styles.chipTablet,
                   selectedSubjects.includes(subject) && styles.chipSelected,
                 ]}
                 onPress={() => toggleSelection(selectedSubjects, setSelectedSubjects, subject)}
@@ -209,12 +218,13 @@ export default function TutorOnboarding() {
           style={[
             styles.nextButton,
             styles.nextButtonSmall,
+            isTablet && styles.nextButtonTablet,
             selectedSubjects.length === 0 && styles.buttonDisabled,
           ]}
           onPress={() => setStep(3)}
           disabled={selectedSubjects.length === 0}
         >
-          <Text style={styles.nextButtonText}>Continue</Text>
+          <Text style={[styles.nextButtonText, isTablet && styles.nextButtonTextTablet]}>Continue</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -222,8 +232,8 @@ export default function TutorOnboarding() {
 
   const renderStep3 = () => (
     <View style={styles.stepContent}>
-      <Text style={styles.stepTitle}>Who do you teach?</Text>
-      <Text style={styles.stepSubtitle}>Select experience levels</Text>
+      <Text style={[styles.stepTitle, isDesktop && styles.stepTitleDesktop]}>Who do you teach?</Text>
+      <Text style={[styles.stepSubtitle, isDesktop && styles.stepSubtitleDesktop]}>Select experience levels</Text>
 
       <View style={styles.levelsList}>
         {LEVELS.map((level) => (
@@ -231,6 +241,7 @@ export default function TutorOnboarding() {
             key={level.id}
             style={[
               styles.levelItem,
+              isTablet && styles.levelItemTablet,
               selectedLevels.includes(level.id) && styles.levelItemSelected,
             ]}
             onPress={() => toggleSelection(selectedLevels, setSelectedLevels, level.id)}
@@ -238,6 +249,7 @@ export default function TutorOnboarding() {
             <Text
               style={[
                 styles.levelText,
+                isDesktop && styles.levelTextDesktop,
                 selectedLevels.includes(level.id) && styles.levelTextSelected,
               ]}
             >
@@ -250,13 +262,14 @@ export default function TutorOnboarding() {
         ))}
       </View>
 
-      <Text style={styles.subTitle}>How do you teach?</Text>
+      <Text style={[styles.subTitle, isDesktop && styles.subTitleDesktop]}>How do you teach?</Text>
       <View style={styles.modalitiesRow}>
         {MODALITIES.map((mod) => (
           <TouchableOpacity
             key={mod.id}
             style={[
               styles.modalityCard,
+              isTablet && styles.modalityCardTablet,
               selectedModalities.includes(mod.id) && styles.modalityCardSelected,
             ]}
             onPress={() => toggleSelection(selectedModalities, setSelectedModalities, mod.id)}
@@ -286,12 +299,13 @@ export default function TutorOnboarding() {
           style={[
             styles.nextButton,
             styles.nextButtonSmall,
+            isTablet && styles.nextButtonTablet,
             selectedLevels.length === 0 && styles.buttonDisabled,
           ]}
           onPress={() => setStep(4)}
           disabled={selectedLevels.length === 0}
         >
-          <Text style={styles.nextButtonText}>Continue</Text>
+          <Text style={[styles.nextButtonText, isTablet && styles.nextButtonTextTablet]}>Continue</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -299,14 +313,14 @@ export default function TutorOnboarding() {
 
   const renderStep4 = () => (
     <View style={styles.stepContent}>
-      <Text style={styles.stepTitle}>Set your pricing</Text>
-      <Text style={styles.stepSubtitle}>How much do you charge per lesson?</Text>
+      <Text style={[styles.stepTitle, isDesktop && styles.stepTitleDesktop]}>Set your pricing</Text>
+      <Text style={[styles.stepSubtitle, isDesktop && styles.stepSubtitleDesktop]}>How much do you charge per lesson?</Text>
 
-      <Text style={styles.inputLabel}>Hourly rate ($)</Text>
-      <View style={styles.priceInputContainer}>
-        <Text style={styles.dollarSign}>$</Text>
+      <Text style={[styles.inputLabel, isDesktop && styles.inputLabelDesktop]}>Hourly rate ($)</Text>
+      <View style={[styles.priceInputContainer, isTablet && styles.priceInputContainerTablet]}>
+        <Text style={[styles.dollarSign, isDesktop && styles.dollarSignDesktop]}>$</Text>
         <TextInput
-          style={styles.priceInput}
+          style={[styles.priceInput, isDesktop && styles.priceInputDesktop]}
           value={basePrice}
           onChangeText={setBasePrice}
           keyboardType="numeric"
@@ -316,17 +330,22 @@ export default function TutorOnboarding() {
         <Text style={styles.perHour}>/hour</Text>
       </View>
 
-      <Text style={styles.inputLabel}>Default session length</Text>
-      <View style={styles.durationOptions}>
+      <Text style={[styles.inputLabel, isDesktop && styles.inputLabelDesktop]}>Default session length</Text>
+      <View style={[styles.durationOptions, isTablet && styles.durationOptionsTablet]}>
         {['30', '45', '60', '90'].map((d) => (
           <TouchableOpacity
             key={d}
-            style={[styles.durationOption, duration === d && styles.durationOptionSelected]}
+            style={[
+              styles.durationOption,
+              isTablet && styles.durationOptionTablet,
+              duration === d && styles.durationOptionSelected,
+            ]}
             onPress={() => setDuration(d)}
           >
             <Text
               style={[
                 styles.durationText,
+                isDesktop && styles.durationTextDesktop,
                 duration === d && styles.durationTextSelected,
               ]}
             >
@@ -341,14 +360,14 @@ export default function TutorOnboarding() {
           <Text style={styles.backButtonText}>Back</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.nextButton, styles.nextButtonSmall, loading && styles.buttonDisabled]}
+          style={[styles.nextButton, styles.nextButtonSmall, isTablet && styles.nextButtonTablet, loading && styles.buttonDisabled]}
           onPress={handleSubmit}
           disabled={loading}
         >
           {loading ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.nextButtonText}>Create Profile</Text>
+            <Text style={[styles.nextButtonText, isTablet && styles.nextButtonTextTablet]}>Create Profile</Text>
           )}
         </TouchableOpacity>
       </View>
@@ -361,31 +380,33 @@ export default function TutorOnboarding() {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardView}
       >
-        <ScrollView contentContainerStyle={styles.scrollContent}>
-          {/* Header */}
-          <View style={styles.header}>
-            <TouchableOpacity style={styles.closeButton} onPress={() => router.back()}>
-              <Ionicons name="close" size={24} color={colors.text} />
-            </TouchableOpacity>
-            <Text style={styles.headerTitle}>Create Profile</Text>
-            <View style={styles.closeButton} />
-          </View>
+        <ScrollView contentContainerStyle={[styles.scrollContent, isTablet && styles.scrollContentTablet]}>
+          <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
+            {/* Header */}
+            <View style={styles.header}>
+              <TouchableOpacity style={styles.closeButton} onPress={() => router.back()}>
+                <Ionicons name="close" size={24} color={colors.text} />
+              </TouchableOpacity>
+              <Text style={[styles.headerTitle, isDesktop && styles.headerTitleDesktop]}>Create Profile</Text>
+              <View style={styles.closeButton} />
+            </View>
 
-          {/* Progress */}
-          <View style={styles.progress}>
-            {[1, 2, 3, 4].map((s) => (
-              <View
-                key={s}
-                style={[styles.progressStep, s <= step && styles.progressStepActive]}
-              />
-            ))}
-          </View>
+            {/* Progress */}
+            <View style={[styles.progress, isTablet && styles.progressTablet]}>
+              {[1, 2, 3, 4].map((s) => (
+                <View
+                  key={s}
+                  style={[styles.progressStep, s <= step && styles.progressStepActive]}
+                />
+              ))}
+            </View>
 
-          {/* Steps */}
-          {step === 1 && renderStep1()}
-          {step === 2 && renderStep2()}
-          {step === 3 && renderStep3()}
-          {step === 4 && renderStep4()}
+            {/* Steps */}
+            {step === 1 && renderStep1()}
+            {step === 2 && renderStep2()}
+            {step === 3 && renderStep3()}
+            {step === 4 && renderStep4()}
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -402,6 +423,12 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingBottom: 40,
+  },
+  scrollContentTablet: {
+    paddingVertical: 32,
+  },
+  contentWrapper: {
+    flex: 1,
   },
   header: {
     flexDirection: 'row',
@@ -422,11 +449,17 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: colors.text,
   },
+  headerTitleDesktop: {
+    fontSize: 22,
+  },
   progress: {
     flexDirection: 'row',
     paddingHorizontal: 20,
     gap: 8,
     marginBottom: 24,
+  },
+  progressTablet: {
+    marginBottom: 32,
   },
   progressStep: {
     flex: 1,
@@ -445,11 +478,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: colors.text,
   },
+  stepTitleDesktop: {
+    fontSize: 28,
+  },
   stepSubtitle: {
     fontSize: 14,
     color: colors.textMuted,
     marginTop: 4,
     marginBottom: 24,
+  },
+  stepSubtitleDesktop: {
+    fontSize: 16,
+    marginBottom: 32,
   },
   bioInput: {
     backgroundColor: colors.surface,
@@ -463,11 +503,21 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
     marginBottom: 24,
   },
+  bioInputTablet: {
+    borderRadius: 16,
+    padding: 20,
+    fontSize: 17,
+    minHeight: 180,
+  },
   nextButton: {
     backgroundColor: colors.primary,
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
+  },
+  nextButtonTablet: {
+    borderRadius: 14,
+    padding: 18,
   },
   nextButtonSmall: {
     flex: 1,
@@ -480,10 +530,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
+  nextButtonTextTablet: {
+    fontSize: 18,
+  },
   optionsGrid: {
     flexDirection: 'row',
     gap: 12,
     marginBottom: 24,
+  },
+  optionsGridTablet: {
+    gap: 16,
   },
   optionCard: {
     flex: 1,
@@ -493,6 +549,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 2,
     borderColor: colors.border,
+  },
+  optionCardTablet: {
+    borderRadius: 20,
+    padding: 24,
   },
   optionCardSelected: {
     borderColor: colors.primary,
@@ -513,6 +573,9 @@ const styles = StyleSheet.create({
     color: colors.text,
     marginBottom: 12,
   },
+  subTitleDesktop: {
+    fontSize: 18,
+  },
   chipsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -526,6 +589,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1,
     borderColor: colors.border,
+  },
+  chipTablet: {
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 24,
   },
   chipSelected: {
     backgroundColor: colors.primary,
@@ -565,6 +633,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
+  levelItemTablet: {
+    padding: 18,
+    borderRadius: 14,
+  },
   levelItemSelected: {
     borderColor: colors.primary,
     backgroundColor: colors.primaryLight,
@@ -572,6 +644,9 @@ const styles = StyleSheet.create({
   levelText: {
     fontSize: 15,
     color: colors.text,
+  },
+  levelTextDesktop: {
+    fontSize: 17,
   },
   levelTextSelected: {
     color: colors.primary,
@@ -594,6 +669,10 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: colors.border,
   },
+  modalityCardTablet: {
+    padding: 20,
+    borderRadius: 16,
+  },
   modalityCardSelected: {
     borderColor: colors.primary,
     backgroundColor: colors.primaryLight,
@@ -612,6 +691,9 @@ const styles = StyleSheet.create({
     color: colors.text,
     marginBottom: 8,
   },
+  inputLabelDesktop: {
+    fontSize: 16,
+  },
   priceInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -622,10 +704,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginBottom: 24,
   },
+  priceInputContainerTablet: {
+    borderRadius: 14,
+    paddingHorizontal: 20,
+  },
   dollarSign: {
     fontSize: 24,
     fontWeight: '600',
     color: colors.text,
+  },
+  dollarSignDesktop: {
+    fontSize: 28,
   },
   priceInput: {
     flex: 1,
@@ -634,6 +723,10 @@ const styles = StyleSheet.create({
     color: colors.text,
     paddingVertical: 16,
     marginLeft: 4,
+  },
+  priceInputDesktop: {
+    fontSize: 28,
+    paddingVertical: 18,
   },
   perHour: {
     fontSize: 16,
@@ -644,6 +737,9 @@ const styles = StyleSheet.create({
     gap: 8,
     marginBottom: 24,
   },
+  durationOptionsTablet: {
+    gap: 12,
+  },
   durationOption: {
     flex: 1,
     padding: 16,
@@ -653,6 +749,10 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: colors.border,
   },
+  durationOptionTablet: {
+    padding: 18,
+    borderRadius: 14,
+  },
   durationOptionSelected: {
     borderColor: colors.primary,
     backgroundColor: colors.primaryLight,
@@ -661,6 +761,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
     color: colors.textMuted,
+  },
+  durationTextDesktop: {
+    fontSize: 16,
   },
   durationTextSelected: {
     color: colors.primary,

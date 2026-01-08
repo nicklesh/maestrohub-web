@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
+  useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -16,6 +17,12 @@ import { colors } from '@/src/theme/colors';
 export default function AdminSettings() {
   const { user, logout } = useAuth();
   const router = useRouter();
+  const { width } = useWindowDimensions();
+
+  // Responsive breakpoints
+  const isTablet = width >= 768;
+  const isDesktop = width >= 1024;
+  const contentMaxWidth = isDesktop ? 600 : isTablet ? 520 : undefined;
 
   const handleLogout = () => {
     Alert.alert('Logout', 'Are you sure?', [
@@ -33,51 +40,53 @@ export default function AdminSettings() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Settings</Text>
-        </View>
-
-        {/* Profile */}
-        <View style={styles.profileCard}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>
-              {user?.name?.charAt(0)?.toUpperCase() || 'A'}
-            </Text>
+      <ScrollView contentContainerStyle={[styles.scrollContent, isTablet && styles.scrollContentTablet]}>
+        <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
+          <View style={styles.header}>
+            <Text style={[styles.title, isDesktop && styles.titleDesktop]}>Settings</Text>
           </View>
-          <View style={styles.profileInfo}>
-            <Text style={styles.profileName}>{user?.name}</Text>
-            <Text style={styles.profileEmail}>{user?.email}</Text>
-            <View style={styles.roleBadge}>
-              <Text style={styles.roleText}>Administrator</Text>
+
+          {/* Profile */}
+          <View style={[styles.profileCard, isTablet && styles.profileCardTablet]}>
+            <View style={[styles.avatar, isDesktop && styles.avatarDesktop]}>
+              <Text style={[styles.avatarText, isDesktop && styles.avatarTextDesktop]}>
+                {user?.name?.charAt(0)?.toUpperCase() || 'A'}
+              </Text>
+            </View>
+            <View style={styles.profileInfo}>
+              <Text style={[styles.profileName, isDesktop && styles.profileNameDesktop]}>{user?.name}</Text>
+              <Text style={[styles.profileEmail, isDesktop && styles.profileEmailDesktop]}>{user?.email}</Text>
+              <View style={styles.roleBadge}>
+                <Text style={styles.roleText}>Administrator</Text>
+              </View>
             </View>
           </View>
-        </View>
 
-        {/* Menu */}
-        <View style={styles.menu}>
-          <TouchableOpacity style={styles.menuItem}>
-            <Ionicons name="settings-outline" size={22} color={colors.primary} />
-            <Text style={styles.menuItemText}>Pricing Policies</Text>
-            <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
-            <Ionicons name="notifications-outline" size={22} color={colors.primary} />
-            <Text style={styles.menuItemText}>Notifications</Text>
-            <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
-            <Ionicons name="shield-outline" size={22} color={colors.primary} />
-            <Text style={styles.menuItemText}>Security</Text>
-            <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+          {/* Menu */}
+          <View style={[styles.menu, isTablet && styles.menuTablet]}>
+            <TouchableOpacity style={[styles.menuItem, isTablet && styles.menuItemTablet]}>
+              <Ionicons name="settings-outline" size={isTablet ? 24 : 22} color={colors.primary} />
+              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Pricing Policies</Text>
+              <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.menuItem, isTablet && styles.menuItemTablet]}>
+              <Ionicons name="notifications-outline" size={isTablet ? 24 : 22} color={colors.primary} />
+              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Notifications</Text>
+              <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.menuItem, isTablet && styles.menuItemTablet]}>
+              <Ionicons name="shield-outline" size={isTablet ? 24 : 22} color={colors.primary} />
+              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Security</Text>
+              <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
+          </View>
+
+          {/* Logout */}
+          <TouchableOpacity style={[styles.logoutButton, isTablet && styles.logoutButtonTablet]} onPress={handleLogout}>
+            <Ionicons name="log-out-outline" size={22} color={colors.error} />
+            <Text style={styles.logoutText}>Logout</Text>
           </TouchableOpacity>
         </View>
-
-        {/* Logout */}
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Ionicons name="log-out-outline" size={22} color={colors.error} />
-          <Text style={styles.logoutText}>Logout</Text>
-        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
@@ -91,6 +100,12 @@ const styles = StyleSheet.create({
   scrollContent: {
     padding: 20,
   },
+  scrollContentTablet: {
+    padding: 32,
+  },
+  contentWrapper: {
+    flex: 1,
+  },
   header: {
     marginBottom: 24,
   },
@@ -98,6 +113,9 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     color: colors.text,
+  },
+  titleDesktop: {
+    fontSize: 32,
   },
   profileCard: {
     flexDirection: 'row',
@@ -109,6 +127,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
+  profileCardTablet: {
+    borderRadius: 20,
+    padding: 24,
+  },
   avatar: {
     width: 64,
     height: 64,
@@ -117,10 +139,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  avatarDesktop: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+  },
   avatarText: {
     fontSize: 28,
     fontWeight: '600',
     color: colors.primary,
+  },
+  avatarTextDesktop: {
+    fontSize: 34,
   },
   profileInfo: {
     flex: 1,
@@ -131,10 +161,16 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: colors.text,
   },
+  profileNameDesktop: {
+    fontSize: 22,
+  },
   profileEmail: {
     fontSize: 14,
     color: colors.textMuted,
     marginTop: 2,
+  },
+  profileEmailDesktop: {
+    fontSize: 16,
   },
   roleBadge: {
     alignSelf: 'flex-start',
@@ -157,6 +193,9 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     marginBottom: 24,
   },
+  menuTablet: {
+    borderRadius: 20,
+  },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -165,10 +204,16 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.border,
     gap: 12,
   },
+  menuItemTablet: {
+    padding: 20,
+  },
   menuItemText: {
     flex: 1,
     fontSize: 15,
     color: colors.text,
+  },
+  menuItemTextDesktop: {
+    fontSize: 17,
   },
   logoutButton: {
     flexDirection: 'row',
@@ -178,6 +223,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.errorLight,
     borderRadius: 12,
     gap: 8,
+  },
+  logoutButtonTablet: {
+    padding: 18,
+    borderRadius: 14,
   },
   logoutText: {
     fontSize: 16,

@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   Alert,
   RefreshControl,
+  useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -33,11 +34,18 @@ const STATUS_FILTER = [
 ];
 
 export default function AdminTutors() {
+  const { width } = useWindowDimensions();
   const [tutors, setTutors] = useState<Tutor[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [filter, setFilter] = useState('all');
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+
+  // Responsive breakpoints
+  const isTablet = width >= 768;
+  const isDesktop = width >= 1024;
+  const contentMaxWidth = isDesktop ? 960 : isTablet ? 720 : undefined;
+  const numColumns = isDesktop ? 2 : 1;
 
   useEffect(() => {
     loadTutors();
@@ -100,16 +108,26 @@ export default function AdminTutors() {
     );
   };
 
-  const renderTutorCard = ({ item }: { item: Tutor }) => (
-    <View style={styles.tutorCard}>
+  const renderTutorCard = ({ item, index }: { item: Tutor; index: number }) => (
+    <View
+      style={[
+        styles.tutorCard,
+        isTablet && styles.tutorCardTablet,
+        isDesktop && {
+          marginRight: index % 2 === 0 ? 8 : 0,
+          marginLeft: index % 2 === 1 ? 8 : 0,
+          flex: 1,
+        },
+      ]}
+    >
       <View style={styles.tutorHeader}>
-        <View style={styles.tutorAvatar}>
-          <Text style={styles.avatarText}>
+        <View style={[styles.tutorAvatar, isTablet && styles.tutorAvatarTablet]}>
+          <Text style={[styles.avatarText, isTablet && styles.avatarTextTablet]}>
             {item.user_name?.charAt(0)?.toUpperCase() || 'T'}
           </Text>
         </View>
         <View style={styles.tutorInfo}>
-          <Text style={styles.tutorName}>{item.user_name}</Text>
+          <Text style={[styles.tutorName, isDesktop && styles.tutorNameDesktop]}>{item.user_name}</Text>
           <Text style={styles.tutorEmail}>{item.user_email}</Text>
         </View>
         <View
@@ -130,13 +148,13 @@ export default function AdminTutors() {
         <Text style={styles.metaText}>
           {item.categories.join(', ')} - {item.subjects.slice(0, 3).join(', ')}
         </Text>
-        <Text style={styles.metaPrice}>${item.base_price}/hr</Text>
+        <Text style={[styles.metaPrice, isDesktop && styles.metaPriceDesktop]}>${item.base_price}/hr</Text>
       </View>
 
       <View style={styles.actions}>
         {item.status === 'pending' && (
           <TouchableOpacity
-            style={styles.approveButton}
+            style={[styles.approveButton, isTablet && styles.approveButtonTablet]}
             onPress={() => handleApprove(item.tutor_id)}
             disabled={actionLoading === item.tutor_id}
           >
@@ -152,7 +170,7 @@ export default function AdminTutors() {
         )}
         {item.status !== 'suspended' && (
           <TouchableOpacity
-            style={styles.suspendButton}
+            style={[styles.suspendButton, isTablet && styles.suspendButtonTablet]}
             onPress={() => handleSuspend(item)}
             disabled={actionLoading === item.tutor_id}
           >
@@ -162,7 +180,7 @@ export default function AdminTutors() {
         )}
         {item.status === 'suspended' && (
           <TouchableOpacity
-            style={styles.approveButton}
+            style={[styles.approveButton, isTablet && styles.approveButtonTablet]}
             onPress={() => handleApprove(item.tutor_id)}
             disabled={actionLoading === item.tutor_id}
           >
@@ -186,46 +204,50 @@ export default function AdminTutors() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Manage Tutors</Text>
-      </View>
-
-      {/* Filter */}
-      <FlatList
-        data={STATUS_FILTER}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.filterList}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={[styles.filterChip, filter === item.id && styles.filterChipActive]}
-            onPress={() => setFilter(item.id)}
-          >
-            <Text style={[styles.filterText, filter === item.id && styles.filterTextActive]}>
-              {item.name}
-            </Text>
-          </TouchableOpacity>
-        )}
-        keyExtractor={(item) => item.id}
-      />
-
-      {/* Tutors List */}
-      {tutors.length === 0 ? (
-        <View style={styles.emptyContainer}>
-          <Ionicons name="people-outline" size={64} color={colors.textMuted} />
-          <Text style={styles.emptyText}>No tutors found</Text>
+      <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
+        <View style={[styles.header, isTablet && styles.headerTablet]}>
+          <Text style={[styles.title, isDesktop && styles.titleDesktop]}>Manage Tutors</Text>
         </View>
-      ) : (
+
+        {/* Filter */}
         <FlatList
-          data={tutors}
-          renderItem={renderTutorCard}
-          keyExtractor={(item) => item.tutor_id}
-          contentContainerStyle={styles.listContent}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
+          data={STATUS_FILTER}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={[styles.filterList, isTablet && styles.filterListTablet]}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={[styles.filterChip, isTablet && styles.filterChipTablet, filter === item.id && styles.filterChipActive]}
+              onPress={() => setFilter(item.id)}
+            >
+              <Text style={[styles.filterText, isTablet && styles.filterTextTablet, filter === item.id && styles.filterTextActive]}>
+                {item.name}
+              </Text>
+            </TouchableOpacity>
+          )}
+          keyExtractor={(item) => item.id}
         />
-      )}
+
+        {/* Tutors List */}
+        {tutors.length === 0 ? (
+          <View style={styles.emptyContainer}>
+            <Ionicons name="people-outline" size={isTablet ? 80 : 64} color={colors.textMuted} />
+            <Text style={[styles.emptyText, isDesktop && styles.emptyTextDesktop]}>No tutors found</Text>
+          </View>
+        ) : (
+          <FlatList
+            data={tutors}
+            renderItem={renderTutorCard}
+            keyExtractor={(item) => item.tutor_id}
+            contentContainerStyle={[styles.listContent, isTablet && styles.listContentTablet]}
+            numColumns={numColumns}
+            key={numColumns}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+          />
+        )}
+      </View>
     </SafeAreaView>
   );
 }
@@ -240,19 +262,31 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  contentWrapper: {
+    flex: 1,
+  },
   header: {
     padding: 20,
     paddingBottom: 8,
+  },
+  headerTablet: {
+    paddingHorizontal: 24,
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
     color: colors.text,
   },
+  titleDesktop: {
+    fontSize: 32,
+  },
   filterList: {
     paddingHorizontal: 20,
     paddingVertical: 12,
     gap: 8,
+  },
+  filterListTablet: {
+    paddingHorizontal: 24,
   },
   filterChip: {
     paddingHorizontal: 16,
@@ -263,6 +297,11 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     marginRight: 8,
   },
+  filterChipTablet: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 24,
+  },
   filterChipActive: {
     backgroundColor: colors.primary,
     borderColor: colors.primary,
@@ -271,11 +310,18 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.text,
   },
+  filterTextTablet: {
+    fontSize: 16,
+  },
   filterTextActive: {
     color: '#fff',
   },
   listContent: {
     padding: 20,
+    paddingTop: 0,
+  },
+  listContentTablet: {
+    padding: 24,
     paddingTop: 0,
   },
   tutorCard: {
@@ -285,6 +331,10 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     borderWidth: 1,
     borderColor: colors.border,
+  },
+  tutorCardTablet: {
+    borderRadius: 20,
+    padding: 20,
   },
   tutorHeader: {
     flexDirection: 'row',
@@ -298,10 +348,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  tutorAvatarTablet: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+  },
   avatarText: {
     fontSize: 20,
     fontWeight: '600',
     color: colors.primary,
+  },
+  avatarTextTablet: {
+    fontSize: 24,
   },
   tutorInfo: {
     flex: 1,
@@ -311,6 +369,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: colors.text,
+  },
+  tutorNameDesktop: {
+    fontSize: 18,
   },
   tutorEmail: {
     fontSize: 13,
@@ -353,6 +414,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: colors.primary,
   },
+  metaPriceDesktop: {
+    fontSize: 16,
+  },
   actions: {
     flexDirection: 'row',
     gap: 8,
@@ -368,6 +432,10 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 8,
   },
+  approveButtonTablet: {
+    paddingVertical: 12,
+    borderRadius: 10,
+  },
   approveButtonText: {
     color: '#fff',
     fontWeight: '600',
@@ -382,6 +450,10 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 8,
   },
+  suspendButtonTablet: {
+    paddingVertical: 12,
+    borderRadius: 10,
+  },
   suspendButtonText: {
     color: colors.error,
     fontWeight: '600',
@@ -395,5 +467,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.textMuted,
     marginTop: 16,
+  },
+  emptyTextDesktop: {
+    fontSize: 18,
   },
 });
