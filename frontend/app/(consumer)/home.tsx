@@ -59,7 +59,11 @@ export default function HomeScreen() {
 
   useEffect(() => {
     loadData();
-  }, []);
+    // Show market selection modal if needed
+    if (needsSelection) {
+      setShowMarketModal(true);
+    }
+  }, [needsSelection]);
 
   const loadData = async () => {
     try {
