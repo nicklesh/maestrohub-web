@@ -14,8 +14,8 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, Link } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useAuth } from '../../src/context/AuthContext';
-import { colors } from '../../src/theme/colors';
+import { useAuth } from '@/src/context/AuthContext';
+import { colors } from '@/src/theme/colors';
 
 export default function RegisterScreen() {
   const [name, setName] = useState('');
