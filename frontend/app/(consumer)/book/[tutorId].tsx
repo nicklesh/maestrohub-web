@@ -333,16 +333,16 @@ export default function BookingScreen() {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, isTablet && styles.headerTablet]}>
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={24} color={colors.text} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Book Lesson</Text>
+        <Text style={[styles.headerTitle, isDesktop && styles.headerTitleDesktop]}>Book Lesson</Text>
         <View style={styles.backButton} />
       </View>
 
       {/* Progress */}
-      <View style={styles.progress}>
+      <View style={[styles.progress, isTablet && styles.progressTablet, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
         {['student', 'intake', 'confirm'].map((s, i) => (
           <View
             key={s}
@@ -356,9 +356,11 @@ export default function BookingScreen() {
       </View>
 
       {/* Content */}
-      {step === 'student' && renderStudentStep()}
-      {step === 'intake' && renderIntakeStep()}
-      {step === 'confirm' && renderConfirmStep()}
+      <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
+        {step === 'student' && renderStudentStep()}
+        {step === 'intake' && renderIntakeStep()}
+        {step === 'confirm' && renderConfirmStep()}
+      </View>
     </SafeAreaView>
   );
 }
