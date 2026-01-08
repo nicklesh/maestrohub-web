@@ -152,7 +152,7 @@ export default function HomeScreen() {
             </Text>
           </View>
           <Text style={[styles.price, isTablet && styles.priceTablet]}>
-            ${item.base_price}/hr
+            {item.currency_symbol || currentMarket?.currency_symbol || '$'}{item.base_price}/hr
           </Text>
         </View>
       </View>
