@@ -10,6 +10,7 @@ import {
   ScrollView,
   ActivityIndicator,
   Alert,
+  useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, Link } from 'expo-router';
@@ -29,6 +30,12 @@ export default function RegisterScreen() {
   
   const { register, loginWithGoogle } = useAuth();
   const router = useRouter();
+  const { width } = useWindowDimensions();
+  
+  // Responsive breakpoints
+  const isTablet = width >= 768;
+  const isDesktop = width >= 1024;
+  const formMaxWidth = isDesktop ? 480 : isTablet ? 440 : undefined;
 
   const handleRegister = async () => {
     if (!name || !email || !password || !confirmPassword) {
@@ -76,163 +83,174 @@ export default function RegisterScreen() {
         style={styles.keyboardView}
       >
         <ScrollView
-          contentContainerStyle={styles.scrollContent}
+          contentContainerStyle={[
+            styles.scrollContent,
+            isTablet && styles.scrollContentTablet,
+          ]}
           keyboardShouldPersistTaps="handled"
         >
-          <View style={styles.header}>
-            <Text style={styles.logo}>Acharyaly</Text>
-          </View>
+          <View style={[styles.formWrapper, formMaxWidth ? { maxWidth: formMaxWidth } : undefined]}>
+            <View style={[styles.header, isDesktop && styles.headerDesktop]}>
+              <Text style={[styles.logo, isDesktop && styles.logoDesktop]}>Acharyaly</Text>
+            </View>
 
-          <View style={styles.form}>
-            <Text style={styles.title}>Create Account</Text>
-            <Text style={styles.subtitle}>Join our tutoring community</Text>
+            <View style={[styles.form, isTablet && styles.formTablet]}>
+              <Text style={[styles.title, isDesktop && styles.titleDesktop]}>Create Account</Text>
+              <Text style={[styles.subtitle, isDesktop && styles.subtitleDesktop]}>
+                Join our tutoring community
+              </Text>
 
-            {/* Role Selection */}
-            <View style={styles.roleContainer}>
-              <TouchableOpacity
-                style={[
-                  styles.roleButton,
-                  role === 'consumer' && styles.roleButtonActive,
-                ]}
-                onPress={() => setRole('consumer')}
-              >
-                <Ionicons
-                  name="school-outline"
-                  size={24}
-                  color={role === 'consumer' ? colors.primary : colors.textMuted}
-                />
-                <Text
+              {/* Role Selection */}
+              <View style={styles.roleContainer}>
+                <TouchableOpacity
                   style={[
-                    styles.roleText,
-                    role === 'consumer' && styles.roleTextActive,
+                    styles.roleButton,
+                    role === 'consumer' && styles.roleButtonActive,
                   ]}
+                  onPress={() => setRole('consumer')}
                 >
-                  I'm a Parent
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  styles.roleButton,
-                  role === 'tutor' && styles.roleButtonActive,
-                ]}
-                onPress={() => setRole('tutor')}
-              >
-                <Ionicons
-                  name="person-outline"
-                  size={24}
-                  color={role === 'tutor' ? colors.primary : colors.textMuted}
-                />
-                <Text
-                  style={[
-                    styles.roleText,
-                    role === 'tutor' && styles.roleTextActive,
-                  ]}
-                >
-                  I'm a Tutor
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.inputContainer}>
-              <Ionicons name="person-outline" size={20} color={colors.textMuted} style={styles.inputIcon} />
-              <TextInput
-                style={styles.input}
-                placeholder="Full name"
-                placeholderTextColor={colors.textMuted}
-                value={name}
-                onChangeText={setName}
-                autoCapitalize="words"
-              />
-            </View>
-
-            <View style={styles.inputContainer}>
-              <Ionicons name="mail-outline" size={20} color={colors.textMuted} style={styles.inputIcon} />
-              <TextInput
-                style={styles.input}
-                placeholder="Email address"
-                placeholderTextColor={colors.textMuted}
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoCorrect={false}
-              />
-            </View>
-
-            <View style={styles.inputContainer}>
-              <Ionicons name="lock-closed-outline" size={20} color={colors.textMuted} style={styles.inputIcon} />
-              <TextInput
-                style={styles.input}
-                placeholder="Password"
-                placeholderTextColor={colors.textMuted}
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry={!showPassword}
-              />
-              <TouchableOpacity
-                onPress={() => setShowPassword(!showPassword)}
-                style={styles.eyeIcon}
-              >
-                <Ionicons
-                  name={showPassword ? 'eye-off-outline' : 'eye-outline'}
-                  size={20}
-                  color={colors.textMuted}
-                />
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.inputContainer}>
-              <Ionicons name="lock-closed-outline" size={20} color={colors.textMuted} style={styles.inputIcon} />
-              <TextInput
-                style={styles.input}
-                placeholder="Confirm password"
-                placeholderTextColor={colors.textMuted}
-                value={confirmPassword}
-                onChangeText={setConfirmPassword}
-                secureTextEntry={!showPassword}
-              />
-            </View>
-
-            <TouchableOpacity
-              style={styles.primaryButton}
-              onPress={handleRegister}
-              disabled={loading}
-            >
-              {loading ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <Text style={styles.primaryButtonText}>Create Account</Text>
-              )}
-            </TouchableOpacity>
-
-            <View style={styles.divider}>
-              <View style={styles.dividerLine} />
-              <Text style={styles.dividerText}>or</Text>
-              <View style={styles.dividerLine} />
-            </View>
-
-            <TouchableOpacity
-              style={styles.googleButton}
-              onPress={handleGoogleLogin}
-              disabled={googleLoading}
-            >
-              {googleLoading ? (
-                <ActivityIndicator color={colors.text} />
-              ) : (
-                <>
-                  <Ionicons name="logo-google" size={20} color={colors.text} />
-                  <Text style={styles.googleButtonText}>Continue with Google</Text>
-                </>
-              )}
-            </TouchableOpacity>
-
-            <View style={styles.footer}>
-              <Text style={styles.footerText}>Already have an account? </Text>
-              <Link href="/(auth)/login" asChild>
-                <TouchableOpacity>
-                  <Text style={styles.footerLink}>Sign In</Text>
+                  <Ionicons
+                    name="school-outline"
+                    size={24}
+                    color={role === 'consumer' ? colors.primary : colors.textMuted}
+                  />
+                  <Text
+                    style={[
+                      styles.roleText,
+                      role === 'consumer' && styles.roleTextActive,
+                    ]}
+                  >
+                    I'm a Parent
+                  </Text>
                 </TouchableOpacity>
-              </Link>
+                <TouchableOpacity
+                  style={[
+                    styles.roleButton,
+                    role === 'tutor' && styles.roleButtonActive,
+                  ]}
+                  onPress={() => setRole('tutor')}
+                >
+                  <Ionicons
+                    name="person-outline"
+                    size={24}
+                    color={role === 'tutor' ? colors.primary : colors.textMuted}
+                  />
+                  <Text
+                    style={[
+                      styles.roleText,
+                      role === 'tutor' && styles.roleTextActive,
+                    ]}
+                  >
+                    I'm a Tutor
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={[styles.inputContainer, isTablet && styles.inputContainerTablet]}>
+                <Ionicons name="person-outline" size={20} color={colors.textMuted} style={styles.inputIcon} />
+                <TextInput
+                  style={[styles.input, isTablet && styles.inputTablet]}
+                  placeholder="Full name"
+                  placeholderTextColor={colors.textMuted}
+                  value={name}
+                  onChangeText={setName}
+                  autoCapitalize="words"
+                />
+              </View>
+
+              <View style={[styles.inputContainer, isTablet && styles.inputContainerTablet]}>
+                <Ionicons name="mail-outline" size={20} color={colors.textMuted} style={styles.inputIcon} />
+                <TextInput
+                  style={[styles.input, isTablet && styles.inputTablet]}
+                  placeholder="Email address"
+                  placeholderTextColor={colors.textMuted}
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
+              </View>
+
+              <View style={[styles.inputContainer, isTablet && styles.inputContainerTablet]}>
+                <Ionicons name="lock-closed-outline" size={20} color={colors.textMuted} style={styles.inputIcon} />
+                <TextInput
+                  style={[styles.input, isTablet && styles.inputTablet]}
+                  placeholder="Password"
+                  placeholderTextColor={colors.textMuted}
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry={!showPassword}
+                />
+                <TouchableOpacity
+                  onPress={() => setShowPassword(!showPassword)}
+                  style={styles.eyeIcon}
+                >
+                  <Ionicons
+                    name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                    size={20}
+                    color={colors.textMuted}
+                  />
+                </TouchableOpacity>
+              </View>
+
+              <View style={[styles.inputContainer, isTablet && styles.inputContainerTablet]}>
+                <Ionicons name="lock-closed-outline" size={20} color={colors.textMuted} style={styles.inputIcon} />
+                <TextInput
+                  style={[styles.input, isTablet && styles.inputTablet]}
+                  placeholder="Confirm password"
+                  placeholderTextColor={colors.textMuted}
+                  value={confirmPassword}
+                  onChangeText={setConfirmPassword}
+                  secureTextEntry={!showPassword}
+                />
+              </View>
+
+              <TouchableOpacity
+                style={[styles.primaryButton, isTablet && styles.primaryButtonTablet]}
+                onPress={handleRegister}
+                disabled={loading}
+              >
+                {loading ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  <Text style={[styles.primaryButtonText, isTablet && styles.primaryButtonTextTablet]}>
+                    Create Account
+                  </Text>
+                )}
+              </TouchableOpacity>
+
+              <View style={styles.divider}>
+                <View style={styles.dividerLine} />
+                <Text style={styles.dividerText}>or</Text>
+                <View style={styles.dividerLine} />
+              </View>
+
+              <TouchableOpacity
+                style={[styles.googleButton, isTablet && styles.googleButtonTablet]}
+                onPress={handleGoogleLogin}
+                disabled={googleLoading}
+              >
+                {googleLoading ? (
+                  <ActivityIndicator color={colors.text} />
+                ) : (
+                  <>
+                    <Ionicons name="logo-google" size={20} color={colors.text} />
+                    <Text style={[styles.googleButtonText, isTablet && styles.googleButtonTextTablet]}>
+                      Continue with Google
+                    </Text>
+                  </>
+                )}
+              </TouchableOpacity>
+
+              <View style={styles.footer}>
+                <Text style={styles.footerText}>Already have an account? </Text>
+                <Link href="/(auth)/login" asChild>
+                  <TouchableOpacity>
+                    <Text style={styles.footerLink}>Sign In</Text>
+                  </TouchableOpacity>
+                </Link>
+              </View>
             </View>
           </View>
         </ScrollView>
@@ -253,18 +271,46 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     padding: 24,
   },
+  scrollContentTablet: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 48,
+  },
+  formWrapper: {
+    width: '100%',
+    alignSelf: 'center',
+  },
   header: {
     alignItems: 'center',
     marginTop: 24,
     marginBottom: 24,
+  },
+  headerDesktop: {
+    marginTop: 0,
+    marginBottom: 32,
   },
   logo: {
     fontSize: 32,
     fontWeight: 'bold',
     color: colors.primary,
   },
+  logoDesktop: {
+    fontSize: 40,
+  },
   form: {
     flex: 1,
+  },
+  formTablet: {
+    backgroundColor: colors.surface,
+    borderRadius: 24,
+    padding: 32,
+    borderWidth: 1,
+    borderColor: colors.border,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 4,
   },
   title: {
     fontSize: 28,
@@ -272,10 +318,16 @@ const styles = StyleSheet.create({
     color: colors.text,
     marginBottom: 4,
   },
+  titleDesktop: {
+    fontSize: 32,
+  },
   subtitle: {
     fontSize: 16,
     color: colors.textMuted,
     marginBottom: 24,
+  },
+  subtitleDesktop: {
+    fontSize: 18,
   },
   roleContainer: {
     flexDirection: 'row',
@@ -316,6 +368,10 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     paddingHorizontal: 16,
   },
+  inputContainerTablet: {
+    backgroundColor: colors.gray100,
+    borderRadius: 14,
+  },
   inputIcon: {
     marginRight: 12,
   },
@@ -324,6 +380,10 @@ const styles = StyleSheet.create({
     height: 52,
     fontSize: 16,
     color: colors.text,
+  },
+  inputTablet: {
+    height: 56,
+    fontSize: 17,
   },
   eyeIcon: {
     padding: 4,
@@ -336,10 +396,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 8,
   },
+  primaryButtonTablet: {
+    height: 56,
+    borderRadius: 14,
+  },
   primaryButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  primaryButtonTextTablet: {
+    fontSize: 18,
   },
   divider: {
     flexDirection: 'row',
@@ -367,10 +434,18 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     gap: 12,
   },
+  googleButtonTablet: {
+    height: 56,
+    borderRadius: 14,
+    backgroundColor: colors.gray100,
+  },
   googleButtonText: {
     color: colors.text,
     fontSize: 16,
     fontWeight: '500',
+  },
+  googleButtonTextTablet: {
+    fontSize: 17,
   },
   footer: {
     flexDirection: 'row',
