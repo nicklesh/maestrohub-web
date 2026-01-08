@@ -14,8 +14,8 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { api } from '../../../src/services/api';
-import { colors } from '../../../src/theme/colors';
+import { api } from '@/src/services/api';
+import { colors } from '@/src/theme/colors';
 import { format, parseISO } from 'date-fns';
 
 interface Student {
