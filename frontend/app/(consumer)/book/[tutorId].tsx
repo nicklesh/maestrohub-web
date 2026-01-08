@@ -41,11 +41,17 @@ type Step = 'student' | 'intake' | 'confirm';
 
 export default function BookingScreen() {
   const router = useRouter();
+  const { width } = useWindowDimensions();
   const { tutorId, startAt, endAt } = useLocalSearchParams<{
     tutorId: string;
     startAt: string;
     endAt: string;
   }>();
+
+  // Responsive breakpoints
+  const isTablet = width >= 768;
+  const isDesktop = width >= 1024;
+  const contentMaxWidth = isDesktop ? 560 : isTablet ? 480 : undefined;
 
   const [step, setStep] = useState<Step>('student');
   const [loading, setLoading] = useState(true);
