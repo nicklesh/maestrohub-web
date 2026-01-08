@@ -16,6 +16,7 @@ import { useRouter, Link } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
 import { colors } from '@/src/theme/colors';
+import { useResponsive, getContainerMaxWidth } from '@/src/utils/responsive';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
