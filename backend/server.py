@@ -1392,6 +1392,735 @@ async def get_fee_events(request: Request):
     
     return events
 
+# ============== STRIPE PAYMENT ROUTES ==============
+
+class CreateCheckoutRequest(BaseModel):
+    booking_id: str
+    success_url: str
+    cancel_url: str
+
+class PaymentIntentRequest(BaseModel):
+    hold_id: str
+    student_id: str
+
+@api_router.post("/payments/create-intent")
+async def create_payment_intent(data: PaymentIntentRequest, request: Request):
+    """Create a Stripe PaymentIntent for a booking hold"""
+    user = await require_auth(request)
+    
+    # Get hold
+    hold = await db.booking_holds.find_one({"hold_id": data.hold_id}, {"_id": 0})
+    if not hold:
+        raise HTTPException(status_code=404, detail="Hold not found")
+    
+    if hold["consumer_id"] != user.user_id:
+        raise HTTPException(status_code=403, detail="Hold does not belong to you")
+    
+    # Get tutor
+    tutor = await db.tutors.find_one({"tutor_id": hold["tutor_id"]}, {"_id": 0})
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Tutor not found")
+    
+    # Get market config
+    market_id = tutor.get("market_id", "US_USD")
+    market_config = MARKETS_CONFIG.get(market_id, MARKETS_CONFIG["US_USD"])
+    
+    amount_cents = int(tutor["base_price"] * 100)
+    currency = market_config["currency"].lower()
+    
+    # Calculate platform fee and tutor payout
+    platform_fee_cents = int(amount_cents * PLATFORM_FEE_PERCENT / 100)
+    tutor_payout_cents = amount_cents - platform_fee_cents
+    
+    # In production, create real Stripe PaymentIntent
+    # For now, create a mock payment intent
+    payment_intent_id = f"pi_{uuid.uuid4().hex[:24]}"
+    client_secret = f"{payment_intent_id}_secret_{uuid.uuid4().hex[:24]}"
+    
+    # Store payment intent in database
+    payment_doc = {
+        "payment_intent_id": payment_intent_id,
+        "hold_id": data.hold_id,
+        "student_id": data.student_id,
+        "consumer_id": user.user_id,
+        "tutor_id": hold["tutor_id"],
+        "amount_cents": amount_cents,
+        "platform_fee_cents": platform_fee_cents,
+        "tutor_payout_cents": tutor_payout_cents,
+        "currency": currency,
+        "market_id": market_id,
+        "status": "requires_payment_method",
+        "created_at": datetime.now(timezone.utc)
+    }
+    await db.payment_intents.insert_one(payment_doc)
+    
+    return {
+        "payment_intent_id": payment_intent_id,
+        "client_secret": client_secret,
+        "amount_cents": amount_cents,
+        "currency": currency,
+        "currency_symbol": market_config["currency_symbol"],
+        "platform_fee_cents": platform_fee_cents,
+        "publishable_key": STRIPE_PUBLISHABLE_KEY
+    }
+
+@api_router.post("/payments/confirm")
+async def confirm_payment(request: Request):
+    """Confirm payment and create booking (mock for placeholder keys)"""
+    user = await require_auth(request)
+    body = await request.json()
+    
+    payment_intent_id = body.get("payment_intent_id")
+    if not payment_intent_id:
+        raise HTTPException(status_code=400, detail="Payment intent ID required")
+    
+    # Get payment intent
+    payment = await db.payment_intents.find_one({"payment_intent_id": payment_intent_id}, {"_id": 0})
+    if not payment:
+        raise HTTPException(status_code=404, detail="Payment intent not found")
+    
+    if payment["consumer_id"] != user.user_id:
+        raise HTTPException(status_code=403, detail="Payment does not belong to you")
+    
+    if payment["status"] == "succeeded":
+        raise HTTPException(status_code=400, detail="Payment already processed")
+    
+    # Get hold
+    hold = await db.booking_holds.find_one({"hold_id": payment["hold_id"]}, {"_id": 0})
+    if not hold:
+        raise HTTPException(status_code=404, detail="Hold not found or expired")
+    
+    # Get tutor
+    tutor = await db.tutors.find_one({"tutor_id": payment["tutor_id"]}, {"_id": 0})
+    tutor_user = await db.users.find_one({"user_id": tutor["user_id"]}, {"_id": 0})
+    
+    # Update payment status
+    await db.payment_intents.update_one(
+        {"payment_intent_id": payment_intent_id},
+        {"$set": {"status": "succeeded", "paid_at": datetime.now(timezone.utc)}}
+    )
+    
+    # Create booking
+    booking_id = f"booking_{uuid.uuid4().hex[:12]}"
+    market_config = MARKETS_CONFIG.get(payment["market_id"], MARKETS_CONFIG["US_USD"])
+    
+    # Get pricing policy
+    pricing_policy = await db.pricing_policies.find_one({"market_id": payment["market_id"]}, {"_id": 0})
+    if not pricing_policy:
+        pricing_policy = {"market_id": payment["market_id"], "provider_fee_percent": PLATFORM_FEE_PERCENT}
+    
+    booking_doc = {
+        "booking_id": booking_id,
+        "tutor_id": payment["tutor_id"],
+        "consumer_id": user.user_id,
+        "student_id": payment["student_id"],
+        "market_id": payment["market_id"],
+        "currency": payment["currency"].upper(),
+        "start_at": hold["start_at"],
+        "end_at": hold["end_at"],
+        "status": "booked",
+        "payment_status": "paid",
+        "price_snapshot": payment["amount_cents"] / 100,
+        "amount_cents": payment["amount_cents"],
+        "platform_fee_cents": payment["platform_fee_cents"],
+        "tutor_payout_cents": payment["tutor_payout_cents"],
+        "policy_snapshot": tutor.get("policies", {}),
+        "pricing_policy_snapshot": pricing_policy,
+        "payment_intent_id": payment_intent_id,
+        "created_at": datetime.now(timezone.utc)
+    }
+    await db.bookings.insert_one(booking_doc)
+    
+    # Delete hold
+    await db.booking_holds.delete_one({"hold_id": payment["hold_id"]})
+    
+    # Process immediate payout to tutor
+    payout_id = f"payout_{uuid.uuid4().hex[:12]}"
+    payout_doc = {
+        "payout_id": payout_id,
+        "booking_id": booking_id,
+        "tutor_id": payment["tutor_id"],
+        "amount_cents": payment["tutor_payout_cents"],
+        "platform_fee_cents": payment["platform_fee_cents"],
+        "currency": payment["currency"],
+        "market_id": payment["market_id"],
+        "status": "completed",  # In production, this would be "pending" until Stripe transfer completes
+        "stripe_transfer_id": f"tr_{uuid.uuid4().hex[:24]}",  # Mock transfer ID
+        "created_at": datetime.now(timezone.utc),
+        "completed_at": datetime.now(timezone.utc)
+    }
+    await db.payouts.insert_one(payout_doc)
+    
+    # Start trial if first booking
+    if not tutor.get("trial_start_at"):
+        await db.tutors.update_one(
+            {"tutor_id": payment["tutor_id"]},
+            {"$set": {"trial_start_at": datetime.now(timezone.utc)}}
+        )
+    
+    return {
+        "success": True,
+        "booking_id": booking_id,
+        "payout_id": payout_id,
+        "message": "Payment confirmed and booking created"
+    }
+
+@api_router.post("/webhooks/stripe")
+async def stripe_webhook(request: Request):
+    """Handle Stripe webhooks"""
+    payload = await request.body()
+    sig_header = request.headers.get("stripe-signature", "")
+    
+    # In production, verify webhook signature using STRIPE_WEBHOOK_SECRET
+    # For placeholder mode, just parse the JSON
+    try:
+        event = await request.json()
+    except:
+        raise HTTPException(status_code=400, detail="Invalid payload")
+    
+    event_type = event.get("type", "")
+    data = event.get("data", {}).get("object", {})
+    
+    logger.info(f"Stripe webhook received: {event_type}")
+    
+    if event_type == "payment_intent.succeeded":
+        payment_intent_id = data.get("id")
+        if payment_intent_id:
+            await db.payment_intents.update_one(
+                {"payment_intent_id": payment_intent_id},
+                {"$set": {"status": "succeeded", "paid_at": datetime.now(timezone.utc)}}
+            )
+            logger.info(f"Payment succeeded: {payment_intent_id}")
+    
+    elif event_type == "payment_intent.payment_failed":
+        payment_intent_id = data.get("id")
+        failure_message = data.get("last_payment_error", {}).get("message", "Unknown error")
+        if payment_intent_id:
+            await db.payment_intents.update_one(
+                {"payment_intent_id": payment_intent_id},
+                {"$set": {"status": "failed", "failure_message": failure_message}}
+            )
+            logger.info(f"Payment failed: {payment_intent_id} - {failure_message}")
+    
+    elif event_type == "charge.refunded":
+        charge_id = data.get("id")
+        payment_intent_id = data.get("payment_intent")
+        refund_amount = data.get("amount_refunded", 0)
+        
+        if payment_intent_id:
+            # Update payment intent
+            await db.payment_intents.update_one(
+                {"payment_intent_id": payment_intent_id},
+                {"$set": {"status": "refunded", "refunded_at": datetime.now(timezone.utc), "refund_amount_cents": refund_amount}}
+            )
+            
+            # Find and update booking
+            booking = await db.bookings.find_one({"payment_intent_id": payment_intent_id})
+            if booking:
+                await db.bookings.update_one(
+                    {"booking_id": booking["booking_id"]},
+                    {"$set": {"payment_status": "refunded", "refunded_at": datetime.now(timezone.utc)}}
+                )
+                
+                # Create refund record
+                await db.refunds.insert_one({
+                    "refund_id": f"refund_{uuid.uuid4().hex[:12]}",
+                    "booking_id": booking["booking_id"],
+                    "payment_intent_id": payment_intent_id,
+                    "amount_cents": refund_amount,
+                    "status": "completed",
+                    "created_at": datetime.now(timezone.utc)
+                })
+            
+            logger.info(f"Charge refunded: {charge_id}")
+    
+    elif event_type == "transfer.created":
+        transfer_id = data.get("id")
+        logger.info(f"Transfer created: {transfer_id}")
+    
+    elif event_type == "transfer.failed":
+        transfer_id = data.get("id")
+        # Update payout status
+        await db.payouts.update_one(
+            {"stripe_transfer_id": transfer_id},
+            {"$set": {"status": "failed", "failed_at": datetime.now(timezone.utc)}}
+        )
+        logger.info(f"Transfer failed: {transfer_id}")
+    
+    return {"received": True}
+
+# ============== PAYOUT ROUTES ==============
+
+@api_router.get("/payouts")
+async def get_payouts(request: Request):
+    """Get tutor's payout history"""
+    user = await require_tutor(request)
+    tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Tutor profile not found")
+    
+    payouts = await db.payouts.find(
+        {"tutor_id": tutor["tutor_id"]},
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(100)
+    
+    # Enrich with booking info
+    results = []
+    for payout in payouts:
+        booking = await db.bookings.find_one({"booking_id": payout["booking_id"]}, {"_id": 0})
+        student = None
+        if booking:
+            student = await db.students.find_one({"student_id": booking.get("student_id")}, {"_id": 0})
+        
+        results.append({
+            **payout,
+            "student_name": student["name"] if student else "Unknown",
+            "session_date": booking["start_at"] if booking else None
+        })
+    
+    return results
+
+@api_router.get("/payouts/summary")
+async def get_payout_summary(request: Request):
+    """Get tutor's payout summary"""
+    user = await require_tutor(request)
+    tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Tutor profile not found")
+    
+    payouts = await db.payouts.find(
+        {"tutor_id": tutor["tutor_id"]},
+        {"_id": 0}
+    ).to_list(1000)
+    
+    total_earned = sum(p["amount_cents"] for p in payouts if p["status"] == "completed")
+    pending = sum(p["amount_cents"] for p in payouts if p["status"] == "pending")
+    total_fees = sum(p.get("platform_fee_cents", 0) for p in payouts)
+    
+    # Get market config for currency
+    market_id = tutor.get("market_id", "US_USD")
+    market_config = MARKETS_CONFIG.get(market_id, MARKETS_CONFIG["US_USD"])
+    
+    return {
+        "total_earned_cents": total_earned,
+        "pending_cents": pending,
+        "total_platform_fees_cents": total_fees,
+        "total_payouts": len(payouts),
+        "currency": market_config["currency"],
+        "currency_symbol": market_config["currency_symbol"]
+    }
+
+# ============== REPORTS ROUTES ==============
+
+@api_router.get("/reports/consumer")
+async def get_consumer_report(
+    request: Request,
+    start_date: Optional[str] = None,
+    end_date: Optional[str] = None
+):
+    """Get consumer's session and cost report"""
+    user = await require_auth(request)
+    
+    # Build query
+    query = {"consumer_id": user.user_id}
+    
+    if start_date:
+        query["created_at"] = {"$gte": datetime.fromisoformat(start_date.replace('Z', '+00:00'))}
+    if end_date:
+        if "created_at" in query:
+            query["created_at"]["$lte"] = datetime.fromisoformat(end_date.replace('Z', '+00:00'))
+        else:
+            query["created_at"] = {"$lte": datetime.fromisoformat(end_date.replace('Z', '+00:00'))}
+    
+    bookings = await db.bookings.find(query, {"_id": 0}).sort("created_at", -1).to_list(1000)
+    
+    # Get user's market
+    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    market_id = user_doc.get("market_id", "US_USD")
+    market_config = MARKETS_CONFIG.get(market_id, MARKETS_CONFIG["US_USD"])
+    
+    # Calculate summaries
+    total_sessions = len(bookings)
+    completed_sessions = len([b for b in bookings if b["status"] == "completed"])
+    upcoming_sessions = len([b for b in bookings if b["status"] in ["booked", "confirmed"]])
+    canceled_sessions = len([b for b in bookings if "canceled" in b["status"]])
+    
+    total_spent_cents = sum(b.get("amount_cents", 0) for b in bookings if b.get("payment_status") == "paid")
+    
+    # Group by tutor
+    by_tutor = {}
+    for b in bookings:
+        tid = b["tutor_id"]
+        if tid not in by_tutor:
+            tutor = await db.tutors.find_one({"tutor_id": tid}, {"_id": 0})
+            tutor_user = await db.users.find_one({"user_id": tutor["user_id"]}, {"_id": 0}) if tutor else None
+            by_tutor[tid] = {
+                "tutor_id": tid,
+                "tutor_name": tutor_user["name"] if tutor_user else "Unknown",
+                "sessions": 0,
+                "spent_cents": 0
+            }
+        by_tutor[tid]["sessions"] += 1
+        by_tutor[tid]["spent_cents"] += b.get("amount_cents", 0) if b.get("payment_status") == "paid" else 0
+    
+    # Group by student
+    by_student = {}
+    for b in bookings:
+        sid = b.get("student_id")
+        if sid and sid not in by_student:
+            student = await db.students.find_one({"student_id": sid}, {"_id": 0})
+            by_student[sid] = {
+                "student_id": sid,
+                "student_name": student["name"] if student else "Unknown",
+                "sessions": 0,
+                "spent_cents": 0
+            }
+        if sid:
+            by_student[sid]["sessions"] += 1
+            by_student[sid]["spent_cents"] += b.get("amount_cents", 0) if b.get("payment_status") == "paid" else 0
+    
+    # Group by month
+    by_month = {}
+    for b in bookings:
+        created = b.get("created_at")
+        if created:
+            if isinstance(created, str):
+                created = datetime.fromisoformat(created.replace('Z', '+00:00'))
+            month_key = created.strftime("%Y-%m")
+            if month_key not in by_month:
+                by_month[month_key] = {"month": month_key, "sessions": 0, "spent_cents": 0}
+            by_month[month_key]["sessions"] += 1
+            by_month[month_key]["spent_cents"] += b.get("amount_cents", 0) if b.get("payment_status") == "paid" else 0
+    
+    return {
+        "summary": {
+            "total_sessions": total_sessions,
+            "completed_sessions": completed_sessions,
+            "upcoming_sessions": upcoming_sessions,
+            "canceled_sessions": canceled_sessions,
+            "total_spent_cents": total_spent_cents,
+            "currency": market_config["currency"],
+            "currency_symbol": market_config["currency_symbol"]
+        },
+        "by_tutor": list(by_tutor.values()),
+        "by_student": list(by_student.values()),
+        "by_month": sorted(by_month.values(), key=lambda x: x["month"], reverse=True),
+        "bookings": bookings[:50]  # Last 50 bookings
+    }
+
+@api_router.get("/reports/provider")
+async def get_provider_report(
+    request: Request,
+    start_date: Optional[str] = None,
+    end_date: Optional[str] = None
+):
+    """Get tutor's session and earnings report"""
+    user = await require_tutor(request)
+    tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Tutor profile not found")
+    
+    # Build query for bookings
+    query = {"tutor_id": tutor["tutor_id"]}
+    
+    if start_date:
+        query["created_at"] = {"$gte": datetime.fromisoformat(start_date.replace('Z', '+00:00'))}
+    if end_date:
+        if "created_at" in query:
+            query["created_at"]["$lte"] = datetime.fromisoformat(end_date.replace('Z', '+00:00'))
+        else:
+            query["created_at"] = {"$lte": datetime.fromisoformat(end_date.replace('Z', '+00:00'))}
+    
+    bookings = await db.bookings.find(query, {"_id": 0}).sort("created_at", -1).to_list(1000)
+    
+    # Get payouts
+    payout_query = {"tutor_id": tutor["tutor_id"]}
+    payouts = await db.payouts.find(payout_query, {"_id": 0}).to_list(1000)
+    
+    # Get market config
+    market_id = tutor.get("market_id", "US_USD")
+    market_config = MARKETS_CONFIG.get(market_id, MARKETS_CONFIG["US_USD"])
+    
+    # Calculate summaries
+    total_sessions = len(bookings)
+    completed_sessions = len([b for b in bookings if b["status"] == "completed"])
+    upcoming_sessions = len([b for b in bookings if b["status"] in ["booked", "confirmed"]])
+    canceled_sessions = len([b for b in bookings if "canceled" in b["status"]])
+    
+    total_earned_cents = sum(p["amount_cents"] for p in payouts if p["status"] == "completed")
+    pending_cents = sum(p["amount_cents"] for p in payouts if p["status"] == "pending")
+    total_fees_cents = sum(p.get("platform_fee_cents", 0) for p in payouts)
+    
+    # Group by student
+    by_student = {}
+    for b in bookings:
+        sid = b.get("student_id")
+        if sid and sid not in by_student:
+            student = await db.students.find_one({"student_id": sid}, {"_id": 0})
+            by_student[sid] = {
+                "student_id": sid,
+                "student_name": student["name"] if student else "Unknown",
+                "sessions": 0,
+                "earned_cents": 0
+            }
+        if sid:
+            by_student[sid]["sessions"] += 1
+            # Find payout for this booking
+            payout = next((p for p in payouts if p.get("booking_id") == b["booking_id"]), None)
+            if payout and payout["status"] == "completed":
+                by_student[sid]["earned_cents"] += payout["amount_cents"]
+    
+    # Group by month
+    by_month = {}
+    for b in bookings:
+        created = b.get("created_at")
+        if created:
+            if isinstance(created, str):
+                created = datetime.fromisoformat(created.replace('Z', '+00:00'))
+            month_key = created.strftime("%Y-%m")
+            if month_key not in by_month:
+                by_month[month_key] = {"month": month_key, "sessions": 0, "earned_cents": 0}
+            by_month[month_key]["sessions"] += 1
+            payout = next((p for p in payouts if p.get("booking_id") == b["booking_id"]), None)
+            if payout and payout["status"] == "completed":
+                by_month[month_key]["earned_cents"] += payout["amount_cents"]
+    
+    return {
+        "summary": {
+            "total_sessions": total_sessions,
+            "completed_sessions": completed_sessions,
+            "upcoming_sessions": upcoming_sessions,
+            "canceled_sessions": canceled_sessions,
+            "total_earned_cents": total_earned_cents,
+            "pending_cents": pending_cents,
+            "total_platform_fees_cents": total_fees_cents,
+            "currency": market_config["currency"],
+            "currency_symbol": market_config["currency_symbol"]
+        },
+        "by_student": list(by_student.values()),
+        "by_month": sorted(by_month.values(), key=lambda x: x["month"], reverse=True),
+        "bookings": bookings[:50],  # Last 50 bookings
+        "payouts": payouts[:50]  # Last 50 payouts
+    }
+
+@api_router.get("/reports/consumer/pdf")
+async def get_consumer_report_pdf(
+    request: Request,
+    start_date: Optional[str] = None,
+    end_date: Optional[str] = None
+):
+    """Generate PDF report for consumer"""
+    user = await require_auth(request)
+    
+    # Get report data
+    report = await get_consumer_report(request, start_date, end_date)
+    
+    # Generate PDF
+    try:
+        from reportlab.lib import colors
+        from reportlab.lib.pagesizes import letter
+        from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+        from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+        from reportlab.lib.units import inch
+    except ImportError:
+        raise HTTPException(status_code=500, detail="PDF generation not available")
+    
+    buffer = io.BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=letter, rightMargin=72, leftMargin=72, topMargin=72, bottomMargin=72)
+    
+    styles = getSampleStyleSheet()
+    title_style = ParagraphStyle('Title', parent=styles['Heading1'], fontSize=24, spaceAfter=30)
+    heading_style = ParagraphStyle('Heading', parent=styles['Heading2'], fontSize=16, spaceAfter=12)
+    
+    story = []
+    
+    # Title
+    story.append(Paragraph("Maestro Hub - Session Report", title_style))
+    story.append(Paragraph(f"Report for: {user.name}", styles['Normal']))
+    story.append(Paragraph(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')}", styles['Normal']))
+    story.append(Spacer(1, 20))
+    
+    # Summary
+    story.append(Paragraph("Summary", heading_style))
+    summary = report["summary"]
+    symbol = summary["currency_symbol"]
+    
+    summary_data = [
+        ["Total Sessions", str(summary["total_sessions"])],
+        ["Completed", str(summary["completed_sessions"])],
+        ["Upcoming", str(summary["upcoming_sessions"])],
+        ["Canceled", str(summary["canceled_sessions"])],
+        ["Total Spent", f"{symbol}{summary['total_spent_cents']/100:.2f}"]
+    ]
+    
+    summary_table = Table(summary_data, colWidths=[3*inch, 2*inch])
+    summary_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, -1), colors.whitesmoke),
+        ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 0), (-1, -1), 11),
+        ('PADDING', (0, 0), (-1, -1), 8),
+    ]))
+    story.append(summary_table)
+    story.append(Spacer(1, 20))
+    
+    # By Tutor
+    if report["by_tutor"]:
+        story.append(Paragraph("Sessions by Tutor", heading_style))
+        tutor_data = [["Tutor", "Sessions", "Amount"]]
+        for t in report["by_tutor"]:
+            tutor_data.append([t["tutor_name"], str(t["sessions"]), f"{symbol}{t['spent_cents']/100:.2f}"])
+        
+        tutor_table = Table(tutor_data, colWidths=[3*inch, 1.5*inch, 1.5*inch])
+        tutor_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2563eb')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+            ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('PADDING', (0, 0), (-1, -1), 6),
+        ]))
+        story.append(tutor_table)
+        story.append(Spacer(1, 20))
+    
+    # By Month
+    if report["by_month"]:
+        story.append(Paragraph("Monthly Breakdown", heading_style))
+        month_data = [["Month", "Sessions", "Amount"]]
+        for m in report["by_month"][:12]:  # Last 12 months
+            month_data.append([m["month"], str(m["sessions"]), f"{symbol}{m['spent_cents']/100:.2f}"])
+        
+        month_table = Table(month_data, colWidths=[3*inch, 1.5*inch, 1.5*inch])
+        month_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2563eb')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+            ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('PADDING', (0, 0), (-1, -1), 6),
+        ]))
+        story.append(month_table)
+    
+    doc.build(story)
+    buffer.seek(0)
+    
+    filename = f"maestrohub_report_{datetime.now().strftime('%Y%m%d')}.pdf"
+    return StreamingResponse(
+        buffer,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename={filename}"}
+    )
+
+@api_router.get("/reports/provider/pdf")
+async def get_provider_report_pdf(
+    request: Request,
+    start_date: Optional[str] = None,
+    end_date: Optional[str] = None
+):
+    """Generate PDF report for tutor"""
+    user = await require_tutor(request)
+    
+    # Get report data
+    report = await get_provider_report(request, start_date, end_date)
+    
+    # Generate PDF
+    try:
+        from reportlab.lib import colors
+        from reportlab.lib.pagesizes import letter
+        from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+        from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+        from reportlab.lib.units import inch
+    except ImportError:
+        raise HTTPException(status_code=500, detail="PDF generation not available")
+    
+    buffer = io.BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=letter, rightMargin=72, leftMargin=72, topMargin=72, bottomMargin=72)
+    
+    styles = getSampleStyleSheet()
+    title_style = ParagraphStyle('Title', parent=styles['Heading1'], fontSize=24, spaceAfter=30)
+    heading_style = ParagraphStyle('Heading', parent=styles['Heading2'], fontSize=16, spaceAfter=12)
+    
+    story = []
+    
+    # Title
+    story.append(Paragraph("Maestro Hub - Earnings Report", title_style))
+    story.append(Paragraph(f"Report for: {user.name}", styles['Normal']))
+    story.append(Paragraph(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')}", styles['Normal']))
+    story.append(Spacer(1, 20))
+    
+    # Summary
+    story.append(Paragraph("Summary", heading_style))
+    summary = report["summary"]
+    symbol = summary["currency_symbol"]
+    
+    summary_data = [
+        ["Total Sessions", str(summary["total_sessions"])],
+        ["Completed", str(summary["completed_sessions"])],
+        ["Upcoming", str(summary["upcoming_sessions"])],
+        ["Canceled", str(summary["canceled_sessions"])],
+        ["Total Earned", f"{symbol}{summary['total_earned_cents']/100:.2f}"],
+        ["Pending Payout", f"{symbol}{summary['pending_cents']/100:.2f}"],
+        ["Platform Fees", f"{symbol}{summary['total_platform_fees_cents']/100:.2f}"]
+    ]
+    
+    summary_table = Table(summary_data, colWidths=[3*inch, 2*inch])
+    summary_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, -1), colors.whitesmoke),
+        ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 0), (-1, -1), 11),
+        ('PADDING', (0, 0), (-1, -1), 8),
+    ]))
+    story.append(summary_table)
+    story.append(Spacer(1, 20))
+    
+    # By Student
+    if report["by_student"]:
+        story.append(Paragraph("Sessions by Student", heading_style))
+        student_data = [["Student", "Sessions", "Earned"]]
+        for s in report["by_student"]:
+            student_data.append([s["student_name"], str(s["sessions"]), f"{symbol}{s['earned_cents']/100:.2f}"])
+        
+        student_table = Table(student_data, colWidths=[3*inch, 1.5*inch, 1.5*inch])
+        student_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2563eb')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+            ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('PADDING', (0, 0), (-1, -1), 6),
+        ]))
+        story.append(student_table)
+        story.append(Spacer(1, 20))
+    
+    # By Month
+    if report["by_month"]:
+        story.append(Paragraph("Monthly Earnings", heading_style))
+        month_data = [["Month", "Sessions", "Earned"]]
+        for m in report["by_month"][:12]:
+            month_data.append([m["month"], str(m["sessions"]), f"{symbol}{m['earned_cents']/100:.2f}"])
+        
+        month_table = Table(month_data, colWidths=[3*inch, 1.5*inch, 1.5*inch])
+        month_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2563eb')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+            ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('PADDING', (0, 0), (-1, -1), 6),
+        ]))
+        story.append(month_table)
+    
+    doc.build(story)
+    buffer.seek(0)
+    
+    filename = f"maestrohub_earnings_{datetime.now().strftime('%Y%m%d')}.pdf"
+    return StreamingResponse(
+        buffer,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename={filename}"}
+    )
+
 # ============== CATEGORIES ==============
 
 @api_router.get("/categories")
