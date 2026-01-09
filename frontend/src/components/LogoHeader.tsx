@@ -27,15 +27,15 @@ export default function LogoHeader({
         };
       case 'large':
         return {
-          logoWidth: isDesktop ? 280 : isTablet ? 260 : 220,
-          logoHeight: isDesktop ? 112 : isTablet ? 104 : 88,
-          taglineFontSize: isDesktop ? 16 : isTablet ? 15 : 14,
+          logoWidth: isDesktop ? 360 : isTablet ? 320 : 280,
+          logoHeight: isDesktop ? 144 : isTablet ? 128 : 112,
+          taglineFontSize: isDesktop ? 17 : isTablet ? 16 : 15,
         };
       case 'medium':
       default:
         return {
-          logoWidth: isDesktop ? 220 : isTablet ? 200 : 180,
-          logoHeight: isDesktop ? 88 : isTablet ? 80 : 72,
+          logoWidth: isDesktop ? 240 : isTablet ? 220 : 200,
+          logoHeight: isDesktop ? 96 : isTablet ? 88 : 80,
           taglineFontSize: isDesktop ? 15 : isTablet ? 14 : 13,
         };
     }
