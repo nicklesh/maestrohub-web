@@ -31,7 +31,7 @@ export default function Index() {
   return (
     <View style={styles.container}>
       <Text style={styles.logo}>Maestro Hub</Text>
-      <Text style={styles.tagline}>The easiest way to book a tutor.</Text>
+      <Text style={styles.tagline}>Find your coach, master your skill.</Text>
       <ActivityIndicator size="large" color={colors.primary} style={styles.loader} />
     </View>
   );

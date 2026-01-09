@@ -188,7 +188,7 @@ export default function HomeScreen() {
                 Hello, {user?.name?.split(' ')[0] || 'there'}!
               </Text>
               <Text style={[styles.tagline, isDesktop && styles.taglineDesktop]}>
-                The easiest way to book a tutor.
+                Find your coach, master your skill.
               </Text>
             </View>
           </View>

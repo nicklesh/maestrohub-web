@@ -80,7 +80,7 @@ export default function LoginScreen() {
             <View style={[styles.header, isDesktop && styles.headerDesktop]}>
               <Text style={[styles.logo, isDesktop && styles.logoDesktop]}>Maestro Hub</Text>
               <Text style={[styles.tagline, isDesktop && styles.taglineDesktop]}>
-                The easiest way to book a tutor.
+                Find your coach, master your skill.
               </Text>
             </View>
 
