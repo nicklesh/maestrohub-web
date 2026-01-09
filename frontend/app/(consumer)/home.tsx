@@ -16,6 +16,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
 import { useMarket } from '@/src/context/MarketContext';
 import MarketSelectionModal from '@/src/components/MarketSelectionModal';
+import LogoHeader from '@/src/components/LogoHeader';
 import { api } from '@/src/services/api';
 import { colors } from '@/src/theme/colors';
 
@@ -181,14 +182,14 @@ export default function HomeScreen() {
         }
       >
         <View style={[styles.contentWrapper, containerMaxWidth ? { maxWidth: containerMaxWidth } : undefined]}>
-          {/* Header */}
+          {/* Header with Logo */}
           <View style={[styles.header, isTablet && styles.headerTablet]}>
-            <View>
+            <View style={styles.headerLeft}>
+              <LogoHeader size="small" showTagline={true} alignment="left" />
+            </View>
+            <View style={styles.headerRight}>
               <Text style={[styles.greeting, isDesktop && styles.greetingDesktop]}>
                 Hello, {user?.name?.split(' ')[0] || 'there'}!
-              </Text>
-              <Text style={[styles.tagline, isDesktop && styles.taglineDesktop]}>
-                Find your coach, master your skill.
               </Text>
             </View>
           </View>
@@ -296,21 +297,19 @@ const styles = StyleSheet.create({
     paddingTop: 32,
     paddingBottom: 16,
   },
+  headerLeft: {
+    flex: 1,
+  },
+  headerRight: {
+    alignItems: 'flex-end',
+  },
   greeting: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 16,
+    fontWeight: '600',
     color: colors.text,
   },
   greetingDesktop: {
-    fontSize: 32,
-  },
-  tagline: {
-    fontSize: 14,
-    color: colors.textMuted,
-    marginTop: 4,
-  },
-  taglineDesktop: {
-    fontSize: 16,
+    fontSize: 18,
   },
   searchBar: {
     flexDirection: 'row',
