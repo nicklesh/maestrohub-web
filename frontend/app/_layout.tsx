@@ -3,31 +3,44 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { AuthProvider } from '@/src/context/AuthContext';
 import { MarketProvider } from '@/src/context/MarketContext';
+import { ThemeProvider, useTheme } from '@/src/context/ThemeContext';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StyleSheet } from 'react-native';
+
+function AppContent() {
+  const { colors, isDark } = useTheme();
+  
+  return (
+    <>
+      <StatusBar style={isDark ? 'light' : 'dark'} />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: { backgroundColor: colors.background },
+        }}
+      >
+        <Stack.Screen name="index" />
+        <Stack.Screen name="(auth)" />
+        <Stack.Screen name="(consumer)" />
+        <Stack.Screen name="(tutor)" />
+        <Stack.Screen name="(admin)" />
+      </Stack>
+    </>
+  );
+}
 
 export default function RootLayout() {
   return (
     <GestureHandlerRootView style={styles.container}>
       <SafeAreaProvider>
-        <AuthProvider>
-          <MarketProvider>
-            <StatusBar style="dark" />
-            <Stack
-              screenOptions={{
-                headerShown: false,
-                contentStyle: { backgroundColor: '#F8FAFC' },
-              }}
-            >
-              <Stack.Screen name="index" />
-              <Stack.Screen name="(auth)" />
-              <Stack.Screen name="(consumer)" />
-              <Stack.Screen name="(tutor)" />
-              <Stack.Screen name="(admin)" />
-            </Stack>
-          </MarketProvider>
-        </AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <MarketProvider>
+              <AppContent />
+            </MarketProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
