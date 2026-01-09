@@ -399,9 +399,12 @@ export default function ProfileScreen() {
             activeOpacity={1} 
             onPress={() => setShowContactSheet(false)}
           />
-          <View style={[styles.bottomSheet, { backgroundColor: colors.surface }]}>
-            <View style={styles.sheetHandle} />
-            <Text style={[styles.sheetTitle, { color: colors.text }]}>Contact Us</Text>
+          <View style={[styles.bottomSheet, { backgroundColor: colors.surface, overflow: 'hidden' }]}>
+            <View style={[styles.sheetHandle, { backgroundColor: colors.gray300 }]} />
+            <View style={styles.sheetHeader}>
+              <Ionicons name="mail" size={24} color={isDark ? '#FFD700' : colors.primary} />
+              <Text style={[styles.sheetTitle, { color: colors.text }]}>Contact Us</Text>
+            </View>
             
             <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Subject</Text>
             <TextInput
