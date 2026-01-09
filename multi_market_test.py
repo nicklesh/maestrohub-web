@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Backend API Testing for Acharyaly Multi-Market Endpoints
+Backend API Testing for Maestro Hub Multi-Market Endpoints
 Tests the new multi-market API endpoints as requested in the review.
 """
 
@@ -428,7 +428,7 @@ def test_admin_endpoints():
 
 def run_all_tests():
     """Run all multi-market API tests"""
-    print("🚀 Starting Acharyaly Multi-Market API Tests")
+    print("🚀 Starting Maestro Hub Multi-Market API Tests")
     print(f"Backend URL: {API_BASE}")
     print("=" * 60)
     

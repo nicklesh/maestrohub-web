@@ -91,7 +91,7 @@ export default function RegisterScreen() {
         >
           <View style={[styles.formWrapper, formMaxWidth ? { maxWidth: formMaxWidth } : undefined]}>
             <View style={[styles.header, isDesktop && styles.headerDesktop]}>
-              <Text style={[styles.logo, isDesktop && styles.logoDesktop]}>Acharyaly</Text>
+              <Text style={[styles.logo, isDesktop && styles.logoDesktop]}>Maestro Hub</Text>
             </View>
 
             <View style={[styles.form, isTablet && styles.formTablet]}>

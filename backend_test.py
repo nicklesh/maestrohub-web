@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Acharyaly Backend API Test Suite
+Maestro Hub Backend API Test Suite
 Tests all major backend flows including auth, students, tutors, and categories
 """
 
@@ -13,7 +13,7 @@ import sys
 # Backend URL from environment
 BACKEND_URL = "https://tutorspot-15.preview.emergentagent.com/api"
 
-class AcharyalyAPITester:
+class Maestro HubAPITester:
     def __init__(self):
         self.base_url = BACKEND_URL
         self.session = requests.Session()
@@ -415,6 +415,6 @@ class AcharyalyAPITester:
         return passed == total
 
 if __name__ == "__main__":
-    tester = AcharyalyAPITester()
+    tester = Maestro HubAPITester()
     success = tester.run_all_tests()
     sys.exit(0 if success else 1)

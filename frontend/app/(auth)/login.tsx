@@ -78,7 +78,7 @@ export default function LoginScreen() {
         >
           <View style={[styles.formWrapper, formMaxWidth ? { maxWidth: formMaxWidth } : undefined]}>
             <View style={[styles.header, isDesktop && styles.headerDesktop]}>
-              <Text style={[styles.logo, isDesktop && styles.logoDesktop]}>Acharyaly</Text>
+              <Text style={[styles.logo, isDesktop && styles.logoDesktop]}>Maestro Hub</Text>
               <Text style={[styles.tagline, isDesktop && styles.taglineDesktop]}>
                 The easiest way to book a tutor.
               </Text>

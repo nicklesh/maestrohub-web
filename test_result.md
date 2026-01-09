@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Test the Acharyaly tutor marketplace backend API flows including auth, student management, tutor profiles, and categories"
+user_problem_statement: "Test the Maestro Hub tutor marketplace backend API flows including auth, student management, tutor profiles, and categories"
 
 backend:
   - task: "Health Check API"

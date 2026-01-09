@@ -1,10 +1,10 @@
-# Acharyaly - City-First Tutor Marketplace
+# Maestro Hub - City-First Tutor Marketplace
 
 ## Overview
 A Zocdoc-like marketplace where families can discover tutors (academic, music, activities), view real availability, book instantly, complete enrollment/intake, and pay.
 
 ## Branding
-- **App Name**: Acharyaly
+- **App Name**: Maestro Hub
 - **Consumer Tagline**: "The easiest way to book a tutor."
 - **Provider Tagline**: "Scheduling, enrollment, and payments for tutors."
 

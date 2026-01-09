@@ -76,7 +76,7 @@ COUNTRY_TO_MARKET = {
 }
 
 # Create the main app
-app = FastAPI(title="Acharyaly API", version="1.0.0")
+app = FastAPI(title="Maestro Hub API", version="1.0.0")
 api_router = APIRouter(prefix="/api")
 security = HTTPBearer(auto_error=False)
 
@@ -1861,7 +1861,7 @@ async def admin_get_market_analytics(request: Request, market_id: Optional[str] 
 
 @api_router.get("/")
 async def root():
-    return {"message": "Acharyaly API", "version": "1.0.0"}
+    return {"message": "Maestro Hub API", "version": "1.0.0"}
 
 @api_router.get("/health")
 async def health():
