@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Test the Maestro Hub tutor marketplace backend API flows including auth, student management, tutor profiles, and categories"
+user_problem_statement: "Test the Maestro Hub tutor marketplace backend API flows including auth, student management, tutor profiles, invites, and categories"
 
 backend:
   - task: "Health Check API"
@@ -116,6 +116,54 @@ backend:
       - working: true
         agent: "testing"
         comment: "API health endpoint responding correctly at /api/health"
+
+  - task: "Invites API - Send Invite"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Implemented POST /api/invites for tutors to send invites to consumers"
+
+  - task: "Invites API - Get Sent Invites"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Implemented GET /api/invites/sent for tutors to view invites they've sent"
+
+  - task: "Invites API - Get Received Invites"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Implemented GET /api/invites/received for consumers to view invites they've received"
+
+  - task: "Invites API - Accept/Decline Invite"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Implemented POST /api/invites/{id}/accept and /api/invites/{id}/decline for consumers"
 
   - task: "User Registration (Consumer)"
     implemented: true
