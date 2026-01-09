@@ -225,8 +225,8 @@ export default function BookingDetailScreen() {
           <View style={[styles.card, isTablet && styles.cardTablet]}>
             <Text style={styles.cardTitle}>Student</Text>
             <View style={styles.personRow}>
-              <View style={[styles.personAvatar, { backgroundColor: colors.accent }]}>
-                <Text style={styles.personInitial}>
+              <View style={[styles.personAvatar, styles.studentAvatar]}>
+                <Text style={styles.studentInitial}>
                   {booking.student_name?.charAt(0)?.toUpperCase() || 'S'}
                 </Text>
               </View>
