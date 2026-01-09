@@ -65,32 +65,37 @@ export default function AppHeader({ showBack = false, title, showUserName = fals
     }
   };
 
-  const handleLogout = () => {
-    Alert.alert('Logout', 'Are you sure you want to logout?', [
-      { text: 'Cancel', style: 'cancel' },
-      { 
-        text: 'Logout', 
-        style: 'destructive', 
-        onPress: async () => {
-          try {
-            await logout();
-            // The logout function in AuthContext handles the redirect for web
-            // For native, use router.replace
-            if (Platform.OS !== 'web') {
+  const handleLogout = async () => {
+    // On web, use window.confirm instead of Alert
+    if (Platform.OS === 'web' && typeof window !== 'undefined') {
+      const confirmed = window.confirm('Are you sure you want to logout?');
+      if (confirmed) {
+        try {
+          await logout();
+          // AuthContext handles redirect for web
+        } catch (error) {
+          console.error('Logout error:', error);
+          window.location.replace('/login');
+        }
+      }
+    } else {
+      Alert.alert('Logout', 'Are you sure you want to logout?', [
+        { text: 'Cancel', style: 'cancel' },
+        { 
+          text: 'Logout', 
+          style: 'destructive', 
+          onPress: async () => {
+            try {
+              await logout();
               router.replace('/(auth)/login');
-            }
-          } catch (error) {
-            console.error('Logout error:', error);
-            // Force redirect even on error for web
-            if (Platform.OS === 'web' && typeof window !== 'undefined') {
-              window.location.replace('/login');
-            } else {
+            } catch (error) {
+              console.error('Logout error:', error);
               router.replace('/(auth)/login');
             }
           }
-        }
-      },
-    ]);
+        },
+      ]);
+    }
   };
 
   const handleContactSubmit = async () => {
