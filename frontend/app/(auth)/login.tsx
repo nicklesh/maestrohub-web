@@ -84,7 +84,7 @@ export default function LoginScreen() {
           <View style={[styles.formWrapper, formMaxWidth ? { maxWidth: formMaxWidth } : undefined]}>
             <View style={[styles.header, isDesktop && styles.headerDesktop]}>
               <Image
-                source={require('../../assets/images/mh_logo.png')}
+                source={require('../../assets/images/mh_logo_trimmed.png')}
                 style={{ width: logoWidth, height: logoHeight }}
                 resizeMode="contain"
               />
