@@ -716,6 +716,21 @@ const createStyles = (colors: any) => StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
   },
+  successContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 40,
+  },
+  successTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    marginTop: 16,
+  },
+  successText: {
+    fontSize: 14,
+    marginTop: 8,
+    textAlign: 'center',
+  },
   inputLabel: {
     fontSize: 13,
     marginBottom: 6,
