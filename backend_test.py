@@ -426,14 +426,19 @@ class APITester:
         """Helper method to login and return token"""
         try:
             credentials = TEST_CREDENTIALS[user_type]
-            response = self.session.post(f"{API_BASE}/auth/login", json=credentials, timeout=30)
+            # Use a fresh request instead of session to avoid conflicts
+            response = requests.post(f"{API_BASE}/auth/login", json=credentials, timeout=30)
             
             if response.status_code == 200:
                 data = response.json()
-                return data.get("token")
+                token = data.get("token")
+                print(f"   {user_type} login successful, token: {token[:20]}...")
+                return token
             else:
+                print(f"   {user_type} login failed: {response.status_code} - {response.text}")
                 return None
-        except Exception:
+        except Exception as e:
+            print(f"   {user_type} login exception: {str(e)}")
             return None
     
     def get_tutor_id(self, token):
