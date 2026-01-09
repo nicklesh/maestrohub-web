@@ -349,14 +349,24 @@ class APITester:
             
             if response.status_code == 200:
                 data = response.json()
+                # Handle both formats: direct list or object with markets key
                 if isinstance(data, list) and len(data) > 0:
                     markets = data
                     market_ids = [m.get("market_id") for m in markets]
                     self.log_result("GET /api/markets", True, 
                                   f"Markets retrieved: {len(markets)} markets - {', '.join(market_ids)}")
+                elif isinstance(data, dict) and "markets" in data:
+                    markets = data["markets"]
+                    if isinstance(markets, list) and len(markets) > 0:
+                        market_ids = [m.get("market_id") for m in markets]
+                        self.log_result("GET /api/markets", True, 
+                                      f"Markets retrieved: {len(markets)} markets - {', '.join(market_ids)}")
+                    else:
+                        self.log_result("GET /api/markets", False, 
+                                      "Markets list is empty or invalid", data)
                 else:
                     self.log_result("GET /api/markets", False, 
-                                  "Invalid response format - expected list of markets", data)
+                                  "Invalid response format - expected markets data", data)
             else:
                 self.log_result("GET /api/markets", False, 
                               f"HTTP {response.status_code}", response.text)
