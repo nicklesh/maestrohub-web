@@ -444,10 +444,14 @@ class APITester:
             
             if response.status_code == 200:
                 data = response.json()
-                return data.get("tutor_id")
+                tutor_id = data.get("tutor_id")
+                print(f"   Got tutor_id: {tutor_id}")
+                return tutor_id
             else:
+                print(f"   Profile request failed: {response.status_code} - {response.text}")
                 return None
-        except Exception:
+        except Exception as e:
+            print(f"   Exception getting tutor profile: {str(e)}")
             return None
     
     def test_create_invite(self, token, test_suffix=""):
