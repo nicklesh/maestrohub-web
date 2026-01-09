@@ -57,7 +57,15 @@ export default function AppHeader({ showBack = false, title, showUserName = fals
   };
 
   const handleBack = () => {
-    if (router.canGoBack()) {
+    // On web, use browser history if available
+    if (Platform.OS === 'web' && typeof window !== 'undefined') {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        // Fallback to home based on role
+        handleLogoPress();
+      }
+    } else if (router.canGoBack()) {
       router.back();
     } else {
       // Fallback to home based on role
