@@ -147,10 +147,19 @@ export default function BookingDetailScreen() {
         rating,
         comment: reviewComment.trim() || undefined,
       });
-      Alert.alert('Thank you!', 'Your review has been submitted.');
+      if (Platform.OS === 'web') {
+        window.alert('Thank you! Your review has been submitted.');
+      } else {
+        Alert.alert('Thank you!', 'Your review has been submitted.');
+      }
       setShowReview(false);
     } catch (error: any) {
-      Alert.alert('Error', error.response?.data?.detail || 'Failed to submit review');
+      const errorMsg = error.response?.data?.detail || 'Failed to submit review';
+      if (Platform.OS === 'web') {
+        window.alert(errorMsg);
+      } else {
+        Alert.alert('Error', errorMsg);
+      }
     } finally {
       setSubmittingReview(false);
     }
