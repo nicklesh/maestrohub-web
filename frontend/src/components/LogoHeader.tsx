@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Image, Text, StyleSheet, useWindowDimensions } from 'react-native';
-import { colors } from '@/src/theme/colors';
+import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 
 interface LogoHeaderProps {
   showTagline?: boolean;
@@ -14,8 +14,11 @@ export default function LogoHeader({
   alignment = 'center' 
 }: LogoHeaderProps) {
   const { width } = useWindowDimensions();
+  const { colors } = useTheme();
   const isTablet = width >= 768;
   const isDesktop = width >= 1024;
+
+  const styles = getStyles(colors);
 
   const getSizeStyles = () => {
     switch (size) {
@@ -62,7 +65,7 @@ export default function LogoHeader({
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colors: ThemeColors) => StyleSheet.create({
   container: {
     paddingVertical: 8,
   },

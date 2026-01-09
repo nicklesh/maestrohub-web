@@ -6,12 +6,11 @@ import {
   Modal,
   TouchableOpacity,
   useWindowDimensions,
-  Image,
   ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '@/src/theme/colors';
-import { useMarket, Market } from '@/src/context/MarketContext';
+import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
+import { useMarket } from '@/src/context/MarketContext';
 
 interface MarketSelectionModalProps {
   visible: boolean;
@@ -30,6 +29,7 @@ export default function MarketSelectionModal({
   canDismiss = false,
 }: MarketSelectionModalProps) {
   const { width } = useWindowDimensions();
+  const { colors } = useTheme();
   const { markets, suggestedMarketId, selectMarket, loading } = useMarket();
   const [selectedId, setSelectedId] = useState<string | null>(suggestedMarketId);
   const [submitting, setSubmitting] = useState(false);
@@ -37,6 +37,8 @@ export default function MarketSelectionModal({
   // Responsive breakpoints
   const isTablet = width >= 768;
   const contentMaxWidth = isTablet ? 480 : width * 0.9;
+
+  const styles = getStyles(colors);
 
   const handleSelect = async () => {
     if (!selectedId) return;
@@ -156,7 +158,7 @@ export default function MarketSelectionModal({
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colors: ThemeColors) => StyleSheet.create({
   overlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -284,7 +286,7 @@ const styles = StyleSheet.create({
   infoText: {
     flex: 1,
     fontSize: 13,
-    color: colors.primaryDark,
+    color: colors.primary,
     lineHeight: 18,
   },
   continueButton: {
