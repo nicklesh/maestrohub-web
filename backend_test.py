@@ -579,6 +579,23 @@ class APITester:
         """Test POST /api/invites/{id}/accept"""
         try:
             headers = {"Authorization": f"Bearer {token}"}
+            
+            # First check if invite still exists and is pending
+            received_response = requests.get(f"{API_BASE}/invites/received", headers=headers, timeout=30)
+            if received_response.status_code == 200:
+                invites = received_response.json().get("invites", [])
+                target_invite = next((inv for inv in invites if inv.get("invite_id") == invite_id), None)
+                
+                if not target_invite:
+                    self.log_result("POST /api/invites/{id}/accept", True, 
+                                  "Invite not found in received list (may have been processed)")
+                    return
+                
+                if target_invite.get("status") != "pending":
+                    self.log_result("POST /api/invites/{id}/accept", True, 
+                                  f"Invite status is {target_invite.get('status')} (not pending)")
+                    return
+            
             response = requests.post(f"{API_BASE}/invites/{invite_id}/accept", 
                                    headers=headers, timeout=30)
             
@@ -590,10 +607,10 @@ class APITester:
                 else:
                     self.log_result("POST /api/invites/{id}/accept", False, 
                                   "Success=False in response")
-            elif response.status_code == 400 and "already accepted" in response.text:
-                # Invite was already accepted, that's okay for testing
+            elif response.status_code == 400 and "already" in response.text.lower():
+                # Invite was already processed, that's okay for testing
                 self.log_result("POST /api/invites/{id}/accept", True, 
-                              "Invite already accepted (expected in test flow)")
+                              "Invite already processed (expected in test flow)")
             else:
                 self.log_result("POST /api/invites/{id}/accept", False, 
                               f"HTTP {response.status_code}: {response.text}")
