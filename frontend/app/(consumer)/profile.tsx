@@ -90,22 +90,27 @@ export default function ProfileScreen() {
     fetchReminders();
   }, []);
 
-  const handleLogout = () => {
-    Alert.alert('Logout', 'Are you sure you want to logout?', [
-      { text: 'Cancel', style: 'cancel' },
-      { 
-        text: 'Logout', 
-        style: 'destructive', 
-        onPress: async () => {
-          await logout();
-          // AuthContext handles redirect for web
-          // For native, manually navigate
-          if (Platform.OS !== 'web') {
+  const handleLogout = async () => {
+    // On web, use window.confirm instead of Alert
+    if (Platform.OS === 'web') {
+      const confirmed = window.confirm('Are you sure you want to logout?');
+      if (confirmed) {
+        await logout();
+        // AuthContext handles redirect for web
+      }
+    } else {
+      Alert.alert('Logout', 'Are you sure you want to logout?', [
+        { text: 'Cancel', style: 'cancel' },
+        { 
+          text: 'Logout', 
+          style: 'destructive', 
+          onPress: async () => {
+            await logout();
             router.replace('/(auth)/login');
           }
-        }
-      },
-    ]);
+        },
+      ]);
+    }
   };
 
   const handleContactSubmit = async () => {
