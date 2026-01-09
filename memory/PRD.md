@@ -1,174 +1,275 @@
-# Maestro Hub - City-First Tutor Marketplace
+# Maestro Hub - Product Requirements Document (PRD)
 
-## Overview
-A Zocdoc-like marketplace where families can discover tutors (academic, music, activities), view real availability, book instantly, complete enrollment/intake, and pay.
+## Version: 2.0
+## Last Updated: January 9, 2025
+## Status: In Development
 
-## Branding
-- **App Name**: Maestro Hub
-- **Consumer Tagline**: "The easiest way to book a tutor."
-- **Provider Tagline**: "Scheduling, enrollment, and payments for tutors."
+---
 
-## Color Theme
-| Color | Hex | Usage |
-|-------|-----|-------|
-| Primary (Trust Blue) | #2563EB | Buttons, links, primary actions |
-| Primary Dark | #1E3A8A | Headers, emphasis |
-| Accent (Amber) | #F59E0B | CTAs, highlights, badges |
-| Success | #16A34A | Confirmations, completed states |
-| Background | #F8FAFC | App background |
-| Surface | #FFFFFF | Cards, modals |
-| Text | #0F172A | Primary text |
-| Muted Text | #64748B | Secondary text, placeholders |
-| Border | #E2E8F0 | Dividers, input borders |
+## 1. Product Overview
 
-## User Personas
-1. **Parent (Consumer)**: Creates account, adds students, books tutors, pays
-2. **Tutor (Provider)**: Creates profile, sets availability, receives bookings + payouts
-3. **Admin**: Approves/suspends tutors, manages refunds, configures pricing
+### 1.1 Product Name
+**Maestro Hub**
 
-## MVP Features (4 Weeks)
+### 1.2 Tagline
+"Find your coach, master your skill"
 
-### Week 1: Foundation + Tutor Listings
-- [x] Auth (Google OAuth + JWT email/password)
-- [x] Role-based access (Consumer, Tutor, Admin)
-- [x] Device ID tracking
-- [x] Tutor profile creation
-- [x] Availability templates
-- [x] Search/discovery
+### 1.3 Product Description
+Maestro Hub is a Zocdoc-style marketplace that connects families with tutors across various subjects and skills. The platform enables parents to discover, book, and pay for tutoring sessions with real-time availability and multi-market support.
 
-### Week 2: Booking Engine + Payments
-- [x] Slot locking mechanism
-- [x] Booking state machine (HOLD → BOOKED → COMPLETED/CANCELED)
-- [x] Stripe payments (placeholder)
-- [x] Basic reschedule/cancel
+### 1.4 Target Users
+- **Parents/Guardians (Consumers)**: Families seeking tutors for their children
+- **Tutors (Providers)**: Instructors offering tutoring services
+- **Administrators**: Platform operators managing the marketplace
 
-### Week 3: Intake + Notifications + Reviews
-- [x] Student profile management
-- [x] Intake forms per booking
-- [x] Email notifications (Resend placeholder)
-- [x] Verified reviews after completion
+---
 
-### Week 4: Admin + Provider Fees
-- [x] Admin console (approve/suspend tutors)
-- [x] Refund tool
-- [x] Trial tracking
-- [x] NSF event logging
+## 2. Feature Requirements
 
-## Technical Stack
-- **Frontend**: Expo React Native
-- **Backend**: FastAPI
-- **Database**: MongoDB
-- **Payments**: Stripe Connect (placeholder)
-- **Email**: Resend (placeholder)
-- **Push**: Expo Push Notifications
+### 2.1 Core Features (MVP) ✅
 
-## API Endpoints
+| Feature | Status | Notes |
+|---------|--------|-------|
+| User Authentication | ✅ Complete | Email/password, JWT tokens |
+| User Registration | ✅ Complete | Consumer, Tutor, Admin roles |
+| Tutor Profiles | ✅ Complete | Bio, subjects, pricing, availability |
+| Search & Discovery | ✅ Complete | Filter by subject, category, price |
+| Booking System | ✅ Complete | Holds, confirmations, cancellations |
+| Payment Processing | ✅ Complete | Stripe integration (placeholder keys) |
+| Multi-Market Support | ✅ Complete | US (USD) and India (INR) |
+| Reports & Analytics | ✅ Complete | Session history, spending/earnings |
 
-### Auth
-- POST /api/auth/register
-- POST /api/auth/login
-- GET /api/auth/me
-- POST /api/auth/logout
-- POST /api/auth/google/callback
+### 2.2 New Features (v2.0) 🚧
 
-### Consumers
-- GET /api/students
-- POST /api/students
-- PUT /api/students/{id}
-- DELETE /api/students/{id}
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Dark/Light Theme | ✅ Complete | Premium Academy palette for dark mode |
+| Notifications | ✅ Complete | Payment, session, system notifications |
+| Reminders | ✅ Complete | Upcoming sessions, payments |
+| Contact Support | ✅ Complete | In-app support form |
+| PDF Reports | ✅ Complete | Downloadable session reports |
+| Tutor Payouts | ✅ Complete | Immediate payout per session |
+| Calendar View | 🚧 Pending | Visual booking calendar |
+| Edit Profile | 🚧 Pending | Profile editing screen |
+| Payment Methods | 🚧 Pending | Saved payment methods |
 
-### Tutors
-- GET /api/tutors/search
-- GET /api/tutors/{id}
-- POST /api/tutors/profile
-- PUT /api/tutors/profile
-- GET /api/tutors/{id}/availability
+### 2.3 Planned Features (Backlog)
 
-### Availability
-- GET /api/availability/rules
-- POST /api/availability/rules
-- PUT /api/availability/rules/{id}
-- POST /api/availability/exceptions
+| Feature | Priority | Sprint |
+|---------|----------|--------|
+| Push Notifications | P1 | Sprint 4 |
+| Real-time Chat | P2 | Sprint 5 |
+| Video Sessions | P2 | Sprint 6 |
+| Review System UI | P1 | Sprint 4 |
+| Student Management UI | P2 | Sprint 5 |
+| Subscription Plans | P3 | Sprint 7 |
 
-### Bookings
-- POST /api/booking-holds
-- POST /api/bookings
-- GET /api/bookings
-- POST /api/bookings/{id}/cancel
-- POST /api/bookings/{id}/reschedule
-- POST /api/bookings/{id}/complete
+---
 
-### Reviews
-- POST /api/bookings/{id}/review
-- GET /api/tutors/{id}/reviews
+## 3. Technical Architecture
 
-### Admin
-- GET /api/admin/tutors
-- POST /api/admin/tutors/{id}/approve
-- POST /api/admin/tutors/{id}/suspend
-- POST /api/admin/bookings/{id}/refund
+### 3.1 Tech Stack
 
-### Billing
-- GET /api/billing/summary
-- GET /api/billing/fee-events
+| Layer | Technology |
+|-------|------------|
+| Frontend | React Native (Expo) |
+| Backend | FastAPI (Python) |
+| Database | MongoDB |
+| Payments | Stripe |
+| Hosting | Kubernetes |
 
-## Data Models
+### 3.2 Key Endpoints
 
-### Users
-```json
-{
-  "user_id": "string",
-  "email": "string",
-  "name": "string",
-  "picture": "string?",
-  "role": "consumer | tutor | admin",
-  "password_hash": "string?",
-  "devices": [{ "device_id": "string", "device_name": "string", "platform": "string" }],
-  "created_at": "datetime"
-}
+```
+/api/auth/*        - Authentication
+/api/users/*       - User management
+/api/tutors/*      - Tutor profiles & search
+/api/bookings/*    - Booking management
+/api/payments/*    - Payment processing
+/api/reports/*     - Analytics & reports
+/api/notifications/* - User notifications
+/api/reminders/*   - User reminders
+/api/contact       - Support requests
+/api/markets/*     - Market configuration
 ```
 
-### Tutors
-```json
-{
-  "tutor_id": "string",
-  "user_id": "string",
-  "bio": "string",
-  "categories": ["academic", "music", "activities"],
-  "subjects": ["math", "piano"],
-  "levels": ["elementary", "high_school"],
-  "modality": ["online", "in_person"],
-  "service_area_radius": "number",
-  "base_price": "number",
-  "duration_minutes": "number",
-  "policies": { "cancel_window_hours": 24, "no_show_policy": "string" },
-  "status": "pending | approved | suspended",
-  "is_published": "boolean",
-  "trial_start_at": "datetime?",
-  "created_at": "datetime"
-}
+### 3.3 Database Collections
+
+```
+users              - User accounts
+tutors             - Tutor profiles
+students           - Student records
+bookings           - Session bookings
+booking_holds      - Temporary holds
+payment_intents    - Payment records
+payouts            - Tutor payouts
+refunds            - Refund records
+notifications      - User notifications
+contact_requests   - Support tickets
+markets            - Market configuration
+pricing_policies   - Pricing rules
 ```
 
-### Bookings
-```json
-{
-  "booking_id": "string",
-  "tutor_id": "string",
-  "consumer_id": "string",
-  "student_id": "string",
-  "service_id": "string",
-  "start_at": "datetime",
-  "end_at": "datetime",
-  "status": "hold | booked | confirmed | completed | canceled_by_consumer | canceled_by_provider",
-  "price_snapshot": "number",
-  "policy_snapshot": "object",
-  "payment_id": "string?",
-  "intake_response": "object?",
-  "created_at": "datetime"
-}
+---
+
+## 4. User Stories
+
+### 4.1 Consumer Stories
+
+| ID | Story | Acceptance Criteria | Status |
+|----|-------|---------------------|--------|
+| C-001 | As a parent, I can register and create an account | Email verification, role selection | ✅ Done |
+| C-002 | As a parent, I can search for tutors | Filter by subject, price, location | ✅ Done |
+| C-003 | As a parent, I can view tutor profiles | See bio, reviews, availability | ✅ Done |
+| C-004 | As a parent, I can book a session | Select time, pay, confirm | ✅ Done |
+| C-005 | As a parent, I can view my bookings | Upcoming and past sessions | ✅ Done |
+| C-006 | As a parent, I can download reports | PDF with spending history | ✅ Done |
+| C-007 | As a parent, I can switch themes | Light and dark mode | ✅ Done |
+| C-008 | As a parent, I can contact support | In-app form submission | ✅ Done |
+| C-009 | As a parent, I can view calendar | Visual booking calendar | 🚧 Pending |
+
+### 4.2 Tutor Stories
+
+| ID | Story | Acceptance Criteria | Status |
+|----|-------|---------------------|--------|
+| T-001 | As a tutor, I can create my profile | Add bio, subjects, pricing | ✅ Done |
+| T-002 | As a tutor, I can set availability | Weekly schedule rules | ✅ Done |
+| T-003 | As a tutor, I can view my bookings | Upcoming sessions list | ✅ Done |
+| T-004 | As a tutor, I can view earnings | Payout history, reports | ✅ Done |
+| T-005 | As a tutor, I receive payouts | Immediate per-session | ✅ Done |
+
+### 4.3 Admin Stories
+
+| ID | Story | Acceptance Criteria | Status |
+|----|-------|---------------------|--------|
+| A-001 | As admin, I can view dashboard | Key metrics overview | ✅ Done |
+| A-002 | As admin, I can manage markets | Enable/disable markets | ✅ Done |
+| A-003 | As admin, I can view analytics | Market-level metrics | ✅ Done |
+
+---
+
+## 5. Multi-Market Support
+
+### 5.1 Supported Markets
+
+| Market | Currency | Status |
+|--------|----------|--------|
+| United States | USD ($) | ✅ Active |
+| India | INR (₹) | ✅ Active |
+
+### 5.2 Market Features
+
+- IP-based market suggestion on first visit
+- Market selection modal for new users
+- Market-filtered search results
+- Market-specific pricing display
+- Cross-market booking prevention
+
+---
+
+## 6. Design System
+
+### 6.1 Light Theme (Default)
+
+```
+Primary: #2563EB (Blue)
+Accent: #F59E0B (Amber)
+Success: #16A34A (Green)
+Background: #F8FAFC (Light Gray)
+Surface: #FFFFFF (White)
+Text: #0F172A (Dark)
+Border: #E2E8F0 (Gray)
 ```
 
-## Monetization
-- Consumer fees: $0 (Phase 1)
-- Provider fees: Pay-per-new-student (NSF) after 90-day trial
-- Pro subscription: $49/mo (optional)
+### 6.2 Dark Theme (Premium Academy)
+
+```
+Primary: #D4A72C (Gold)
+Background: #0B1F3B (Navy)
+Surface: #142E54 (Dark Blue)
+Text: #F6F7FB (Light)
+Border: #334155 (Slate)
+```
+
+### 6.3 Responsive Breakpoints
+
+```
+Mobile: < 768px
+Tablet: 768px - 1024px
+Desktop: > 1024px
+```
+
+---
+
+## 7. Success Metrics
+
+| Metric | Target | Current |
+|--------|--------|--------|
+| User Registration | 100/month | - |
+| Booking Conversion | 15% | - |
+| Session Completion | 90% | - |
+| Tutor Retention | 80% | - |
+| NPS Score | > 50 | - |
+
+---
+
+## 8. Risks & Mitigations
+
+| Risk | Impact | Mitigation |
+|------|--------|------------|
+| Payment failures | High | Retry logic, fallback methods |
+| Cross-market fraud | Medium | Market validation on booking |
+| Tutor no-shows | Medium | Cancellation policies, reviews |
+| Data breach | High | Encryption, access controls |
+
+---
+
+## 9. Dependencies
+
+### 9.1 External Services
+
+| Service | Purpose | Status |
+|---------|---------|--------|
+| Stripe | Payments | ⚠️ Placeholder keys |
+| ip-api.com | Geolocation | ✅ Active |
+| Resend | Email | ⚠️ Placeholder keys |
+
+### 9.2 Environment Variables
+
+```
+STRIPE_SECRET_KEY=sk_test_placeholder
+STRIPE_PUBLISHABLE_KEY=pk_test_placeholder
+STRIPE_WEBHOOK_SECRET=whsec_placeholder
+PLATFORM_FEE_PERCENT=10
+```
+
+---
+
+## 10. Release History
+
+| Version | Date | Changes |
+|---------|------|--------|
+| 1.0.0 | Jan 2025 | MVP release with core features |
+| 1.1.0 | Jan 2025 | Multi-market support (US, India) |
+| 1.2.0 | Jan 2025 | Rebranding to Maestro Hub |
+| 2.0.0 | Jan 2025 | Dark mode, notifications, reports |
+
+---
+
+## 11. Appendix
+
+### 11.1 Test Accounts
+
+| Email | Password | Role |
+|-------|----------|------|
+| parent1@test.com | password123 | Consumer |
+| parent2@test.com | password123 | Consumer |
+| tutor1@test.com | password123 | Tutor |
+| tutor2@test.com | password123 | Tutor |
+| admin@maestrohub.com | password123 | Admin |
+
+### 11.2 Documentation
+
+- Test Cases: `/app/docs/TEST_CASES.md`
+- Test Results: `/app/docs/TEST_RESULTS.md`
+- API Docs: Auto-generated at `/api/docs`
