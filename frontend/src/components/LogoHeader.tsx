@@ -46,7 +46,7 @@ export default function LogoHeader({
   return (
     <View style={[styles.container, alignment === 'left' ? styles.alignLeft : styles.alignCenter]}>
       <Image
-        source={require('../../assets/images/mh_logo.png')}
+        source={require('../../assets/images/mh_logo_trimmed.png')}
         style={{
           width: sizeStyles.logoWidth,
           height: sizeStyles.logoHeight,
