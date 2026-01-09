@@ -3509,8 +3509,8 @@ app.include_router(api_router)
 ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:8001",
-    "https://maestro-hub-1.preview.emergentagent.com",
-    "https://maestro-hub.preview.emergentagent.com",
+    "https://tutormarket-2.preview.emergentagent.com",
+    "https://tutormarket-2.preview.emergentagent.com",
 ]
 
 app.add_middleware(

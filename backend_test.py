@@ -12,7 +12,7 @@ from datetime import datetime, timezone
 import uuid
 
 # Configuration
-BACKEND_URL = "https://maestro-hub-1.preview.emergentagent.com/api"
+BACKEND_URL = "https://tutormarket-2.preview.emergentagent.com/api"
 TEST_EMAIL = "parent2@test.com"
 TEST_PASSWORD = "password123"
 

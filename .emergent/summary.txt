@@ -1,275 +1,259 @@
 <analysis>
 
 **original_problem_statement:**
-The user wants to build a full-stack mobile application, Maestro Hub, a marketplace for tutors.
+The user wants to build and enhance a full-stack mobile application, Maestro Hub, a marketplace for tutors.
 
-**Initial high-level requirements:**
-- Implement a new logo and favicon.
-- Add the logo to all screens.
+The initial goal was to fix a list of existing bugs and continue implementing a unified header and dark/light theme. During the session, the user provided extensive feedback and new feature requests across several messages, significantly expanding the scope.
 
-**Expanded requirements from the user during the session:**
-1.  **Branding & UI:**
-    - Increase logo size on the login page, then trim excess transparent space from the logo file for better rendering.
-    - Add Maestro Hub title to the index/splash screen and on the login page.
-    - Create a dark/light color mode switch available on all screens.
-    - Implement a new, unified, fixed header for all screens with a specific layout:
-        - Centered, clickable logo that navigates home.
-        - User icon, name, and role on the top left.
-        - Contact Us (envelope) and Logout icons on the top right.
-        - A separator line below the header.
-        - Remove the tagline Find your coach, master your skill from the header.
-    - Make the entire application responsive (mobile, tablet, web).
-    - Squeeze content to avoid scrolling where possible.
-    - Update Reports page UI: rename Session Reports to Reports, change card icons, and ensure text on avatars is white.
-    - In Booking Details, add Student and Tutor names next to their icons.
+**Consolidated User Requirements from this session:**
+1.  **Bug Fixes & UX Polish:**
+    *   Fix tutor search, tutor details page crash, and unresponsive tutor onboarding button.
+    *   Fix a recurring crash colors is not defined when switching to dark mode.
+    *   Fix the logout functionality, especially on the web.
+    *   Fix the back arrow navigation to go to the previous screen instead of always returning home.
+    *   Make the header and footer consistent across ALL screens.
+    *   The Contact Us bottom sheet should have rounded corners and not show white edges in dark mode.
 
-2.  **Functionality & Features:**
-    - **Payments:** Implement Stripe payment flow, webhook handlers, and an immediate per-session payout system for tutors.
-    - **Reports:** Create a reports module for consumers and tutors to track sessions and costs, with data filtered per user and PDF download capability.
-    - **Account Tab:**
-        - Fix non-working links: Edit Profile, Notification, Payment Methods, Become a Tutor.
-        - Add a Contact Us option that opens a bottom sheet form, which sends a notification on submit.
-    - **Notifications & Reminders:**
-        - Create a notification section for events like payments, cancellations, and maintenance.
-        - Create a reminder section for upcoming sessions and payments.
-    - **Bookings:**
-        - Display bookings in a full-screen calendar view, highlighting days with sessions.
-        - Allow toggling between upcoming and past booking lists.
-    - **Data:** Create sample data, including for past and upcoming bookings, to test the new features.
+2.  **Dark/Light Mode:**
+    *   Implement a full dark/light mode controlled by a toggle in preferences.
+    *   All pages and components (headers, footers, body, modals) must respect the selected theme.
+    *   Use a specific dark mode logo provided by the user.
+    *   Change the Contact Us envelope icon to gold in dark mode.
 
-3.  **Bug Fixes:**
-    - Fix uncaught error when clicking on a tutor's name to view their profile.
-    - Fix tutor search functionality, including the subject filter pills.
-    - Fix the Create Profile button on the tutor onboarding screen, which does nothing.
-    - Fix a color is not defined crash on the home page.
+3.  **Parent (Consumer) Features:**
+    *   **Kid Management:** Parents should be able to add/manage their kids. The app should filter schedules, payments, and reports per kid. Kids do not have their own logins.
+    *   **Email Schedules:** Allow parents to email a kid's schedule to them (using Resend).
+    *   **Billing Section:**
+        *   Create a Billing section in the Account tab.
+        *   Show options for Stripe onboarding, pending balance, and auto-payment status.
+        *   Allow users to configure the auto-pay date (e.g., 1st, 15th of the month).
+        *   Update payment methods to include Apple Pay, Google Pay, PayPal, Amazon Pay, Zelle, and Venmo. These options should open a modal to input user identifiers (e.g., Venmo handle), as the app will not store payment details directly.
+    *   **Free Session Invite:** Allow a parent to invite a provider for one free session, which should be reflected as a credit.
+    *   **Edit Profile:** Add an Edit Profile screen to update password and contact number.
+    *   **Notifications/Reminders:** Implement functional pages for viewing notifications and reminders, with an option to configure reminder timing.
 
-4.  **Documentation:**
-    - Create a consolidated test case document.
-    - Create a test results document after comprehensive testing (unit, integration, security, etc.).
-    - Update the PRD and any JIRA tickets with the latest changes.
+4.  **Tutor (Provider) Features:**
+    *   **In-App Invites:** Allow tutors to send in-app invites to consumers.
+    *   **Availability Calendar:**
+        *   Overhaul the UI to show a full-screen, full-month calendar.
+        *   Add Select/Deselect All functionality for setting daily availability.
+        *   Fix the save functionality.
+        *   Add a Vacation option to mark the provider as unavailable for a date range.
+
+5.  **Code Quality:**
+    *   Refactor the monolithic  file into smaller, modular files.
 
 **User's preferred language**: English
 
 **what currently exists?**
-The application has a FastAPI backend, an Expo frontend, and a MongoDB database.
+The application is a full-stack project with a FastAPI backend, Expo (React Native) frontend, and MongoDB database.
 
-A significant number of features were added in this session. The backend now includes API endpoints for Stripe payments (stubs), PDF reports, notifications, reminders, and a contact form. The frontend has new (partially complete) pages/components for reports, a theme context for dark/light mode, and a new unified header component (). Sample data, including users and bookings, has been created in the database.
+A significant number of features were implemented in this session. The backend now contains dozens of new endpoints in  for kid management, billing, profile updates, tutor invites, and a completely new availability/vacation system. The frontend has new skeleton pages for all the parent features (, , , etc.). The tutor's availability calendar has been completely rewritten.
+
+Crucially, a major UI refactoring effort is underway to support dark/light mode. A new, powerful  component has been created and applied to most pages. A new pattern for dynamic styling (defining styles within the component using a  hook) has been established to fix theme-related crashes.
 
 **Last working item**:
-    - Last item agent was working: Implementing a new, unified, fixed header across the application. The agent created a reusable  component and was in the process of applying it to the consumer home screen (). It had just finished the initial refactoring of this screen.
+    - Last item agent was working: Fixing a critical and recurring crash TypeError: Cannot read property primary of undefined that occurred on pages with  when switching to dark mode. The agent correctly identified that stylesheets created at the module level do not update with the theme. The fix involves rewriting the component to define styles inside the function body using . This was successfully applied to  and , which resolved the immediate crash and allowed the app to load.
     - Status: IN PROGRESS
     - Agent Testing Done: N
     - Which testing method agent to use? screenshot tool
     - User Testing Done: N
 
 **All Pending/In progress Issue list**:
-  - Issue 1: (P0) Tutor search is not working. The search results page does not function correctly, and the subject filter pills are broken.
-  - Issue 2: (P0) Uncaught error on tutor details page. Clicking a tutor from a list causes the app to crash. An initial fix was attempted but not verified.
-  - Issue 3: (P1) Create Profile button on tutor onboarding is unresponsive.
-  - Issue 4: (P1) PDF report download is not working. The agent removed the  package that was causing a crash but did not implement an alternative download mechanism for web/mobile.
-  - Issue 5: (P2) Links in the Account tab are not functional (Edit Profile, Notification, Payment Methods, Become a Tutor).
-  - Issue 6: (P2) The application is not fully responsive. The user explicitly requested a seamless experience on all device sizes.
-  - Issue 7: (P2) The  variable was not imported in , causing a crash. This was fixed, but it points to a recurring issue of breaking changes during large refactors.
-
+  - Issue 1: **colors not defined crash on multiple screens** (P0)
+  - Issue 2: **Contact Us bottom sheet has white corners in dark mode** (P1)
+  - Issue 3: **Back button navigation needs verification** (P1)
+  - Issue 4: **PDF report download is not working** (P2)
+  
   Issues Detail:
-  - Issue 1: **Tutor search not working**
-     - Attempted fixes: Agent identified that the frontend might be using POST while the backend expects GET for search, but did not implement a fix.
-     - Next debug checklist:
-        1.  Examine  to confirm the HTTP method and payload for the API call.
-        2.  Examine  and the  endpoint to ensure it handles the query parameters correctly.
-        3.  Check browser network logs and backend logs during a search attempt to pinpoint the failure.
-        4.  Fix the frontend API call or backend endpoint as needed.
-        5.  Test the filter pills to ensure they correctly modify the search query.
-     - Why fix this issue and what will be achieved with the fix? This is a core feature of the marketplace. Fixing it is critical for users to find tutors.
-     - Status: NOT STARTED
-     - Is recurring issue? N
-     - Should Test frontend/backend/both after fix? Both
-     - Blocked on other issue: None
-
-  - Issue 2: **Uncaught error on tutor details page**
-     - Attempted fixes: The agent correctly identified that  and  could be undefined. It added optional chaining () in  as a fix.
-     - Next debug checklist:
-        1.  Verify the fix by navigating to a tutor details page.
-        2.  Check the backend endpoint  to ensure it always returns a consistent data structure, even for optional fields (e.g., return  instead of ).
-     - Why fix this issue and what will be achieved with the fix? This crash blocks users from viewing tutor profiles, another core function of the app.
-     - Status: USER VERIFICATION PENDING
+  - Issue 1: **colors not defined crash on multiple screens**
+     - Attempted fixes: The agent successfully refactored  and  to use a dynamic styling pattern, which fixed the crash on those pages.
+     - Next debug checklist: 
+        1. Identify all remaining pages that use  with a static  import from . User mentioned , , .
+        2. Refactor each of these files to use the new dynamic styling pattern: create a  function outside the component that takes a  object, and call it inside the component with the  from the  hook.
+     - Why fix this issue and what will be achieved with the fix? This is a critical, app-breaking bug that makes dark mode unusable. Fixing it is essential for UI stability.
+     - Status: IN PROGRESS
      - Is recurring issue? Y
      - Should Test frontend/backend/both after fix? Frontend
      - Blocked on other issue: None
 
-  - Issue 3: **Create Profile button on tutor onboarding is unresponsive**
-     - Attempted fixes: Agent viewed  but did not identify the root cause or attempt a fix.
+  - Issue 2: **Contact Us bottom sheet has white corners in dark mode**
+     - Attempted fixes: None.
      - Next debug checklist:
-        1.  Inspect the  function in .
-        2.  Add  statements to trace the execution flow when the button is pressed.
-        3.  Check for any  logic on the button that might be preventing the press.
-        4.  Verify the API call within  is being made correctly and check for any client-side or server-side errors.
-     - Why fix this issue and what will be achieved with the fix? This bug prevents new tutors from joining the platform.
+        1. Locate the component that renders the Contact Us bottom sheet (likely in ).
+        2. Inspect the styles of the bottom sheet container and its parent.
+        3. Apply a  or a theme-based background color to the container and ensure its children have the correct .
+     - Why fix this issue and what will be achieved with the fix? This is a UI polish item requested by the user to improve the visual consistency of dark mode.
+     - Status: NOT STARTED
+     - Is recurring issue? N
+     - Should Test frontend/backend/both after fix? Frontend
+     - Blocked on other issue: None
+  
+  - Issue 3: **Back button navigation needs verification**
+     - Attempted fixes: The agent implemented improved logic in  ().
+     - Next debug checklist: 
+        1. Navigate several layers deep in the app (e.g., Home -> Search -> Tutor Profile -> Booking).
+        2. Use the back arrow in the header at each step.
+        3. Verify it returns to the immediately preceding screen, not all the way back to Home.
+     - Why fix this issue and what will be achieved with the fix? Fixes a core navigation bug reported by the user, leading to a standard and expected user experience.
+     - Status: TESTING PENDING
+     - Is recurring issue? N
+     - Should Test frontend/backend/both after fix? Frontend
+     - Blocked on other issue: None
+     
+  - Issue 4: **PDF report download is not working**
+     - Attempted fixes: In a previous session, the agent removed  which was causing a crash, but did not implement an alternative.
+     - Next debug checklist:
+        1. Re-evaluate the PDF download requirement for web vs. mobile.
+        2. For web, the backend can serve the file with .
+        3. For mobile, investigate  to save the file and  again (with proper error handling) or a similar library to open the share sheet.
+     - Why fix this issue and what will be achieved with the fix? This is a core feature of the reports module.
      - Status: NOT STARTED
      - Is recurring issue? N
      - Should Test frontend/backend/both after fix? Both
      - Blocked on other issue: None
 
 **In progress Task List**:
-  - Task 1: **Implement Unified Header** (P0)
-     - Where to resume: The new component  has been created. It has been added to . The next step is to apply this header to all other screens in the app (, , , ) to ensure a consistent look and feel, replacing all old headers.
-     - What will be achieved with this? A consistent, branded, and functional header across the entire application as per user requirements.
-     - Status: IN PROGRESS
-     - Should Test frontend/backend/both after fix? Frontend
-     - Blocked on something: None
-
-  - Task 2: **Implement Dark/Light Theme** (P1)
-     - Where to resume:  is created and wrapped around the root . The  page has a toggle. The theme needs to be applied to all components and screens, ensuring all styles use theme variables instead of hardcoded colors from .
-     - What will be achieved with this? A fully functional dark/light mode toggle that affects the entire application.
+  - Task 1: **Complete the Dark/Light Theme Implementation** (P0)
+     - Where to resume: The core bug causing crashes has been identified and fixed on two pages. This task involves applying the same dynamic styling pattern to all remaining pages and components that still use static colors. The goal is to make the entire application fully theme-aware.
+     - What will be achieved with this? A stable, visually consistent dark mode across the entire application, as requested by the user.
      - Status: IN PROGRESS
      - Should Test frontend/backend/both after fix? Frontend
      - Blocked on something: None
 
 **Upcoming and Future Tasks**
-- **Upcoming Tasks (P1):**
-    - **Implement Calendar View for Bookings:** Replace the list view in  with a full-screen calendar UI.
-    - **Implement full Stripe Payment Flow:** The backend has placeholder endpoints. The full frontend-to-backend flow for  and handling the result needs to be built.
-    - **Implement Stripe Payouts:** Implement the logic for immediate payouts to tutors after a session is paid for.
-    - **Complete Account Tab Links:** Create the missing pages/modals for , , and .
+- **Upcoming Tasks:**
+    - **Refactor  (P0):** The user explicitly requested to break the monolithic  into smaller, modular files for maintainability. This should be a high priority.
+    - **Implement Skeleton Pages (P1):** The newly created pages (, , , ) are mostly placeholders. They need to be implemented to fetch and display data from the backend APIs.
+    - **Implement Parent-Invite-Provider Flow (P1):** Create the frontend UI for a parent to invite a provider, which should trigger the backend endpoint and apply a one-session credit.
+    - **Implement Email Schedule Feature (P2):** Integrate  on the backend and create a UI for parents to trigger the email schedule functionality for their kids.
+    - **Hide Platform Payments (P2):** Remove any mention of Platform Payments from the UI and reports, as requested by the user.
 
-- **Future Tasks (P2):**
-    - **Comprehensive Testing:** Execute the plan laid out in  and document results.
-    - **Documentation:** Update PRD and JIRA as requested.
-    - **Add date range filters** to the reports UI.
+- **Future Tasks:**
+    - **Full Stripe Integration:** The billing section is a placeholder. A full Stripe Connect onboarding flow for tutors and payment processing for consumers needs to be implemented.
+    - **Comprehensive Testing:** Execute the plan laid out in .
 
 **Completed work in this session**
-- **Logo and Favicon Implementation:**
-  - New logo and favicon assets were integrated.
-  - The primary logo image () was programmatically trimmed to remove excess transparent space, improving its appearance.
-  - The trimmed logo was applied to the login screen, index page, and a reusable  component.
-  - The login page UI was updated to include the logo, Maestro Hub title, and tagline.
-- **Sample Data Creation:**
-  - A robust Python script was created and debugged to populate the database with sample users (parents, tutors, admin) and bookings (past and upcoming).
-- **Backend Feature Implementation:**
-  - **Reports Module:** Created  and  endpoints, including PDF generation logic using .
-  - **Notifications & Reminders:** Added DB collections and API endpoints (, ).
-  - **Contact Form:** Added a  endpoint to handle submissions.
-  - **DB Debugging:** Resolved a critical bug where the app was writing to/reading from the wrong database name ( vs. ).
-- **Frontend Scaffolding & Fixes:**
-  - Created initial UI for consumer and tutor reports pages (, ).
-  - Added Reports tab to consumer and tutor navigation layouts.
-  - Created a  for dark/light mode.
-  - Created a new unified  component.
-  - Fixed a fatal color is not defined crash on the home page.
-  - Created initial documentation files (, , ).
+- **Critical Bug Fixes:**
+  - **Tutor Search:** Fixed by adding missing  field to tutor data in the database.
+  - **Tutor Onboarding:** Fixed by correcting a Pydantic model mismatch in the backend for the  endpoint.
+  - **CORS:** Resolved a blocking CORS issue by configuring the FastAPI middleware with specific origins.
+  - **Logout:** Fixed logout on web by adding a platform check and using  directly.
+  - **User Role:** Corrected a user's role in the database from  to  to resolve UI confusion.
+
+- **New Feature Implementation:**
+  - **Provider Availability:**
+    - Completely rewrote  with a full-month calendar view, month/year navigation, and time slot selection.
+    - Implemented Select/Deselect All and Set Vacation functionality.
+    - Fixed the backend bulk save endpoint () and added vacation endpoints.
+  - **Parent Features:**
+    - Created backend endpoints for Kid Management, Profile Updates, and Billing.
+    - Created new (skeleton) frontend screens: , , , , .
+    - Significantly updated  to include new payment method options (Zelle, Venmo, etc.) and a modal for entering user identifiers.
+  - **Tutor Invites:** Added backend endpoints and a basic frontend screen for tutors to invite consumers.
+
+- **Major UI/UX Overhaul:**
+  - **:** Rewrote the component to be fully theme-aware, support a dark mode logo, show the user's name, and contain correct back-button navigation logic.
+  - **Theme Application:** Applied the new  to most screens and updated tab bar layouts to respect the current theme.
+  - **Dynamic Styling Pattern:** Established a crucial pattern for fixing theme-related crashes by defining styles dynamically within components, and applied it to  and .
 
 **Earlier issues found/mentioned but not fixed**
-- The full list of user requests from messages 266, 342, and 365 is extensive. The main ones not yet started are:
-  - **Bookings Calendar View:** The user wants a full-screen calendar, not a list.
-  - **Content Squeezing:** General request to make content more compact to avoid scrolling.
-  - **Booking Details UI:** Add student/tutor names next to icons.
+   - The user's request to squeeze content to avoid scrolling from the previous session has not been addressed.
+   - The user's request to add student/tutor names next to icons in Booking Details has not been addressed.
 
 **Known issue recurrence from previous fork**
-- None.
+  - None.
 
 **Code Architecture**
 
 
 **Key Technical Concepts**
-- **Backend:** FastAPI, MongoDB ( async driver), Pydantic.
-- **Frontend:** React Native, Expo, Expo Router.
-- **PDF Generation:**  library on the backend.
-- **Image Manipulation:**  library used in a one-off script to trim image assets.
-- **State Management:** React Context (, , and new ).
-- **Styling:**  with responsive design patterns ().
+- **Dynamic Theming Pattern (CRITICAL):** The most important concept from this session. To make components theme-aware, styles must be generated *inside* the component's render logic using the theme from a hook (), not defined once at the module level with . Example: .
+- **Backend Development:** FastAPI, Pydantic models for data validation, MongoDB with .
+- **Frontend Development:** Expo, React Native, Expo Router for file-based routing.
+- **State Management:** React Context (, ).
 
 **key DB schema**
-- **users, tutors, bookings:** Core collections, now populated with sample data.
-- **notifications (NEW):** , , , , .
-- **reminders (NEW):** , , , , .
-- **contact_submissions (NEW):** , , , .
-- **payments (NEW):** , , , , , , .
-- **payouts (NEW):** , , , , , .
+- **students:**  added.  (optional) added.
+- **invites (NEW):** , ,  (, , ),  (, ).
+- **availability_rules (Existing):** Used for storing recurring provider availability.
+- **availability_exceptions (Existing):** Used for one-off overrides.
+- **vacations (NEW):** , , , .
 
 **changes in tech stack**
--  added to the backend for PDF generation.
+- No changes to the core technology stack.
 
 **All files of reference**
-- **New/Created:**
-  - : Manages dark/light mode state.
-  - : The new standard for headers across the app.
-  - , : New pages for viewing reports.
-  - : New documentation files.
-- **Heavily Modified/Overwritten:**
-  - : Major additions for payments, reports, notifications, and contact form.
-  - : Completely overhauled to add new features.
-  - : Refactored to use the new .
+- **Rewritten/Overhauled:**
+  - : The new standard header.
+  - : Rewritten for dynamic theming.
+  - : Rewritten for dynamic theming.
+  - : Completely new availability management UI.
+  - : Completely new UI with more payment options.
+- **Heavily Modified:**
+  - : Contains dozens of new endpoints; needs refactoring.
+  - : Logout logic was fixed.
+- **New Files:**
+  - 
+  - 
+  - 
 
 **Areas that need refactoring**:
-- The old  should be fully deprecated and removed in favor of .
-- Color definitions should be moved from  to the  to support theme switching properly. Any component still importing directly from  needs to be refactored.
+- **:** This is the highest priority. The file is extremely large and difficult to maintain. It should be broken down into multiple router files by feature (e.g., , , ).
+- **Theming:** All remaining files that use  with static colors must be refactored to the new dynamic styling pattern to prevent crashes.
 
 **key api endpoints**
 - **New Endpoints:**
-  - : Creates a Stripe payment session.
-  - : Handles Stripe events.
-  - : Fetches summary data for reports.
-  - : Serves a generated PDF report.
-  - , : Manage user notifications.
-  - , : Manage user reminders.
-  - : Handles the Contact Us form submission.
-- **Problematic Endpoints:**
-  - : Not working correctly with the frontend.
-  - : Data structure may be causing frontend crashes.
+  - **Kids:** , , , , 
+  - **Profile:** 
+  - **Billing:** , , 
+  - **Invites:** , , , 
+  - **Availability:** , , , 
 
 **Critical Info for New Agent**
-- **Database Name:** The application's backend is configured to use the database named  (from ). Any manual scripts or verification must target this database.
-- **Unified Header:** The new standard is . All screens must be migrated to use it for consistency.
-- **Multiple High-Priority Bugs:** There are several critical bugs blocking core user flows (search, viewing tutor profiles, onboarding). These should be prioritized over new features.
-- **In-Progress Refactors:** The theme implementation and header rollout are significant, partially-completed tasks that affect the entire codebase. Be mindful of their incomplete state.
+- **Theming is the #1 Priority:** The colors not defined crash will persist until all screens are refactored to use the **dynamic styling pattern**. Do not use  with the static  import for any UI that needs to be theme-aware. Instead, define styles inside the component using the  hook.
+- **Refactor :** The backend code is in a single monolithic file and is unmaintainable. The user has specifically requested this be broken down into modules.
+- **Use the new :** The component at  is the new standard. It handles theming, back navigation, and user name display correctly.
+- **Many new pages are skeletons:** The agent created many new files (, , etc.) that are just placeholders. They need to be fully implemented.
 
 **documents created in this job**
-  - 
-  - 
-  - 
+- No new documents were created. Existing  files were not modified.
 
-**Last 10 User Messages and any pending HUMAN messages**
-1.  **User (Message 365):** Reported multiple new bugs and feature requests, including the Uncaught error on the tutor page, and specified the new unified header design. (IN PROGRESS)
-2.  **User (Message 342):** Reported the color is not defined crash, requested full responsiveness, and asked for test/PRD documentation. (Partially Completed)
-3.  **User (Message 269):** Provided a large list of new features, including dark/light mode with a premium palette, contact us sheet, and notification/reminder sections. (Partially Completed)
-4.  **User (Message 266):** Provided a very large list of bugs and UI/UX improvements, including broken account links, broken search, and the desire for a calendar view for bookings. (Partially Completed)
-5.  **User (Message 155):** Clarified payout requirements (immediate, per session) and specified PDF for reports. (Completed - Backend Logic)
-6.  **User (Message 152):** Gave a 5-point plan to implement Stripe, payouts, and reports. (Completed - Backend Logic & Initial UI)
-7.  **User (Message 134):** Asked to create sample data and inquired about the payment module status. (Completed)
-8.  **User (Message 109):** Requested to trim the logo image and add the brand name to the index page. (Completed)
-9.  **User (Message 76):** Requested to increase the logo size on the login page by 100%. (Completed)
-10. **User (Message 5):** Provided a new, larger favicon image and specified the desired logo format. (Completed)
+**Last 10 User Messages and any pending HUMAN messages** 
+1.  **User (Message 350):** Reported the colors not defined error is still happening and provided a screenshot showing it on the search page. (IN PROGRESS - fixed for search, but root cause remains on other pages).
+2.  **User (Message 307):** Reported the colors not defined error after the bookings page was updated. Clarified that payment methods should just open a modal to input user IDs (like Venmo handle), not process payments directly. (Partially Completed).
+3.  **User (Message 234):** Provided a very long list of UI/UX feedback, mostly related to dark mode inconsistencies, missing headers, incorrect back navigation, and missing features on the billing page. (Partially Completed).
+4.  **User (Message 199):** Reported role confusion (parent seeing tutor screens), inconsistent logout/headers, and provided major feedback for a complete overhaul of the provider's Availability screen. Requested  be modularized. (Partially Completed).
+5.  **User (Message 146):** Confirmed a plan to proceed. Clarified that kids do not have logins and that the parent-invite-provider feature should be an auto-credit. (Acknowledged).
+6.  **User (Message 143):** Provided a very large list of new features including kid management, billing, edit profile, functional notifications/reminders, and fixing the logout button. (Partially Completed).
+7.  **User (Message 5):** Approved the initial plan and added a new feature request: Allow option for providers to send in-app invites to consumers to join. (Completed).
 
 **Project Health Check:**
 - **Broken:**
-    - Tutor Search
-    - Tutor Details Page (crashes the app)
-    - Tutor Onboarding (Create Profile button)
+    - Dark mode is unstable. Any screen not yet refactored with the dynamic styling pattern is likely to crash when the theme is toggled.
 - **Mocked:**
-    - Stripe payment and payout functionality (backend has placeholder keys and logic stubs, but no end-to-end flow).
+    - Billing section: UI exists, but there's no actual integration with Stripe for onboarding or payments.
+    - Payment Methods: The UI for adding payment methods like Venmo/Zelle captures a user identifier, but this data is not yet saved or used by the backend.
 
 **3rd Party Integrations**
-- **Stripe (Payments)** — requires User API Key (currently using placeholders).
-- **Resend (Email)** — requires User API Key (placeholders exist but not used).
+- **Stripe (Payments)** — requires User API Key. Placeholders exist, but no real integration.
+- **Resend (Email)** — requires User API Key. Mentioned for a new feature, but not yet integrated.
 - **Emergent Google OAuth** — uses Emergent LLM Key.
 - **ip-api.com (IP Geolocation)** — free, no key required.
 
 **Testing status**
-  - Testing agent used after significant changes: YES ( was run and passed 12/12 tests on the updated backend).
+  - Testing agent used after significant changes: YES ( was run after initial bug fixes and passed).
   - Troubleshoot agent used after agent stuck in loop: NO
-  - Test files created:
-    - 
-    - 
-  - Known regressions:
-    - Tutor Search functionality.
-    - Tutor Profile page stability.
+  - Test files created: None.
+  - Known regressions: The colors not defined bug is a major regression affecting UI stability.
 
 **Credentials to test flow:**
-Sample users have been created. Use  (password: ) for consumer flows and  (password: ) for tutor flows.
+- **Consumer:**  (password: ). The  user has been modified and may have a mixed state.
+- **Tutor:**  (password: ) or  with password .
 
 **What agent forgot to execute**
-- The agent did not provide a working alternative for the PDF download after removing the crashing  package. The download button on the reports page is now likely non-functional on mobile and web.
-- The agent did not fix the core Tutor Search bug despite acknowledging it.
-- The agent has not started on several major user requests, such as the calendar view for bookings or fixing all the broken links in the account tab.
+- The request to refactor  was acknowledged but not started.
+- The UI polish item to fix the white corners on the Contact Us bottom sheet in dark mode was not addressed.
+- The request to hide Platform Payments from the reports and UI was not implemented.
 
 </analysis>
