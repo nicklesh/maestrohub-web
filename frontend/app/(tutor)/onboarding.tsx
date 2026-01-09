@@ -87,19 +87,35 @@ export default function TutorOnboarding() {
 
   const handleSubmit = async () => {
     if (!bio.trim()) {
-      Alert.alert('Error', 'Please enter a bio');
+      if (Platform.OS === 'web') {
+        window.alert('Please enter a bio');
+      } else {
+        Alert.alert('Error', 'Please enter a bio');
+      }
       return;
     }
     if (selectedCategories.length === 0) {
-      Alert.alert('Error', 'Please select at least one category');
+      if (Platform.OS === 'web') {
+        window.alert('Please select at least one category');
+      } else {
+        Alert.alert('Error', 'Please select at least one category');
+      }
       return;
     }
     if (selectedSubjects.length === 0) {
-      Alert.alert('Error', 'Please select at least one subject');
+      if (Platform.OS === 'web') {
+        window.alert('Please select at least one subject');
+      } else {
+        Alert.alert('Error', 'Please select at least one subject');
+      }
       return;
     }
     if (selectedLevels.length === 0) {
-      Alert.alert('Error', 'Please select at least one level');
+      if (Platform.OS === 'web') {
+        window.alert('Please select at least one level');
+      } else {
+        Alert.alert('Error', 'Please select at least one level');
+      }
       return;
     }
 
@@ -127,13 +143,24 @@ export default function TutorOnboarding() {
         console.log('Could not set provider market');
       }
 
-      Alert.alert(
-        'Profile Created!',
-        'Your tutor profile has been created. It will be reviewed by our team.',
-        [{ text: 'OK', onPress: () => router.replace('/(tutor)/dashboard') }]
-      );
+      // Show success and redirect
+      if (Platform.OS === 'web') {
+        window.alert('Profile Created! Your tutor profile has been created. It will be reviewed by our team.');
+        router.replace('/(tutor)/dashboard');
+      } else {
+        Alert.alert(
+          'Profile Created!',
+          'Your tutor profile has been created. It will be reviewed by our team.',
+          [{ text: 'OK', onPress: () => router.replace('/(tutor)/dashboard') }]
+        );
+      }
     } catch (error: any) {
-      Alert.alert('Error', error.response?.data?.detail || 'Failed to create profile');
+      const errorMsg = error.response?.data?.detail || 'Failed to create profile';
+      if (Platform.OS === 'web') {
+        window.alert(errorMsg);
+      } else {
+        Alert.alert('Error', errorMsg);
+      }
     } finally {
       setLoading(false);
     }
