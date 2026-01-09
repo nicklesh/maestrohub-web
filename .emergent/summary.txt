@@ -1,88 +1,168 @@
 <analysis>
-<original_problem_statement>
-The user wants to build a full-stack mobile application, originally called Acharyaly and now rebranded to **Maestro Hub**. It is a Zocdoc-like marketplace for tutors, allowing families to discover, book, and pay for tutors with real-time availability.
 
-**Initial PRODUCT REQUIREMENTS (from PRD):**
-- **User Roles:** Parent (Consumer), Tutor (Provider), Admin.
-- **Core MVP Features:** Authentication, Tutor Profiles, Search & Discovery, Booking, Payments (Stripe), Student Management, Notifications (Email/Push), Reviews, Admin Console, Device ID Tracking.
-- **Branding:**
-    - **App Name:** Maestro Hub
-    - **Tagline:** Find your coach, master your skill
+**original_problem_statement:**
+The user wants to build a full-stack mobile application, Maestro Hub, a marketplace for tutors.
 
-**Addendum PRODUCT REQUIREMENTS (Multi-Market Expansion):**
-- **Phase 1 expansion:** Launch in US (USD) and India (INR) as separate marketplaces.
-- **Market Configuration:** A new  collection in the DB to hold market-specific settings (currency, country, etc.).
-- **Market Selection:** Consumers must select a market (US or India) upon first use, with an IP-based suggestion.
-- **Market Enforcement:** Search results and bookings must be restricted to the user's selected market. Tutors enroll in a specific market.
-- **Market-based Pricing:** Foundation for different pricing policies per market.
-- **Market Analytics:** A new admin dashboard to view metrics per market.
-</original_problem_statement>
+**Initial high-level requirements:**
+- Implement a new logo and favicon.
+- Add the logo to all screens.
+
+**Expanded requirements from the user during the session:**
+1.  **Branding & UI:**
+    - Increase logo size on the login page, then trim excess transparent space from the logo file for better rendering.
+    - Add Maestro Hub title to the index/splash screen and on the login page.
+    - Create a dark/light color mode switch available on all screens.
+    - Implement a new, unified, fixed header for all screens with a specific layout:
+        - Centered, clickable logo that navigates home.
+        - User icon, name, and role on the top left.
+        - Contact Us (envelope) and Logout icons on the top right.
+        - A separator line below the header.
+        - Remove the tagline Find your coach, master your skill from the header.
+    - Make the entire application responsive (mobile, tablet, web).
+    - Squeeze content to avoid scrolling where possible.
+    - Update Reports page UI: rename Session Reports to Reports, change card icons, and ensure text on avatars is white.
+    - In Booking Details, add Student and Tutor names next to their icons.
+
+2.  **Functionality & Features:**
+    - **Payments:** Implement Stripe payment flow, webhook handlers, and an immediate per-session payout system for tutors.
+    - **Reports:** Create a reports module for consumers and tutors to track sessions and costs, with data filtered per user and PDF download capability.
+    - **Account Tab:**
+        - Fix non-working links: Edit Profile, Notification, Payment Methods, Become a Tutor.
+        - Add a Contact Us option that opens a bottom sheet form, which sends a notification on submit.
+    - **Notifications & Reminders:**
+        - Create a notification section for events like payments, cancellations, and maintenance.
+        - Create a reminder section for upcoming sessions and payments.
+    - **Bookings:**
+        - Display bookings in a full-screen calendar view, highlighting days with sessions.
+        - Allow toggling between upcoming and past booking lists.
+    - **Data:** Create sample data, including for past and upcoming bookings, to test the new features.
+
+3.  **Bug Fixes:**
+    - Fix uncaught error when clicking on a tutor's name to view their profile.
+    - Fix tutor search functionality, including the subject filter pills.
+    - Fix the Create Profile button on the tutor onboarding screen, which does nothing.
+    - Fix a color is not defined crash on the home page.
+
+4.  **Documentation:**
+    - Create a consolidated test case document.
+    - Create a test results document after comprehensive testing (unit, integration, security, etc.).
+    - Update the PRD and any JIRA tickets with the latest changes.
 
 **User's preferred language**: English
 
 **what currently exists?**
-The application, now named Maestro Hub, has a complete foundational backend (FastAPI) and frontend (Expo).
+The application has a FastAPI backend, an Expo frontend, and a MongoDB database.
 
-**Key recent additions:**
-1.  **Full Responsive Design:** All screens have been updated to provide a professional experience on mobile, tablet, and desktop devices using a custom responsive utility.
-2.  **Device ID Tracking:** This feature was verified as fully implemented on both the backend (user model stores device info) and frontend ( sends device info on login/register).
-3.  **Multi-Market Architecture:** The entire application has been refactored to support multiple markets (initially US and India).
-    -   **Backend:** The database schema (, , ) and API endpoints (, ) have been updated to be market-aware. New models (, ) and endpoints () have been created.
-    -   **Frontend:** A  manages the user's selected market. A  prompts new users to choose their market. The UI now displays market-specific currency and filters content accordingly.
-4.  **Rebranding:** The application has been fully rebranded from Acharyaly to Maestro Hub with the new tagline Find your coach, master your skill. This change was applied across all frontend and backend files.
+A significant number of features were added in this session. The backend now includes API endpoints for Stripe payments (stubs), PDF reports, notifications, reminders, and a contact form. The frontend has new (partially complete) pages/components for reports, a theme context for dark/light mode, and a new unified header component (). Sample data, including users and bookings, has been created in the database.
 
 **Last working item**:
-    - Last item agent was working: The user provided new image assets for the rebranding ( and ). The agent successfully downloaded these files into the  directory and was about to start integrating them into the UI.
-    - Status: NOT STARTED
+    - Last item agent was working: Implementing a new, unified, fixed header across the application. The agent created a reusable  component and was in the process of applying it to the consumer home screen (). It had just finished the initial refactoring of this screen.
+    - Status: IN PROGRESS
     - Agent Testing Done: N
     - Which testing method agent to use? screenshot tool
     - User Testing Done: N
 
 **All Pending/In progress Issue list**:
-  - Issue 1:  (P0) Implement New Logo and Favicon. The image files have been downloaded but are not yet used in the application.
+  - Issue 1: (P0) Tutor search is not working. The search results page does not function correctly, and the subject filter pills are broken.
+  - Issue 2: (P0) Uncaught error on tutor details page. Clicking a tutor from a list causes the app to crash. An initial fix was attempted but not verified.
+  - Issue 3: (P1) Create Profile button on tutor onboarding is unresponsive.
+  - Issue 4: (P1) PDF report download is not working. The agent removed the  package that was causing a crash but did not implement an alternative download mechanism for web/mobile.
+  - Issue 5: (P2) Links in the Account tab are not functional (Edit Profile, Notification, Payment Methods, Become a Tutor).
+  - Issue 6: (P2) The application is not fully responsive. The user explicitly requested a seamless experience on all device sizes.
+  - Issue 7: (P2) The  variable was not imported in , causing a crash. This was fixed, but it points to a recurring issue of breaking changes during large refactors.
 
   Issues Detail:
-  - Issue 1: 
-     - Attempted fixes: None. This is a new task.
+  - Issue 1: **Tutor search not working**
+     - Attempted fixes: Agent identified that the frontend might be using POST while the backend expects GET for search, but did not implement a fix.
      - Next debug checklist:
-        1. Identify all components where the logo should appear (e.g., , , root layout).
-        2. Replace the placeholder text/old logo with the new  image asset. Use the React Native  component.
-        3. Update  to use  as the application icon and favicon.
-        4. Use the  tool to visually verify the new logo and favicon are displayed correctly.
-     - Why fix this issue and what will be achieved with the fix? To complete the user's rebranding request and give the application a visual identity.
-     - Status:  NOT STARTED
+        1.  Examine  to confirm the HTTP method and payload for the API call.
+        2.  Examine  and the  endpoint to ensure it handles the query parameters correctly.
+        3.  Check browser network logs and backend logs during a search attempt to pinpoint the failure.
+        4.  Fix the frontend API call or backend endpoint as needed.
+        5.  Test the filter pills to ensure they correctly modify the search query.
+     - Why fix this issue and what will be achieved with the fix? This is a core feature of the marketplace. Fixing it is critical for users to find tutors.
+     - Status: NOT STARTED
      - Is recurring issue? N
+     - Should Test frontend/backend/both after fix? Both
+     - Blocked on other issue: None
+
+  - Issue 2: **Uncaught error on tutor details page**
+     - Attempted fixes: The agent correctly identified that  and  could be undefined. It added optional chaining () in  as a fix.
+     - Next debug checklist:
+        1.  Verify the fix by navigating to a tutor details page.
+        2.  Check the backend endpoint  to ensure it always returns a consistent data structure, even for optional fields (e.g., return  instead of ).
+     - Why fix this issue and what will be achieved with the fix? This crash blocks users from viewing tutor profiles, another core function of the app.
+     - Status: USER VERIFICATION PENDING
+     - Is recurring issue? Y
      - Should Test frontend/backend/both after fix? Frontend
      - Blocked on other issue: None
 
+  - Issue 3: **Create Profile button on tutor onboarding is unresponsive**
+     - Attempted fixes: Agent viewed  but did not identify the root cause or attempt a fix.
+     - Next debug checklist:
+        1.  Inspect the  function in .
+        2.  Add  statements to trace the execution flow when the button is pressed.
+        3.  Check for any  logic on the button that might be preventing the press.
+        4.  Verify the API call within  is being made correctly and check for any client-side or server-side errors.
+     - Why fix this issue and what will be achieved with the fix? This bug prevents new tutors from joining the platform.
+     - Status: NOT STARTED
+     - Is recurring issue? N
+     - Should Test frontend/backend/both after fix? Both
+     - Blocked on other issue: None
+
 **In progress Task List**:
-- None.
+  - Task 1: **Implement Unified Header** (P0)
+     - Where to resume: The new component  has been created. It has been added to . The next step is to apply this header to all other screens in the app (, , , ) to ensure a consistent look and feel, replacing all old headers.
+     - What will be achieved with this? A consistent, branded, and functional header across the entire application as per user requirements.
+     - Status: IN PROGRESS
+     - Should Test frontend/backend/both after fix? Frontend
+     - Blocked on something: None
+
+  - Task 2: **Implement Dark/Light Theme** (P1)
+     - Where to resume:  is created and wrapped around the root . The  page has a toggle. The theme needs to be applied to all components and screens, ensuring all styles use theme variables instead of hardcoded colors from .
+     - What will be achieved with this? A fully functional dark/light mode toggle that affects the entire application.
+     - Status: IN PROGRESS
+     - Should Test frontend/backend/both after fix? Frontend
+     - Blocked on something: None
 
 **Upcoming and Future Tasks**
 - **Upcoming Tasks (P1):**
-    - **Implement Market Analytics Dashboard (MKT-07):** Build out the UI and data fetching for the  page to display key metrics (tutor count, booking volume, etc.) for each market.
-    - **Implement Market-based Pricing Policy (MKT-06):** Create the  collection and logic to snapshot the policy on booking creation.
-    - **Complete Stripe Integration:** Replace placeholder keys and implement the full multi-currency payment and payout flow, respecting the  on bookings.
-    - **Complete Resend Integration:** Replace placeholder key and implement email sending for notifications.
+    - **Implement Calendar View for Bookings:** Replace the list view in  with a full-screen calendar UI.
+    - **Implement full Stripe Payment Flow:** The backend has placeholder endpoints. The full frontend-to-backend flow for  and handling the result needs to be built.
+    - **Implement Stripe Payouts:** Implement the logic for immediate payouts to tutors after a session is paid for.
+    - **Complete Account Tab Links:** Create the missing pages/modals for , , and .
 
 - **Future Tasks (P2):**
-    - **Push Notifications:** Implement push notifications using Expo's services.
-    - **Student Management:** Build out the UI for adding/editing students on .
-    - **Reviews System:** Implement the UI and API calls for creating and viewing reviews.
+    - **Comprehensive Testing:** Execute the plan laid out in  and document results.
+    - **Documentation:** Update PRD and JIRA as requested.
+    - **Add date range filters** to the reports UI.
 
 **Completed work in this session**
-- **Responsive Design:** Successfully applied responsive design across all previously static screens in the consumer, tutor, and admin sections.
-- **Device ID Tracking:** Verified that the feature was already implemented and working end-to-end.
-- **Multi-Market Expansion (EPICs MKT-01 to MKT-05):**
-    - Created backend models and APIs for market management.
-    - Implemented IP-based market suggestions.
-    - Integrated a frontend market selection modal and global context.
-    - Enforced market-based filtering in search and booking.
-    - Added market selection to tutor onboarding.
-- **Full Rebranding:** Renamed the app to Maestro Hub and updated the tagline throughout the frontend, backend, and configuration files.
+- **Logo and Favicon Implementation:**
+  - New logo and favicon assets were integrated.
+  - The primary logo image () was programmatically trimmed to remove excess transparent space, improving its appearance.
+  - The trimmed logo was applied to the login screen, index page, and a reusable  component.
+  - The login page UI was updated to include the logo, Maestro Hub title, and tagline.
+- **Sample Data Creation:**
+  - A robust Python script was created and debugged to populate the database with sample users (parents, tutors, admin) and bookings (past and upcoming).
+- **Backend Feature Implementation:**
+  - **Reports Module:** Created  and  endpoints, including PDF generation logic using .
+  - **Notifications & Reminders:** Added DB collections and API endpoints (, ).
+  - **Contact Form:** Added a  endpoint to handle submissions.
+  - **DB Debugging:** Resolved a critical bug where the app was writing to/reading from the wrong database name ( vs. ).
+- **Frontend Scaffolding & Fixes:**
+  - Created initial UI for consumer and tutor reports pages (, ).
+  - Added Reports tab to consumer and tutor navigation layouts.
+  - Created a  for dark/light mode.
+  - Created a new unified  component.
+  - Fixed a fatal color is not defined crash on the home page.
+  - Created initial documentation files (, , ).
 
 **Earlier issues found/mentioned but not fixed**
-- None.
+- The full list of user requests from messages 266, 342, and 365 is extensive. The main ones not yet started are:
+  - **Bookings Calendar View:** The user wants a full-screen calendar, not a list.
+  - **Content Squeezing:** General request to make content more compact to avoid scrolling.
+  - **Booking Details UI:** Add student/tutor names next to icons.
 
 **Known issue recurrence from previous fork**
 - None.
@@ -91,84 +171,105 @@ The application, now named Maestro Hub, has a complete foundational backend (Fas
 
 
 **Key Technical Concepts**
-- **Frameworks:** FastAPI, React Native with Expo.
-- **Database:** MongoDB.
-- **Multi-Market Architecture:** The application logic and data models are partitioned by a  to support different regions and currencies.
-- **IP Geolocation:** Using a third-party service () to suggest a user's market based on their IP address.
-- **State Management:** Zustand (global), React Context (auth, market).
-- **Styling:**  with a custom responsive utility ().
+- **Backend:** FastAPI, MongoDB ( async driver), Pydantic.
+- **Frontend:** React Native, Expo, Expo Router.
+- **PDF Generation:**  library on the backend.
+- **Image Manipulation:**  library used in a one-off script to trim image assets.
+- **State Management:** React Context (, , and new ).
+- **Styling:**  with responsive design patterns ().
 
 **key DB schema**
-- **markets (NEW):** , , , , , 
-- **pricing_policies (NEW):** , , , 
-- **users:** ,  (string, nullable)
-- **tutors:** ,  (string),  (string)
-- **bookings:** ,  (string),  (string),  (object)
+- **users, tutors, bookings:** Core collections, now populated with sample data.
+- **notifications (NEW):** , , , , .
+- **reminders (NEW):** , , , , .
+- **contact_submissions (NEW):** , , , .
+- **payments (NEW):** , , , , , , .
+- **payouts (NEW):** , , , , , .
 
 **changes in tech stack**
--  was added to the backend dependencies to make HTTP requests for IP geolocation.
+-  added to the backend for PDF generation.
 
 **All files of reference**
-- **Backend (Heavily Modified):** 
-- **Frontend (New Files):**
-    - : Manages global market state.
-    - : UI for the market selection prompt.
-    - : Admin page for managing markets.
-- **Frontend (Core Modified Files):**
-    - : Wraps the app in the new .
-    - : Implements the market selection flow and displays market-specific data.
-    - : Adds payout country selection.
+- **New/Created:**
+  - : Manages dark/light mode state.
+  - : The new standard for headers across the app.
+  - , : New pages for viewing reports.
+  - : New documentation files.
+- **Heavily Modified/Overwritten:**
+  - : Major additions for payments, reports, notifications, and contact form.
+  - : Completely overhauled to add new features.
+  - : Refactored to use the new .
 
 **Areas that need refactoring**:
-- None identified in this session.
+- The old  should be fully deprecated and removed in favor of .
+- Color definitions should be moved from  to the  to support theme switching properly. Any component still importing directly from  needs to be refactored.
 
 **key api endpoints**
-- : Get list of available markets.
-- : Suggest market based on user's IP.
-- : Set the current user's market.
-- : Now filters tutors based on the user's .
-- : Now validates that tutor and consumer are in the same market.
+- **New Endpoints:**
+  - : Creates a Stripe payment session.
+  - : Handles Stripe events.
+  - : Fetches summary data for reports.
+  - : Serves a generated PDF report.
+  - , : Manage user notifications.
+  - , : Manage user reminders.
+  - : Handles the Contact Us form submission.
+- **Problematic Endpoints:**
+  - : Not working correctly with the frontend.
+  - : Data structure may be causing frontend crashes.
 
 **Critical Info for New Agent**
-- The app's name is **Maestro Hub**.
-- The immediate next task is to implement the new logo and favicon that have already been downloaded to .
-- The multi-market feature is the most significant recent change. All new features should be built with market separation in mind.
-- A single Stripe account with multi-currency support is the agreed-upon strategy for MVP.
+- **Database Name:** The application's backend is configured to use the database named  (from ). Any manual scripts or verification must target this database.
+- **Unified Header:** The new standard is . All screens must be migrated to use it for consistency.
+- **Multiple High-Priority Bugs:** There are several critical bugs blocking core user flows (search, viewing tutor profiles, onboarding). These should be prioritized over new features.
+- **In-Progress Refactors:** The theme implementation and header rollout are significant, partially-completed tasks that affect the entire codebase. Be mindful of their incomplete state.
 
 **documents created in this job**
-- None.
+  - 
+  - 
+  - 
 
 **Last 10 User Messages and any pending HUMAN messages**
-1.  **User (Message 266):** Provided a new logo and favicon for the app. (NOT STARTED)
-2.  **User (Message 237):** Requested to rebrand Acharyaly to Maestro Hub and update the tagline. (COMPLETED)
-3.  **User (Message 216):** Said Continue during the multi-market implementation. (COMPLETED)
-4.  **User (Message 131):** Gave the go-ahead to start building the multi-market features. (COMPLETED)
-5.  **User (Message 129):** Answered the agent's questions regarding the multi-market implementation strategy. (COMPLETED)
-6.  **User (Message 124):** Provided PDF documents with requirements for a multi-market release. (COMPLETED)
-7.  **User (Message 5):** Confirmed the plan to implement responsive design and then device ID tracking. (COMPLETED)
+1.  **User (Message 365):** Reported multiple new bugs and feature requests, including the Uncaught error on the tutor page, and specified the new unified header design. (IN PROGRESS)
+2.  **User (Message 342):** Reported the color is not defined crash, requested full responsiveness, and asked for test/PRD documentation. (Partially Completed)
+3.  **User (Message 269):** Provided a large list of new features, including dark/light mode with a premium palette, contact us sheet, and notification/reminder sections. (Partially Completed)
+4.  **User (Message 266):** Provided a very large list of bugs and UI/UX improvements, including broken account links, broken search, and the desire for a calendar view for bookings. (Partially Completed)
+5.  **User (Message 155):** Clarified payout requirements (immediate, per session) and specified PDF for reports. (Completed - Backend Logic)
+6.  **User (Message 152):** Gave a 5-point plan to implement Stripe, payouts, and reports. (Completed - Backend Logic & Initial UI)
+7.  **User (Message 134):** Asked to create sample data and inquired about the payment module status. (Completed)
+8.  **User (Message 109):** Requested to trim the logo image and add the brand name to the index page. (Completed)
+9.  **User (Message 76):** Requested to increase the logo size on the login page by 100%. (Completed)
+10. **User (Message 5):** Provided a new, larger favicon image and specified the desired logo format. (Completed)
 
 **Project Health Check:**
-- **Broken:** None.
+- **Broken:**
+    - Tutor Search
+    - Tutor Details Page (crashes the app)
+    - Tutor Onboarding (Create Profile button)
 - **Mocked:**
-    - Stripe payment functionality.
-    - Resend email functionality.
+    - Stripe payment and payout functionality (backend has placeholder keys and logic stubs, but no end-to-end flow).
 
 **3rd Party Integrations**
 - **Stripe (Payments)** — requires User API Key (currently using placeholders).
-- **Resend (Email)** — requires User API Key (currently using placeholders).
+- **Resend (Email)** — requires User API Key (placeholders exist but not used).
 - **Emergent Google OAuth** — uses Emergent LLM Key.
 - **ip-api.com (IP Geolocation)** — free, no key required.
 
 **Testing status**
-- **Testing agent used after significant changes:** YES (deep_testing_backend_v2 was used for the multi-market APIs and passed 18/18 tests).
-- **Troubleshoot agent used after agent stuck in loop:** NO
-- **Test files created:** 
-- **Known regressions:** None.
+  - Testing agent used after significant changes: YES ( was run and passed 12/12 tests on the updated backend).
+  - Troubleshoot agent used after agent stuck in loop: NO
+  - Test files created:
+    - 
+    - 
+  - Known regressions:
+    - Tutor Search functionality.
+    - Tutor Profile page stability.
 
 **Credentials to test flow:**
-New users can be created via the registration screen or API. No specific credentials saved.
+Sample users have been created. Use  (password: ) for consumer flows and  (password: ) for tutor flows.
 
 **What agent forgot to execute**
-- Nothing was forgotten in this session. The agent successfully completed all user requests in the specified order.
+- The agent did not provide a working alternative for the PDF download after removing the crashing  package. The download button on the reports page is now likely non-functional on mobile and web.
+- The agent did not fix the core Tutor Search bug despite acknowledging it.
+- The agent has not started on several major user requests, such as the calendar view for bookings or fixing all the broken links in the account tab.
 
 </analysis>
