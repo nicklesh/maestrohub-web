@@ -198,7 +198,8 @@ export default function TutorProfileScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+        <AppHeader showBack />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -208,16 +209,18 @@ export default function TutorProfileScreen() {
 
   if (!tutor) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+        <AppHeader showBack />
         <View style={styles.loadingContainer}>
-          <Text>Tutor not found</Text>
+          <Text style={{ color: colors.text }}>Tutor not found</Text>
         </View>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+      <AppHeader showBack />
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
