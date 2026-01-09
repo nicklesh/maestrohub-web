@@ -17,6 +17,7 @@ import { useRouter, Link } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
 import { colors } from '@/src/theme/colors';
+import LogoHeader from '@/src/components/LogoHeader';
 
 export default function RegisterScreen() {
   const [name, setName] = useState('');
@@ -91,7 +92,7 @@ export default function RegisterScreen() {
         >
           <View style={[styles.formWrapper, formMaxWidth ? { maxWidth: formMaxWidth } : undefined]}>
             <View style={[styles.header, isDesktop && styles.headerDesktop]}>
-              <Text style={[styles.logo, isDesktop && styles.logoDesktop]}>Maestro Hub</Text>
+              <LogoHeader size="large" showTagline={false} />
             </View>
 
             <View style={[styles.form, isTablet && styles.formTablet]}>
@@ -288,14 +289,6 @@ const styles = StyleSheet.create({
   headerDesktop: {
     marginTop: 0,
     marginBottom: 32,
-  },
-  logo: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: colors.primary,
-  },
-  logoDesktop: {
-    fontSize: 40,
   },
   form: {
     flex: 1,
