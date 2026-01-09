@@ -2925,7 +2925,10 @@ async def accept_invite(invite_id: str, request: Request):
         raise HTTPException(status_code=400, detail=f"Invite is already {invite['status']}")
     
     # Check expiry
-    if datetime.fromisoformat(invite["expires_at"].isoformat()) < datetime.now(timezone.utc):
+    expires_at = invite["expires_at"]
+    if expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+    if expires_at < datetime.now(timezone.utc):
         await db.invites.update_one(
             {"invite_id": invite_id},
             {"$set": {"status": "expired"}}
