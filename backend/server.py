@@ -3008,14 +3008,19 @@ async def cancel_invite(invite_id: str, request: Request):
 # Include router
 app.include_router(api_router)
 
+# Dynamic CORS allowing specific origins with credentials
+ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost:8001",
+    "https://maestro-hub-1.preview.emergentagent.com",
+    "https://maestro-hub.preview.emergentagent.com",
+]
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
-    allow_origins=[
-        "http://localhost:3000",
-        "https://maestro-hub-1.preview.emergentagent.com",
-        "https://maestro-hub.preview.emergentagent.com",
-    ],
+    allow_origins=ALLOWED_ORIGINS,
+    allow_origin_regex=r"https://.*\.preview\.emergentagent\.com",  # Allow all preview subdomains
     allow_methods=["*"],
     allow_headers=["*"],
 )
