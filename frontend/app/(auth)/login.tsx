@@ -218,6 +218,15 @@ const styles = StyleSheet.create({
     marginTop: 0,
     marginBottom: 48,
   },
+  tagline: {
+    fontSize: 15,
+    color: colors.textMuted,
+    marginTop: 8,
+    fontStyle: 'italic',
+  },
+  taglineDesktop: {
+    fontSize: 17,
+  },
   form: {
     flex: 1,
   },
