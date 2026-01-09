@@ -16,7 +16,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { api } from '@/src/services/api';
-import { colors } from '@/src/theme/colors';
+import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
+import AppHeader from '@/src/components/AppHeader';
 import { format, parseISO } from 'date-fns';
 
 interface Student {
@@ -42,6 +43,7 @@ type Step = 'student' | 'intake' | 'confirm';
 export default function BookingScreen() {
   const router = useRouter();
   const { width } = useWindowDimensions();
+  const { colors } = useTheme();
   const { tutorId, startAt, endAt } = useLocalSearchParams<{
     tutorId: string;
     startAt: string;
@@ -66,6 +68,8 @@ export default function BookingScreen() {
   const [currentLevel, setCurrentLevel] = useState('');
   const [notes, setNotes] = useState('');
   const [policyAcknowledged, setPolicyAcknowledged] = useState(false);
+
+  const styles = getStyles(colors);
 
   useEffect(() => {
     loadData();
@@ -165,6 +169,7 @@ export default function BookingScreen() {
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
+        <AppHeader showBack title="Book Lesson" />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -332,14 +337,7 @@ export default function BookingScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
-      <View style={[styles.header, isTablet && styles.headerTablet]}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color={colors.text} />
-        </TouchableOpacity>
-        <Text style={[styles.headerTitle, isDesktop && styles.headerTitleDesktop]}>Book Lesson</Text>
-        <View style={styles.backButton} />
-      </View>
+      <AppHeader showBack title="Book Lesson" />
 
       {/* Progress */}
       <View style={[styles.progress, isTablet && styles.progressTablet, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
@@ -365,7 +363,7 @@ export default function BookingScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colors: ThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
@@ -377,32 +375,6 @@ const styles = StyleSheet.create({
   },
   contentWrapper: {
     flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 16,
-  },
-  headerTablet: {
-    paddingHorizontal: 24,
-    paddingVertical: 20,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.surface,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: colors.text,
-  },
-  headerTitleDesktop: {
-    fontSize: 22,
   },
   progress: {
     flexDirection: 'row',
@@ -673,7 +645,7 @@ const styles = StyleSheet.create({
   paymentNoteText: {
     flex: 1,
     fontSize: 13,
-    color: colors.primaryDark,
+    color: colors.primary,
   },
   paymentNoteTextDesktop: {
     fontSize: 14,
