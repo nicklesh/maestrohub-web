@@ -16,8 +16,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
 import { useTheme } from '@/src/context/ThemeContext';
 import { api } from '@/src/services/api';
-import * as FileSystem from 'expo-file-system';
-import * as Sharing from 'expo-sharing';
 
 interface ReportSummary {
   total_sessions: number;
@@ -96,29 +94,25 @@ export default function ConsumerReportsScreen() {
   const downloadPDF = async () => {
     setDownloading(true);
     try {
-      const response = await api.get('/reports/consumer/pdf', {
-        headers: { Authorization: `Bearer ${token}` },
-        responseType: 'blob'
-      });
-      
+      // For web, create a direct download link
       if (Platform.OS === 'web') {
-        // Web: Create download link
-        const blob = new Blob([response.data], { type: 'application/pdf' });
-        const url = window.URL.createObjectURL(blob);
+        const baseUrl = api.defaults.baseURL || '/api';
+        const pdfUrl = `${baseUrl}/reports/consumer/pdf`;
+        
+        // Create temporary anchor to download
         const link = document.createElement('a');
-        link.href = url;
+        link.href = pdfUrl;
         link.download = `maestrohub_report_${new Date().toISOString().split('T')[0]}.pdf`;
+        link.target = '_blank';
+        document.body.appendChild(link);
         link.click();
-        window.URL.revokeObjectURL(url);
+        document.body.removeChild(link);
+        
+        Alert.alert('Success', 'Report download started');
       } else {
-        // Native: Save and share
-        const filename = `${FileSystem.documentDirectory}maestrohub_report.pdf`;
-        await FileSystem.writeAsStringAsync(filename, response.data, {
-          encoding: FileSystem.EncodingType.Base64
-        });
-        await Sharing.shareAsync(filename);
+        // For native, show alert to use web version
+        Alert.alert('Info', 'PDF download is available in the web version');
       }
-      Alert.alert('Success', 'Report downloaded successfully');
     } catch (error) {
       console.error('PDF download error:', error);
       Alert.alert('Error', 'Failed to download report. Please try again.');
