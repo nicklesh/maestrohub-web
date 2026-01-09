@@ -121,7 +121,8 @@ export default function BookingsScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+        <AppHeader />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -130,19 +131,20 @@ export default function BookingsScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+      <AppHeader />
       <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
         <View style={[styles.header, isTablet && styles.headerTablet]}>
-          <Text style={[styles.title, isDesktop && styles.titleDesktop]}>My Bookings</Text>
+          <Text style={[styles.title, { color: colors.text }, isDesktop && styles.titleDesktop]}>My Bookings</Text>
         </View>
 
         {/* Filter Tabs */}
         <View style={[styles.tabs, isTablet && styles.tabsTablet]}>
           <TouchableOpacity
-            style={[styles.tab, isTablet && styles.tabTablet, filter === 'upcoming' && styles.tabActive]}
+            style={[styles.tab, { backgroundColor: filter === 'upcoming' ? colors.primary : colors.surface }, isTablet && styles.tabTablet]}
             onPress={() => setFilter('upcoming')}
           >
-            <Text style={[styles.tabText, isTablet && styles.tabTextTablet, filter === 'upcoming' && styles.tabTextActive]}>
+            <Text style={[styles.tabText, { color: filter === 'upcoming' ? '#FFFFFF' : colors.text }, isTablet && styles.tabTextTablet]}>
               Upcoming
             </Text>
           </TouchableOpacity>
