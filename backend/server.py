@@ -527,6 +527,291 @@ async def update_role(request: Request, new_role: str = Query(...)):
     await db.users.update_one({"user_id": user.user_id}, {"$set": {"role": new_role}})
     return {"message": "Role updated", "role": new_role}
 
+# ============== PROFILE MANAGEMENT ==============
+
+class ProfileUpdate(BaseModel):
+    name: Optional[str] = None
+    phone: Optional[str] = None
+
+class PasswordChange(BaseModel):
+    current_password: str
+    new_password: str
+
+@api_router.put("/profile")
+async def update_profile(data: ProfileUpdate, request: Request):
+    """Update user profile (name, phone)"""
+    user = await require_auth(request)
+    
+    update_data = {}
+    if data.name:
+        update_data["name"] = data.name
+    if data.phone:
+        update_data["phone"] = data.phone
+    
+    if not update_data:
+        raise HTTPException(status_code=400, detail="No fields to update")
+    
+    await db.users.update_one({"user_id": user.user_id}, {"$set": update_data})
+    
+    # Get updated user
+    updated = await db.users.find_one({"user_id": user.user_id}, {"_id": 0, "password_hash": 0})
+    return updated
+
+@api_router.post("/profile/change-password")
+async def change_password(data: PasswordChange, request: Request):
+    """Change user password"""
+    user = await require_auth(request)
+    
+    # Get current user with password
+    user_doc = await db.users.find_one({"user_id": user.user_id})
+    if not user_doc:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Verify current password
+    if not user_doc.get("password_hash"):
+        raise HTTPException(status_code=400, detail="Account uses social login, cannot change password")
+    
+    if not pwd_context.verify(data.current_password, user_doc["password_hash"]):
+        raise HTTPException(status_code=400, detail="Current password is incorrect")
+    
+    # Validate new password
+    if len(data.new_password) < 6:
+        raise HTTPException(status_code=400, detail="New password must be at least 6 characters")
+    
+    # Update password
+    new_hash = pwd_context.hash(data.new_password)
+    await db.users.update_one({"user_id": user.user_id}, {"$set": {"password_hash": new_hash}})
+    
+    return {"success": True, "message": "Password changed successfully"}
+
+# ============== BILLING & PAYMENT METHODS ==============
+
+class PaymentMethodAdd(BaseModel):
+    stripe_payment_method_id: str
+    is_default: bool = False
+
+class AutoPaySettings(BaseModel):
+    enabled: bool
+    day_of_month: int = 1  # 1-28
+
+@api_router.get("/billing")
+async def get_billing_info(request: Request):
+    """Get comprehensive billing information"""
+    user = await require_auth(request)
+    
+    # Get user's payment methods (if connected to Stripe)
+    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    stripe_customer_id = user_doc.get("stripe_customer_id")
+    
+    # Get pending payments
+    pending_payments = await db.payments.find({
+        "user_id": user.user_id,
+        "status": "pending"
+    }, {"_id": 0}).to_list(100)
+    
+    pending_balance = sum(p.get("amount", 0) for p in pending_payments)
+    
+    # Get auto-pay settings
+    auto_pay = user_doc.get("auto_pay_settings", {"enabled": False})
+    
+    # Calculate next auto-pay (if enabled)
+    next_auto_pay = None
+    if auto_pay.get("enabled") and pending_balance > 0:
+        today = datetime.now(timezone.utc)
+        day = auto_pay.get("day_of_month", 1)
+        if today.day > day:
+            # Next month
+            if today.month == 12:
+                next_auto_pay = datetime(today.year + 1, 1, day, tzinfo=timezone.utc)
+            else:
+                next_auto_pay = datetime(today.year, today.month + 1, day, tzinfo=timezone.utc)
+        else:
+            next_auto_pay = datetime(today.year, today.month, day, tzinfo=timezone.utc)
+    
+    return {
+        "stripe_connected": bool(stripe_customer_id),
+        "stripe_customer_id": stripe_customer_id,
+        "pending_balance": pending_balance,
+        "pending_payments": pending_payments,
+        "auto_pay": {
+            "enabled": auto_pay.get("enabled", False),
+            "day_of_month": auto_pay.get("day_of_month", 1),
+            "next_auto_pay_date": next_auto_pay.isoformat() if next_auto_pay else None,
+            "next_auto_pay_amount": pending_balance if auto_pay.get("enabled") else 0
+        },
+        "payment_methods": user_doc.get("payment_methods", [])
+    }
+
+@api_router.post("/billing/setup-stripe")
+async def setup_stripe_billing(request: Request):
+    """Create Stripe customer and return setup URL"""
+    user = await require_auth(request)
+    
+    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    
+    if user_doc.get("stripe_customer_id"):
+        return {
+            "already_setup": True,
+            "stripe_customer_id": user_doc.get("stripe_customer_id"),
+            "message": "Stripe account already connected"
+        }
+    
+    # In production, create actual Stripe customer
+    # For now, simulate customer creation
+    stripe_customer_id = f"cus_{uuid.uuid4().hex[:14]}"
+    
+    await db.users.update_one(
+        {"user_id": user.user_id},
+        {"$set": {
+            "stripe_customer_id": stripe_customer_id,
+            "stripe_setup_at": datetime.now(timezone.utc)
+        }}
+    )
+    
+    return {
+        "success": True,
+        "stripe_customer_id": stripe_customer_id,
+        "message": "Stripe billing setup complete"
+    }
+
+@api_router.put("/billing/auto-pay")
+async def update_auto_pay_settings(data: AutoPaySettings, request: Request):
+    """Update auto-pay settings"""
+    user = await require_auth(request)
+    
+    if data.day_of_month < 1 or data.day_of_month > 28:
+        raise HTTPException(status_code=400, detail="Day must be between 1 and 28")
+    
+    await db.users.update_one(
+        {"user_id": user.user_id},
+        {"$set": {
+            "auto_pay_settings": {
+                "enabled": data.enabled,
+                "day_of_month": data.day_of_month
+            }
+        }}
+    )
+    
+    return {"success": True, "auto_pay": data.dict()}
+
+# ============== CONSUMER INVITES TO PROVIDERS ==============
+
+class ConsumerInviteCreate(BaseModel):
+    tutor_email: EmailStr
+    tutor_name: Optional[str] = None
+    message: Optional[str] = None
+
+@api_router.post("/consumer/invite-provider")
+async def consumer_invite_provider(data: ConsumerInviteCreate, request: Request):
+    """Consumer invites a provider with one free session credit"""
+    user = await require_auth(request)
+    
+    # Check if invite already exists
+    existing = await db.consumer_invites.find_one({
+        "consumer_id": user.user_id,
+        "tutor_email": data.tutor_email.lower(),
+        "status": {"$in": ["pending", "accepted"]}
+    })
+    if existing:
+        raise HTTPException(status_code=400, detail="You've already invited this provider")
+    
+    invite_id = f"cinv_{uuid.uuid4().hex[:12]}"
+    
+    invite_doc = {
+        "invite_id": invite_id,
+        "consumer_id": user.user_id,
+        "consumer_name": user.name,
+        "tutor_email": data.tutor_email.lower(),
+        "tutor_name": data.tutor_name,
+        "message": data.message or f"Hi! I'd like to invite you to join Maestro Hub as a tutor. You'll get one free session to try out the platform!",
+        "status": "pending",
+        "free_session_credit": True,  # Auto credit for first session
+        "credit_amount": 50.00,  # Default credit amount
+        "created_at": datetime.now(timezone.utc),
+        "expires_at": datetime.now(timezone.utc) + timedelta(days=30)
+    }
+    
+    await db.consumer_invites.insert_one(invite_doc)
+    
+    # Check if tutor already exists
+    existing_tutor = await db.users.find_one({"email": data.tutor_email.lower()}, {"_id": 0})
+    if existing_tutor:
+        # Create notification for tutor
+        await db.notifications.insert_one({
+            "notification_id": f"notif_{uuid.uuid4().hex[:8]}",
+            "user_id": existing_tutor["user_id"],
+            "type": "consumer_invite",
+            "title": "New Student Invitation",
+            "message": f"{user.name} has invited you to connect! You'll receive a free session credit.",
+            "data": {"invite_id": invite_id, "consumer_id": user.user_id},
+            "read": False,
+            "created_at": datetime.now(timezone.utc)
+        })
+    
+    # Create notification for consumer
+    await db.notifications.insert_one({
+        "notification_id": f"notif_{uuid.uuid4().hex[:8]}",
+        "user_id": user.user_id,
+        "type": "invite_sent",
+        "title": "Invite Sent",
+        "message": f"Your invite to {data.tutor_name or data.tutor_email} has been sent with a free session credit offer!",
+        "data": {"invite_id": invite_id},
+        "read": False,
+        "created_at": datetime.now(timezone.utc)
+    })
+    
+    return {
+        "success": True,
+        "invite_id": invite_id,
+        "message": "Invite sent with one free session credit!",
+        "credit_amount": 50.00
+    }
+
+@api_router.get("/consumer/invites")
+async def get_consumer_sent_invites(request: Request):
+    """Get invites sent by the consumer to providers"""
+    user = await require_auth(request)
+    
+    invites = await db.consumer_invites.find(
+        {"consumer_id": user.user_id},
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(50)
+    
+    return {"invites": invites}
+
+# ============== REMINDER CONFIGURATION ==============
+
+class ReminderConfig(BaseModel):
+    session_reminder_hours: int = 1  # Hours before session
+    payment_reminder_days: int = 1  # Days before payment due
+    weekly_summary: bool = True
+
+@api_router.get("/reminders/config")
+async def get_reminder_config(request: Request):
+    """Get user's reminder configuration"""
+    user = await require_auth(request)
+    
+    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    config = user_doc.get("reminder_config", {
+        "session_reminder_hours": 1,
+        "payment_reminder_days": 1,
+        "weekly_summary": True
+    })
+    
+    return config
+
+@api_router.put("/reminders/config")
+async def update_reminder_config(data: ReminderConfig, request: Request):
+    """Update user's reminder configuration"""
+    user = await require_auth(request)
+    
+    await db.users.update_one(
+        {"user_id": user.user_id},
+        {"$set": {"reminder_config": data.dict()}}
+    )
+    
+    return {"success": True, "config": data.dict()}
+
 @api_router.post("/auth/device")
 async def register_device(device: DeviceInfo, request: Request):
     user = await require_auth(request)
