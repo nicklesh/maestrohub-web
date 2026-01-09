@@ -283,31 +283,39 @@ export default function TutorProfileScreen() {
               </View>
 
               {/* Levels */}
-              <View style={[styles.section, isTablet && styles.sectionTablet]}>
-                <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>Levels Taught</Text>
-                <View style={styles.chipsList}>
-                  {tutor.levels.map((l) => (
-                    <View key={l} style={[styles.chip, isTablet && styles.chipTablet]}>
-                      <Text style={styles.chipText}>{l.replace('_', ' ')}</Text>
-                    </View>
-                  ))}
+              {tutor.levels && tutor.levels.length > 0 && (
+                <View style={[styles.section, isTablet && styles.sectionTablet]}>
+                  <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>Levels Taught</Text>
+                  <View style={styles.chipsList}>
+                    {tutor.levels.map((l) => (
+                      <View key={l} style={[styles.chip, isTablet && styles.chipTablet]}>
+                        <Text style={styles.chipText}>{l.replace('_', ' ')}</Text>
+                      </View>
+                    ))}
+                  </View>
                 </View>
-              </View>
+              )}
 
               {/* Policies */}
-              <View style={[styles.section, isTablet && styles.sectionTablet]}>
-                <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>Policies</Text>
-                <View style={styles.policyItem}>
-                  <Ionicons name="time-outline" size={18} color={colors.textMuted} />
-                  <Text style={styles.policyText}>
-                    Cancel {tutor.policies.cancel_window_hours}h before for full refund
-                  </Text>
+              {tutor.policies && (
+                <View style={[styles.section, isTablet && styles.sectionTablet]}>
+                  <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>Policies</Text>
+                  {tutor.policies.cancel_window_hours && (
+                    <View style={styles.policyItem}>
+                      <Ionicons name="time-outline" size={18} color={colors.textMuted} />
+                      <Text style={styles.policyText}>
+                        Cancel {tutor.policies.cancel_window_hours}h before for full refund
+                      </Text>
+                    </View>
+                  )}
+                  {tutor.policies.no_show_policy && (
+                    <View style={styles.policyItem}>
+                      <Ionicons name="alert-circle-outline" size={18} color={colors.textMuted} />
+                      <Text style={styles.policyText}>{tutor.policies.no_show_policy}</Text>
+                    </View>
+                  )}
                 </View>
-                <View style={styles.policyItem}>
-                  <Ionicons name="alert-circle-outline" size={18} color={colors.textMuted} />
-                  <Text style={styles.policyText}>{tutor.policies.no_show_policy}</Text>
-                </View>
-              </View>
+              )}
             </View>
 
             <View style={isTablet ? styles.rightColumn : undefined}>
