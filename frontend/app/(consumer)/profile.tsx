@@ -105,8 +105,14 @@ export default function ProfileScreen() {
           text: 'Logout', 
           style: 'destructive', 
           onPress: async () => {
-            await logout();
-            router.replace('/(auth)/login');
+            try {
+              await logout();
+            } catch (e) {
+              console.error('Logout error:', e);
+            } finally {
+              // Always navigate to login regardless of logout API success
+              router.replace('/(auth)/login');
+            }
           }
         },
       ]);
