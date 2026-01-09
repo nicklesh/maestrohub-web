@@ -29,21 +29,22 @@ interface Booking {
   price_snapshot: number;
 }
 
-const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
-  booked: { bg: colors.primaryLight, text: colors.primary },
-  confirmed: { bg: colors.successLight, text: colors.success },
-  completed: { bg: colors.gray200, text: colors.gray600 },
-  canceled_by_consumer: { bg: colors.errorLight, text: colors.error },
-  canceled_by_provider: { bg: colors.errorLight, text: colors.error },
-};
-
 export default function BookingsScreen() {
   const router = useRouter();
   const { width } = useWindowDimensions();
+  const { colors } = useTheme();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [filter, setFilter] = useState<'upcoming' | 'past'>('upcoming');
+
+  const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
+    booked: { bg: colors.primaryLight, text: colors.primary },
+    confirmed: { bg: colors.successLight, text: colors.success },
+    completed: { bg: colors.gray200, text: colors.gray600 },
+    canceled_by_consumer: { bg: colors.errorLight, text: colors.error },
+    canceled_by_provider: { bg: colors.errorLight, text: colors.error },
+  };
 
   // Responsive breakpoints
   const isTablet = width >= 768;
