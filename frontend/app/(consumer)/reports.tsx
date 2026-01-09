@@ -97,20 +97,27 @@ export default function ConsumerReportsScreen() {
     setDownloading(true);
     try {
       if (Platform.OS === 'web') {
-        const baseUrl = api.defaults.baseURL || '/api';
-        const pdfUrl = `${baseUrl}/reports/consumer/pdf`;
+        // Use fetch with authorization header for authenticated download
+        const response = await api.get('/reports/consumer/pdf', {
+          headers: { Authorization: `Bearer ${token}` },
+          responseType: 'blob'
+        });
         
+        // Create blob and download
+        const blob = new Blob([response.data], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
-        link.href = pdfUrl;
+        link.href = url;
         link.download = `maestrohub_report_${new Date().toISOString().split('T')[0]}.pdf`;
-        link.target = '_blank';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
         
-        Alert.alert('Success', 'Report download started');
+        Alert.alert('Success', 'Report downloaded successfully');
       } else {
-        Alert.alert('Info', 'PDF download is available in the web version');
+        // For mobile, show info about web availability
+        Alert.alert('Info', 'PDF download is available in the web version. Please use the web app to download reports.');
       }
     } catch (error) {
       console.error('PDF download error:', error);
