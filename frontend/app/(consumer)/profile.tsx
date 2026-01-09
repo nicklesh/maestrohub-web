@@ -98,7 +98,11 @@ export default function ProfileScreen() {
         style: 'destructive', 
         onPress: async () => {
           await logout();
-          router.replace('/(auth)/login');
+          // AuthContext handles redirect for web
+          // For native, manually navigate
+          if (Platform.OS !== 'web') {
+            router.replace('/(auth)/login');
+          }
         }
       },
     ]);
