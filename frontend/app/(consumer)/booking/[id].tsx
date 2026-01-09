@@ -87,36 +87,57 @@ export default function BookingDetailScreen() {
       setBooking(response.data);
     } catch (error) {
       console.error('Failed to load booking:', error);
-      Alert.alert('Error', 'Failed to load booking details');
+      if (Platform.OS === 'web') {
+        window.alert('Failed to load booking details');
+      } else {
+        Alert.alert('Error', 'Failed to load booking details');
+      }
     } finally {
       setLoading(false);
     }
   };
 
   const handleCancel = () => {
-    Alert.alert(
-      'Cancel Booking',
-      'Are you sure you want to cancel this booking?',
-      [
-        { text: 'No', style: 'cancel' },
-        {
-          text: 'Yes, Cancel',
-          style: 'destructive',
-          onPress: async () => {
-            setCanceling(true);
-            try {
-              await api.post(`/bookings/${id}/cancel`);
-              loadBooking();
-              Alert.alert('Canceled', 'Your booking has been canceled.');
-            } catch (error) {
-              Alert.alert('Error', 'Failed to cancel booking');
-            } finally {
-              setCanceling(false);
-            }
+    if (Platform.OS === 'web') {
+      const confirmed = window.confirm('Are you sure you want to cancel this booking?');
+      if (confirmed) {
+        performCancel();
+      }
+    } else {
+      Alert.alert(
+        'Cancel Booking',
+        'Are you sure you want to cancel this booking?',
+        [
+          { text: 'No', style: 'cancel' },
+          {
+            text: 'Yes, Cancel',
+            style: 'destructive',
+            onPress: performCancel,
           },
-        },
-      ]
-    );
+        ]
+      );
+    }
+  };
+
+  const performCancel = async () => {
+    setCanceling(true);
+    try {
+      await api.post(`/bookings/${id}/cancel`);
+      loadBooking();
+      if (Platform.OS === 'web') {
+        window.alert('Your booking has been canceled.');
+      } else {
+        Alert.alert('Canceled', 'Your booking has been canceled.');
+      }
+    } catch (error) {
+      if (Platform.OS === 'web') {
+        window.alert('Failed to cancel booking');
+      } else {
+        Alert.alert('Error', 'Failed to cancel booking');
+      }
+    } finally {
+      setCanceling(false);
+    }
   };
 
   const handleSubmitReview = async () => {
