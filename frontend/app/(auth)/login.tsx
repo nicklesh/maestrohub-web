@@ -35,9 +35,9 @@ export default function LoginScreen() {
   const isDesktop = width >= 1024;
   const formMaxWidth = isDesktop ? 440 : isTablet ? 400 : undefined;
 
-  // Logo sizes - doubled for login page
-  const logoWidth = isDesktop ? 500 : isTablet ? 450 : width - 48; // Full width minus padding on mobile
-  const logoHeight = isDesktop ? 200 : isTablet ? 180 : 160;
+  // Logo sizes - maximized for login page (compensating for transparent space in logo file)
+  const logoWidth = isDesktop ? 600 : isTablet ? 550 : width - 32;
+  const logoHeight = isDesktop ? 240 : isTablet ? 220 : 200;
 
   const handleLogin = async () => {
     if (!email || !password) {
