@@ -104,10 +104,10 @@ export default function SearchScreen() {
     >
       <View style={styles.cardHeader}>
         <View style={[styles.avatar, { backgroundColor: colors.primary }]}>
-          <Text style={styles.avatarText}>{item.name?.charAt(0) || 'T'}</Text>
+          <Text style={styles.avatarText}>{item.user_name?.charAt(0) || 'T'}</Text>
         </View>
         <View style={styles.cardInfo}>
-          <Text style={[styles.tutorName, { color: colors.text }]} numberOfLines={1}>{item.name}</Text>
+          <Text style={[styles.tutorName, { color: colors.text }]} numberOfLines={1}>{item.user_name}</Text>
           <View style={styles.ratingRow}>
             <Ionicons name="star" size={14} color="#FFB800" />
             <Text style={[styles.rating, { color: colors.text }]}>
