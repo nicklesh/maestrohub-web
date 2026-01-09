@@ -80,17 +80,31 @@ export default function TutorSettings() {
   };
 
   const handleLogout = () => {
-    Alert.alert('Logout', 'Are you sure?', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Logout',
-        style: 'destructive',
-        onPress: async () => {
-          await logout();
-          router.replace('/');
+    if (Platform.OS === 'web') {
+      const confirmed = window.confirm('Are you sure you want to logout?');
+      if (confirmed) {
+        logout().then(() => {
+          // AuthContext handles web redirect
+        });
+      }
+    } else {
+      Alert.alert('Logout', 'Are you sure?', [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Logout',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await logout();
+            } catch (e) {
+              console.error('Logout error:', e);
+            } finally {
+              router.replace('/(auth)/login');
+            }
+          },
         },
-      },
-    ]);
+      ]);
+    }
   };
 
   if (loading) {
