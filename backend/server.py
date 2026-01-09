@@ -160,7 +160,7 @@ class StudentCreate(BaseModel):
 class Student(StudentCreate):
     student_id: str
     user_id: str
-    created_at: datetime
+    created_at: Optional[datetime] = None
 
 class TutorPolicies(BaseModel):
     cancel_window_hours: int = 24
