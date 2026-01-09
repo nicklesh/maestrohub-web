@@ -27,9 +27,9 @@ export default function LogoHeader({
         };
       case 'large':
         return {
-          logoWidth: isDesktop ? 360 : isTablet ? 320 : 280,
-          logoHeight: isDesktop ? 144 : isTablet ? 128 : 112,
-          taglineFontSize: isDesktop ? 17 : isTablet ? 16 : 15,
+          logoWidth: isDesktop ? 720 : isTablet ? 640 : 560,
+          logoHeight: isDesktop ? 288 : isTablet ? 256 : 224,
+          taglineFontSize: isDesktop ? 19 : isTablet ? 18 : 17,
         };
       case 'medium':
       default:
