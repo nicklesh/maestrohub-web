@@ -8,7 +8,7 @@ export const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true,
+  // Note: withCredentials removed to avoid CORS issues with wildcard origins
 });
 
 // Add response interceptor for error handling
