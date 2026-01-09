@@ -11,7 +11,7 @@ from datetime import datetime
 import sys
 
 # Backend URL from environment
-BACKEND_URL = "https://tutorspot-15.preview.emergentagent.com/api"
+BACKEND_URL = "https://maestrohub.preview.emergentagent.com/api"
 
 class Maestro HubAPITester:
     def __init__(self):
