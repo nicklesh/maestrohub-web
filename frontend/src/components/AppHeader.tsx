@@ -100,7 +100,11 @@ export default function AppHeader({ showBack = false, title, showUserName = fals
 
   const handleContactSubmit = async () => {
     if (!contactSubject.trim() || !contactMessage.trim()) {
-      Alert.alert('Error', 'Please fill in all fields');
+      if (Platform.OS === 'web') {
+        window.alert('Please fill in all fields');
+      } else {
+        Alert.alert('Error', 'Please fill in all fields');
+      }
       return;
     }
 
@@ -114,12 +118,20 @@ export default function AppHeader({ showBack = false, title, showUserName = fals
         headers: { Authorization: `Bearer ${token}` }
       });
       
-      Alert.alert('Success', 'Your message has been sent!');
+      if (Platform.OS === 'web') {
+        window.alert('Your message has been sent!');
+      } else {
+        Alert.alert('Success', 'Your message has been sent!');
+      }
       setShowContactSheet(false);
       setContactSubject('');
       setContactMessage('');
     } catch (error) {
-      Alert.alert('Error', 'Failed to send message');
+      if (Platform.OS === 'web') {
+        window.alert('Failed to send message');
+      } else {
+        Alert.alert('Error', 'Failed to send message');
+      }
     } finally {
       setSubmittingContact(false);
     }
