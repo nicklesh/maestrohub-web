@@ -32,6 +32,8 @@ JWT_EXPIRATION_DAYS = 7
 # Stripe Config (placeholder)
 STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', 'sk_test_placeholder')
 STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY', 'pk_test_placeholder')
+STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET', 'whsec_placeholder')
+PLATFORM_FEE_PERCENT = float(os.environ.get('PLATFORM_FEE_PERCENT', '10'))  # 10% platform fee
 
 # Resend Config (placeholder)
 RESEND_API_KEY = os.environ.get('RESEND_API_KEY', 're_placeholder')
