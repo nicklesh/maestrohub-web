@@ -271,16 +271,18 @@ export default function TutorProfileScreen() {
               </View>
 
               {/* Subjects */}
-              <View style={[styles.section, isTablet && styles.sectionTablet]}>
-                <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>Subjects</Text>
-                <View style={styles.chipsList}>
-                  {tutor.subjects.map((s) => (
-                    <View key={s} style={[styles.chip, isTablet && styles.chipTablet]}>
-                      <Text style={styles.chipText}>{s}</Text>
-                    </View>
-                  ))}
+              {(tutor.subjects || []).length > 0 && (
+                <View style={[styles.section, isTablet && styles.sectionTablet]}>
+                  <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>Subjects</Text>
+                  <View style={styles.chipsList}>
+                    {tutor.subjects.map((s) => (
+                      <View key={s} style={[styles.chip, isTablet && styles.chipTablet]}>
+                        <Text style={styles.chipText}>{s}</Text>
+                      </View>
+                    ))}
+                  </View>
                 </View>
-              </View>
+              )}
 
               {/* Levels */}
               {tutor.levels && tutor.levels.length > 0 && (
