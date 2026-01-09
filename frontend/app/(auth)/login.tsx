@@ -35,9 +35,9 @@ export default function LoginScreen() {
   const isDesktop = width >= 1024;
   const formMaxWidth = isDesktop ? 440 : isTablet ? 400 : undefined;
 
-  // Logo sizes - maximized for login page (compensating for transparent space in logo file)
-  const logoWidth = isDesktop ? 600 : isTablet ? 550 : width - 32;
-  const logoHeight = isDesktop ? 240 : isTablet ? 220 : 200;
+  // Logo sizes - reduced by 15% and add title
+  const logoWidth = isDesktop ? 510 : isTablet ? 467 : Math.min(width - 32, 306);
+  const logoHeight = isDesktop ? 204 : isTablet ? 187 : 170;
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -88,6 +88,7 @@ export default function LoginScreen() {
                 style={{ width: logoWidth, height: logoHeight }}
                 resizeMode="contain"
               />
+              <Text style={[styles.appTitle, isDesktop && styles.appTitleDesktop]}>Maestro Hub</Text>
               <Text style={[styles.tagline, isDesktop && styles.taglineDesktop]}>
                 Find your coach, master your skill
               </Text>
@@ -218,10 +219,19 @@ const styles = StyleSheet.create({
     marginTop: 0,
     marginBottom: 48,
   },
+  appTitle: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: colors.primary,
+    marginTop: 8,
+  },
+  appTitleDesktop: {
+    fontSize: 40,
+  },
   tagline: {
     fontSize: 15,
     color: colors.textMuted,
-    marginTop: 8,
+    marginTop: 4,
     fontStyle: 'italic',
   },
   taglineDesktop: {
