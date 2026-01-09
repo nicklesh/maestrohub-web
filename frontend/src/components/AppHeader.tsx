@@ -72,11 +72,21 @@ export default function AppHeader({ showBack = false, title, showUserName = fals
         text: 'Logout', 
         style: 'destructive', 
         onPress: async () => {
-          await logout();
-          if (Platform.OS === 'web' && typeof window !== 'undefined') {
-            window.location.href = '/login';
-          } else {
-            router.replace('/(auth)/login');
+          try {
+            await logout();
+            // The logout function in AuthContext handles the redirect for web
+            // For native, use router.replace
+            if (Platform.OS !== 'web') {
+              router.replace('/(auth)/login');
+            }
+          } catch (error) {
+            console.error('Logout error:', error);
+            // Force redirect even on error for web
+            if (Platform.OS === 'web' && typeof window !== 'undefined') {
+              window.location.replace('/login');
+            } else {
+              router.replace('/(auth)/login');
+            }
           }
         }
       },
