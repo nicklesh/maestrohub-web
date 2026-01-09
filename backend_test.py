@@ -373,6 +373,224 @@ class APITester:
         except Exception as e:
             self.log_result("GET /api/markets", False, f"Exception: {str(e)}")
     
+    def test_invites_api(self):
+        """Test the complete Invites API flow"""
+        print("\n📧 TESTING INVITES API")
+        print("-" * 40)
+        
+        # Step 1: Login as tutor
+        tutor_token = self.login_user("tutor")
+        if not tutor_token:
+            self.log_result("Invites API - Tutor Login", False, "Failed to login as tutor")
+            return
+        
+        # Step 2: Login as consumer  
+        consumer_token = self.login_user("consumer")
+        if not consumer_token:
+            self.log_result("Invites API - Consumer Login", False, "Failed to login as consumer")
+            return
+        
+        # Step 3: Get tutor profile to get tutor_id
+        tutor_id = self.get_tutor_id(tutor_token)
+        if not tutor_id:
+            self.log_result("Invites API - Get Tutor Profile", False, "Failed to get tutor profile")
+            return
+        
+        # Step 4: Create invite (POST /api/invites)
+        invite_id = self.test_create_invite(tutor_token)
+        if not invite_id:
+            return
+        
+        # Step 5: Get sent invites (GET /api/invites/sent)
+        self.test_get_sent_invites(tutor_token, invite_id)
+        
+        # Step 6: Get received invites (GET /api/invites/received)
+        self.test_get_received_invites(consumer_token, invite_id)
+        
+        # Step 7: Accept invite (POST /api/invites/{id}/accept)
+        self.test_accept_invite(consumer_token, invite_id)
+        
+        # Step 8: Create another invite for decline test
+        decline_invite_id = self.test_create_invite(tutor_token, "decline_test")
+        if decline_invite_id:
+            # Step 9: Decline invite (POST /api/invites/{id}/decline)
+            self.test_decline_invite(consumer_token, decline_invite_id)
+        
+        # Step 10: Create another invite for cancel test
+        cancel_invite_id = self.test_create_invite(tutor_token, "cancel_test")
+        if cancel_invite_id:
+            # Step 11: Cancel invite (DELETE /api/invites/{id})
+            self.test_cancel_invite(tutor_token, cancel_invite_id)
+    
+    def login_user(self, user_type):
+        """Helper method to login and return token"""
+        try:
+            credentials = TEST_CREDENTIALS[user_type]
+            response = self.session.post(f"{API_BASE}/auth/login", json=credentials, timeout=30)
+            
+            if response.status_code == 200:
+                data = response.json()
+                return data.get("token")
+            else:
+                return None
+        except Exception:
+            return None
+    
+    def get_tutor_id(self, token):
+        """Helper method to get tutor_id"""
+        try:
+            headers = {"Authorization": f"Bearer {token}"}
+            response = self.session.get(f"{API_BASE}/tutors/profile", headers=headers, timeout=30)
+            
+            if response.status_code == 200:
+                data = response.json()
+                return data.get("tutor_id")
+            else:
+                return None
+        except Exception:
+            return None
+    
+    def test_create_invite(self, token, test_suffix=""):
+        """Test POST /api/invites"""
+        try:
+            headers = {"Authorization": f"Bearer {token}"}
+            invite_data = {
+                "email": TEST_CREDENTIALS["consumer"]["email"],
+                "name": f"Test Parent {test_suffix}",
+                "message": f"Test invite message {test_suffix}"
+            }
+            
+            response = self.session.post(f"{API_BASE}/invites", 
+                                       json=invite_data, headers=headers, timeout=30)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success"):
+                    invite_id = data.get("invite_id")
+                    self.log_result(f"POST /api/invites {test_suffix}", True, 
+                                  f"Invite created: {invite_id}")
+                    return invite_id
+                else:
+                    self.log_result(f"POST /api/invites {test_suffix}", False, 
+                                  "Success=False in response")
+                    return None
+            else:
+                self.log_result(f"POST /api/invites {test_suffix}", False, 
+                              f"HTTP {response.status_code}: {response.text}")
+                return None
+        except Exception as e:
+            self.log_result(f"POST /api/invites {test_suffix}", False, f"Exception: {str(e)}")
+            return None
+    
+    def test_get_sent_invites(self, token, expected_invite_id):
+        """Test GET /api/invites/sent"""
+        try:
+            headers = {"Authorization": f"Bearer {token}"}
+            response = self.session.get(f"{API_BASE}/invites/sent", headers=headers, timeout=30)
+            
+            if response.status_code == 200:
+                data = response.json()
+                invites = data.get("invites", [])
+                found = any(inv.get("invite_id") == expected_invite_id for inv in invites)
+                
+                if found:
+                    self.log_result("GET /api/invites/sent", True, 
+                                  f"Found {len(invites)} invites including test invite")
+                else:
+                    self.log_result("GET /api/invites/sent", False, 
+                                  f"Test invite {expected_invite_id} not found in {len(invites)} invites")
+            else:
+                self.log_result("GET /api/invites/sent", False, 
+                              f"HTTP {response.status_code}: {response.text}")
+        except Exception as e:
+            self.log_result("GET /api/invites/sent", False, f"Exception: {str(e)}")
+    
+    def test_get_received_invites(self, token, expected_invite_id):
+        """Test GET /api/invites/received"""
+        try:
+            headers = {"Authorization": f"Bearer {token}"}
+            response = self.session.get(f"{API_BASE}/invites/received", headers=headers, timeout=30)
+            
+            if response.status_code == 200:
+                data = response.json()
+                invites = data.get("invites", [])
+                found = any(inv.get("invite_id") == expected_invite_id for inv in invites)
+                
+                if found:
+                    self.log_result("GET /api/invites/received", True, 
+                                  f"Found {len(invites)} invites including test invite")
+                else:
+                    self.log_result("GET /api/invites/received", False, 
+                                  f"Test invite {expected_invite_id} not found in {len(invites)} invites")
+            else:
+                self.log_result("GET /api/invites/received", False, 
+                              f"HTTP {response.status_code}: {response.text}")
+        except Exception as e:
+            self.log_result("GET /api/invites/received", False, f"Exception: {str(e)}")
+    
+    def test_accept_invite(self, token, invite_id):
+        """Test POST /api/invites/{id}/accept"""
+        try:
+            headers = {"Authorization": f"Bearer {token}"}
+            response = self.session.post(f"{API_BASE}/invites/{invite_id}/accept", 
+                                       headers=headers, timeout=30)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success"):
+                    self.log_result("POST /api/invites/{id}/accept", True, 
+                                  data.get("message", "Invite accepted"))
+                else:
+                    self.log_result("POST /api/invites/{id}/accept", False, 
+                                  "Success=False in response")
+            else:
+                self.log_result("POST /api/invites/{id}/accept", False, 
+                              f"HTTP {response.status_code}: {response.text}")
+        except Exception as e:
+            self.log_result("POST /api/invites/{id}/accept", False, f"Exception: {str(e)}")
+    
+    def test_decline_invite(self, token, invite_id):
+        """Test POST /api/invites/{id}/decline"""
+        try:
+            headers = {"Authorization": f"Bearer {token}"}
+            response = self.session.post(f"{API_BASE}/invites/{invite_id}/decline", 
+                                       headers=headers, timeout=30)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success"):
+                    self.log_result("POST /api/invites/{id}/decline", True, 
+                                  data.get("message", "Invite declined"))
+                else:
+                    self.log_result("POST /api/invites/{id}/decline", False, 
+                                  "Success=False in response")
+            else:
+                self.log_result("POST /api/invites/{id}/decline", False, 
+                              f"HTTP {response.status_code}: {response.text}")
+        except Exception as e:
+            self.log_result("POST /api/invites/{id}/decline", False, f"Exception: {str(e)}")
+    
+    def test_cancel_invite(self, token, invite_id):
+        """Test DELETE /api/invites/{id}"""
+        try:
+            headers = {"Authorization": f"Bearer {token}"}
+            response = self.session.delete(f"{API_BASE}/invites/{invite_id}", 
+                                         headers=headers, timeout=30)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success"):
+                    self.log_result("DELETE /api/invites/{id}", True, 
+                                  data.get("message", "Invite cancelled"))
+                else:
+                    self.log_result("DELETE /api/invites/{id}", False, 
+                                  "Success=False in response")
+            else:
+                self.log_result("DELETE /api/invites/{id}", False, 
+                              f"HTTP {response.status_code}: {response.text}")
+        except Exception as e:
+            self.log_result("DELETE /api/invites/{id}", False, f"Exception: {str(e)}")
+    
     def run_all_tests(self):
         """Run all API tests"""
         print("🚀 Starting Maestro Hub Backend API Tests")
