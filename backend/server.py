@@ -2608,6 +2608,193 @@ async def root():
 async def health():
     return {"status": "healthy"}
 
+# ============== NOTIFICATIONS & REMINDERS ==============
+
+class ContactRequest(BaseModel):
+    subject: str
+    message: str
+    category: str = "general"  # general, billing, technical, feedback
+
+@api_router.get("/notifications")
+async def get_notifications(request: Request):
+    """Get user notifications"""
+    user = await require_auth(request)
+    
+    notifications = await db.notifications.find(
+        {"user_id": user.user_id},
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(50)
+    
+    # Generate some system notifications if none exist
+    if not notifications:
+        # Check for payment completions, session cancellations, etc.
+        recent_bookings = await db.bookings.find(
+            {"consumer_id": user.user_id, "payment_status": "paid"},
+            {"_id": 0}
+        ).sort("created_at", -1).limit(5).to_list(5)
+        
+        for booking in recent_bookings:
+            notifications.append({
+                "notification_id": f"notif_{uuid.uuid4().hex[:8]}",
+                "user_id": user.user_id,
+                "type": "payment_completed",
+                "title": "Payment Completed",
+                "message": f"Your payment of ${booking.get('amount_cents', 0)/100:.2f} was successful",
+                "data": {"booking_id": booking.get("booking_id")},
+                "read": False,
+                "created_at": booking.get("created_at", datetime.now(timezone.utc))
+            })
+    
+    # Add system maintenance notification
+    notifications.insert(0, {
+        "notification_id": "system_maintenance",
+        "user_id": user.user_id,
+        "type": "system_maintenance",
+        "title": "System Update",
+        "message": "Platform improvements deployed successfully",
+        "data": {},
+        "read": True,
+        "created_at": datetime.now(timezone.utc) - timedelta(days=1)
+    })
+    
+    unread_count = len([n for n in notifications if not n.get("read", False)])
+    
+    return {
+        "notifications": notifications,
+        "unread_count": unread_count
+    }
+
+@api_router.post("/notifications/{notification_id}/read")
+async def mark_notification_read(notification_id: str, request: Request):
+    """Mark notification as read"""
+    user = await require_auth(request)
+    
+    await db.notifications.update_one(
+        {"notification_id": notification_id, "user_id": user.user_id},
+        {"$set": {"read": True, "read_at": datetime.now(timezone.utc)}}
+    )
+    
+    return {"success": True}
+
+@api_router.get("/reminders")
+async def get_reminders(request: Request):
+    """Get user reminders for upcoming sessions, payments, etc."""
+    user = await require_auth(request)
+    
+    reminders = []
+    now = datetime.now(timezone.utc)
+    
+    # Get upcoming bookings (next 7 days)
+    upcoming_cutoff = now + timedelta(days=7)
+    
+    # For consumers
+    if user.role == "consumer":
+        bookings = await db.bookings.find({
+            "consumer_id": user.user_id,
+            "status": {"$in": ["booked", "confirmed"]},
+            "start_at": {"$gte": now.isoformat(), "$lte": upcoming_cutoff.isoformat()}
+        }, {"_id": 0}).to_list(20)
+        
+        for booking in bookings:
+            tutor = await db.tutors.find_one({"tutor_id": booking["tutor_id"]}, {"_id": 0})
+            tutor_user = await db.users.find_one({"user_id": tutor["user_id"]}, {"_id": 0}) if tutor else None
+            
+            start_at = booking.get("start_at")
+            if isinstance(start_at, str):
+                start_dt = datetime.fromisoformat(start_at.replace('Z', '+00:00'))
+            else:
+                start_dt = start_at
+            
+            hours_until = (start_dt - now).total_seconds() / 3600
+            
+            reminders.append({
+                "reminder_id": f"session_{booking['booking_id']}",
+                "type": "upcoming_session",
+                "title": "Upcoming Session",
+                "message": f"Session with {tutor_user['name'] if tutor_user else 'Tutor'} in {int(hours_until)} hours",
+                "due_at": start_at,
+                "priority": "high" if hours_until < 24 else "medium",
+                "data": {"booking_id": booking["booking_id"]}
+            })
+    
+    # For tutors
+    elif user.role == "tutor":
+        tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+        if tutor:
+            bookings = await db.bookings.find({
+                "tutor_id": tutor["tutor_id"],
+                "status": {"$in": ["booked", "confirmed"]},
+                "start_at": {"$gte": now.isoformat(), "$lte": upcoming_cutoff.isoformat()}
+            }, {"_id": 0}).to_list(20)
+            
+            for booking in bookings:
+                student = await db.students.find_one({"student_id": booking.get("student_id")}, {"_id": 0})
+                
+                start_at = booking.get("start_at")
+                if isinstance(start_at, str):
+                    start_dt = datetime.fromisoformat(start_at.replace('Z', '+00:00'))
+                else:
+                    start_dt = start_at
+                
+                hours_until = (start_dt - now).total_seconds() / 3600
+                
+                reminders.append({
+                    "reminder_id": f"session_{booking['booking_id']}",
+                    "type": "upcoming_session",
+                    "title": "Upcoming Session",
+                    "message": f"Session with {student['name'] if student else 'Student'} in {int(hours_until)} hours",
+                    "due_at": start_at,
+                    "priority": "high" if hours_until < 24 else "medium",
+                    "data": {"booking_id": booking["booking_id"]}
+                })
+    
+    # Sort by due date
+    reminders.sort(key=lambda x: x.get("due_at", ""))
+    
+    return {
+        "reminders": reminders,
+        "total": len(reminders)
+    }
+
+@api_router.post("/contact")
+async def submit_contact_request(data: ContactRequest, request: Request):
+    """Submit a contact request"""
+    user = await require_auth(request)
+    
+    contact_id = f"contact_{uuid.uuid4().hex[:12]}"
+    
+    contact_doc = {
+        "contact_id": contact_id,
+        "user_id": user.user_id,
+        "user_name": user.name,
+        "user_email": user.email,
+        "subject": data.subject,
+        "message": data.message,
+        "category": data.category,
+        "status": "pending",
+        "created_at": datetime.now(timezone.utc)
+    }
+    
+    await db.contact_requests.insert_one(contact_doc)
+    
+    # Create notification for user
+    await db.notifications.insert_one({
+        "notification_id": f"notif_{uuid.uuid4().hex[:8]}",
+        "user_id": user.user_id,
+        "type": "contact_received",
+        "title": "Contact Request Received",
+        "message": f"We received your message about: {data.subject}. We'll respond within 24-48 hours.",
+        "data": {"contact_id": contact_id},
+        "read": False,
+        "created_at": datetime.now(timezone.utc)
+    })
+    
+    return {
+        "success": True,
+        "contact_id": contact_id,
+        "message": "Your message has been received. We'll respond within 24-48 hours."
+    }
+
 # Include router
 app.include_router(api_router)
 
