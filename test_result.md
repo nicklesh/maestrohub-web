@@ -177,6 +177,21 @@ backend:
         agent: "testing"
         comment: "✅ PASS - Accept/decline functionality working correctly. Fixed datetime comparison issue in accept logic. Notifications are created for tutors when invites are accepted."
 
+  - task: "Invites API - Cancel Invite"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Implemented DELETE /api/invites/{id} for tutors to cancel invites they've sent"
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS - Cancel invite functionality working correctly. Tutors can delete invites they've sent with proper authentication and validation."
+
   - task: "User Registration (Consumer)"
     implemented: true
     working: true
