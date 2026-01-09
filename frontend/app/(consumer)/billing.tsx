@@ -9,6 +9,7 @@ import {
   Alert,
   RefreshControl,
   Switch,
+  Modal,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -31,14 +32,27 @@ interface BillingInfo {
   payment_methods: any[];
 }
 
+const PAYMENT_PROVIDERS = [
+  { id: 'apple_pay', name: 'Apple Pay', icon: 'logo-apple', color: '#000000' },
+  { id: 'google_pay', name: 'Google Pay', icon: 'logo-google', color: '#4285F4' },
+  { id: 'paypal', name: 'PayPal', icon: 'logo-paypal', color: '#003087' },
+  { id: 'amazon_pay', name: 'Amazon Pay', icon: 'cart', color: '#FF9900' },
+  { id: 'card', name: 'Credit/Debit Card', icon: 'card', color: '#6366F1' },
+];
+
+const DAY_OPTIONS = [1, 5, 10, 15, 20, 25, 28];
+
 export default function BillingScreen() {
-  const { token } = useAuth();
+  const { user, token } = useAuth();
   const { colors } = useTheme();
   const [billing, setBilling] = useState<BillingInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [settingUp, setSettingUp] = useState(false);
   const [savingAutoPay, setSavingAutoPay] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showDayPickerModal, setShowDayPickerModal] = useState(false);
+  const [selectedDay, setSelectedDay] = useState(1);
 
   const loadBilling = useCallback(async () => {
     try {
@@ -46,6 +60,7 @@ export default function BillingScreen() {
         headers: { Authorization: `Bearer ${token}` }
       });
       setBilling(response.data);
+      setSelectedDay(response.data.auto_pay?.day_of_month || 1);
     } catch (error) {
       console.error('Failed to load billing:', error);
     } finally {
@@ -83,7 +98,7 @@ export default function BillingScreen() {
     try {
       await api.put('/billing/auto-pay', {
         enabled,
-        day_of_month: billing?.auto_pay?.day_of_month || 1
+        day_of_month: selectedDay
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -93,6 +108,31 @@ export default function BillingScreen() {
     } finally {
       setSavingAutoPay(false);
     }
+  };
+
+  const handleDayChange = async (day: number) => {
+    setSelectedDay(day);
+    setSavingAutoPay(true);
+    try {
+      await api.put('/billing/auto-pay', {
+        enabled: billing?.auto_pay?.enabled || false,
+        day_of_month: day
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setShowDayPickerModal(false);
+      loadBilling();
+    } catch (error: any) {
+      Alert.alert('Error', error.response?.data?.detail || 'Failed to update auto-pay date');
+    } finally {
+      setSavingAutoPay(false);
+    }
+  };
+
+  const handleAddPaymentMethod = (providerId: string) => {
+    setShowPaymentModal(false);
+    // In production, this would open the respective payment provider flow
+    Alert.alert('Coming Soon', `${PAYMENT_PROVIDERS.find(p => p.id === providerId)?.name} integration will be available soon.`);
   };
 
   const formatDate = (dateString: string | null) => {
@@ -105,10 +145,20 @@ export default function BillingScreen() {
     });
   };
 
+  const getOrdinalSuffix = (day: number) => {
+    if (day > 3 && day < 21) return 'th';
+    switch (day % 10) {
+      case 1: return 'st';
+      case 2: return 'nd';
+      case 3: return 'rd';
+      default: return 'th';
+    }
+  };
+
   if (loading) {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-        <AppHeader showBack title="Billing" />
+        <AppHeader showBack showUserName title="Billing" />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -118,7 +168,7 @@ export default function BillingScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <AppHeader showBack title="Billing" />
+      <AppHeader showBack showUserName title="Billing" />
 
       <ScrollView
         style={styles.content}
@@ -172,21 +222,6 @@ export default function BillingScreen() {
               {billing?.pending_balance ? 'Due for upcoming sessions' : 'No pending payments'}
             </Text>
           </View>
-
-          {billing?.pending_payments && billing.pending_payments.length > 0 && (
-            <View style={styles.pendingList}>
-              {billing.pending_payments.slice(0, 3).map((payment, index) => (
-                <View key={index} style={[styles.pendingItem, { borderTopColor: colors.border }]}>
-                  <Text style={[styles.pendingText, { color: colors.text }]}>
-                    ${payment.amount?.toFixed(2)}
-                  </Text>
-                  <Text style={[styles.pendingDate, { color: colors.textMuted }]}>
-                    Due: {formatDate(payment.due_date)}
-                  </Text>
-                </View>
-              ))}
-            </View>
-          )}
         </View>
 
         {/* Auto-Pay Settings */}
@@ -200,7 +235,7 @@ export default function BillingScreen() {
             <View style={styles.autoPayInfo}>
               <Text style={[styles.autoPayLabel, { color: colors.text }]}>Enable Auto-Pay</Text>
               <Text style={[styles.autoPayDesc, { color: colors.textMuted }]}>
-                Automatically pay pending balance on the 1st of each month
+                Automatically pay pending balance monthly
               </Text>
             </View>
             <Switch
@@ -213,15 +248,31 @@ export default function BillingScreen() {
           </View>
 
           {billing?.auto_pay?.enabled && (
-            <View style={[styles.nextAutoPayCard, { backgroundColor: colors.background }]}>
-              <Text style={[styles.nextAutoPayLabel, { color: colors.textMuted }]}>Next Auto-Pay</Text>
-              <Text style={[styles.nextAutoPayDate, { color: colors.text }]}>
-                {formatDate(billing.auto_pay.next_auto_pay_date)}
-              </Text>
-              <Text style={[styles.nextAutoPayAmount, { color: colors.primary }]}>
-                ${billing.auto_pay.next_auto_pay_amount.toFixed(2)}
-              </Text>
-            </View>
+            <>
+              {/* Day Selector */}
+              <TouchableOpacity 
+                style={[styles.daySelector, { backgroundColor: colors.background, borderColor: colors.border }]}
+                onPress={() => setShowDayPickerModal(true)}
+              >
+                <View>
+                  <Text style={[styles.daySelectorLabel, { color: colors.textMuted }]}>Payment Day</Text>
+                  <Text style={[styles.daySelectorValue, { color: colors.text }]}>
+                    {selectedDay}{getOrdinalSuffix(selectedDay)} of each month
+                  </Text>
+                </View>
+                <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+              </TouchableOpacity>
+
+              <View style={[styles.nextAutoPayCard, { backgroundColor: colors.background }]}>
+                <Text style={[styles.nextAutoPayLabel, { color: colors.textMuted }]}>Next Auto-Pay</Text>
+                <Text style={[styles.nextAutoPayDate, { color: colors.text }]}>
+                  {formatDate(billing.auto_pay.next_auto_pay_date)}
+                </Text>
+                <Text style={[styles.nextAutoPayAmount, { color: colors.primary }]}>
+                  ${billing.auto_pay.next_auto_pay_amount.toFixed(2)}
+                </Text>
+              </View>
+            </>
           )}
         </View>
 
@@ -247,12 +298,84 @@ export default function BillingScreen() {
             </Text>
           )}
 
-          <TouchableOpacity style={[styles.addMethodButton, { borderColor: colors.primary }]}>
+          <TouchableOpacity 
+            style={[styles.addMethodButton, { borderColor: colors.primary }]}
+            onPress={() => setShowPaymentModal(true)}
+          >
             <Ionicons name="add" size={20} color={colors.primary} />
             <Text style={[styles.addMethodText, { color: colors.primary }]}>Add Payment Method</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
+
+      {/* Payment Method Selection Modal */}
+      <Modal visible={showPaymentModal} animationType="slide" transparent>
+        <View style={styles.modalOverlay}>
+          <TouchableOpacity 
+            style={styles.modalBackdrop} 
+            activeOpacity={1} 
+            onPress={() => setShowPaymentModal(false)} 
+          />
+          <View style={[styles.bottomSheet, { backgroundColor: colors.surface }]}>
+            <View style={[styles.sheetHandle, { backgroundColor: colors.gray300 }]} />
+            <Text style={[styles.sheetTitle, { color: colors.text }]}>Add Payment Method</Text>
+
+            {PAYMENT_PROVIDERS.map((provider) => (
+              <TouchableOpacity
+                key={provider.id}
+                style={[styles.providerOption, { borderColor: colors.border }]}
+                onPress={() => handleAddPaymentMethod(provider.id)}
+              >
+                <View style={[styles.providerIcon, { backgroundColor: provider.color + '15' }]}>
+                  <Ionicons name={provider.icon as any} size={24} color={provider.color} />
+                </View>
+                <Text style={[styles.providerName, { color: colors.text }]}>{provider.name}</Text>
+                <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+      </Modal>
+
+      {/* Day Picker Modal */}
+      <Modal visible={showDayPickerModal} animationType="fade" transparent>
+        <View style={styles.modalOverlay}>
+          <TouchableOpacity 
+            style={styles.modalBackdrop} 
+            activeOpacity={1} 
+            onPress={() => setShowDayPickerModal(false)} 
+          />
+          <View style={[styles.dayPickerSheet, { backgroundColor: colors.surface }]}>
+            <Text style={[styles.sheetTitle, { color: colors.text }]}>Select Payment Day</Text>
+            <Text style={[styles.dayPickerHint, { color: colors.textMuted }]}>
+              Choose which day of the month to auto-pay
+            </Text>
+            
+            <View style={styles.dayGrid}>
+              {DAY_OPTIONS.map((day) => (
+                <TouchableOpacity
+                  key={day}
+                  style={[
+                    styles.dayOption,
+                    { backgroundColor: colors.background, borderColor: colors.border },
+                    selectedDay === day && { backgroundColor: colors.primary, borderColor: colors.primary }
+                  ]}
+                  onPress={() => handleDayChange(day)}
+                  disabled={savingAutoPay}
+                >
+                  <Text style={[
+                    styles.dayOptionText,
+                    { color: colors.text },
+                    selectedDay === day && { color: '#FFFFFF' }
+                  ]}>
+                    {day}{getOrdinalSuffix(day)}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -273,19 +396,13 @@ const styles = StyleSheet.create({
     gap: 10,
     marginBottom: 16,
   },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
+  sectionTitle: { fontSize: 16, fontWeight: '600' },
   connectedRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
   },
-  connectedText: {
-    fontSize: 14,
-    fontWeight: '500',
-  },
+  connectedText: { fontSize: 14, fontWeight: '500' },
   setupButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -295,34 +412,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   buttonDisabled: { opacity: 0.7 },
-  setupButtonText: {
-    color: '#FFFFFF',
-    fontSize: 15,
-    fontWeight: '600',
-  },
-  balanceCard: {
-    alignItems: 'center',
-    paddingVertical: 16,
-  },
-  balanceAmount: {
-    fontSize: 32,
-    fontWeight: '700',
-  },
-  balanceLabel: {
-    fontSize: 13,
-    marginTop: 4,
-  },
-  pendingList: {
-    marginTop: 12,
-  },
-  pendingItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 10,
-    borderTopWidth: 1,
-  },
-  pendingText: { fontSize: 14, fontWeight: '500' },
-  pendingDate: { fontSize: 13 },
+  setupButtonText: { color: '#FFFFFF', fontSize: 15, fontWeight: '600' },
+  balanceCard: { alignItems: 'center', paddingVertical: 16 },
+  balanceAmount: { fontSize: 32, fontWeight: '700' },
+  balanceLabel: { fontSize: 13, marginTop: 4 },
   autoPayRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -331,8 +424,19 @@ const styles = StyleSheet.create({
   autoPayInfo: { flex: 1, marginRight: 12 },
   autoPayLabel: { fontSize: 15, fontWeight: '500' },
   autoPayDesc: { fontSize: 12, marginTop: 2 },
-  nextAutoPayCard: {
+  daySelector: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     marginTop: 16,
+    padding: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+  },
+  daySelectorLabel: { fontSize: 12 },
+  daySelectorValue: { fontSize: 14, fontWeight: '600', marginTop: 2 },
+  nextAutoPayCard: {
+    marginTop: 12,
     padding: 12,
     borderRadius: 8,
     alignItems: 'center',
@@ -360,4 +464,58 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   addMethodText: { fontSize: 14, fontWeight: '500' },
+  modalOverlay: { flex: 1, justifyContent: 'flex-end' },
+  modalBackdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)' },
+  bottomSheet: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+    overflow: 'hidden',
+  },
+  sheetHandle: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    alignSelf: 'center',
+    marginBottom: 16,
+  },
+  sheetTitle: { fontSize: 18, fontWeight: '600', marginBottom: 16 },
+  providerOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 14,
+    borderWidth: 1,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  providerIcon: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  providerName: { flex: 1, marginLeft: 12, fontSize: 15, fontWeight: '500' },
+  dayPickerSheet: {
+    margin: 20,
+    borderRadius: 16,
+    padding: 20,
+    overflow: 'hidden',
+  },
+  dayPickerHint: { fontSize: 13, marginBottom: 16 },
+  dayGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+    justifyContent: 'center',
+  },
+  dayOption: {
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    minWidth: 60,
+    alignItems: 'center',
+  },
+  dayOptionText: { fontSize: 14, fontWeight: '500' },
 });
