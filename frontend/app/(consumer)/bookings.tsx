@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
   TouchableOpacity,
   ActivityIndicator,
   FlatList,
@@ -38,12 +37,20 @@ export default function BookingsScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [filter, setFilter] = useState<'upcoming' | 'past'>('upcoming');
 
-  const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
-    booked: { bg: colors.primaryLight, text: colors.primary },
-    confirmed: { bg: colors.successLight, text: colors.success },
-    completed: { bg: colors.gray200, text: colors.gray600 },
-    canceled_by_consumer: { bg: colors.errorLight, text: colors.error },
-    canceled_by_provider: { bg: colors.errorLight, text: colors.error },
+  const getStatusColors = (status: string) => {
+    switch (status) {
+      case 'booked':
+        return { bg: colors.primaryLight, text: colors.primary };
+      case 'confirmed':
+        return { bg: colors.successLight, text: colors.success };
+      case 'completed':
+        return { bg: colors.gray200, text: colors.gray600 };
+      case 'canceled_by_consumer':
+      case 'canceled_by_provider':
+        return { bg: colors.errorLight, text: colors.error };
+      default:
+        return { bg: colors.gray200, text: colors.gray600 };
+    }
   };
 
   // Responsive breakpoints
@@ -59,7 +66,7 @@ export default function BookingsScreen() {
   const loadBookings = async () => {
     try {
       const response = await api.get('/bookings?role=consumer');
-      setBookings(response.data);
+      setBookings(response.data || []);
     } catch (error) {
       console.error('Failed to load bookings:', error);
     } finally {
@@ -73,47 +80,50 @@ export default function BookingsScreen() {
     loadBookings();
   };
 
-  const filteredBookings = bookings.filter((b) => {
-    const isUpcoming = !isPast(parseISO(b.start_at)) && !['completed', 'canceled_by_consumer', 'canceled_by_provider'].includes(b.status);
-    return filter === 'upcoming' ? isUpcoming : !isUpcoming;
+  const filteredBookings = bookings.filter((booking) => {
+    const bookingDate = parseISO(booking.start_at);
+    const isBookingPast = isPast(bookingDate);
+    return filter === 'past' ? isBookingPast : !isBookingPast;
   });
 
-  const renderBookingCard = ({ item, index }: { item: Booking; index: number }) => {
-    const statusStyle = STATUS_COLORS[item.status] || STATUS_COLORS.booked;
-    const statusText = item.status.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
+  const renderBookingCard = ({ item }: { item: Booking }) => {
+    const statusColors = getStatusColors(item.status);
+    const startDate = parseISO(item.start_at);
+    const endDate = parseISO(item.end_at);
 
     return (
       <TouchableOpacity
         style={[
-          styles.bookingCard,
-          isTablet && styles.bookingCardTablet,
-          isDesktop && {
-            marginRight: index % 2 === 0 ? 8 : 0,
-            marginLeft: index % 2 === 1 ? 8 : 0,
-            flex: 1,
-          },
+          styles.card,
+          { backgroundColor: colors.surface, borderColor: colors.border },
+          isTablet && styles.cardTablet,
+          isDesktop && { flex: 0.48, marginHorizontal: 4 }
         ]}
         onPress={() => router.push(`/(consumer)/booking/${item.booking_id}`)}
       >
-        <View style={styles.bookingHeader}>
-          <View style={[styles.dateContainer, isTablet && styles.dateContainerTablet]}>
-            <Text style={[styles.dateDay, isTablet && styles.dateDayTablet]}>{format(parseISO(item.start_at), 'dd')}</Text>
-            <Text style={styles.dateMonth}>{format(parseISO(item.start_at), 'MMM')}</Text>
-          </View>
-          <View style={styles.bookingInfo}>
-            <Text style={[styles.tutorName, isDesktop && styles.tutorNameDesktop]}>{item.tutor_name}</Text>
-            <Text style={styles.studentName}>Student: {item.student_name}</Text>
-            <Text style={styles.timeText}>
-              {format(parseISO(item.start_at), 'h:mm a')} - {format(parseISO(item.end_at), 'h:mm a')}
+        <View style={styles.cardHeader}>
+          <View style={[styles.statusBadge, { backgroundColor: statusColors.bg }]}>
+            <Text style={[styles.statusText, { color: statusColors.text }]}>
+              {item.status.replace(/_/g, ' ')}
             </Text>
           </View>
-          <View style={[styles.statusBadge, { backgroundColor: statusStyle.bg }]}>
-            <Text style={[styles.statusText, { color: statusStyle.text }]}>{statusText}</Text>
-          </View>
+          <Text style={[styles.price, { color: colors.text }]}>${item.price_snapshot}</Text>
         </View>
-        <View style={styles.bookingFooter}>
-          <Text style={[styles.priceText, isDesktop && styles.priceTextDesktop]}>${item.price_snapshot}</Text>
-          <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+
+        <Text style={[styles.tutorName, { color: colors.text }]}>{item.tutor_name}</Text>
+        <Text style={[styles.studentName, { color: colors.textMuted }]}>
+          Student: {item.student_name}
+        </Text>
+
+        <View style={[styles.timeRow, { borderTopColor: colors.border }]}>
+          <Ionicons name="calendar-outline" size={16} color={colors.textMuted} />
+          <Text style={[styles.timeText, { color: colors.textMuted }]}>
+            {format(startDate, 'MMM d, yyyy')}
+          </Text>
+          <Ionicons name="time-outline" size={16} color={colors.textMuted} />
+          <Text style={[styles.timeText, { color: colors.textMuted }]}>
+            {format(startDate, 'h:mm a')} - {format(endDate, 'h:mm a')}
+          </Text>
         </View>
       </TouchableOpacity>
     );
@@ -141,7 +151,11 @@ export default function BookingsScreen() {
         {/* Filter Tabs */}
         <View style={[styles.tabs, isTablet && styles.tabsTablet]}>
           <TouchableOpacity
-            style={[styles.tab, { backgroundColor: filter === 'upcoming' ? colors.primary : colors.surface }, isTablet && styles.tabTablet]}
+            style={[
+              styles.tab,
+              { backgroundColor: filter === 'upcoming' ? colors.primary : colors.surface, borderColor: colors.border },
+              isTablet && styles.tabTablet
+            ]}
             onPress={() => setFilter('upcoming')}
           >
             <Text style={[styles.tabText, { color: filter === 'upcoming' ? '#FFFFFF' : colors.text }, isTablet && styles.tabTextTablet]}>
@@ -149,10 +163,14 @@ export default function BookingsScreen() {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.tab, isTablet && styles.tabTablet, filter === 'past' && styles.tabActive]}
+            style={[
+              styles.tab,
+              { backgroundColor: filter === 'past' ? colors.primary : colors.surface, borderColor: colors.border },
+              isTablet && styles.tabTablet
+            ]}
             onPress={() => setFilter('past')}
           >
-            <Text style={[styles.tabText, isTablet && styles.tabTextTablet, filter === 'past' && styles.tabTextActive]}>
+            <Text style={[styles.tabText, { color: filter === 'past' ? '#FFFFFF' : colors.text }, isTablet && styles.tabTextTablet]}>
               Past
             </Text>
           </TouchableOpacity>
@@ -160,32 +178,19 @@ export default function BookingsScreen() {
 
         {filteredBookings.length === 0 ? (
           <View style={styles.emptyContainer}>
-            <Ionicons name="calendar-outline" size={isTablet ? 80 : 64} color={colors.textMuted} />
-            <Text style={[styles.emptyTitle, isDesktop && styles.emptyTitleDesktop]}>
+            <Ionicons name="calendar-outline" size={64} color={colors.textMuted} />
+            <Text style={[styles.emptyText, { color: colors.textMuted }]}>
               No {filter} bookings
             </Text>
-            <Text style={[styles.emptyText, isDesktop && styles.emptyTextDesktop]}>
-              {filter === 'upcoming'
-                ? 'Book a tutor to get started!'
-                : 'Your past bookings will appear here.'}
-            </Text>
-            {filter === 'upcoming' && (
-              <TouchableOpacity
-                style={[styles.ctaButton, isTablet && styles.ctaButtonTablet]}
-                onPress={() => router.push('/(consumer)/search')}
-              >
-                <Text style={[styles.ctaButtonText, isTablet && styles.ctaButtonTextTablet]}>Find a Tutor</Text>
-              </TouchableOpacity>
-            )}
           </View>
         ) : (
           <FlatList
             data={filteredBookings}
             renderItem={renderBookingCard}
             keyExtractor={(item) => item.booking_id}
-            contentContainerStyle={[styles.listContent, isTablet && styles.listContentTablet]}
             numColumns={numColumns}
             key={numColumns}
+            contentContainerStyle={[styles.listContent, isDesktop && styles.listContentDesktop]}
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
@@ -199,7 +204,6 @@ export default function BookingsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
   },
   loadingContainer: {
     flex: 1,
@@ -219,7 +223,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: colors.text,
   },
   titleDesktop: {
     fontSize: 32,
@@ -237,170 +240,85 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 20,
     borderRadius: 20,
-    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: colors.border,
   },
   tabTablet: {
     paddingVertical: 10,
     paddingHorizontal: 24,
     borderRadius: 24,
   },
-  tabActive: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
-  },
   tabText: {
     fontSize: 14,
     fontWeight: '500',
-    color: colors.text,
   },
   tabTextTablet: {
-    fontSize: 16,
-  },
-  tabTextActive: {
-    color: '#fff',
+    fontSize: 15,
   },
   listContent: {
     padding: 20,
     paddingTop: 0,
   },
-  listContentTablet: {
-    padding: 24,
-    paddingTop: 0,
+  listContentDesktop: {
+    paddingHorizontal: 16,
   },
-  bookingCard: {
-    backgroundColor: colors.surface,
+  card: {
     borderRadius: 16,
     padding: 16,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: colors.border,
   },
-  bookingCardTablet: {
-    borderRadius: 20,
+  cardTablet: {
     padding: 20,
+    borderRadius: 20,
   },
-  bookingHeader: {
+  cardHeader: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-  },
-  dateContainer: {
-    width: 50,
-    height: 50,
-    backgroundColor: colors.primaryLight,
-    borderRadius: 12,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    marginRight: 12,
+    marginBottom: 12,
   },
-  dateContainerTablet: {
-    width: 60,
-    height: 60,
-    borderRadius: 14,
+  statusBadge: {
+    paddingVertical: 4,
+    paddingHorizontal: 10,
+    borderRadius: 12,
   },
-  dateDay: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: colors.primary,
-  },
-  dateDayTablet: {
-    fontSize: 22,
-  },
-  dateMonth: {
+  statusText: {
     fontSize: 12,
-    color: colors.primary,
-    textTransform: 'uppercase',
+    fontWeight: '600',
+    textTransform: 'capitalize',
   },
-  bookingInfo: {
-    flex: 1,
+  price: {
+    fontSize: 18,
+    fontWeight: '700',
   },
   tutorName: {
     fontSize: 16,
     fontWeight: '600',
-    color: colors.text,
-  },
-  tutorNameDesktop: {
-    fontSize: 18,
+    marginBottom: 4,
   },
   studentName: {
-    fontSize: 13,
-    color: colors.textMuted,
-    marginTop: 2,
+    fontSize: 14,
+    marginBottom: 12,
+  },
+  timeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingTop: 12,
+    borderTopWidth: 1,
   },
   timeText: {
     fontSize: 13,
-    color: colors.textMuted,
-    marginTop: 4,
-  },
-  statusBadge: {
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 12,
-  },
-  statusText: {
-    fontSize: 11,
-    fontWeight: '600',
-  },
-  bookingFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 12,
-    paddingTop: 12,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-  },
-  priceText: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: colors.text,
-  },
-  priceTextDesktop: {
-    fontSize: 18,
+    marginRight: 12,
   },
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 32,
-  },
-  emptyTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: colors.text,
-    marginTop: 16,
-  },
-  emptyTitleDesktop: {
-    fontSize: 22,
+    padding: 40,
   },
   emptyText: {
-    fontSize: 14,
-    color: colors.textMuted,
-    marginTop: 8,
-    textAlign: 'center',
-  },
-  emptyTextDesktop: {
     fontSize: 16,
-  },
-  ctaButton: {
-    backgroundColor: colors.primary,
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 12,
-    marginTop: 24,
-  },
-  ctaButtonTablet: {
-    paddingHorizontal: 32,
-    paddingVertical: 16,
-    borderRadius: 14,
-  },
-  ctaButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  ctaButtonTextTablet: {
-    fontSize: 18,
+    marginTop: 16,
   },
 });
