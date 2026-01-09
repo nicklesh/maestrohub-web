@@ -20,6 +20,7 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
 import { useTheme } from '@/src/context/ThemeContext';
+import AppHeader from '@/src/components/AppHeader';
 import { api } from '@/src/services/api';
 
 interface Notification {
