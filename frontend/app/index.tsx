@@ -2,10 +2,11 @@ import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, Image, useWindowDimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '@/src/context/AuthContext';
-import { colors } from '@/src/theme/colors';
+import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 
 export default function Index() {
   const { user, loading } = useAuth();
+  const { colors } = useTheme();
   const router = useRouter();
   const { width } = useWindowDimensions();
   
@@ -13,6 +14,8 @@ export default function Index() {
   const isDesktop = width >= 1024;
   const logoWidth = isDesktop ? 300 : isTablet ? 260 : 220;
   const logoHeight = isDesktop ? 200 : isTablet ? 175 : 150;
+
+  const styles = getStyles(colors);
 
   useEffect(() => {
     if (!loading) {
@@ -48,7 +51,7 @@ export default function Index() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colors: ThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
