@@ -12,6 +12,7 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
 import { colors } from '@/src/theme/colors';
+import LogoHeader from '@/src/components/LogoHeader';
 
 export default function AdminDashboard() {
   const { user } = useAuth();
@@ -27,9 +28,15 @@ export default function AdminDashboard() {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={[styles.scrollContent, isTablet && styles.scrollContentTablet]}>
         <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
-          <View style={styles.header}>
-            <Text style={[styles.title, isDesktop && styles.titleDesktop]}>Admin Dashboard</Text>
-            <Text style={[styles.subtitle, isDesktop && styles.subtitleDesktop]}>Manage your marketplace</Text>
+          {/* Header with Logo */}
+          <View style={[styles.header, isTablet && styles.headerTablet]}>
+            <View style={styles.headerLeft}>
+              <LogoHeader size="small" showTagline={false} alignment="left" />
+            </View>
+            <View style={styles.headerRight}>
+              <Text style={[styles.title, isDesktop && styles.titleDesktop]}>Admin Dashboard</Text>
+              <Text style={[styles.subtitle, isDesktop && styles.subtitleDesktop]}>Manage your marketplace</Text>
+            </View>
           </View>
 
           {/* Quick Stats */}
@@ -98,15 +105,27 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 24,
   },
+  headerTablet: {
+    marginBottom: 32,
+  },
+  headerLeft: {
+    flex: 1,
+  },
+  headerRight: {
+    alignItems: 'flex-end',
+  },
   title: {
-    fontSize: 28,
+    fontSize: 20,
     fontWeight: 'bold',
     color: colors.text,
   },
   titleDesktop: {
-    fontSize: 32,
+    fontSize: 24,
   },
   subtitle: {
     fontSize: 14,
