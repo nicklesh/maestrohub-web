@@ -617,4 +617,42 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   dayOptionText: { fontSize: 14, fontWeight: '500' },
+  providerHeader: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  providerIconLarge: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  inputLabel: {
+    fontSize: 13,
+    marginBottom: 6,
+  },
+  input: {
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 14,
+    fontSize: 15,
+    marginBottom: 12,
+  },
+  privacyNote: {
+    fontSize: 12,
+    lineHeight: 16,
+    marginBottom: 16,
+  },
+  linkButton: {
+    padding: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  linkButtonText: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '600',
+  },
 });
