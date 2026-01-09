@@ -172,6 +172,9 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Fixed Header */}
+      <AppHeader />
+      
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
@@ -182,18 +185,6 @@ export default function HomeScreen() {
         }
       >
         <View style={[styles.contentWrapper, containerMaxWidth ? { maxWidth: containerMaxWidth } : undefined]}>
-          {/* Header with Logo */}
-          <View style={[styles.header, isTablet && styles.headerTablet]}>
-            <View style={styles.headerLeft}>
-              <LogoHeader size="small" showTagline={true} alignment="left" />
-            </View>
-            <View style={styles.headerRight}>
-              <Text style={[styles.greeting, isDesktop && styles.greetingDesktop]}>
-                Hello, {user?.name?.split(' ')[0] || 'there'}!
-              </Text>
-            </View>
-          </View>
-
           {/* Search Bar */}
           <TouchableOpacity
             style={[styles.searchBar, isTablet && styles.searchBarTablet]}
