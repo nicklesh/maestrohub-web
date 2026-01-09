@@ -4,7 +4,7 @@
     "slug": "maestro-hub",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/maestrohub_app_icon_only_192x192.png",
     "scheme": "maestrohub",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -13,7 +13,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/maestrohub_app_icon_only_192x192.png",
         "backgroundColor": "#000"
       },
       "edgeToEdgeEnabled": true
@@ -21,14 +21,14 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/maestrohub_app_icon_only_192x192.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/maestrohub_app_icon_only_192x192.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#000"
