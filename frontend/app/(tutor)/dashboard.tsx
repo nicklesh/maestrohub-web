@@ -13,10 +13,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
+import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 import { api } from '@/src/services/api';
-import { colors } from '@/src/theme/colors';
+import AppHeader from '@/src/components/AppHeader';
 import { format, parseISO, isToday, isTomorrow } from 'date-fns';
-import LogoHeader from '@/src/components/LogoHeader';
 
 interface Booking {
   booking_id: string;
@@ -37,6 +37,7 @@ interface TutorStats {
 
 export default function TutorDashboard() {
   const { user } = useAuth();
+  const { colors } = useTheme();
   const router = useRouter();
   const { width } = useWindowDimensions();
   const [loading, setLoading] = useState(true);
@@ -49,6 +50,8 @@ export default function TutorDashboard() {
   const isTablet = width >= 768;
   const isDesktop = width >= 1024;
   const contentMaxWidth = isDesktop ? 960 : isTablet ? 720 : undefined;
+
+  const styles = getStyles(colors);
 
   useEffect(() => {
     loadData();
@@ -153,6 +156,7 @@ export default function TutorDashboard() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <AppHeader />
       <ScrollView
         contentContainerStyle={[styles.scrollContent, isTablet && styles.scrollContentTablet]}
         refreshControl={
@@ -160,17 +164,6 @@ export default function TutorDashboard() {
         }
       >
         <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
-          {/* Header with Logo */}
-          <View style={styles.header}>
-            <View style={styles.headerLeft}>
-              <LogoHeader size="small" showTagline={false} alignment="left" />
-            </View>
-            <View style={styles.headerRight}>
-              <Text style={styles.greeting}>Welcome back,</Text>
-              <Text style={[styles.userName, isDesktop && styles.userNameDesktop]}>{user?.name?.split(' ')[0]}</Text>
-            </View>
-          </View>
-
           {/* Stats */}
           <View style={[styles.statsGrid, isTablet && styles.statsGridTablet]}>
             <View style={[styles.statCard, isTablet && styles.statCardTablet]}>
@@ -265,7 +258,7 @@ export default function TutorDashboard() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colors: ThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
@@ -329,33 +322,10 @@ const styles = StyleSheet.create({
   contentWrapper: {
     flex: 1,
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 20,
-  },
-  headerLeft: {
-    flex: 1,
-  },
-  headerRight: {
-    alignItems: 'flex-end',
-  },
-  greeting: {
-    fontSize: 14,
-    color: colors.textMuted,
-  },
-  userName: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: colors.text,
-  },
-  userNameDesktop: {
-    fontSize: 32,
-  },
   statsGrid: {
     flexDirection: 'row',
     paddingHorizontal: 16,
+    paddingTop: 16,
     gap: 12,
   },
   statsGridTablet: {

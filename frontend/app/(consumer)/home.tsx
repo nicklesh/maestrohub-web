@@ -15,11 +15,10 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
 import { useMarket } from '@/src/context/MarketContext';
-import { useTheme } from '@/src/context/ThemeContext';
+import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 import MarketSelectionModal from '@/src/components/MarketSelectionModal';
 import AppHeader from '@/src/components/AppHeader';
 import { api } from '@/src/services/api';
-import { colors } from '@/src/theme/colors';
 
 interface Category {
   id: string;
@@ -45,6 +44,7 @@ interface Tutor {
 export default function HomeScreen() {
   const { user } = useAuth();
   const { currentMarket, needsSelection } = useMarket();
+  const { colors } = useTheme();
   const router = useRouter();
   const { width } = useWindowDimensions();
   const [categories, setCategories] = useState<Category[]>([]);
@@ -58,6 +58,9 @@ export default function HomeScreen() {
   const isDesktop = width >= 1024;
   const isWide = width >= 1280;
   const containerMaxWidth = isWide ? 1200 : isDesktop ? 960 : isTablet ? 720 : undefined;
+
+  // Dynamic styles
+  const styles = getStyles(colors);
 
   useEffect(() => {
     loadData();
@@ -257,7 +260,7 @@ export default function HomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colors: ThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
@@ -276,32 +279,6 @@ const styles = StyleSheet.create({
   contentWrapper: {
     width: '100%',
     alignSelf: 'center',
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 16,
-    paddingBottom: 8,
-  },
-  headerTablet: {
-    paddingTop: 32,
-    paddingBottom: 16,
-  },
-  headerLeft: {
-    flex: 1,
-  },
-  headerRight: {
-    alignItems: 'flex-end',
-  },
-  greeting: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: colors.text,
-  },
-  greetingDesktop: {
-    fontSize: 18,
   },
   searchBar: {
     flexDirection: 'row',

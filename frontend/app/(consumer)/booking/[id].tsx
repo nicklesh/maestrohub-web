@@ -14,7 +14,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { api } from '@/src/services/api';
-import { colors } from '@/src/theme/colors';
+import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
+import AppHeader from '@/src/components/AppHeader';
 import { format, parseISO, isPast } from 'date-fns';
 
 interface Booking {
@@ -38,18 +39,11 @@ interface Booking {
   };
 }
 
-const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
-  booked: { bg: colors.primaryLight, text: colors.primary },
-  confirmed: { bg: colors.successLight, text: colors.success },
-  completed: { bg: colors.gray200, text: colors.gray600 },
-  canceled_by_consumer: { bg: colors.errorLight, text: colors.error },
-  canceled_by_provider: { bg: colors.errorLight, text: colors.error },
-};
-
 export default function BookingDetailScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { width } = useWindowDimensions();
+  const { colors } = useTheme();
   const [booking, setBooking] = useState<Booking | null>(null);
   const [loading, setLoading] = useState(true);
   const [canceling, setCanceling] = useState(false);
@@ -62,6 +56,25 @@ export default function BookingDetailScreen() {
   const isTablet = width >= 768;
   const isDesktop = width >= 1024;
   const contentMaxWidth = isDesktop ? 640 : isTablet ? 560 : undefined;
+
+  // Dynamic styles
+  const styles = getStyles(colors);
+
+  const getStatusColors = (status: string) => {
+    switch (status) {
+      case 'booked':
+        return { bg: colors.primaryLight, text: colors.primary };
+      case 'confirmed':
+        return { bg: colors.successLight, text: colors.success };
+      case 'completed':
+        return { bg: colors.gray200, text: colors.gray600 };
+      case 'canceled_by_consumer':
+      case 'canceled_by_provider':
+        return { bg: colors.errorLight, text: colors.error };
+      default:
+        return { bg: colors.gray200, text: colors.gray600 };
+    }
+  };
 
   useEffect(() => {
     loadBooking();
@@ -124,6 +137,7 @@ export default function BookingDetailScreen() {
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
+        <AppHeader showBack title="Booking Details" />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -134,20 +148,22 @@ export default function BookingDetailScreen() {
   if (!booking) {
     return (
       <SafeAreaView style={styles.container}>
+        <AppHeader showBack title="Booking Details" />
         <View style={styles.loadingContainer}>
-          <Text>Booking not found</Text>
+          <Text style={{ color: colors.text }}>Booking not found</Text>
         </View>
       </SafeAreaView>
     );
   }
 
-  const statusStyle = STATUS_COLORS[booking.status] || STATUS_COLORS.booked;
+  const statusStyle = getStatusColors(booking.status);
   const statusText = booking.status.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
   const isUpcoming = !isPast(parseISO(booking.start_at)) && ['booked', 'confirmed'].includes(booking.status);
   const canReview = booking.status === 'completed';
 
   return (
     <SafeAreaView style={styles.container}>
+      <AppHeader showBack title="Booking Details" />
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
@@ -155,15 +171,6 @@ export default function BookingDetailScreen() {
         ]}
       >
         <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
-          {/* Header */}
-          <View style={styles.header}>
-            <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-              <Ionicons name="arrow-back" size={24} color={colors.text} />
-            </TouchableOpacity>
-            <Text style={[styles.headerTitle, isDesktop && styles.headerTitleDesktop]}>Booking Details</Text>
-            <View style={styles.backButton} />
-          </View>
-
           {/* Status Badge */}
           <View style={styles.statusContainer}>
             <View style={[styles.statusBadge, { backgroundColor: statusStyle.bg }]}>
@@ -320,7 +327,7 @@ export default function BookingDetailScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colors: ThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
@@ -338,28 +345,7 @@ const styles = StyleSheet.create({
   },
   contentWrapper: {
     flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
     padding: 16,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.surface,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: colors.text,
-  },
-  headerTitleDesktop: {
-    fontSize: 22,
   },
   statusContainer: {
     alignItems: 'center',
@@ -376,7 +362,6 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: colors.surface,
-    marginHorizontal: 20,
     marginBottom: 16,
     borderRadius: 16,
     padding: 20,
@@ -485,7 +470,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginHorizontal: 20,
     padding: 16,
     backgroundColor: colors.errorLight,
     borderRadius: 12,

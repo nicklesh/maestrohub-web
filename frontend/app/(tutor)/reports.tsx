@@ -9,13 +9,14 @@ import {
   RefreshControl,
   useWindowDimensions,
   Alert,
-  Linking,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
+import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
+import AppHeader from '@/src/components/AppHeader';
 import { api } from '@/src/services/api';
-import { colors } from '@/src/theme/colors';
 import Constants from 'expo-constants';
 
 interface ReportSummary {
@@ -45,6 +46,7 @@ interface ByMonth {
 
 export default function TutorReportsScreen() {
   const { token } = useAuth();
+  const { colors } = useTheme();
   const { width } = useWindowDimensions();
   const isTablet = width >= 768;
   const isDesktop = width >= 1024;
@@ -57,6 +59,7 @@ export default function TutorReportsScreen() {
   const [byMonth, setByMonth] = useState<ByMonth[]>([]);
 
   const containerMaxWidth = isDesktop ? 1200 : isTablet ? 900 : undefined;
+  const styles = getStyles(colors);
 
   const fetchReport = async () => {
     try {
@@ -87,10 +90,22 @@ export default function TutorReportsScreen() {
   const downloadPDF = async () => {
     setDownloading(true);
     try {
-      const backendUrl = Constants.expoConfig?.extra?.EXPO_PUBLIC_BACKEND_URL || '';
-      const pdfUrl = `${backendUrl}/api/reports/provider/pdf`;
-      
-      await Linking.openURL(pdfUrl);
+      if (Platform.OS === 'web') {
+        const baseUrl = api.defaults.baseURL || '/api';
+        const pdfUrl = `${baseUrl}/reports/provider/pdf`;
+        
+        const link = document.createElement('a');
+        link.href = pdfUrl;
+        link.download = `maestrohub_earnings_${new Date().toISOString().split('T')[0]}.pdf`;
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        Alert.alert('Success', 'Report download started');
+      } else {
+        Alert.alert('Info', 'PDF download is available in the web version');
+      }
     } catch (error) {
       Alert.alert('Error', 'Failed to download report');
     } finally {
@@ -106,6 +121,7 @@ export default function TutorReportsScreen() {
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
+        <AppHeader />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -115,6 +131,7 @@ export default function TutorReportsScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
+      <AppHeader />
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
@@ -144,34 +161,26 @@ export default function TutorReportsScreen() {
 
           {/* Summary Cards */}
           <View style={[styles.summaryGrid, isTablet && styles.summaryGridTablet]}>
-            <View style={[styles.summaryCard, styles.summaryCardPrimary]}>
+            <View style={[styles.summaryCard, { backgroundColor: colors.cardPrimary }]}>
               <Ionicons name="cash" size={28} color={colors.white} />
               <Text style={styles.summaryValue}>{formatCurrency(summary?.total_earned_cents || 0)}</Text>
               <Text style={styles.summaryLabel}>Total Earned</Text>
             </View>
-            <View style={[styles.summaryCard, styles.summaryCardWarning]}>
+            <View style={[styles.summaryCard, { backgroundColor: colors.cardWarning }]}>
               <Ionicons name="hourglass" size={28} color={colors.white} />
               <Text style={styles.summaryValue}>{formatCurrency(summary?.pending_cents || 0)}</Text>
               <Text style={styles.summaryLabel}>Pending</Text>
             </View>
-            <View style={[styles.summaryCard, styles.summaryCardSuccess]}>
+            <View style={[styles.summaryCard, { backgroundColor: colors.cardSuccess }]}>
               <Ionicons name="checkmark-circle" size={28} color={colors.white} />
               <Text style={styles.summaryValue}>{summary?.completed_sessions || 0}</Text>
               <Text style={styles.summaryLabel}>Completed</Text>
             </View>
-            <View style={[styles.summaryCard, styles.summaryCardInfo]}>
+            <View style={[styles.summaryCard, { backgroundColor: colors.cardInfo }]}>
               <Ionicons name="time" size={28} color={colors.white} />
               <Text style={styles.summaryValue}>{summary?.upcoming_sessions || 0}</Text>
               <Text style={styles.summaryLabel}>Upcoming</Text>
             </View>
-          </View>
-
-          {/* Platform Fees Info */}
-          <View style={styles.feeInfoCard}>
-            <Ionicons name="information-circle" size={20} color={colors.primary} />
-            <Text style={styles.feeInfoText}>
-              Platform fees: {formatCurrency(summary?.total_platform_fees_cents || 0)} ({((summary?.total_platform_fees_cents || 0) / Math.max(((summary?.total_earned_cents || 0) + (summary?.total_platform_fees_cents || 0)), 1) * 100).toFixed(0)}%)
-            </Text>
           </View>
 
           {/* By Student Section */}
@@ -181,7 +190,7 @@ export default function TutorReportsScreen() {
               {byStudent.map((item, index) => (
                 <View key={index} style={styles.listItem}>
                   <View style={styles.listItemLeft}>
-                    <View style={styles.avatar}>
+                    <View style={[styles.avatar, { backgroundColor: '#8b5cf6' }]}>
                       <Text style={styles.avatarText}>{item.student_name.charAt(0)}</Text>
                     </View>
                     <View>
@@ -225,7 +234,7 @@ export default function TutorReportsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colors: ThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
@@ -293,18 +302,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
   },
-  summaryCardPrimary: {
-    backgroundColor: colors.primary,
-  },
-  summaryCardSuccess: {
-    backgroundColor: '#10b981',
-  },
-  summaryCardWarning: {
-    backgroundColor: '#f59e0b',
-  },
-  summaryCardInfo: {
-    backgroundColor: '#6366f1',
-  },
   summaryValue: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -316,29 +313,13 @@ const styles = StyleSheet.create({
     color: 'rgba(255,255,255,0.9)',
     marginTop: 4,
   },
-  feeInfoCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.primaryLight,
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 16,
-    gap: 8,
-  },
-  feeInfoText: {
-    fontSize: 13,
-    color: colors.primary,
-  },
   section: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   sectionTitle: {
     fontSize: 16,
@@ -363,7 +344,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#8b5cf6',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -385,7 +365,7 @@ const styles = StyleSheet.create({
   listItemAmount: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#10b981',
+    color: colors.success,
   },
   monthItem: {
     flexDirection: 'row',
@@ -412,7 +392,7 @@ const styles = StyleSheet.create({
   monthAmount: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#10b981',
+    color: colors.success,
   },
   emptyState: {
     alignItems: 'center',
