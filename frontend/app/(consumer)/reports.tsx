@@ -9,14 +9,15 @@ import {
   RefreshControl,
   useWindowDimensions,
   Alert,
-  Linking,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
+import { useTheme } from '@/src/context/ThemeContext';
 import { api } from '@/src/services/api';
-import { colors } from '@/src/theme/colors';
-import Constants from 'expo-constants';
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
 
 interface ReportSummary {
   total_sessions: number;
@@ -50,6 +51,7 @@ interface ByMonth {
 
 export default function ConsumerReportsScreen() {
   const { token } = useAuth();
+  const { colors } = useTheme();
   const { width } = useWindowDimensions();
   const isTablet = width >= 768;
   const isDesktop = width >= 1024;
@@ -94,13 +96,32 @@ export default function ConsumerReportsScreen() {
   const downloadPDF = async () => {
     setDownloading(true);
     try {
-      const backendUrl = Constants.expoConfig?.extra?.EXPO_PUBLIC_BACKEND_URL || '';
-      const pdfUrl = `${backendUrl}/api/reports/consumer/pdf`;
+      const response = await api.get('/reports/consumer/pdf', {
+        headers: { Authorization: `Bearer ${token}` },
+        responseType: 'blob'
+      });
       
-      // Open PDF in browser
-      await Linking.openURL(pdfUrl);
+      if (Platform.OS === 'web') {
+        // Web: Create download link
+        const blob = new Blob([response.data], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `maestrohub_report_${new Date().toISOString().split('T')[0]}.pdf`;
+        link.click();
+        window.URL.revokeObjectURL(url);
+      } else {
+        // Native: Save and share
+        const filename = `${FileSystem.documentDirectory}maestrohub_report.pdf`;
+        await FileSystem.writeAsStringAsync(filename, response.data, {
+          encoding: FileSystem.EncodingType.Base64
+        });
+        await Sharing.shareAsync(filename);
+      }
+      Alert.alert('Success', 'Report downloaded successfully');
     } catch (error) {
-      Alert.alert('Error', 'Failed to download report');
+      console.error('PDF download error:', error);
+      Alert.alert('Error', 'Failed to download report. Please try again.');
     } finally {
       setDownloading(false);
     }
@@ -113,7 +134,7 @@ export default function ConsumerReportsScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -122,7 +143,7 @@ export default function ConsumerReportsScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={['bottom']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['bottom']}>
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
@@ -130,12 +151,9 @@ export default function ConsumerReportsScreen() {
         <View style={[styles.contentWrapper, containerMaxWidth ? { maxWidth: containerMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
           {/* Header */}
           <View style={styles.header}>
-            <View>
-              <Text style={[styles.title, isDesktop && styles.titleDesktop]}>Session Reports</Text>
-              <Text style={styles.subtitle}>Track your tutoring sessions and spending</Text>
-            </View>
+            <Text style={[styles.title, { color: colors.text }]}>Reports</Text>
             <TouchableOpacity 
-              style={[styles.downloadButton, downloading && styles.downloadButtonDisabled]}
+              style={[styles.downloadButton, { backgroundColor: colors.primary }, downloading && styles.downloadButtonDisabled]}
               onPress={downloadPDF}
               disabled={downloading}
             >
@@ -143,7 +161,7 @@ export default function ConsumerReportsScreen() {
                 <ActivityIndicator size="small" color={colors.white} />
               ) : (
                 <>
-                  <Ionicons name="download-outline" size={18} color={colors.white} />
+                  <Ionicons name="document-text-outline" size={18} color={colors.white} />
                   <Text style={styles.downloadButtonText}>PDF</Text>
                 </>
               )}
@@ -152,23 +170,23 @@ export default function ConsumerReportsScreen() {
 
           {/* Summary Cards */}
           <View style={[styles.summaryGrid, isTablet && styles.summaryGridTablet]}>
-            <View style={[styles.summaryCard, styles.summaryCardPrimary]}>
-              <Ionicons name="calendar" size={28} color={colors.white} />
+            <View style={[styles.summaryCard, { backgroundColor: colors.cardPrimary }]}>
+              <Ionicons name="layers-outline" size={24} color={colors.white} />
               <Text style={styles.summaryValue}>{summary?.total_sessions || 0}</Text>
               <Text style={styles.summaryLabel}>Total Sessions</Text>
             </View>
-            <View style={[styles.summaryCard, styles.summaryCardSuccess]}>
-              <Ionicons name="checkmark-circle" size={28} color={colors.white} />
+            <View style={[styles.summaryCard, { backgroundColor: colors.cardSuccess }]}>
+              <Ionicons name="checkmark-done-outline" size={24} color={colors.white} />
               <Text style={styles.summaryValue}>{summary?.completed_sessions || 0}</Text>
               <Text style={styles.summaryLabel}>Completed</Text>
             </View>
-            <View style={[styles.summaryCard, styles.summaryCardWarning]}>
-              <Ionicons name="time" size={28} color={colors.white} />
+            <View style={[styles.summaryCard, { backgroundColor: colors.cardWarning }]}>
+              <Ionicons name="hourglass-outline" size={24} color={colors.white} />
               <Text style={styles.summaryValue}>{summary?.upcoming_sessions || 0}</Text>
               <Text style={styles.summaryLabel}>Upcoming</Text>
             </View>
-            <View style={[styles.summaryCard, styles.summaryCardInfo]}>
-              <Ionicons name="wallet" size={28} color={colors.white} />
+            <View style={[styles.summaryCard, { backgroundColor: colors.cardInfo }]}>
+              <Ionicons name="receipt-outline" size={24} color={colors.white} />
               <Text style={styles.summaryValue}>{formatCurrency(summary?.total_spent_cents || 0)}</Text>
               <Text style={styles.summaryLabel}>Total Spent</Text>
             </View>
@@ -176,20 +194,20 @@ export default function ConsumerReportsScreen() {
 
           {/* By Tutor Section */}
           {byTutor.length > 0 && (
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Sessions by Tutor</Text>
+            <View style={[styles.section, { backgroundColor: colors.surface }]}>
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>Sessions by Tutor</Text>
               {byTutor.map((item, index) => (
-                <View key={index} style={styles.listItem}>
+                <View key={index} style={[styles.listItem, { borderBottomColor: colors.border }]}>
                   <View style={styles.listItemLeft}>
-                    <View style={styles.avatar}>
+                    <View style={[styles.avatar, { backgroundColor: colors.primary }]}>
                       <Text style={styles.avatarText}>{item.tutor_name.charAt(0)}</Text>
                     </View>
                     <View>
-                      <Text style={styles.listItemName}>{item.tutor_name}</Text>
-                      <Text style={styles.listItemSub}>{item.sessions} sessions</Text>
+                      <Text style={[styles.listItemName, { color: colors.text }]}>{item.tutor_name}</Text>
+                      <Text style={[styles.listItemSub, { color: colors.textMuted }]}>{item.sessions} sessions</Text>
                     </View>
                   </View>
-                  <Text style={styles.listItemAmount}>{formatCurrency(item.spent_cents)}</Text>
+                  <Text style={[styles.listItemAmount, { color: colors.primary }]}>{formatCurrency(item.spent_cents)}</Text>
                 </View>
               ))}
             </View>
@@ -197,20 +215,20 @@ export default function ConsumerReportsScreen() {
 
           {/* By Student Section */}
           {byStudent.length > 0 && (
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Sessions by Student</Text>
+            <View style={[styles.section, { backgroundColor: colors.surface }]}>
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>Sessions by Student</Text>
               {byStudent.map((item, index) => (
-                <View key={index} style={styles.listItem}>
+                <View key={index} style={[styles.listItem, { borderBottomColor: colors.border }]}>
                   <View style={styles.listItemLeft}>
-                    <View style={[styles.avatar, styles.avatarStudent]}>
+                    <View style={[styles.avatar, { backgroundColor: '#8b5cf6' }]}>
                       <Text style={styles.avatarText}>{item.student_name.charAt(0)}</Text>
                     </View>
                     <View>
-                      <Text style={styles.listItemName}>{item.student_name}</Text>
-                      <Text style={styles.listItemSub}>{item.sessions} sessions</Text>
+                      <Text style={[styles.listItemName, { color: colors.text }]}>{item.student_name}</Text>
+                      <Text style={[styles.listItemSub, { color: colors.textMuted }]}>{item.sessions} sessions</Text>
                     </View>
                   </View>
-                  <Text style={styles.listItemAmount}>{formatCurrency(item.spent_cents)}</Text>
+                  <Text style={[styles.listItemAmount, { color: colors.primary }]}>{formatCurrency(item.spent_cents)}</Text>
                 </View>
               ))}
             </View>
@@ -218,14 +236,14 @@ export default function ConsumerReportsScreen() {
 
           {/* Monthly Breakdown */}
           {byMonth.length > 0 && (
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Monthly Breakdown</Text>
+            <View style={[styles.section, { backgroundColor: colors.surface }]}>
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>Monthly Breakdown</Text>
               {byMonth.slice(0, 6).map((item, index) => (
-                <View key={index} style={styles.monthItem}>
-                  <Text style={styles.monthLabel}>{item.month}</Text>
+                <View key={index} style={[styles.monthItem, { borderBottomColor: colors.border }]}>
+                  <Text style={[styles.monthLabel, { color: colors.text }]}>{item.month}</Text>
                   <View style={styles.monthStats}>
-                    <Text style={styles.monthSessions}>{item.sessions} sessions</Text>
-                    <Text style={styles.monthAmount}>{formatCurrency(item.spent_cents)}</Text>
+                    <Text style={[styles.monthSessions, { color: colors.textMuted }]}>{item.sessions} sessions</Text>
+                    <Text style={[styles.monthAmount, { color: colors.primary }]}>{formatCurrency(item.spent_cents)}</Text>
                   </View>
                 </View>
               ))}
@@ -240,7 +258,6 @@ export default function ConsumerReportsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
   },
   loadingContainer: {
     flex: 1,
@@ -257,27 +274,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 24,
+    marginBottom: 16,
   },
   title: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
-    color: colors.text,
-  },
-  titleDesktop: {
-    fontSize: 28,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: colors.textMuted,
-    marginTop: 4,
   },
   downloadButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.primary,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
     borderRadius: 8,
     gap: 6,
   },
@@ -285,135 +292,104 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   downloadButtonText: {
-    color: colors.white,
+    color: '#FFFFFF',
     fontWeight: '600',
     fontSize: 14,
   },
   summaryGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 12,
-    marginBottom: 24,
+    gap: 10,
+    marginBottom: 16,
   },
   summaryGridTablet: {
-    gap: 16,
+    gap: 12,
   },
   summaryCard: {
     flex: 1,
-    minWidth: 150,
-    padding: 16,
+    minWidth: 140,
+    padding: 14,
     borderRadius: 12,
     alignItems: 'center',
   },
-  summaryCardPrimary: {
-    backgroundColor: colors.primary,
-  },
-  summaryCardSuccess: {
-    backgroundColor: '#10b981',
-  },
-  summaryCardWarning: {
-    backgroundColor: '#f59e0b',
-  },
-  summaryCardInfo: {
-    backgroundColor: '#6366f1',
-  },
   summaryValue: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
-    color: colors.white,
-    marginTop: 8,
+    color: '#FFFFFF',
+    marginTop: 6,
   },
   summaryLabel: {
-    fontSize: 12,
+    fontSize: 11,
     color: 'rgba(255,255,255,0.9)',
-    marginTop: 4,
+    marginTop: 2,
   },
   section: {
-    backgroundColor: colors.white,
     borderRadius: 12,
-    padding: 16,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    padding: 14,
+    marginBottom: 12,
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '600',
-    color: colors.text,
-    marginBottom: 12,
+    marginBottom: 10,
   },
   listItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: colors.border,
   },
   listItemLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: 10,
   },
   avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.primary,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  avatarStudent: {
-    backgroundColor: '#8b5cf6',
-  },
   avatarText: {
-    color: colors.white,
+    color: '#FFFFFF',
     fontWeight: '600',
-    fontSize: 16,
+    fontSize: 15,
   },
   listItemName: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '500',
-    color: colors.text,
   },
   listItemSub: {
-    fontSize: 13,
-    color: colors.textMuted,
-    marginTop: 2,
+    fontSize: 12,
+    marginTop: 1,
   },
   listItemAmount: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '600',
-    color: colors.primary,
   },
   monthItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingVertical: 8,
     borderBottomWidth: 1,
-    borderBottomColor: colors.border,
   },
   monthLabel: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '500',
-    color: colors.text,
   },
   monthStats: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 16,
+    gap: 12,
   },
   monthSessions: {
-    fontSize: 13,
-    color: colors.textMuted,
+    fontSize: 12,
   },
   monthAmount: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '600',
-    color: colors.primary,
   },
 });
