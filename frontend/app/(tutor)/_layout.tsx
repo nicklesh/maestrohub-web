@@ -42,11 +42,11 @@ export default function TutorLayout() {
         }}
       />
       <Tabs.Screen
-        name="billing"
+        name="invites"
         options={{
-          title: 'Billing',
+          title: 'Invites',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="card-outline" size={size} color={color} />
+            <Ionicons name="mail-outline" size={size} color={color} />
           ),
         }}
       />
@@ -66,6 +66,12 @@ export default function TutorLayout() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="settings-outline" size={size} color={color} />
           ),
+        }}
+      />
+      <Tabs.Screen
+        name="billing"
+        options={{
+          href: null,
         }}
       />
       <Tabs.Screen
