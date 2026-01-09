@@ -13,8 +13,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
+import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 import { api } from '@/src/services/api';
-import { colors } from '@/src/theme/colors';
+import AppHeader from '@/src/components/AppHeader';
 
 interface TutorProfile {
   tutor_id: string;
@@ -31,6 +32,7 @@ interface TutorProfile {
 
 export default function TutorSettings() {
   const { user, logout } = useAuth();
+  const { colors } = useTheme();
   const router = useRouter();
   const { width } = useWindowDimensions();
   const [loading, setLoading] = useState(true);
@@ -41,6 +43,8 @@ export default function TutorSettings() {
   const isTablet = width >= 768;
   const isDesktop = width >= 1024;
   const contentMaxWidth = isDesktop ? 640 : isTablet ? 560 : undefined;
+
+  const styles = getStyles(colors);
 
   useEffect(() => {
     loadProfile();
@@ -91,6 +95,7 @@ export default function TutorSettings() {
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
+        <AppHeader />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -100,6 +105,7 @@ export default function TutorSettings() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <AppHeader />
       <ScrollView contentContainerStyle={[styles.scrollContent, isTablet && styles.scrollContentTablet]}>
         <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
           {/* Profile Header */}
@@ -219,7 +225,7 @@ export default function TutorSettings() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colors: ThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
@@ -309,6 +315,7 @@ const styles = StyleSheet.create({
   statusText: {
     fontSize: 12,
     fontWeight: '500',
+    color: colors.text,
   },
   card: {
     backgroundColor: colors.surface,

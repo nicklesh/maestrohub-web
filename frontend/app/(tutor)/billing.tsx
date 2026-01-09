@@ -12,7 +12,8 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { api } from '@/src/services/api';
-import { colors } from '@/src/theme/colors';
+import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
+import AppHeader from '@/src/components/AppHeader';
 
 interface BillingSummary {
   trial_status: string;
@@ -33,6 +34,7 @@ interface FeeEvent {
 
 export default function BillingScreen() {
   const { width } = useWindowDimensions();
+  const { colors } = useTheme();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [summary, setSummary] = useState<BillingSummary | null>(null);
@@ -41,6 +43,8 @@ export default function BillingScreen() {
   const isTablet = width >= 768;
   const isDesktop = width >= 1024;
   const contentMaxWidth = isDesktop ? 720 : isTablet ? 600 : undefined;
+
+  const styles = getStyles(colors);
 
   useEffect(() => {
     loadBilling();
@@ -66,6 +70,7 @@ export default function BillingScreen() {
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
+        <AppHeader />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -75,6 +80,7 @@ export default function BillingScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <AppHeader />
       <ScrollView
         contentContainerStyle={[styles.scrollContent, isTablet && styles.scrollContentTablet]}
         refreshControl={
@@ -112,7 +118,7 @@ export default function BillingScreen() {
           {/* Pending Fees */}
           <View style={[styles.card, isTablet && styles.cardTablet]}>
             <View style={styles.cardHeader}>
-              <Text style={[styles.cardTitle, { marginBottom: 0 }]}>Platform Fees</Text>
+              <Text style={[styles.cardTitleText, { marginBottom: 0 }]}>Platform Fees</Text>
             </View>
             <View style={styles.feeRow}>
               <Text style={[styles.feeLabel, isDesktop && styles.feeLabelDesktop]}>Pending Fees</Text>
@@ -127,7 +133,7 @@ export default function BillingScreen() {
 
           {/* Fee Events */}
           <View style={[styles.card, isTablet && styles.cardTablet]}>
-            <Text style={[styles.cardTitle, isDesktop && styles.cardTitleDesktop]}>Recent Fee Activity</Text>
+            <Text style={[styles.cardTitleText, isDesktop && styles.cardTitleDesktop]}>Recent Fee Activity</Text>
             {summary?.fee_events?.length === 0 ? (
               <Text style={styles.emptyText}>No fee activity yet</Text>
             ) : (
@@ -148,7 +154,7 @@ export default function BillingScreen() {
           {/* Payment Methods */}
           <View style={[styles.card, isTablet && styles.cardTablet]}>
             <View style={styles.cardHeader}>
-              <Text style={[styles.cardTitle, { marginBottom: 0 }]}>Payout Account</Text>
+              <Text style={[styles.cardTitleText, { marginBottom: 0 }]}>Payout Account</Text>
             </View>
             <TouchableOpacity style={[styles.setupButton, isTablet && styles.setupButtonTablet]}>
               <Ionicons name="add-circle-outline" size={20} color={colors.primary} />
@@ -164,7 +170,7 @@ export default function BillingScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colors: ThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
@@ -240,6 +246,10 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 32,
   },
+  cardTitle: {
+    fontSize: 14,
+    color: 'rgba(255,255,255,0.8)',
+  },
   earningsAmount: {
     fontSize: 40,
     fontWeight: 'bold',
@@ -274,7 +284,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
   },
-  cardTitle: {
+  cardTitleText: {
     fontSize: 16,
     fontWeight: '600',
     color: colors.text,

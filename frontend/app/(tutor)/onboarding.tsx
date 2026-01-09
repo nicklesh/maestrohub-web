@@ -16,7 +16,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { api } from '@/src/services/api';
-import { colors } from '@/src/theme/colors';
+import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 
 const CATEGORIES = [
   { id: 'academic', name: 'Academic', icon: 'school' },
@@ -51,6 +51,7 @@ const PAYOUT_COUNTRIES = [
 export default function TutorOnboarding() {
   const router = useRouter();
   const { width } = useWindowDimensions();
+  const { colors } = useTheme();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
 
@@ -67,7 +68,9 @@ export default function TutorOnboarding() {
   const [selectedModalities, setSelectedModalities] = useState<string[]>(['online']);
   const [basePrice, setBasePrice] = useState('50');
   const [duration, setDuration] = useState('60');
-  const [payoutCountry, setPayoutCountry] = useState<string>('US');  // New: payout country
+  const [payoutCountry, setPayoutCountry] = useState<string>('US');
+
+  const styles = getStyles(colors);
 
   const toggleSelection = (list: string[], setList: (v: string[]) => void, item: string) => {
     if (list.includes(item)) {
@@ -79,7 +82,6 @@ export default function TutorOnboarding() {
 
   const availableSubjects = selectedCategories.flatMap((cat) => SUBJECTS[cat] || []);
 
-  // Get currency based on selected payout country
   const selectedCountry = PAYOUT_COUNTRIES.find(c => c.id === payoutCountry);
   const currencySymbol = selectedCountry?.symbol || '$';
 
@@ -103,7 +105,6 @@ export default function TutorOnboarding() {
 
     setLoading(true);
     try {
-      // Create tutor profile
       await api.post('/tutors/profile', {
         bio: bio.trim(),
         categories: selectedCategories,
@@ -120,7 +121,6 @@ export default function TutorOnboarding() {
         },
       });
 
-      // Set provider market based on payout country
       try {
         await api.post('/providers/market', { payout_country: payoutCountry });
       } catch (e) {
@@ -180,7 +180,6 @@ export default function TutorOnboarding() {
             ]}
             onPress={() => {
               toggleSelection(selectedCategories, setSelectedCategories, cat.id);
-              // Clear subjects when category changes
               setSelectedSubjects([]);
             }}
           >
@@ -335,7 +334,6 @@ export default function TutorOnboarding() {
       <Text style={[styles.stepTitle, isDesktop && styles.stepTitleDesktop]}>Set your pricing</Text>
       <Text style={[styles.stepSubtitle, isDesktop && styles.stepSubtitleDesktop]}>Where will you receive payments?</Text>
 
-      {/* Payout Country Selection */}
       <Text style={[styles.inputLabel, isDesktop && styles.inputLabelDesktop]}>Payout Country</Text>
       <View style={[styles.countryOptions, isTablet && styles.countryOptionsTablet]}>
         {PAYOUT_COUNTRIES.map((country) => (
@@ -348,11 +346,10 @@ export default function TutorOnboarding() {
             ]}
             onPress={() => {
               setPayoutCountry(country.id);
-              // Set default price based on country
               if (country.id === 'IN') {
-                setBasePrice('500'); // Default INR price
+                setBasePrice('500');
               } else {
-                setBasePrice('50'); // Default USD price
+                setBasePrice('50');
               }
             }}
           >
@@ -466,7 +463,7 @@ export default function TutorOnboarding() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colors: ThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
