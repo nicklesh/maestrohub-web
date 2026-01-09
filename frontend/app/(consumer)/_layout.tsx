@@ -51,47 +51,35 @@ export default function ConsumerLayout() {
         }}
       />
       <Tabs.Screen
-        name="reports"
+        name="kids"
         options={{
-          title: 'Reports',
+          title: 'Kids',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="bar-chart-outline" size={size} color={color} />
+            <Ionicons name="people-outline" size={size} color={color} />
           ),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Profile',
+          title: 'Account',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person-outline" size={size} color={color} />
           ),
         }}
       />
-      <Tabs.Screen
-        name="tutor/[id]"
-        options={{
-          href: null,
-        }}
-      />
-      <Tabs.Screen
-        name="book/[tutorId]"
-        options={{
-          href: null,
-        }}
-      />
-      <Tabs.Screen
-        name="students"
-        options={{
-          href: null,
-        }}
-      />
-      <Tabs.Screen
-        name="booking/[id]"
-        options={{
-          href: null,
-        }}
-      />
+      {/* Hidden screens */}
+      <Tabs.Screen name="tutor/[id]" options={{ href: null }} />
+      <Tabs.Screen name="book/[tutorId]" options={{ href: null }} />
+      <Tabs.Screen name="students" options={{ href: null }} />
+      <Tabs.Screen name="booking/[id]" options={{ href: null }} />
+      <Tabs.Screen name="reports" options={{ href: null }} />
+      <Tabs.Screen name="kid/[id]" options={{ href: null }} />
+      <Tabs.Screen name="edit-profile" options={{ href: null }} />
+      <Tabs.Screen name="billing" options={{ href: null }} />
+      <Tabs.Screen name="notifications" options={{ href: null }} />
+      <Tabs.Screen name="reminders" options={{ href: null }} />
+      <Tabs.Screen name="invite-provider" options={{ href: null }} />
     </Tabs>
   );
 }
