@@ -396,31 +396,55 @@ class APITester:
             self.log_result("Invites API - Get Tutor Profile", False, "Failed to get tutor profile")
             return
         
-        # Step 4: Create invite (POST /api/invites)
+        # Step 4: Clean up any existing invites first
+        self.cleanup_existing_invites(tutor_token)
+        
+        # Step 5: Create invite (POST /api/invites)
         invite_id = self.test_create_invite(tutor_token)
         if not invite_id:
             return
         
-        # Step 5: Get sent invites (GET /api/invites/sent)
+        # Step 6: Get sent invites (GET /api/invites/sent)
         self.test_get_sent_invites(tutor_token, invite_id)
         
-        # Step 6: Get received invites (GET /api/invites/received)
+        # Step 7: Get received invites (GET /api/invites/received)
         self.test_get_received_invites(consumer_token, invite_id)
         
-        # Step 7: Accept invite (POST /api/invites/{id}/accept)
+        # Step 8: Accept invite (POST /api/invites/{id}/accept)
         self.test_accept_invite(consumer_token, invite_id)
         
-        # Step 8: Create another invite for decline test
+        # Step 9: Create another invite for decline test
         decline_invite_id = self.test_create_invite(tutor_token, "decline_test")
         if decline_invite_id:
-            # Step 9: Decline invite (POST /api/invites/{id}/decline)
+            # Step 10: Decline invite (POST /api/invites/{id}/decline)
             self.test_decline_invite(consumer_token, decline_invite_id)
         
-        # Step 10: Create another invite for cancel test
+        # Step 11: Create another invite for cancel test
         cancel_invite_id = self.test_create_invite(tutor_token, "cancel_test")
         if cancel_invite_id:
-            # Step 11: Cancel invite (DELETE /api/invites/{id})
+            # Step 12: Cancel invite (DELETE /api/invites/{id})
             self.test_cancel_invite(tutor_token, cancel_invite_id)
+    
+    def cleanup_existing_invites(self, token):
+        """Clean up existing invites to avoid conflicts"""
+        try:
+            headers = {"Authorization": f"Bearer {token}"}
+            # Get existing invites
+            response = requests.get(f"{API_BASE}/invites/sent", headers=headers, timeout=30)
+            
+            if response.status_code == 200:
+                data = response.json()
+                invites = data.get("invites", [])
+                
+                # Delete existing invites to the test consumer email
+                for invite in invites:
+                    if invite.get("email") == TEST_CREDENTIALS["consumer"]["email"]:
+                        delete_response = requests.delete(f"{API_BASE}/invites/{invite['invite_id']}", 
+                                                        headers=headers, timeout=30)
+                        print(f"   Cleaned up existing invite: {invite['invite_id']}")
+        except Exception as e:
+            print(f"   Cleanup warning: {str(e)}")
+    
     
     def login_user(self, user_type):
         """Helper method to login and return token"""
