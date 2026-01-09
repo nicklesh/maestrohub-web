@@ -61,6 +61,10 @@ export default function BillingScreen() {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showDayPickerModal, setShowDayPickerModal] = useState(false);
   const [selectedDay, setSelectedDay] = useState(1);
+  const [selectedProvider, setSelectedProvider] = useState<any>(null);
+  const [showProviderInput, setShowProviderInput] = useState(false);
+  const [providerInputValue, setProviderInputValue] = useState('');
+  const [savingPaymentMethod, setSavingPaymentMethod] = useState(false);
 
   const loadBilling = useCallback(async () => {
     try {
