@@ -360,7 +360,7 @@ export default function BillingScreen() {
               <TouchableOpacity
                 key={provider.id}
                 style={[styles.providerOption, { borderColor: colors.border }]}
-                onPress={() => handleAddPaymentMethod(provider.id)}
+                onPress={() => handleSelectProvider(provider)}
               >
                 <View style={[styles.providerIcon, { backgroundColor: provider.color + '15' }]}>
                   <Ionicons name={provider.icon as any} size={24} color={provider.color} />
@@ -371,6 +371,65 @@ export default function BillingScreen() {
             ))}
           </View>
         </View>
+      </Modal>
+
+      {/* Provider Input Modal */}
+      <Modal visible={showProviderInput} animationType="slide" transparent>
+        <KeyboardAvoidingView 
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.modalOverlay}
+        >
+          <TouchableOpacity 
+            style={styles.modalBackdrop} 
+            activeOpacity={1} 
+            onPress={() => setShowProviderInput(false)} 
+          />
+          <View style={[styles.bottomSheet, { backgroundColor: colors.surface }]}>
+            <View style={[styles.sheetHandle, { backgroundColor: colors.gray300 }]} />
+            
+            {selectedProvider && (
+              <>
+                <View style={styles.providerHeader}>
+                  <View style={[styles.providerIconLarge, { backgroundColor: selectedProvider.color + '15' }]}>
+                    <Ionicons name={selectedProvider.icon as any} size={32} color={selectedProvider.color} />
+                  </View>
+                  <Text style={[styles.sheetTitle, { color: colors.text }]}>Link {selectedProvider.name}</Text>
+                </View>
+
+                <Text style={[styles.inputLabel, { color: colors.textMuted }]}>
+                  {selectedProvider.inputType === 'email' ? 'Email Address' : 
+                   selectedProvider.inputType === 'phone' ? 'Phone or Email' : 'Username'}
+                </Text>
+                <TextInput
+                  style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
+                  placeholder={selectedProvider.placeholder}
+                  placeholderTextColor={colors.textMuted}
+                  value={providerInputValue}
+                  onChangeText={setProviderInputValue}
+                  keyboardType={selectedProvider.inputType === 'email' ? 'email-address' : 
+                               selectedProvider.inputType === 'phone' ? 'phone-pad' : 'default'}
+                  autoCapitalize="none"
+                />
+
+                <Text style={[styles.privacyNote, { color: colors.textMuted }]}>
+                  Note: Maestro Hub does not store your payment information. You will be redirected to {selectedProvider.name} to complete payments.
+                </Text>
+
+                <TouchableOpacity
+                  style={[styles.linkButton, { backgroundColor: selectedProvider.color }, savingPaymentMethod && styles.buttonDisabled]}
+                  onPress={handleSavePaymentMethod}
+                  disabled={savingPaymentMethod}
+                >
+                  {savingPaymentMethod ? (
+                    <ActivityIndicator color="#FFFFFF" />
+                  ) : (
+                    <Text style={styles.linkButtonText}>Link {selectedProvider.name}</Text>
+                  )}
+                </TouchableOpacity>
+              </>
+            )}
+          </View>
+        </KeyboardAvoidingView>
       </Modal>
 
       {/* Day Picker Modal */}
