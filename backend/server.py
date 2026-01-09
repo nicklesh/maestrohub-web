@@ -20,10 +20,10 @@ load_dotenv(ROOT_DIR / '.env')
 # MongoDB connection
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ.get('DB_NAME', 'acharyaly')]
+db = client[os.environ.get('DB_NAME', 'maestrohub')]
 
 # JWT Config
-JWT_SECRET = os.environ.get('JWT_SECRET', 'acharyaly-secret-key-change-in-production')
+JWT_SECRET = os.environ.get('JWT_SECRET', 'maestrohub-secret-key-change-in-production')
 JWT_ALGORITHM = 'HS256'
 JWT_EXPIRATION_DAYS = 7
 
