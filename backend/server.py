@@ -156,11 +156,21 @@ class StudentCreate(BaseModel):
     age: Optional[int] = None
     grade: Optional[str] = None
     notes: Optional[str] = None
+    email: Optional[EmailStr] = None  # Kid's email for sending schedules
+    auto_send_schedule: bool = False  # Auto-send quarterly schedules
 
 class Student(StudentCreate):
     student_id: str
     user_id: str
     created_at: Optional[datetime] = None
+
+class StudentUpdate(BaseModel):
+    name: Optional[str] = None
+    age: Optional[int] = None
+    grade: Optional[str] = None
+    notes: Optional[str] = None
+    email: Optional[EmailStr] = None
+    auto_send_schedule: Optional[bool] = None
 
 class TutorPolicies(BaseModel):
     cancel_window_hours: int = 24
