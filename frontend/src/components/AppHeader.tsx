@@ -21,11 +21,15 @@ import { api } from '@/src/services/api';
 interface AppHeaderProps {
   showBack?: boolean;
   title?: string;
+  showUserName?: boolean;
 }
 
-export default function AppHeader({ showBack = false, title }: AppHeaderProps) {
+// Gold color for dark mode envelope
+const GOLD_COLOR = '#D4AF37';
+
+export default function AppHeader({ showBack = false, title, showUserName = false }: AppHeaderProps) {
   const { user, logout, token } = useAuth();
-  const { colors } = useTheme();
+  const { colors, isDark } = useTheme();
   const router = useRouter();
   
   const [showContactSheet, setShowContactSheet] = useState(false);
@@ -52,15 +56,28 @@ export default function AppHeader({ showBack = false, title }: AppHeaderProps) {
     }
   };
 
+  const handleBack = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      // Fallback to home based on role
+      handleLogoPress();
+    }
+  };
+
   const handleLogout = () => {
     Alert.alert('Logout', 'Are you sure you want to logout?', [
       { text: 'Cancel', style: 'cancel' },
       { 
         text: 'Logout', 
         style: 'destructive', 
-        onPress: () => {
-          logout();
-          router.replace('/(auth)/login');
+        onPress: async () => {
+          await logout();
+          if (Platform.OS === 'web' && typeof window !== 'undefined') {
+            window.location.href = '/login';
+          } else {
+            router.replace('/(auth)/login');
+          }
         }
       },
     ]);
@@ -93,15 +110,30 @@ export default function AppHeader({ showBack = false, title }: AppHeaderProps) {
     }
   };
 
+  // Determine envelope color - gold in dark mode, text color in light mode
+  const envelopeColor = isDark ? GOLD_COLOR : colors.text;
+
   return (
     <>
       <View style={[styles.header, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
-        {/* Left - User Info */}
+        {/* Left - Back Button OR User Info */}
         <View style={styles.headerLeft}>
           {showBack ? (
-            <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-              <Ionicons name="arrow-back" size={24} color={colors.text} />
-            </TouchableOpacity>
+            <View style={styles.backContainer}>
+              <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+                <Ionicons name="arrow-back" size={24} color={colors.text} />
+              </TouchableOpacity>
+              {showUserName && title && (
+                <Text style={[styles.headerTitle, { color: colors.text }]} numberOfLines={1}>
+                  {title}
+                </Text>
+              )}
+              {showUserName && !title && user?.name && (
+                <Text style={[styles.headerTitle, { color: colors.text }]} numberOfLines={1}>
+                  {user.name}
+                </Text>
+              )}
+            </View>
           ) : (
             <View style={styles.userInfo}>
               <View style={[styles.userAvatar, { backgroundColor: colors.primary }]}>
@@ -119,10 +151,13 @@ export default function AppHeader({ showBack = false, title }: AppHeaderProps) {
           )}
         </View>
 
-        {/* Center - Logo */}
+        {/* Center - Logo (different for dark/light mode) */}
         <TouchableOpacity onPress={handleLogoPress} style={styles.logoContainer}>
           <Image
-            source={require('../../assets/images/mh_logo_trimmed.png')}
+            source={isDark 
+              ? require('../../assets/images/mh_logo_dark.png')
+              : require('../../assets/images/mh_logo_trimmed.png')
+            }
             style={styles.logo}
             resizeMode="contain"
           />
@@ -134,7 +169,7 @@ export default function AppHeader({ showBack = false, title }: AppHeaderProps) {
             onPress={() => setShowContactSheet(true)} 
             style={[styles.iconButton, { backgroundColor: colors.background }]}
           >
-            <Ionicons name="mail-outline" size={20} color={colors.text} />
+            <Ionicons name="mail-outline" size={20} color={envelopeColor} />
           </TouchableOpacity>
           <TouchableOpacity 
             onPress={handleLogout} 
@@ -145,7 +180,7 @@ export default function AppHeader({ showBack = false, title }: AppHeaderProps) {
         </View>
       </View>
 
-      {/* Contact Us Bottom Sheet */}
+      {/* Contact Us Bottom Sheet - Fixed for dark mode */}
       <Modal visible={showContactSheet} animationType="slide" transparent>
         <KeyboardAvoidingView 
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -156,7 +191,14 @@ export default function AppHeader({ showBack = false, title }: AppHeaderProps) {
             activeOpacity={1} 
             onPress={() => setShowContactSheet(false)}
           />
-          <View style={[styles.bottomSheet, { backgroundColor: colors.surface }]}>
+          <View style={[
+            styles.bottomSheet, 
+            { 
+              backgroundColor: colors.surface,
+              // Ensure no white corners in dark mode
+              overflow: 'hidden',
+            }
+          ]}>
             <View style={[styles.sheetHandle, { backgroundColor: colors.gray300 }]} />
             <Text style={[styles.sheetTitle, { color: colors.text }]}>Contact Us</Text>
             
@@ -212,8 +254,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  backContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
   backButton: {
     padding: 4,
+  },
+  headerTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    maxWidth: 120,
   },
   userInfo: {
     flexDirection: 'row',
@@ -273,6 +325,8 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
+    // Ensure rounded corners clip content
+    overflow: 'hidden',
   },
   sheetHandle: {
     width: 40,
