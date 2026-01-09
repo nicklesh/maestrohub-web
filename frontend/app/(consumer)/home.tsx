@@ -15,10 +15,10 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
 import { useMarket } from '@/src/context/MarketContext';
+import { useTheme } from '@/src/context/ThemeContext';
 import MarketSelectionModal from '@/src/components/MarketSelectionModal';
 import LogoHeader from '@/src/components/LogoHeader';
 import { api } from '@/src/services/api';
-import { colors } from '@/src/theme/colors';
 
 interface Category {
   id: string;
