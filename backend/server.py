@@ -1208,7 +1208,7 @@ async def create_availability_rule(rule: AvailabilityRule, request: Request):
     return rule_doc
 
 @api_router.post("/availability/rules/bulk")
-async def set_availability_rules(rules: List[AvailabilityRule], request: Request):
+async def set_availability_rules(rules: List[AvailabilityRuleCreate], request: Request):
     user = await require_tutor(request)
     tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
     if not tutor:
