@@ -123,11 +123,14 @@ backend:
     file: "backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: true
         agent: "main"
         comment: "Implemented POST /api/invites for tutors to send invites to consumers"
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS - Invite creation working correctly. Tutors can send invites to consumers with proper validation and duplicate prevention."
 
   - task: "Invites API - Get Sent Invites"
     implemented: true
@@ -135,11 +138,14 @@ backend:
     file: "backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: true
         agent: "main"
         comment: "Implemented GET /api/invites/sent for tutors to view invites they've sent"
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS - Tutors can successfully retrieve their sent invites with proper authentication and data structure."
 
   - task: "Invites API - Get Received Invites"
     implemented: true
@@ -147,11 +153,14 @@ backend:
     file: "backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: true
         agent: "main"
         comment: "Implemented GET /api/invites/received for consumers to view invites they've received"
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS - Consumers can successfully retrieve received invites with enriched tutor information (bio, subjects, rating)."
 
   - task: "Invites API - Accept/Decline Invite"
     implemented: true
@@ -159,11 +168,14 @@ backend:
     file: "backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: true
         agent: "main"
         comment: "Implemented POST /api/invites/{id}/accept and /api/invites/{id}/decline for consumers"
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS - Accept/decline functionality working correctly. Fixed datetime comparison issue in accept logic. Notifications are created for tutors when invites are accepted."
 
   - task: "User Registration (Consumer)"
     implemented: true
