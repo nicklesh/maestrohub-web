@@ -62,6 +62,7 @@ export default function TutorProfileScreen() {
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
+  const { colors } = useTheme();
 
   // Responsive breakpoints
   const isTablet = width >= 768;
