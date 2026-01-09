@@ -543,11 +543,24 @@ class APITester:
         """Test GET /api/invites/received"""
         try:
             headers = {"Authorization": f"Bearer {token}"}
-            response = self.session.get(f"{API_BASE}/invites/received", headers=headers, timeout=30)
+            
+            # First check who we are logged in as
+            me_response = requests.get(f"{API_BASE}/auth/me", headers=headers, timeout=30)
+            if me_response.status_code == 200:
+                user_data = me_response.json()
+                print(f"   Consumer email: {user_data.get('email')}")
+            
+            response = requests.get(f"{API_BASE}/invites/received", headers=headers, timeout=30)
             
             if response.status_code == 200:
                 data = response.json()
                 invites = data.get("invites", [])
+                print(f"   Found {len(invites)} received invites")
+                
+                # Debug: print all invite IDs
+                for inv in invites:
+                    print(f"   - Invite ID: {inv.get('invite_id')}, Status: {inv.get('status')}")
+                
                 found = any(inv.get("invite_id") == expected_invite_id for inv in invites)
                 
                 if found:
