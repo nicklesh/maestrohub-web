@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Comprehensive Backend API Test Suite for Maestro Hub
-Tests all endpoints requested by the user with proper authentication
+Tests all endpoints including the newly implemented Invites API
 """
 
 import requests
@@ -14,10 +14,10 @@ from datetime import datetime
 BACKEND_URL = os.environ.get('EXPO_PUBLIC_BACKEND_URL', 'https://maestro-hub-1.preview.emergentagent.com')
 API_BASE = f"{BACKEND_URL}/api"
 
-# Test credentials provided by user
+# Test credentials for invites testing
 TEST_CREDENTIALS = {
     "consumer": {
-        "email": "parent1@test.com",
+        "email": "parent2@test.com",
         "password": "password123"
     },
     "tutor": {
