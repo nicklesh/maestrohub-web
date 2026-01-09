@@ -1261,6 +1261,66 @@ async def get_availability_exceptions(request: Request):
     exceptions = await db.availability_exceptions.find({"tutor_id": tutor["tutor_id"]}, {"_id": 0}).to_list(100)
     return exceptions
 
+# ============== VACATION MANAGEMENT ==============
+
+@api_router.get("/availability/vacations")
+async def get_vacations(request: Request):
+    """Get tutor's vacation periods"""
+    user = await require_tutor(request)
+    tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Tutor profile not found")
+    
+    vacations = await db.vacations.find({"tutor_id": tutor["tutor_id"]}, {"_id": 0}).to_list(100)
+    return vacations
+
+@api_router.post("/availability/vacations")
+async def create_vacation(data: VacationPeriodCreate, request: Request):
+    """Create a vacation period"""
+    user = await require_tutor(request)
+    tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Tutor profile not found")
+    
+    # Validate dates
+    try:
+        start = datetime.strptime(data.start_date, "%Y-%m-%d")
+        end = datetime.strptime(data.end_date, "%Y-%m-%d")
+        if end < start:
+            raise HTTPException(status_code=400, detail="End date must be after start date")
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid date format. Use YYYY-MM-DD")
+    
+    vacation_doc = {
+        "vacation_id": f"vac_{uuid.uuid4().hex[:12]}",
+        "tutor_id": tutor["tutor_id"],
+        "start_date": data.start_date,
+        "end_date": data.end_date,
+        "reason": data.reason,
+        "created_at": datetime.now(timezone.utc)
+    }
+    
+    await db.vacations.insert_one(vacation_doc)
+    return {**vacation_doc, "_id": None}
+
+@api_router.delete("/availability/vacations/{vacation_id}")
+async def delete_vacation(vacation_id: str, request: Request):
+    """Delete a vacation period"""
+    user = await require_tutor(request)
+    tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Tutor profile not found")
+    
+    result = await db.vacations.delete_one({
+        "vacation_id": vacation_id,
+        "tutor_id": tutor["tutor_id"]
+    })
+    
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Vacation not found")
+    
+    return {"success": True, "message": "Vacation deleted"}
+
 @api_router.get("/tutors/{tutor_id}/availability")
 async def get_tutor_availability(tutor_id: str, from_date: str = None, to_date: str = None):
     """Get available time slots for a tutor"""
