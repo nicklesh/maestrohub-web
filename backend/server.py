@@ -207,10 +207,28 @@ class TutorProfile(TutorProfileCreate):
 class AvailabilityRule(BaseModel):
     rule_id: str = Field(default_factory=lambda: f"rule_{uuid.uuid4().hex[:12]}")
     tutor_id: str
-    day_of_week: int  # 0=Monday, 6=Sunday
+    day_of_week: int  # 0=Sunday, 1=Monday, etc.
     start_time: str  # HH:MM format
     end_time: str
     timezone: str = "America/New_York"
+
+class AvailabilityRuleCreate(BaseModel):
+    day_of_week: int  # 0=Sunday, 1=Monday, etc.
+    start_time: str  # HH:MM format
+    end_time: str
+    timezone: str = "America/New_York"
+
+class VacationPeriod(BaseModel):
+    vacation_id: str = Field(default_factory=lambda: f"vac_{uuid.uuid4().hex[:12]}")
+    tutor_id: str
+    start_date: str  # YYYY-MM-DD
+    end_date: str  # YYYY-MM-DD
+    reason: Optional[str] = None
+
+class VacationPeriodCreate(BaseModel):
+    start_date: str
+    end_date: str
+    reason: Optional[str] = None
 
 class AvailabilityException(BaseModel):
     exception_id: str = Field(default_factory=lambda: f"exc_{uuid.uuid4().hex[:12]}")
