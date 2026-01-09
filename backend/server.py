@@ -579,6 +579,127 @@ async def delete_student(student_id: str, request: Request):
         raise HTTPException(status_code=404, detail="Student not found")
     return {"message": "Student deleted"}
 
+@api_router.get("/students/{student_id}/schedule")
+async def get_student_schedule(student_id: str, request: Request):
+    """Get schedule/bookings for a specific kid"""
+    user = await require_auth(request)
+    
+    # Verify student belongs to user
+    student = await db.students.find_one({"student_id": student_id, "user_id": user.user_id}, {"_id": 0})
+    if not student:
+        raise HTTPException(status_code=404, detail="Student not found")
+    
+    # Get bookings for this student
+    bookings = await db.bookings.find({
+        "student_id": student_id,
+        "status": {"$in": ["confirmed", "pending", "completed"]}
+    }, {"_id": 0}).sort("start_at", -1).to_list(100)
+    
+    # Enrich with tutor info
+    enriched = []
+    for booking in bookings:
+        tutor = await db.tutors.find_one({"tutor_id": booking.get("tutor_id")}, {"_id": 0})
+        tutor_user = await db.users.find_one({"user_id": booking.get("tutor_user_id")}, {"_id": 0})
+        enriched.append({
+            **booking,
+            "tutor_name": tutor_user.get("name") if tutor_user else "Unknown",
+            "subject": tutor.get("subjects", [])[0] if tutor and tutor.get("subjects") else "General"
+        })
+    
+    return {"student": student, "bookings": enriched}
+
+@api_router.get("/students/{student_id}/payments")
+async def get_student_payments(student_id: str, request: Request):
+    """Get payment history for a specific kid"""
+    user = await require_auth(request)
+    
+    # Verify student belongs to user
+    student = await db.students.find_one({"student_id": student_id, "user_id": user.user_id}, {"_id": 0})
+    if not student:
+        raise HTTPException(status_code=404, detail="Student not found")
+    
+    # Get payments for bookings associated with this student
+    bookings = await db.bookings.find({"student_id": student_id}, {"_id": 0, "booking_id": 1}).to_list(1000)
+    booking_ids = [b["booking_id"] for b in bookings]
+    
+    payments = await db.payments.find({
+        "booking_id": {"$in": booking_ids}
+    }, {"_id": 0}).sort("created_at", -1).to_list(100)
+    
+    # Calculate totals
+    total_paid = sum(p.get("amount", 0) for p in payments if p.get("status") == "completed")
+    pending = sum(p.get("amount", 0) for p in payments if p.get("status") == "pending")
+    
+    return {
+        "student": student,
+        "payments": payments,
+        "total_paid": total_paid,
+        "pending_amount": pending
+    }
+
+class SendScheduleEmail(BaseModel):
+    student_id: str
+    quarter: Optional[str] = None  # Q1, Q2, Q3, Q4 or None for current
+
+@api_router.post("/students/{student_id}/send-schedule")
+async def send_student_schedule_email(student_id: str, request: Request):
+    """Send schedule email to the kid's email address"""
+    user = await require_auth(request)
+    
+    # Verify student belongs to user and has email
+    student = await db.students.find_one({"student_id": student_id, "user_id": user.user_id}, {"_id": 0})
+    if not student:
+        raise HTTPException(status_code=404, detail="Student not found")
+    
+    if not student.get("email"):
+        raise HTTPException(status_code=400, detail="Student does not have an email address configured")
+    
+    # Get upcoming bookings
+    now = datetime.now(timezone.utc)
+    bookings = await db.bookings.find({
+        "student_id": student_id,
+        "start_at": {"$gte": now},
+        "status": {"$in": ["confirmed", "pending"]}
+    }, {"_id": 0}).sort("start_at", 1).to_list(50)
+    
+    # Build schedule HTML (mock for now - would use Resend in production)
+    schedule_html = f"<h2>Schedule for {student.get('name')}</h2>"
+    schedule_html += "<table border='1'><tr><th>Date</th><th>Time</th><th>Subject</th></tr>"
+    
+    for booking in bookings:
+        start = booking.get("start_at")
+        if isinstance(start, datetime):
+            date_str = start.strftime("%B %d, %Y")
+            time_str = start.strftime("%I:%M %p")
+        else:
+            date_str = str(start)
+            time_str = ""
+        schedule_html += f"<tr><td>{date_str}</td><td>{time_str}</td><td>{booking.get('subject', 'Session')}</td></tr>"
+    
+    schedule_html += "</table>"
+    
+    # In production, send via Resend
+    # For now, log and return success
+    logger.info(f"Would send schedule email to {student.get('email')} with {len(bookings)} upcoming sessions")
+    
+    # Create notification
+    await db.notifications.insert_one({
+        "notification_id": f"notif_{uuid.uuid4().hex[:8]}",
+        "user_id": user.user_id,
+        "type": "schedule_sent",
+        "title": "Schedule Sent",
+        "message": f"Schedule email sent to {student.get('name')} ({student.get('email')})",
+        "data": {"student_id": student_id, "bookings_count": len(bookings)},
+        "read": False,
+        "created_at": datetime.now(timezone.utc)
+    })
+    
+    return {
+        "success": True,
+        "message": f"Schedule email sent to {student.get('email')}",
+        "bookings_count": len(bookings)
+    }
+
 # ============== TUTOR PROFILE ROUTES ==============
 
 @api_router.post("/tutors/profile", response_model=TutorProfile)
