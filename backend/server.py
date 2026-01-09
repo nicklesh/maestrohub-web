@@ -176,6 +176,7 @@ class TutorProfileCreate(BaseModel):
     service_area_radius: Optional[int] = 10  # miles
     base_price: float
     duration_minutes: int = 60
+    payout_country: Optional[str] = "US"  # ISO code: US, IN
     policies: TutorPolicies = TutorPolicies()
 
 class TutorProfile(TutorProfileCreate):
