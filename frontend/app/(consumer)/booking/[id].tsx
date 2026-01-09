@@ -422,6 +422,14 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     fontWeight: '600',
     color: colors.primary,
   },
+  studentAvatar: {
+    backgroundColor: colors.accent,
+  },
+  studentInitial: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
   personName: {
     flex: 1,
     fontSize: 16,
