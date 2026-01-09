@@ -183,7 +183,6 @@ class TutorProfile(TutorProfileCreate):
     tutor_id: str
     user_id: str
     market_id: Optional[str] = None  # US_USD, IN_INR - determined by payout_country
-    payout_country: Optional[str] = None  # ISO code: US, IN
     timezone: Optional[str] = None  # IANA timezone
     base_country: Optional[str] = None
     base_state: Optional[str] = None
