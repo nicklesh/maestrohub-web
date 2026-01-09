@@ -431,14 +431,25 @@ export default function ProfileScreen() {
           <TouchableOpacity 
             style={styles.modalBackdrop} 
             activeOpacity={1} 
-            onPress={() => setShowContactSheet(false)}
+            onPress={() => !contactSuccess && setShowContactSheet(false)}
           />
           <View style={[styles.bottomSheet, { backgroundColor: colors.surface, overflow: 'hidden' }]}>
             <View style={[styles.sheetHandle, { backgroundColor: colors.gray300 }]} />
-            <View style={styles.sheetHeader}>
-              <Ionicons name="mail" size={24} color={isDark ? '#FFD700' : colors.primary} />
-              <Text style={[styles.sheetTitle, { color: colors.text }]}>Contact Us</Text>
-            </View>
+            
+            {contactSuccess ? (
+              <View style={styles.successContainer}>
+                <Ionicons name="checkmark-circle" size={64} color={colors.success} />
+                <Text style={[styles.successTitle, { color: colors.text }]}>Message Sent!</Text>
+                <Text style={[styles.successText, { color: colors.textMuted }]}>
+                  We'll respond within 24-48 hours.
+                </Text>
+              </View>
+            ) : (
+              <>
+                <View style={styles.sheetHeader}>
+                  <Ionicons name="mail" size={24} color={isDark ? '#FFD700' : colors.primary} />
+                  <Text style={[styles.sheetTitle, { color: colors.text }]}>Contact Us</Text>
+                </View>
             
             <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Subject</Text>
             <TextInput
