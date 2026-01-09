@@ -32,12 +32,20 @@ interface BillingInfo {
   payment_methods: any[];
 }
 
+interface PaymentProviderInput {
+  providerId: string;
+  email?: string;
+  phone?: string;
+  username?: string;
+}
+
 const PAYMENT_PROVIDERS = [
-  { id: 'apple_pay', name: 'Apple Pay', icon: 'logo-apple', color: '#000000' },
-  { id: 'google_pay', name: 'Google Pay', icon: 'logo-google', color: '#4285F4' },
-  { id: 'paypal', name: 'PayPal', icon: 'logo-paypal', color: '#003087' },
-  { id: 'amazon_pay', name: 'Amazon Pay', icon: 'cart', color: '#FF9900' },
-  { id: 'card', name: 'Credit/Debit Card', icon: 'card', color: '#6366F1' },
+  { id: 'apple_pay', name: 'Apple Pay', icon: 'logo-apple', color: '#000000', inputType: 'email', placeholder: 'Apple ID Email' },
+  { id: 'google_pay', name: 'Google Pay', icon: 'logo-google', color: '#4285F4', inputType: 'email', placeholder: 'Google Email' },
+  { id: 'paypal', name: 'PayPal', icon: 'logo-paypal', color: '#003087', inputType: 'email', placeholder: 'PayPal Email' },
+  { id: 'amazon_pay', name: 'Amazon Pay', icon: 'cart', color: '#FF9900', inputType: 'email', placeholder: 'Amazon Email' },
+  { id: 'zelle', name: 'Zelle', icon: 'flash', color: '#6D1ED4', inputType: 'phone', placeholder: 'Phone or Email' },
+  { id: 'venmo', name: 'Venmo', icon: 'phone-portrait', color: '#008CFF', inputType: 'username', placeholder: '@username' },
 ];
 
 const DAY_OPTIONS = [1, 5, 10, 15, 20, 25, 28];
