@@ -16,6 +16,7 @@ import { useAuth } from '@/src/context/AuthContext';
 import { api } from '@/src/services/api';
 import { colors } from '@/src/theme/colors';
 import { format, parseISO, isToday, isTomorrow } from 'date-fns';
+import LogoHeader from '@/src/components/LogoHeader';
 
 interface Booking {
   booking_id: string;
@@ -159,9 +160,12 @@ export default function TutorDashboard() {
         }
       >
         <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
-          {/* Header */}
+          {/* Header with Logo */}
           <View style={styles.header}>
-            <View>
+            <View style={styles.headerLeft}>
+              <LogoHeader size="small" showTagline={false} alignment="left" />
+            </View>
+            <View style={styles.headerRight}>
               <Text style={styles.greeting}>Welcome back,</Text>
               <Text style={[styles.userName, isDesktop && styles.userNameDesktop]}>{user?.name?.split(' ')[0]}</Text>
             </View>
@@ -326,7 +330,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     padding: 20,
+  },
+  headerLeft: {
+    flex: 1,
+  },
+  headerRight: {
+    alignItems: 'flex-end',
   },
   greeting: {
     fontSize: 14,
