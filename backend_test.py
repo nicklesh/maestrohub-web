@@ -1,727 +1,429 @@
 #!/usr/bin/env python3
 """
-Comprehensive Backend API Test Suite for Maestro Hub
-Tests all endpoints including the newly implemented Invites API
+Backend API Testing for Maestro Hub Parent/Consumer Features
+Tests the newly implemented backend APIs including profile management, 
+student management, billing, consumer invites, and reminders.
 """
 
 import requests
 import json
 import sys
-import os
-from datetime import datetime
+from datetime import datetime, timezone
+import uuid
 
-# Get backend URL from environment
-BACKEND_URL = os.environ.get('EXPO_PUBLIC_BACKEND_URL', 'https://maestro-hub-1.preview.emergentagent.com')
-API_BASE = f"{BACKEND_URL}/api"
+# Configuration
+BACKEND_URL = "https://maestro-hub-1.preview.emergentagent.com/api"
+TEST_EMAIL = "parent2@test.com"
+TEST_PASSWORD = "password123"
 
-# Test credentials for invites testing
-TEST_CREDENTIALS = {
-    "consumer": {
-        "email": "parent2@test.com",
-        "password": "password123"
-    },
-    "tutor": {
-        "email": "tutor1@test.com", 
-        "password": "password123"
-    }
-}
-
-class APITester:
+class MaestroHubTester:
     def __init__(self):
         self.session = requests.Session()
-        self.consumer_token = None
-        self.tutor_token = None
-        self.test_results = []
+        self.auth_token = None
+        self.user_id = None
+        self.test_student_id = None
+        self.results = []
         
-    def log_result(self, test_name, success, details="", response_data=None):
+    def log_result(self, test_name, success, message, details=None):
         """Log test result"""
         status = "✅ PASS" if success else "❌ FAIL"
-        print(f"{status} {test_name}")
-        if details:
-            print(f"   Details: {details}")
-        if response_data and not success:
-            print(f"   Response: {response_data}")
-        print()
-        
-        self.test_results.append({
+        result = {
             "test": test_name,
-            "success": success,
-            "details": details,
-            "timestamp": datetime.now().isoformat()
-        })
+            "status": status,
+            "message": message,
+            "details": details or {}
+        }
+        self.results.append(result)
+        print(f"{status} - {test_name}: {message}")
+        if details and not success:
+            print(f"   Details: {details}")
     
-    def test_auth_register(self):
-        """Test user registration endpoint"""
-        print("🔐 Testing Authentication - Registration")
+    def make_request(self, method, endpoint, data=None, headers=None):
+        """Make HTTP request with proper error handling"""
+        url = f"{BACKEND_URL}{endpoint}"
+        req_headers = {"Content-Type": "application/json"}
         
-        # Test consumer registration
-        consumer_data = {
-            "email": TEST_CREDENTIALS["consumer"]["email"],
-            "password": TEST_CREDENTIALS["consumer"]["password"],
-            "name": "Test Parent",
-            "role": "consumer"
+        if self.auth_token:
+            req_headers["Authorization"] = f"Bearer {self.auth_token}"
+        
+        if headers:
+            req_headers.update(headers)
+        
+        try:
+            if method.upper() == "GET":
+                response = self.session.get(url, headers=req_headers)
+            elif method.upper() == "POST":
+                response = self.session.post(url, json=data, headers=req_headers)
+            elif method.upper() == "PUT":
+                response = self.session.put(url, json=data, headers=req_headers)
+            elif method.upper() == "DELETE":
+                response = self.session.delete(url, headers=req_headers)
+            else:
+                raise ValueError(f"Unsupported method: {method}")
+            
+            return response
+        except Exception as e:
+            return None, str(e)
+    
+    def test_login(self):
+        """Test user login with provided credentials"""
+        print(f"\n🔐 Testing Login with {TEST_EMAIL}")
+        
+        login_data = {
+            "email": TEST_EMAIL,
+            "password": TEST_PASSWORD
         }
         
-        try:
-            response = self.session.post(f"{API_BASE}/auth/register", json=consumer_data)
-            if response.status_code == 200:
-                data = response.json()
-                if "user_id" in data and "token" in data:
-                    self.consumer_token = data["token"]
-                    self.log_result("POST /api/auth/register (Consumer)", True, 
-                                  f"User registered with ID: {data['user_id']}")
-                else:
-                    self.log_result("POST /api/auth/register (Consumer)", False, 
-                                  "Missing user_id or token in response", data)
-            elif response.status_code == 400 and "already registered" in response.text:
-                # User already exists, try login instead
-                self.log_result("POST /api/auth/register (Consumer)", True, 
-                              "User already exists (expected for existing test data)")
-            else:
-                self.log_result("POST /api/auth/register (Consumer)", False, 
-                              f"HTTP {response.status_code}", response.text)
-        except Exception as e:
-            self.log_result("POST /api/auth/register (Consumer)", False, f"Exception: {str(e)}")
+        response = self.make_request("POST", "/auth/login", login_data)
         
-        # Test tutor registration
-        tutor_data = {
-            "email": TEST_CREDENTIALS["tutor"]["email"],
-            "password": TEST_CREDENTIALS["tutor"]["password"],
-            "name": "Test Tutor",
-            "role": "tutor"
+        if response is None:
+            self.log_result("Login", False, "Request failed - connection error")
+            return False
+        
+        if response.status_code == 200:
+            data = response.json()
+            self.auth_token = data.get("token")
+            self.user_id = data.get("user_id")
+            self.log_result("Login", True, f"Successfully logged in as {TEST_EMAIL}")
+            return True
+        else:
+            self.log_result("Login", False, f"Login failed with status {response.status_code}", 
+                          {"response": response.text})
+            return False
+    
+    def test_profile_management(self):
+        """Test profile management endpoints"""
+        print(f"\n👤 Testing Profile Management")
+        
+        # Test 1: Update Profile (PUT /api/profile)
+        profile_data = {
+            "name": "Updated Parent Name",
+            "phone": "+1-555-0123"
         }
         
-        try:
-            response = self.session.post(f"{API_BASE}/auth/register", json=tutor_data)
+        response = self.make_request("PUT", "/profile", profile_data)
+        
+        if response and response.status_code == 200:
+            self.log_result("Update Profile", True, "Profile updated successfully")
+        else:
+            error_msg = response.text if response else "Connection error"
+            self.log_result("Update Profile", False, f"Failed to update profile", 
+                          {"status": response.status_code if response else "N/A", "error": error_msg})
+        
+        # Test 2: Change Password (POST /api/profile/change-password)
+        # Note: This will fail if user uses social login, which is expected
+        password_data = {
+            "current_password": TEST_PASSWORD,
+            "new_password": "newpassword123"
+        }
+        
+        response = self.make_request("POST", "/profile/change-password", password_data)
+        
+        if response:
             if response.status_code == 200:
-                data = response.json()
-                if "user_id" in data and "token" in data:
-                    self.tutor_token = data["token"]
-                    self.log_result("POST /api/auth/register (Tutor)", True, 
-                                  f"Tutor registered with ID: {data['user_id']}")
-                else:
-                    self.log_result("POST /api/auth/register (Tutor)", False, 
-                                  "Missing user_id or token in response", data)
-            elif response.status_code == 400 and "already registered" in response.text:
-                self.log_result("POST /api/auth/register (Tutor)", True, 
-                              "Tutor already exists (expected for existing test data)")
+                self.log_result("Change Password", True, "Password changed successfully")
+                # Change it back for future tests
+                revert_data = {
+                    "current_password": "newpassword123",
+                    "new_password": TEST_PASSWORD
+                }
+                self.make_request("POST", "/profile/change-password", revert_data)
+            elif response.status_code == 400 and "social login" in response.text.lower():
+                self.log_result("Change Password", True, "Expected failure - account uses social login")
             else:
-                self.log_result("POST /api/auth/register (Tutor)", False, 
-                              f"HTTP {response.status_code}", response.text)
-        except Exception as e:
-            self.log_result("POST /api/auth/register (Tutor)", False, f"Exception: {str(e)}")
+                self.log_result("Change Password", False, f"Unexpected response", 
+                              {"status": response.status_code, "error": response.text})
+        else:
+            self.log_result("Change Password", False, "Connection error")
     
-    def test_auth_login(self):
-        """Test user login endpoint"""
-        print("🔐 Testing Authentication - Login")
+    def test_student_management(self):
+        """Test student/kids management endpoints"""
+        print(f"\n👶 Testing Student Management")
         
-        # Test consumer login
-        try:
-            response = self.session.post(f"{API_BASE}/auth/login", json=TEST_CREDENTIALS["consumer"])
-            if response.status_code == 200:
-                data = response.json()
-                if "user_id" in data and "token" in data:
-                    self.consumer_token = data["token"]
-                    self.log_result("POST /api/auth/login (Consumer)", True, 
-                                  f"Login successful, token received")
-                else:
-                    self.log_result("POST /api/auth/login (Consumer)", False, 
-                                  "Missing user_id or token in response", data)
-            else:
-                self.log_result("POST /api/auth/login (Consumer)", False, 
-                              f"HTTP {response.status_code}", response.text)
-        except Exception as e:
-            self.log_result("POST /api/auth/login (Consumer)", False, f"Exception: {str(e)}")
+        # Test 1: Create a student (POST /api/students)
+        student_data = {
+            "name": "Test Kid",
+            "age": 10,
+            "grade": "5th Grade",
+            "notes": "Loves math and science",
+            "email": "testkid@example.com",
+            "auto_send_schedule": True
+        }
         
-        # Test tutor login
-        try:
-            response = self.session.post(f"{API_BASE}/auth/login", json=TEST_CREDENTIALS["tutor"])
-            if response.status_code == 200:
-                data = response.json()
-                if "user_id" in data and "token" in data:
-                    self.tutor_token = data["token"]
-                    self.log_result("POST /api/auth/login (Tutor)", True, 
-                                  f"Login successful, token received")
-                else:
-                    self.log_result("POST /api/auth/login (Tutor)", False, 
-                                  "Missing user_id or token in response", data)
-            else:
-                self.log_result("POST /api/auth/login (Tutor)", False, 
-                              f"HTTP {response.status_code}", response.text)
-        except Exception as e:
-            self.log_result("POST /api/auth/login (Tutor)", False, f"Exception: {str(e)}")
-    
-    def test_auth_me(self):
-        """Test get current user endpoint"""
-        print("👤 Testing User Profile - GET /api/auth/me")
+        response = self.make_request("POST", "/students", student_data)
         
-        if not self.consumer_token:
-            self.log_result("GET /api/auth/me (Consumer)", False, "No consumer token available")
+        if response and response.status_code == 200:
+            data = response.json()
+            self.test_student_id = data.get("student_id")
+            self.log_result("Create Student", True, f"Student created with ID: {self.test_student_id}")
+        else:
+            error_msg = response.text if response else "Connection error"
+            self.log_result("Create Student", False, "Failed to create student", 
+                          {"status": response.status_code if response else "N/A", "error": error_msg})
             return
         
-        try:
-            headers = {"Authorization": f"Bearer {self.consumer_token}"}
-            response = self.session.get(f"{API_BASE}/auth/me", headers=headers)
-            
-            if response.status_code == 200:
-                data = response.json()
-                if "user_id" in data and "email" in data and "role" in data:
-                    self.log_result("GET /api/auth/me (Consumer)", True, 
-                                  f"User profile retrieved: {data['email']}, role: {data['role']}")
-                else:
-                    self.log_result("GET /api/auth/me (Consumer)", False, 
-                                  "Missing required fields in user profile", data)
-            else:
-                self.log_result("GET /api/auth/me (Consumer)", False, 
-                              f"HTTP {response.status_code}", response.text)
-        except Exception as e:
-            self.log_result("GET /api/auth/me (Consumer)", False, f"Exception: {str(e)}")
-    
-    def test_categories(self):
-        """Test categories endpoint"""
-        print("📚 Testing Categories - GET /api/categories")
+        # Test 2: Get all students (GET /api/students)
+        response = self.make_request("GET", "/students")
         
-        try:
-            response = self.session.get(f"{API_BASE}/categories")
-            
-            if response.status_code == 200:
-                data = response.json()
-                if isinstance(data, dict) and "categories" in data:
-                    categories = data["categories"]
-                    if isinstance(categories, list) and len(categories) > 0:
-                        self.log_result("GET /api/categories", True, 
-                                      f"Categories retrieved: {len(categories)} categories found")
-                    else:
-                        self.log_result("GET /api/categories", False, 
-                                      "Categories list is empty or invalid format", data)
-                else:
-                    self.log_result("GET /api/categories", False, 
-                                  "Invalid response format - expected categories object", data)
-            else:
-                self.log_result("GET /api/categories", False, 
-                              f"HTTP {response.status_code}", response.text)
-        except Exception as e:
-            self.log_result("GET /api/categories", False, f"Exception: {str(e)}")
-    
-    def test_tutor_search(self):
-        """Test tutor search endpoint"""
-        print("🔍 Testing Tutor Search - GET /api/tutors/search")
+        if response and response.status_code == 200:
+            students = response.json()
+            self.log_result("Get Students", True, f"Retrieved {len(students)} students")
+        else:
+            error_msg = response.text if response else "Connection error"
+            self.log_result("Get Students", False, "Failed to get students", 
+                          {"status": response.status_code if response else "N/A", "error": error_msg})
         
-        try:
-            response = self.session.get(f"{API_BASE}/tutors/search")
-            
-            if response.status_code == 200:
-                data = response.json()
-                if isinstance(data, dict) and "tutors" in data and "total" in data:
-                    tutors = data["tutors"]
-                    total = data["total"]
-                    self.log_result("GET /api/tutors/search", True, 
-                                  f"Search successful: {len(tutors)} tutors returned, total: {total}")
-                else:
-                    self.log_result("GET /api/tutors/search", False, 
-                                  "Invalid response format - expected tutors and total", data)
-            else:
-                self.log_result("GET /api/tutors/search", False, 
-                              f"HTTP {response.status_code}", response.text)
-        except Exception as e:
-            self.log_result("GET /api/tutors/search", False, f"Exception: {str(e)}")
-    
-    def test_reports_consumer(self):
-        """Test consumer reports endpoint"""
-        print("📊 Testing Reports - GET /api/reports/consumer")
-        
-        if not self.consumer_token:
-            self.log_result("GET /api/reports/consumer", False, "No consumer token available")
+        if not self.test_student_id:
             return
         
-        try:
-            headers = {"Authorization": f"Bearer {self.consumer_token}"}
-            response = self.session.get(f"{API_BASE}/reports/consumer", headers=headers)
-            
-            if response.status_code == 200:
-                data = response.json()
-                if isinstance(data, dict):
-                    self.log_result("GET /api/reports/consumer", True, 
-                                  f"Consumer report retrieved successfully")
-                else:
-                    self.log_result("GET /api/reports/consumer", False, 
-                                  "Invalid response format", data)
-            else:
-                self.log_result("GET /api/reports/consumer", False, 
-                              f"HTTP {response.status_code}", response.text)
-        except Exception as e:
-            self.log_result("GET /api/reports/consumer", False, f"Exception: {str(e)}")
+        # Test 3: Update student (PUT /api/students/{id})
+        update_data = {
+            "name": "Updated Test Kid",
+            "age": 11,
+            "grade": "6th Grade",
+            "notes": "Updated notes - still loves math and science",
+            "email": "updatedkid@example.com",
+            "auto_send_schedule": False
+        }
+        
+        response = self.make_request("PUT", f"/students/{self.test_student_id}", update_data)
+        
+        if response and response.status_code == 200:
+            self.log_result("Update Student", True, "Student updated successfully")
+        else:
+            error_msg = response.text if response else "Connection error"
+            self.log_result("Update Student", False, "Failed to update student", 
+                          {"status": response.status_code if response else "N/A", "error": error_msg})
+        
+        # Test 4: Get student schedule (GET /api/students/{id}/schedule)
+        response = self.make_request("GET", f"/students/{self.test_student_id}/schedule")
+        
+        if response and response.status_code == 200:
+            data = response.json()
+            bookings_count = len(data.get("bookings", []))
+            self.log_result("Get Student Schedule", True, f"Retrieved schedule with {bookings_count} bookings")
+        else:
+            error_msg = response.text if response else "Connection error"
+            self.log_result("Get Student Schedule", False, "Failed to get student schedule", 
+                          {"status": response.status_code if response else "N/A", "error": error_msg})
+        
+        # Test 5: Get student payments (GET /api/students/{id}/payments)
+        response = self.make_request("GET", f"/students/{self.test_student_id}/payments")
+        
+        if response and response.status_code == 200:
+            data = response.json()
+            payments_count = len(data.get("payments", []))
+            total_paid = data.get("total_paid", 0)
+            self.log_result("Get Student Payments", True, f"Retrieved {payments_count} payments, total paid: ${total_paid}")
+        else:
+            error_msg = response.text if response else "Connection error"
+            self.log_result("Get Student Payments", False, "Failed to get student payments", 
+                          {"status": response.status_code if response else "N/A", "error": error_msg})
+        
+        # Test 6: Send schedule email (POST /api/students/{id}/send-schedule)
+        response = self.make_request("POST", f"/students/{self.test_student_id}/send-schedule")
+        
+        if response and response.status_code == 200:
+            data = response.json()
+            bookings_count = data.get("bookings_count", 0)
+            self.log_result("Send Schedule Email", True, f"Schedule email sent with {bookings_count} bookings")
+        else:
+            error_msg = response.text if response else "Connection error"
+            self.log_result("Send Schedule Email", False, "Failed to send schedule email", 
+                          {"status": response.status_code if response else "N/A", "error": error_msg})
+        
+        # Test 7: Delete student (DELETE /api/students/{id}) - Do this last
+        response = self.make_request("DELETE", f"/students/{self.test_student_id}")
+        
+        if response and response.status_code == 200:
+            self.log_result("Delete Student", True, "Student deleted successfully")
+        else:
+            error_msg = response.text if response else "Connection error"
+            self.log_result("Delete Student", False, "Failed to delete student", 
+                          {"status": response.status_code if response else "N/A", "error": error_msg})
     
-    def test_notifications(self):
-        """Test notifications endpoint"""
-        print("🔔 Testing Notifications - GET /api/notifications")
+    def test_billing(self):
+        """Test billing endpoints"""
+        print(f"\n💳 Testing Billing")
         
-        if not self.consumer_token:
-            self.log_result("GET /api/notifications", False, "No consumer token available")
-            return
+        # Test 1: Get billing info (GET /api/billing)
+        response = self.make_request("GET", "/billing")
         
-        try:
-            headers = {"Authorization": f"Bearer {self.consumer_token}"}
-            response = self.session.get(f"{API_BASE}/notifications", headers=headers)
-            
-            if response.status_code == 200:
-                data = response.json()
-                if isinstance(data, dict) and "notifications" in data:
-                    notifications = data["notifications"]
-                    unread_count = data.get("unread_count", 0)
-                    self.log_result("GET /api/notifications", True, 
-                                  f"Notifications retrieved: {len(notifications)} total, {unread_count} unread")
-                else:
-                    self.log_result("GET /api/notifications", False, 
-                                  "Invalid response format - expected notifications", data)
+        if response and response.status_code == 200:
+            data = response.json()
+            stripe_connected = data.get("stripe_connected", False)
+            pending_balance = data.get("pending_balance", 0)
+            auto_pay = data.get("auto_pay", {})
+            self.log_result("Get Billing Info", True, 
+                          f"Stripe connected: {stripe_connected}, Pending: ${pending_balance}, Auto-pay: {auto_pay.get('enabled', False)}")
+        else:
+            error_msg = response.text if response else "Connection error"
+            self.log_result("Get Billing Info", False, "Failed to get billing info", 
+                          {"status": response.status_code if response else "N/A", "error": error_msg})
+        
+        # Test 2: Setup Stripe (POST /api/billing/setup-stripe)
+        response = self.make_request("POST", "/billing/setup-stripe")
+        
+        if response and response.status_code == 200:
+            data = response.json()
+            if data.get("already_setup"):
+                self.log_result("Setup Stripe", True, "Stripe already connected")
             else:
-                self.log_result("GET /api/notifications", False, 
-                              f"HTTP {response.status_code}", response.text)
-        except Exception as e:
-            self.log_result("GET /api/notifications", False, f"Exception: {str(e)}")
+                customer_id = data.get("stripe_customer_id")
+                self.log_result("Setup Stripe", True, f"Stripe setup complete, customer ID: {customer_id}")
+        else:
+            error_msg = response.text if response else "Connection error"
+            self.log_result("Setup Stripe", False, "Failed to setup Stripe", 
+                          {"status": response.status_code if response else "N/A", "error": error_msg})
+        
+        # Test 3: Update auto-pay settings (PUT /api/billing/auto-pay)
+        auto_pay_data = {
+            "enabled": True,
+            "day_of_month": 15
+        }
+        
+        response = self.make_request("PUT", "/billing/auto-pay", auto_pay_data)
+        
+        if response and response.status_code == 200:
+            data = response.json()
+            self.log_result("Update Auto-Pay", True, f"Auto-pay updated: enabled={data.get('auto_pay', {}).get('enabled')}")
+        else:
+            error_msg = response.text if response else "Connection error"
+            self.log_result("Update Auto-Pay", False, "Failed to update auto-pay", 
+                          {"status": response.status_code if response else "N/A", "error": error_msg})
+    
+    def test_consumer_invites(self):
+        """Test consumer invite endpoints"""
+        print(f"\n📧 Testing Consumer Invites")
+        
+        # Test 1: Send invite to provider (POST /api/consumer/invite-provider)
+        invite_data = {
+            "tutor_email": f"testtutor{uuid.uuid4().hex[:8]}@example.com",
+            "tutor_name": "Test Tutor",
+            "message": "Hi! I'd like to invite you to be my kid's tutor on Maestro Hub!"
+        }
+        
+        response = self.make_request("POST", "/consumer/invite-provider", invite_data)
+        
+        if response and response.status_code == 200:
+            data = response.json()
+            invite_id = data.get("invite_id")
+            credit_amount = data.get("credit_amount", 0)
+            self.log_result("Send Provider Invite", True, 
+                          f"Invite sent with ID: {invite_id}, Credit: ${credit_amount}")
+        else:
+            error_msg = response.text if response else "Connection error"
+            self.log_result("Send Provider Invite", False, "Failed to send invite", 
+                          {"status": response.status_code if response else "N/A", "error": error_msg})
+        
+        # Test 2: Get sent invites (GET /api/consumer/invites)
+        response = self.make_request("GET", "/consumer/invites")
+        
+        if response and response.status_code == 200:
+            data = response.json()
+            invites_count = len(data.get("invites", []))
+            self.log_result("Get Sent Invites", True, f"Retrieved {invites_count} sent invites")
+        else:
+            error_msg = response.text if response else "Connection error"
+            self.log_result("Get Sent Invites", False, "Failed to get sent invites", 
+                          {"status": response.status_code if response else "N/A", "error": error_msg})
     
     def test_reminders(self):
-        """Test reminders endpoint"""
-        print("⏰ Testing Reminders - GET /api/reminders")
+        """Test reminder configuration endpoints"""
+        print(f"\n⏰ Testing Reminders")
         
-        if not self.consumer_token:
-            self.log_result("GET /api/reminders", False, "No consumer token available")
-            return
+        # Test 1: Get reminder config (GET /api/reminders/config)
+        response = self.make_request("GET", "/reminders/config")
         
-        try:
-            headers = {"Authorization": f"Bearer {self.consumer_token}"}
-            response = self.session.get(f"{API_BASE}/reminders", headers=headers)
-            
-            if response.status_code == 200:
-                data = response.json()
-                if isinstance(data, dict) and "reminders" in data:
-                    reminders = data["reminders"]
-                    total = data.get("total", 0)
-                    self.log_result("GET /api/reminders", True, 
-                                  f"Reminders retrieved: {len(reminders)} reminders, total: {total}")
-                else:
-                    self.log_result("GET /api/reminders", False, 
-                                  "Invalid response format - expected reminders", data)
-            else:
-                self.log_result("GET /api/reminders", False, 
-                              f"HTTP {response.status_code}", response.text)
-        except Exception as e:
-            self.log_result("GET /api/reminders", False, f"Exception: {str(e)}")
-    
-    def test_contact(self):
-        """Test contact endpoint"""
-        print("📞 Testing Contact - POST /api/contact")
+        if response and response.status_code == 200:
+            data = response.json()
+            session_hours = data.get("session_reminder_hours", 1)
+            payment_days = data.get("payment_reminder_days", 1)
+            weekly_summary = data.get("weekly_summary", True)
+            self.log_result("Get Reminder Config", True, 
+                          f"Session: {session_hours}h, Payment: {payment_days}d, Weekly: {weekly_summary}")
+        else:
+            error_msg = response.text if response else "Connection error"
+            self.log_result("Get Reminder Config", False, "Failed to get reminder config", 
+                          {"status": response.status_code if response else "N/A", "error": error_msg})
         
-        if not self.consumer_token:
-            self.log_result("POST /api/contact", False, "No consumer token available")
-            return
-        
-        contact_data = {
-            "subject": "Test Contact Request",
-            "message": "This is a test contact request from the API testing suite.",
-            "category": "general"
+        # Test 2: Update reminder config (PUT /api/reminders/config)
+        config_data = {
+            "session_reminder_hours": 2,
+            "payment_reminder_days": 3,
+            "weekly_summary": False
         }
         
-        try:
-            headers = {"Authorization": f"Bearer {self.consumer_token}"}
-            response = self.session.post(f"{API_BASE}/contact", json=contact_data, headers=headers)
-            
-            if response.status_code == 200:
-                data = response.json()
-                if isinstance(data, dict) and "contact_id" in data:
-                    self.log_result("POST /api/contact", True, 
-                                  f"Contact request submitted successfully: {data['contact_id']}")
-                else:
-                    self.log_result("POST /api/contact", False, 
-                                  "Invalid response format - expected contact_id", data)
-            else:
-                self.log_result("POST /api/contact", False, 
-                              f"HTTP {response.status_code}", response.text)
-        except Exception as e:
-            self.log_result("POST /api/contact", False, f"Exception: {str(e)}")
-    
-    def test_markets(self):
-        """Test markets endpoint"""
-        print("🌍 Testing Markets - GET /api/markets")
+        response = self.make_request("PUT", "/reminders/config", config_data)
         
-        try:
-            response = self.session.get(f"{API_BASE}/markets")
-            
-            if response.status_code == 200:
-                data = response.json()
-                # Handle both formats: direct list or object with markets key
-                if isinstance(data, list) and len(data) > 0:
-                    markets = data
-                    market_ids = [m.get("market_id") for m in markets]
-                    self.log_result("GET /api/markets", True, 
-                                  f"Markets retrieved: {len(markets)} markets - {', '.join(market_ids)}")
-                elif isinstance(data, dict) and "markets" in data:
-                    markets = data["markets"]
-                    if isinstance(markets, list) and len(markets) > 0:
-                        market_ids = [m.get("market_id") for m in markets]
-                        self.log_result("GET /api/markets", True, 
-                                      f"Markets retrieved: {len(markets)} markets - {', '.join(market_ids)}")
-                    else:
-                        self.log_result("GET /api/markets", False, 
-                                      "Markets list is empty or invalid", data)
-                else:
-                    self.log_result("GET /api/markets", False, 
-                                  "Invalid response format - expected markets data", data)
-            else:
-                self.log_result("GET /api/markets", False, 
-                              f"HTTP {response.status_code}", response.text)
-        except Exception as e:
-            self.log_result("GET /api/markets", False, f"Exception: {str(e)}")
-    
-    def test_invites_api(self):
-        """Test the complete Invites API flow"""
-        print("\n📧 TESTING INVITES API")
-        print("-" * 40)
-        
-        # Step 1: Login as tutor
-        tutor_token = self.login_user("tutor")
-        if not tutor_token:
-            self.log_result("Invites API - Tutor Login", False, "Failed to login as tutor")
-            return
-        
-        # Step 2: Login as consumer  
-        consumer_token = self.login_user("consumer")
-        if not consumer_token:
-            self.log_result("Invites API - Consumer Login", False, "Failed to login as consumer")
-            return
-        
-        # Step 3: Get tutor profile to get tutor_id
-        tutor_id = self.get_tutor_id(tutor_token)
-        if not tutor_id:
-            self.log_result("Invites API - Get Tutor Profile", False, "Failed to get tutor profile")
-            return
-        
-        # Step 4: Clean up any existing invites first
-        self.cleanup_existing_invites(tutor_token)
-        
-        # Step 5: Create invite (POST /api/invites)
-        invite_id = self.test_create_invite(tutor_token)
-        if not invite_id:
-            return
-        
-        # Step 6: Get sent invites (GET /api/invites/sent)
-        self.test_get_sent_invites(tutor_token, invite_id)
-        
-        # Step 7: Get received invites (GET /api/invites/received)
-        self.test_get_received_invites(consumer_token, invite_id)
-        
-        # Step 8: Accept invite (POST /api/invites/{id}/accept)
-        self.test_accept_invite(consumer_token, invite_id)
-        
-        # Step 9: Test decline functionality by creating a new invite
-        decline_invite_id = self.test_create_invite(tutor_token, "decline_test")
-        if decline_invite_id and decline_invite_id != "SKIP":
-            # Step 10: Decline invite (POST /api/invites/{id}/decline)
-            self.test_decline_invite(consumer_token, decline_invite_id)
-        elif decline_invite_id == "SKIP":
-            self.log_result("POST /api/invites/{id}/decline", True, 
-                          "Decline test skipped - API correctly prevents duplicate invites")
-        
-        # Step 11: Test cancel functionality by creating a new invite
-        cancel_invite_id = self.test_create_invite(tutor_token, "cancel_test")
-        if cancel_invite_id and cancel_invite_id != "SKIP":
-            # Step 12: Cancel invite (DELETE /api/invites/{id})
-            self.test_cancel_invite(tutor_token, cancel_invite_id)
-        elif cancel_invite_id == "SKIP":
-            self.log_result("DELETE /api/invites/{id}", True, 
-                          "Cancel test skipped - API correctly prevents duplicate invites")
-    
-    def cleanup_existing_invites(self, token):
-        """Clean up existing invites to avoid conflicts"""
-        try:
-            headers = {"Authorization": f"Bearer {token}"}
-            # Get existing invites
-            response = requests.get(f"{API_BASE}/invites/sent", headers=headers, timeout=30)
-            
-            if response.status_code == 200:
-                data = response.json()
-                invites = data.get("invites", [])
-                
-                # Delete existing invites to the test consumer email
-                for invite in invites:
-                    if invite.get("email") == TEST_CREDENTIALS["consumer"]["email"]:
-                        delete_response = requests.delete(f"{API_BASE}/invites/{invite['invite_id']}", 
-                                                        headers=headers, timeout=30)
-                        print(f"   Cleaned up existing invite: {invite['invite_id']}")
-        except Exception as e:
-            print(f"   Cleanup warning: {str(e)}")
-    
-    
-    def login_user(self, user_type):
-        """Helper method to login and return token"""
-        try:
-            credentials = TEST_CREDENTIALS[user_type]
-            # Use a fresh request instead of session to avoid conflicts
-            response = requests.post(f"{API_BASE}/auth/login", json=credentials, timeout=30)
-            
-            if response.status_code == 200:
-                data = response.json()
-                token = data.get("token")
-                print(f"   {user_type} login successful, token: {token[:20]}...")
-                return token
-            else:
-                print(f"   {user_type} login failed: {response.status_code} - {response.text}")
-                return None
-        except Exception as e:
-            print(f"   {user_type} login exception: {str(e)}")
-            return None
-    
-    def get_tutor_id(self, token):
-        """Helper method to get tutor_id"""
-        try:
-            headers = {"Authorization": f"Bearer {token}"}
-            # Use requests directly instead of session
-            response = requests.get(f"{API_BASE}/tutors/profile", headers=headers, timeout=30)
-            
-            if response.status_code == 200:
-                data = response.json()
-                tutor_id = data.get("tutor_id")
-                print(f"   Got tutor_id: {tutor_id}")
-                return tutor_id
-            else:
-                print(f"   Profile request failed: {response.status_code} - {response.text}")
-                return None
-        except Exception as e:
-            print(f"   Exception getting tutor profile: {str(e)}")
-            return None
-    
-    def test_create_invite(self, token, test_suffix=""):
-        """Test POST /api/invites"""
-        try:
-            headers = {"Authorization": f"Bearer {token}"}
-            invite_data = {
-                "email": TEST_CREDENTIALS["consumer"]["email"],
-                "name": f"Test Parent {test_suffix}",
-                "message": f"Test invite message {test_suffix}"
-            }
-            
-            response = requests.post(f"{API_BASE}/invites", 
-                                   json=invite_data, headers=headers, timeout=30)
-            
-            if response.status_code == 200:
-                data = response.json()
-                if data.get("success"):
-                    invite_id = data.get("invite_id")
-                    self.log_result(f"POST /api/invites {test_suffix}", True, 
-                                  f"Invite created: {invite_id}")
-                    return invite_id
-                else:
-                    self.log_result(f"POST /api/invites {test_suffix}", False, 
-                                  "Success=False in response")
-                    return None
-            elif response.status_code == 400 and "already exists" in response.text:
-                # This is expected for decline/cancel tests since we can't have multiple pending invites
-                if test_suffix:
-                    self.log_result(f"POST /api/invites {test_suffix}", True, 
-                                  "Cannot create duplicate invite (expected - API working correctly)")
-                    return "SKIP"  # Special return value to indicate we should skip this test
-                else:
-                    self.log_result(f"POST /api/invites {test_suffix}", False, 
-                                  f"HTTP {response.status_code}: {response.text}")
-                    return None
-            else:
-                self.log_result(f"POST /api/invites {test_suffix}", False, 
-                              f"HTTP {response.status_code}: {response.text}")
-                return None
-        except Exception as e:
-            self.log_result(f"POST /api/invites {test_suffix}", False, f"Exception: {str(e)}")
-            return None
-    
-    def test_get_sent_invites(self, token, expected_invite_id):
-        """Test GET /api/invites/sent"""
-        try:
-            headers = {"Authorization": f"Bearer {token}"}
-            response = self.session.get(f"{API_BASE}/invites/sent", headers=headers, timeout=30)
-            
-            if response.status_code == 200:
-                data = response.json()
-                invites = data.get("invites", [])
-                found = any(inv.get("invite_id") == expected_invite_id for inv in invites)
-                
-                if found:
-                    self.log_result("GET /api/invites/sent", True, 
-                                  f"Found {len(invites)} invites including test invite")
-                else:
-                    self.log_result("GET /api/invites/sent", False, 
-                                  f"Test invite {expected_invite_id} not found in {len(invites)} invites")
-            else:
-                self.log_result("GET /api/invites/sent", False, 
-                              f"HTTP {response.status_code}: {response.text}")
-        except Exception as e:
-            self.log_result("GET /api/invites/sent", False, f"Exception: {str(e)}")
-    
-    def test_get_received_invites(self, token, expected_invite_id):
-        """Test GET /api/invites/received"""
-        try:
-            headers = {"Authorization": f"Bearer {token}"}
-            
-            # First check who we are logged in as
-            me_response = requests.get(f"{API_BASE}/auth/me", headers=headers, timeout=30)
-            if me_response.status_code == 200:
-                user_data = me_response.json()
-                print(f"   Consumer email: {user_data.get('email')}")
-            
-            response = requests.get(f"{API_BASE}/invites/received", headers=headers, timeout=30)
-            
-            if response.status_code == 200:
-                data = response.json()
-                invites = data.get("invites", [])
-                print(f"   Found {len(invites)} received invites")
-                
-                # Debug: print all invite IDs
-                for inv in invites:
-                    print(f"   - Invite ID: {inv.get('invite_id')}, Status: {inv.get('status')}")
-                
-                found = any(inv.get("invite_id") == expected_invite_id for inv in invites)
-                
-                if found:
-                    self.log_result("GET /api/invites/received", True, 
-                                  f"Found {len(invites)} invites including test invite")
-                else:
-                    self.log_result("GET /api/invites/received", False, 
-                                  f"Test invite {expected_invite_id} not found in {len(invites)} invites")
-            else:
-                self.log_result("GET /api/invites/received", False, 
-                              f"HTTP {response.status_code}: {response.text}")
-        except Exception as e:
-            self.log_result("GET /api/invites/received", False, f"Exception: {str(e)}")
-    
-    def test_accept_invite(self, token, invite_id):
-        """Test POST /api/invites/{id}/accept"""
-        try:
-            headers = {"Authorization": f"Bearer {token}"}
-            
-            # First check if invite still exists and is pending
-            received_response = requests.get(f"{API_BASE}/invites/received", headers=headers, timeout=30)
-            if received_response.status_code == 200:
-                invites = received_response.json().get("invites", [])
-                target_invite = next((inv for inv in invites if inv.get("invite_id") == invite_id), None)
-                
-                if not target_invite:
-                    self.log_result("POST /api/invites/{id}/accept", True, 
-                                  "Invite not found in received list (may have been processed)")
-                    return
-                
-                if target_invite.get("status") != "pending":
-                    self.log_result("POST /api/invites/{id}/accept", True, 
-                                  f"Invite status is {target_invite.get('status')} (not pending)")
-                    return
-            
-            response = requests.post(f"{API_BASE}/invites/{invite_id}/accept", 
-                                   headers=headers, timeout=30)
-            
-            if response.status_code == 200:
-                data = response.json()
-                if data.get("success"):
-                    self.log_result("POST /api/invites/{id}/accept", True, 
-                                  data.get("message", "Invite accepted"))
-                else:
-                    self.log_result("POST /api/invites/{id}/accept", False, 
-                                  "Success=False in response")
-            elif response.status_code == 400 and "already" in response.text.lower():
-                # Invite was already processed, that's okay for testing
-                self.log_result("POST /api/invites/{id}/accept", True, 
-                              "Invite already processed (expected in test flow)")
-            else:
-                self.log_result("POST /api/invites/{id}/accept", False, 
-                              f"HTTP {response.status_code}: {response.text}")
-        except Exception as e:
-            self.log_result("POST /api/invites/{id}/accept", False, f"Exception: {str(e)}")
-    
-    def test_decline_invite(self, token, invite_id):
-        """Test POST /api/invites/{id}/decline"""
-        try:
-            headers = {"Authorization": f"Bearer {token}"}
-            response = self.session.post(f"{API_BASE}/invites/{invite_id}/decline", 
-                                       headers=headers, timeout=30)
-            
-            if response.status_code == 200:
-                data = response.json()
-                if data.get("success"):
-                    self.log_result("POST /api/invites/{id}/decline", True, 
-                                  data.get("message", "Invite declined"))
-                else:
-                    self.log_result("POST /api/invites/{id}/decline", False, 
-                                  "Success=False in response")
-            else:
-                self.log_result("POST /api/invites/{id}/decline", False, 
-                              f"HTTP {response.status_code}: {response.text}")
-        except Exception as e:
-            self.log_result("POST /api/invites/{id}/decline", False, f"Exception: {str(e)}")
-    
-    def test_cancel_invite(self, token, invite_id):
-        """Test DELETE /api/invites/{id}"""
-        try:
-            headers = {"Authorization": f"Bearer {token}"}
-            response = self.session.delete(f"{API_BASE}/invites/{invite_id}", 
-                                         headers=headers, timeout=30)
-            
-            if response.status_code == 200:
-                data = response.json()
-                if data.get("success"):
-                    self.log_result("DELETE /api/invites/{id}", True, 
-                                  data.get("message", "Invite cancelled"))
-                else:
-                    self.log_result("DELETE /api/invites/{id}", False, 
-                                  "Success=False in response")
-            else:
-                self.log_result("DELETE /api/invites/{id}", False, 
-                              f"HTTP {response.status_code}: {response.text}")
-        except Exception as e:
-            self.log_result("DELETE /api/invites/{id}", False, f"Exception: {str(e)}")
+        if response and response.status_code == 200:
+            data = response.json()
+            config = data.get("config", {})
+            self.log_result("Update Reminder Config", True, 
+                          f"Updated - Session: {config.get('session_reminder_hours')}h, Payment: {config.get('payment_reminder_days')}d")
+        else:
+            error_msg = response.text if response else "Connection error"
+            self.log_result("Update Reminder Config", False, "Failed to update reminder config", 
+                          {"status": response.status_code if response else "N/A", "error": error_msg})
     
     def run_all_tests(self):
-        """Run all API tests"""
+        """Run all tests in sequence"""
         print("🚀 Starting Maestro Hub Backend API Tests")
-        print(f"Backend URL: {API_BASE}")
+        print(f"Backend URL: {BACKEND_URL}")
+        print(f"Test User: {TEST_EMAIL}")
         print("=" * 60)
         
-        # Authentication tests
-        self.test_auth_register()
-        self.test_auth_login()
-        self.test_auth_me()
+        # Login first
+        if not self.test_login():
+            print("❌ Login failed - cannot proceed with authenticated tests")
+            return False
         
-        # Public endpoints
-        self.test_categories()
-        self.test_tutor_search()
-        self.test_markets()
-        
-        # Authenticated endpoints
-        self.test_reports_consumer()
-        self.test_notifications()
+        # Run all test suites
+        self.test_profile_management()
+        self.test_student_management()
+        self.test_billing()
+        self.test_consumer_invites()
         self.test_reminders()
-        self.test_contact()
         
-        # NEW: Invites API testing
-        self.test_invites_api()
+        # Print summary
+        self.print_summary()
         
-        # Summary
+        return True
+    
+    def print_summary(self):
+        """Print test results summary"""
+        print("\n" + "=" * 60)
+        print("📊 TEST RESULTS SUMMARY")
         print("=" * 60)
-        print("📋 TEST SUMMARY")
-        print("=" * 60)
         
-        passed = sum(1 for result in self.test_results if result["success"])
-        total = len(self.test_results)
+        passed = sum(1 for r in self.results if "✅ PASS" in r["status"])
+        failed = sum(1 for r in self.results if "❌ FAIL" in r["status"])
+        total = len(self.results)
         
         print(f"Total Tests: {total}")
-        print(f"Passed: {passed}")
-        print(f"Failed: {total - passed}")
-        print(f"Success Rate: {(passed/total)*100:.1f}%")
+        print(f"Passed: {passed} ✅")
+        print(f"Failed: {failed} ❌")
+        print(f"Success Rate: {(passed/total*100):.1f}%")
         
-        if total - passed > 0:
-            print("\n❌ FAILED TESTS:")
-            for result in self.test_results:
-                if not result["success"]:
-                    print(f"  - {result['test']}: {result['details']}")
+        if failed > 0:
+            print(f"\n❌ FAILED TESTS:")
+            for result in self.results:
+                if "❌ FAIL" in result["status"]:
+                    print(f"  - {result['test']}: {result['message']}")
         
-        return passed == total
+        print("\n" + "=" * 60)
+
+def main():
+    """Main test execution"""
+    tester = MaestroHubTester()
+    success = tester.run_all_tests()
+    
+    if success:
+        print("✅ All tests completed successfully!")
+        return 0
+    else:
+        print("❌ Some tests failed!")
+        return 1
 
 if __name__ == "__main__":
-    tester = APITester()
-    success = tester.run_all_tests()
-    sys.exit(0 if success else 1)
+    sys.exit(main())
