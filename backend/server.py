@@ -2795,6 +2795,216 @@ async def submit_contact_request(data: ContactRequest, request: Request):
         "message": "Your message has been received. We'll respond within 24-48 hours."
     }
 
+# ============== INVITES SYSTEM ==============
+
+class InviteCreate(BaseModel):
+    email: EmailStr
+    name: Optional[str] = None
+    message: Optional[str] = None
+
+class InviteResponse(BaseModel):
+    invite_id: str
+    tutor_id: str
+    tutor_name: str
+    email: str
+    name: Optional[str]
+    message: Optional[str]
+    status: str  # pending, accepted, declined, expired
+    created_at: datetime
+    expires_at: datetime
+
+@api_router.post("/invites")
+async def create_invite(data: InviteCreate, request: Request):
+    """Tutors can send invites to potential students"""
+    user = await require_tutor(request)
+    
+    # Get tutor profile
+    tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Tutor profile not found")
+    
+    # Check if invite already exists for this email from this tutor
+    existing = await db.invites.find_one({
+        "tutor_id": tutor["tutor_id"],
+        "email": data.email.lower(),
+        "status": {"$in": ["pending", "accepted"]}
+    })
+    if existing:
+        raise HTTPException(status_code=400, detail="An invite already exists for this email")
+    
+    invite_id = f"inv_{uuid.uuid4().hex[:12]}"
+    invite_doc = {
+        "invite_id": invite_id,
+        "tutor_id": tutor["tutor_id"],
+        "tutor_user_id": user.user_id,
+        "tutor_name": user.name,
+        "email": data.email.lower(),
+        "name": data.name,
+        "message": data.message or f"Hi! I'd like to invite you to join Maestro Hub. I'm available for tutoring sessions.",
+        "status": "pending",
+        "created_at": datetime.now(timezone.utc),
+        "expires_at": datetime.now(timezone.utc) + timedelta(days=30)
+    }
+    
+    await db.invites.insert_one(invite_doc)
+    
+    # Check if user exists - if so, create notification
+    existing_user = await db.users.find_one({"email": data.email.lower()}, {"_id": 0})
+    if existing_user:
+        await db.notifications.insert_one({
+            "notification_id": f"notif_{uuid.uuid4().hex[:8]}",
+            "user_id": existing_user["user_id"],
+            "type": "invite_received",
+            "title": "New Tutor Invitation",
+            "message": f"{user.name} has invited you to connect on Maestro Hub!",
+            "data": {"invite_id": invite_id, "tutor_id": tutor["tutor_id"]},
+            "read": False,
+            "created_at": datetime.now(timezone.utc)
+        })
+    
+    return {
+        "success": True,
+        "invite_id": invite_id,
+        "message": "Invite sent successfully"
+    }
+
+@api_router.get("/invites/sent")
+async def get_sent_invites(request: Request):
+    """Get invites sent by the tutor"""
+    user = await require_tutor(request)
+    
+    tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Tutor profile not found")
+    
+    invites = await db.invites.find(
+        {"tutor_id": tutor["tutor_id"]},
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(100)
+    
+    return {"invites": invites}
+
+@api_router.get("/invites/received")
+async def get_received_invites(request: Request):
+    """Get invites received by the consumer"""
+    user = await require_auth(request)
+    
+    invites = await db.invites.find(
+        {"email": user.email.lower(), "status": "pending"},
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(100)
+    
+    # Enrich with tutor info
+    enriched = []
+    for invite in invites:
+        tutor = await db.tutors.find_one({"tutor_id": invite["tutor_id"]}, {"_id": 0})
+        if tutor:
+            enriched.append({
+                **invite,
+                "tutor_bio": tutor.get("bio", ""),
+                "tutor_subjects": tutor.get("subjects", []),
+                "tutor_rating": tutor.get("rating_avg", 0)
+            })
+    
+    return {"invites": enriched}
+
+@api_router.post("/invites/{invite_id}/accept")
+async def accept_invite(invite_id: str, request: Request):
+    """Consumer accepts an invite from a tutor"""
+    user = await require_auth(request)
+    
+    invite = await db.invites.find_one({
+        "invite_id": invite_id,
+        "email": user.email.lower()
+    }, {"_id": 0})
+    
+    if not invite:
+        raise HTTPException(status_code=404, detail="Invite not found")
+    
+    if invite["status"] != "pending":
+        raise HTTPException(status_code=400, detail=f"Invite is already {invite['status']}")
+    
+    # Check expiry
+    if datetime.fromisoformat(invite["expires_at"].isoformat()) < datetime.now(timezone.utc):
+        await db.invites.update_one(
+            {"invite_id": invite_id},
+            {"$set": {"status": "expired"}}
+        )
+        raise HTTPException(status_code=400, detail="Invite has expired")
+    
+    # Update invite status
+    await db.invites.update_one(
+        {"invite_id": invite_id},
+        {"$set": {
+            "status": "accepted",
+            "accepted_at": datetime.now(timezone.utc),
+            "accepted_by_user_id": user.user_id
+        }}
+    )
+    
+    # Notify tutor
+    await db.notifications.insert_one({
+        "notification_id": f"notif_{uuid.uuid4().hex[:8]}",
+        "user_id": invite["tutor_user_id"],
+        "type": "invite_accepted",
+        "title": "Invite Accepted!",
+        "message": f"{user.name} has accepted your invitation!",
+        "data": {"invite_id": invite_id, "consumer_id": user.user_id},
+        "read": False,
+        "created_at": datetime.now(timezone.utc)
+    })
+    
+    return {
+        "success": True,
+        "message": "Invite accepted! You can now book sessions with this tutor.",
+        "tutor_id": invite["tutor_id"]
+    }
+
+@api_router.post("/invites/{invite_id}/decline")
+async def decline_invite(invite_id: str, request: Request):
+    """Consumer declines an invite"""
+    user = await require_auth(request)
+    
+    invite = await db.invites.find_one({
+        "invite_id": invite_id,
+        "email": user.email.lower()
+    }, {"_id": 0})
+    
+    if not invite:
+        raise HTTPException(status_code=404, detail="Invite not found")
+    
+    if invite["status"] != "pending":
+        raise HTTPException(status_code=400, detail=f"Invite is already {invite['status']}")
+    
+    await db.invites.update_one(
+        {"invite_id": invite_id},
+        {"$set": {
+            "status": "declined",
+            "declined_at": datetime.now(timezone.utc)
+        }}
+    )
+    
+    return {"success": True, "message": "Invite declined"}
+
+@api_router.delete("/invites/{invite_id}")
+async def cancel_invite(invite_id: str, request: Request):
+    """Tutor cancels/deletes an invite they sent"""
+    user = await require_tutor(request)
+    
+    tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Tutor profile not found")
+    
+    result = await db.invites.delete_one({
+        "invite_id": invite_id,
+        "tutor_id": tutor["tutor_id"]
+    })
+    
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Invite not found")
+    
+    return {"success": True, "message": "Invite cancelled"}
+
 # Include router
 app.include_router(api_router)
 
