@@ -19,9 +19,10 @@ import AppHeader from '@/src/components/AppHeader';
 interface Tutor {
   id: string;
   tutor_id: string;
-  name: string;
+  user_name: string;
   bio: string;
   subjects: string[];
+  categories: string[];
   modality: string[];
   base_price: number;
   rating_avg: number;
