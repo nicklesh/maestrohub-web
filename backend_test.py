@@ -413,13 +413,13 @@ class APITester:
         # Step 8: Accept invite (POST /api/invites/{id}/accept)
         self.test_accept_invite(consumer_token, invite_id)
         
-        # Step 9: Create another invite for decline test
+        # Step 9: Test decline functionality by creating a new invite
         decline_invite_id = self.test_create_invite(tutor_token, "decline_test")
         if decline_invite_id:
             # Step 10: Decline invite (POST /api/invites/{id}/decline)
             self.test_decline_invite(consumer_token, decline_invite_id)
         
-        # Step 11: Create another invite for cancel test
+        # Step 11: Test cancel functionality by creating a new invite
         cancel_invite_id = self.test_create_invite(tutor_token, "cancel_test")
         if cancel_invite_id:
             # Step 12: Cancel invite (DELETE /api/invites/{id})
