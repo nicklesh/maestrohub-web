@@ -16,7 +16,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, Link } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
-import { colors } from '@/src/theme/colors';
+import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 import LogoHeader from '@/src/components/LogoHeader';
 
 export default function RegisterScreen() {
@@ -30,6 +30,7 @@ export default function RegisterScreen() {
   const [googleLoading, setGoogleLoading] = useState(false);
   
   const { register, loginWithGoogle } = useAuth();
+  const { colors } = useTheme();
   const router = useRouter();
   const { width } = useWindowDimensions();
   
@@ -37,6 +38,8 @@ export default function RegisterScreen() {
   const isTablet = width >= 768;
   const isDesktop = width >= 1024;
   const formMaxWidth = isDesktop ? 480 : isTablet ? 440 : undefined;
+
+  const styles = getStyles(colors);
 
   const handleRegister = async () => {
     if (!name || !email || !password || !confirmPassword) {
@@ -260,7 +263,7 @@ export default function RegisterScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colors: ThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,

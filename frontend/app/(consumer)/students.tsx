@@ -17,7 +17,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { api } from '@/src/services/api';
-import { colors } from '@/src/theme/colors';
+import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
+import AppHeader from '@/src/components/AppHeader';
 
 interface Student {
   student_id: string;
@@ -30,6 +31,7 @@ interface Student {
 export default function StudentsScreen() {
   const router = useRouter();
   const { width } = useWindowDimensions();
+  const { colors } = useTheme();
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
@@ -47,6 +49,8 @@ export default function StudentsScreen() {
   const isDesktop = width >= 1024;
   const contentMaxWidth = isDesktop ? 800 : isTablet ? 680 : undefined;
   const numColumns = isDesktop ? 2 : 1;
+
+  const styles = getStyles(colors);
 
   useEffect(() => {
     loadStudents();
@@ -179,6 +183,7 @@ export default function StudentsScreen() {
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
+        <AppHeader showBack title="My Students" />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -188,15 +193,13 @@ export default function StudentsScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <AppHeader showBack title="My Students" />
       <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
-        {/* Header */}
-        <View style={[styles.header, isTablet && styles.headerTablet]}>
-          <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={24} color={colors.text} />
-          </TouchableOpacity>
-          <Text style={[styles.headerTitle, isDesktop && styles.headerTitleDesktop]}>My Students</Text>
+        {/* Header Actions */}
+        <View style={[styles.headerActions, isTablet && styles.headerActionsTablet]}>
           <TouchableOpacity style={[styles.addButton, isTablet && styles.addButtonTablet]} onPress={openAddModal}>
             <Ionicons name="add" size={24} color={colors.primary} />
+            <Text style={styles.addButtonText}>Add Student</Text>
           </TouchableOpacity>
         </View>
 
@@ -301,7 +304,7 @@ export default function StudentsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colors: ThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
@@ -314,44 +317,34 @@ const styles = StyleSheet.create({
   contentWrapper: {
     flex: 1,
   },
-  header: {
+  headerActions: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 16,
+    justifyContent: 'flex-end',
   },
-  headerTablet: {
+  headerActionsTablet: {
     paddingHorizontal: 24,
-    paddingVertical: 20,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.surface,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: colors.text,
-  },
-  headerTitleDesktop: {
-    fontSize: 22,
+    paddingVertical: 16,
   },
   addButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.primaryLight,
-    justifyContent: 'center',
+    flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: colors.primaryLight,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 20,
+    gap: 6,
   },
   addButtonTablet: {
-    width: 48,
-    height: 48,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
     borderRadius: 24,
+  },
+  addButtonText: {
+    color: colors.primary,
+    fontSize: 14,
+    fontWeight: '600',
   },
   listContent: {
     padding: 20,

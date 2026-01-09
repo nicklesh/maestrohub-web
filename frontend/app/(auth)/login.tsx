@@ -17,7 +17,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, Link } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
-import { colors } from '@/src/theme/colors';
+import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -27,6 +27,7 @@ export default function LoginScreen() {
   const [googleLoading, setGoogleLoading] = useState(false);
   
   const { login, loginWithGoogle } = useAuth();
+  const { colors, isDark } = useTheme();
   const router = useRouter();
   const { width } = useWindowDimensions();
   
@@ -38,6 +39,8 @@ export default function LoginScreen() {
   // Logo sizes - reduced by 15% and add title
   const logoWidth = isDesktop ? 510 : isTablet ? 467 : Math.min(width - 32, 306);
   const logoHeight = isDesktop ? 204 : isTablet ? 187 : 170;
+
+  const styles = getStyles(colors);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -84,7 +87,10 @@ export default function LoginScreen() {
           <View style={[styles.formWrapper, formMaxWidth ? { maxWidth: formMaxWidth } : undefined]}>
             <View style={[styles.header, isDesktop && styles.headerDesktop]}>
               <Image
-                source={require('../../assets/images/mh_logo_trimmed.png')}
+                source={isDark 
+                  ? require('../../assets/images/mh_logo_trimmed.png')
+                  : require('../../assets/images/mh_logo_trimmed.png')
+                }
                 style={{ width: logoWidth, height: logoHeight }}
                 resizeMode="contain"
               />
@@ -189,7 +195,7 @@ export default function LoginScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colors: ThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
