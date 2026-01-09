@@ -11,13 +11,13 @@ import {
   ActivityIndicator,
   Alert,
   useWindowDimensions,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, Link } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
 import { colors } from '@/src/theme/colors';
-import LogoHeader from '@/src/components/LogoHeader';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -34,6 +34,10 @@ export default function LoginScreen() {
   const isTablet = width >= 768;
   const isDesktop = width >= 1024;
   const formMaxWidth = isDesktop ? 440 : isTablet ? 400 : undefined;
+
+  // Logo sizes - doubled for login page
+  const logoWidth = isDesktop ? 500 : isTablet ? 450 : 340;
+  const logoHeight = isDesktop ? 200 : isTablet ? 180 : 136;
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -79,7 +83,14 @@ export default function LoginScreen() {
         >
           <View style={[styles.formWrapper, formMaxWidth ? { maxWidth: formMaxWidth } : undefined]}>
             <View style={[styles.header, isDesktop && styles.headerDesktop]}>
-              <LogoHeader size="large" showTagline={true} />
+              <Image
+                source={require('../../assets/images/mh_logo.png')}
+                style={{ width: logoWidth, height: logoHeight }}
+                resizeMode="contain"
+              />
+              <Text style={[styles.tagline, isDesktop && styles.taglineDesktop]}>
+                Find your coach, master your skill
+              </Text>
             </View>
 
             <View style={[styles.form, isTablet && styles.formTablet]}>
