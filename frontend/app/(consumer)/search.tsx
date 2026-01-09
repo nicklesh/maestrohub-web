@@ -47,6 +47,7 @@ export default function SearchScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
   const { width } = useWindowDimensions();
+  const { colors } = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
   const [category, setCategory] = useState(params.category as string || 'all');
   const [modality, setModality] = useState('all');
