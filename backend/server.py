@@ -393,9 +393,17 @@ async def register(data: UserCreate, response: Response):
 async def login(data: UserLogin, response: Response):
     user_doc = await db.users.find_one({"email": data.email}, {"_id": 0})
     if not user_doc:
+        logger.error(f"Login failed: user not found for {data.email}")
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
-    if not user_doc.get("password_hash") or not verify_password(data.password, user_doc["password_hash"]):
+    logger.info(f"Login attempt for {data.email}, has password_hash: {'password_hash' in user_doc}")
+    
+    if not user_doc.get("password_hash"):
+        logger.error(f"Login failed: no password_hash for {data.email}")
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    
+    if not verify_password(data.password, user_doc["password_hash"]):
+        logger.error(f"Login failed: password mismatch for {data.email}")
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
     # Update device if provided
