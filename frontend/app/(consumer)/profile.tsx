@@ -647,22 +647,27 @@ const createStyles = (colors: any) => StyleSheet.create({
     marginTop: 2,
   },
   bottomSheet: {
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
     padding: 20,
+    paddingBottom: Platform.OS === 'ios' ? 34 : 20,
   },
   sheetHandle: {
     width: 40,
     height: 4,
-    backgroundColor: colors.gray300,
     borderRadius: 2,
     alignSelf: 'center',
+    marginBottom: 16,
+  },
+  sheetHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
     marginBottom: 16,
   },
   sheetTitle: {
     fontSize: 18,
     fontWeight: '600',
-    marginBottom: 16,
   },
   inputLabel: {
     fontSize: 13,
