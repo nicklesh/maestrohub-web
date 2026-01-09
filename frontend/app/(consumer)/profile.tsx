@@ -113,9 +113,15 @@ export default function ProfileScreen() {
     }
   };
 
+  const [contactSuccess, setContactSuccess] = useState(false);
+  
   const handleContactSubmit = async () => {
     if (!contactSubject.trim() || !contactMessage.trim()) {
-      Alert.alert('Error', 'Please fill in all fields');
+      if (Platform.OS === 'web') {
+        window.alert('Please fill in all fields');
+      } else {
+        Alert.alert('Error', 'Please fill in all fields');
+      }
       return;
     }
 
@@ -129,13 +135,24 @@ export default function ProfileScreen() {
         headers: { Authorization: `Bearer ${token}` }
       });
       
-      Alert.alert('Success', 'Your message has been sent. We\'ll respond within 24-48 hours.');
-      setShowContactSheet(false);
+      // Show success state
+      setContactSuccess(true);
       setContactSubject('');
       setContactMessage('');
-      fetchNotifications(); // Refresh to show new notification
+      
+      // Auto-close after 2 seconds
+      setTimeout(() => {
+        setContactSuccess(false);
+        setShowContactSheet(false);
+        fetchNotifications();
+      }, 2000);
+      
     } catch (error) {
-      Alert.alert('Error', 'Failed to send message. Please try again.');
+      if (Platform.OS === 'web') {
+        window.alert('Failed to send message. Please try again.');
+      } else {
+        Alert.alert('Error', 'Failed to send message. Please try again.');
+      }
     } finally {
       setSubmittingContact(false);
     }
