@@ -1087,15 +1087,21 @@ async def search_tutors(
 ):
     query = {"is_published": True, "status": "approved"}
     
-    # Get consumer's market for filtering
+    # Get consumer's market for filtering and exclude self from results
+    current_user_id = None
     try:
         user = await require_auth(request)
+        current_user_id = user.user_id
         user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
         consumer_market_id = user_doc.get("market_id") if user_doc else None
         
         # Enforce market filtering if market is set
         if consumer_market_id:
             query["market_id"] = consumer_market_id
+        
+        # Prevent self-selection: exclude current user's tutor profile from results
+        # This handles the case where a parent has also become a tutor
+        query["user_id"] = {"$ne": current_user_id}
     except:
         # Allow unauthenticated browsing without market filter
         pass
