@@ -151,13 +151,10 @@ export default function AppHeader({ showBack = false, title, showUserName = fals
           )}
         </View>
 
-        {/* Center - Logo (different for dark/light mode) */}
+        {/* Center - Logo (use same logo for both modes, trimmed looks consistent) */}
         <TouchableOpacity onPress={handleLogoPress} style={styles.logoContainer}>
           <Image
-            source={isDark 
-              ? require('../../assets/images/mh_logo_dark.png')
-              : require('../../assets/images/mh_logo_trimmed.png')
-            }
+            source={require('../../assets/images/mh_logo_trimmed.png')}
             style={styles.logo}
             resizeMode="contain"
           />
