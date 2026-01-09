@@ -14,7 +14,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { api } from '@/src/services/api';
-import { colors } from '@/src/theme/colors';
+import { useTheme } from '@/src/context/ThemeContext';
+import AppHeader from '@/src/components/AppHeader';
 import { format, parseISO, isPast } from 'date-fns';
 
 interface Booking {
