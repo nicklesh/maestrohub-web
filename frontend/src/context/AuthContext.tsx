@@ -217,6 +217,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       console.error('Logout error:', error);
     }
     await clearAuth();
+    // Force redirect on web
+    if (Platform.OS === 'web' && typeof window !== 'undefined') {
+      window.location.href = '/login';
+    }
   };
 
   const updateRole = async (role: string) => {
