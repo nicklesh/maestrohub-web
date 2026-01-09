@@ -222,6 +222,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       // Use replace to prevent back navigation to logged-in state
       window.location.replace('/login');
     }
+    // For native platforms, the caller should handle navigation
+    // The user state will be null after clearAuth(), which triggers index.tsx to redirect
   };
 
   const updateRole = async (role: string) => {
