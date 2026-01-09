@@ -571,7 +571,7 @@ async def change_password(data: PasswordChange, request: Request):
     if not user_doc.get("password_hash"):
         raise HTTPException(status_code=400, detail="Account uses social login, cannot change password")
     
-    if not pwd_context.verify(data.current_password, user_doc["password_hash"]):
+    if not verify_password(data.current_password, user_doc["password_hash"]):
         raise HTTPException(status_code=400, detail="Current password is incorrect")
     
     # Validate new password
@@ -579,7 +579,7 @@ async def change_password(data: PasswordChange, request: Request):
         raise HTTPException(status_code=400, detail="New password must be at least 6 characters")
     
     # Update password
-    new_hash = pwd_context.hash(data.new_password)
+    new_hash = hash_password(data.new_password)
     await db.users.update_one({"user_id": user.user_id}, {"$set": {"password_hash": new_hash}})
     
     return {"success": True, "message": "Password changed successfully"}
