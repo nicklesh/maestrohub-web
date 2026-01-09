@@ -445,7 +445,8 @@ class APITester:
         """Helper method to get tutor_id"""
         try:
             headers = {"Authorization": f"Bearer {token}"}
-            response = self.session.get(f"{API_BASE}/tutors/profile", headers=headers, timeout=30)
+            # Use requests directly instead of session
+            response = requests.get(f"{API_BASE}/tutors/profile", headers=headers, timeout=30)
             
             if response.status_code == 200:
                 data = response.json()
