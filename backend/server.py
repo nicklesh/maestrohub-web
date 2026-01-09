@@ -3289,6 +3289,64 @@ async def submit_contact_request(data: ContactRequest, request: Request):
         "message": "Your message has been received. We'll respond within 24-48 hours."
     }
 
+# Admin inbox for contact messages
+@api_router.get("/admin/inbox")
+async def admin_get_inbox(request: Request, status: Optional[str] = None, limit: int = 50, skip: int = 0):
+    """Get all contact messages for admin inbox"""
+    await require_admin(request)
+    
+    query: Dict[str, Any] = {}
+    if status:
+        query["status"] = status
+    
+    cursor = db.contact_requests.find(query).sort("created_at", -1).skip(skip).limit(limit)
+    messages = await cursor.to_list(length=limit)
+    
+    total = await db.contact_requests.count_documents(query)
+    pending_count = await db.contact_requests.count_documents({"status": "pending"})
+    
+    return {
+        "messages": [
+            {
+                "contact_id": m.get("contact_id"),
+                "user_id": m.get("user_id"),
+                "user_name": m.get("user_name"),
+                "user_email": m.get("user_email"),
+                "subject": m.get("subject"),
+                "message": m.get("message"),
+                "category": m.get("category"),
+                "status": m.get("status", "pending"),
+                "created_at": m.get("created_at").isoformat() if m.get("created_at") else None,
+                "responded_at": m.get("responded_at").isoformat() if m.get("responded_at") else None,
+            }
+            for m in messages
+        ],
+        "total": total,
+        "pending_count": pending_count,
+        "has_more": (skip + limit) < total
+    }
+
+@api_router.put("/admin/inbox/{contact_id}")
+async def admin_update_contact_status(contact_id: str, status: str, response_note: Optional[str] = None, request: Request = None):
+    """Update contact message status"""
+    await require_admin(request)
+    
+    update_data: Dict[str, Any] = {"status": status}
+    if status == "resolved":
+        update_data["responded_at"] = datetime.now(timezone.utc)
+    if response_note:
+        update_data["admin_response"] = response_note
+    
+    result = await db.contact_requests.update_one(
+        {"contact_id": contact_id},
+        {"$set": update_data}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Contact message not found")
+    
+    return {"success": True, "message": f"Contact status updated to {status}"}
+
 # ============== INVITES SYSTEM ==============
 
 class InviteCreate(BaseModel):
