@@ -613,6 +613,9 @@ class APITester:
         self.test_reminders()
         self.test_contact()
         
+        # NEW: Invites API testing
+        self.test_invites_api()
+        
         # Summary
         print("=" * 60)
         print("📋 TEST SUMMARY")
