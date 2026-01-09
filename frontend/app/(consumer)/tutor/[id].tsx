@@ -247,7 +247,7 @@ export default function TutorProfileScreen() {
               </Text>
             </View>
             <View style={styles.tagsRow}>
-              {tutor.modality.map((m) => (
+              {(tutor.modality || []).map((m) => (
                 <View key={m} style={styles.tag}>
                   <Ionicons
                     name={m === 'online' ? 'videocam' : 'location'}
