@@ -19,6 +19,7 @@ import { useTheme } from '@/src/context/ThemeContext';
 import MarketSelectionModal from '@/src/components/MarketSelectionModal';
 import AppHeader from '@/src/components/AppHeader';
 import { api } from '@/src/services/api';
+import { colors } from '@/src/theme/colors';
 
 interface Category {
   id: string;
