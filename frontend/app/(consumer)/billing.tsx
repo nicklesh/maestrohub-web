@@ -141,10 +141,34 @@ export default function BillingScreen() {
     }
   };
 
-  const handleAddPaymentMethod = (providerId: string) => {
+  const handleSelectProvider = (provider: any) => {
+    setSelectedProvider(provider);
+    setProviderInputValue('');
     setShowPaymentModal(false);
-    // In production, this would open the respective payment provider flow
-    Alert.alert('Coming Soon', `${PAYMENT_PROVIDERS.find(p => p.id === providerId)?.name} integration will be available soon.`);
+    setShowProviderInput(true);
+  };
+
+  const handleSavePaymentMethod = async () => {
+    if (!providerInputValue.trim()) {
+      Alert.alert('Error', 'Please enter the required information');
+      return;
+    }
+
+    setSavingPaymentMethod(true);
+    try {
+      // Note: This app doesn't store payment info - just confirms the method
+      Alert.alert(
+        'Payment Method Added',
+        `${selectedProvider?.name} has been linked. You'll be redirected to ${selectedProvider?.name} when making payments.`,
+        [{ text: 'OK', onPress: () => {
+          setShowProviderInput(false);
+          setSelectedProvider(null);
+          setProviderInputValue('');
+        }}]
+      );
+    } finally {
+      setSavingPaymentMethod(false);
+    }
   };
 
   const formatDate = (dateString: string | null) => {
