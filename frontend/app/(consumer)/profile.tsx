@@ -482,6 +482,8 @@ export default function ProfileScreen() {
                 <Text style={styles.submitButtonText}>Send Message</Text>
               )}
             </TouchableOpacity>
+              </>
+            )}
           </View>
         </KeyboardAvoidingView>
       </Modal>
