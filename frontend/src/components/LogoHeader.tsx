@@ -21,21 +21,21 @@ export default function LogoHeader({
     switch (size) {
       case 'small':
         return {
-          logoWidth: isDesktop ? 140 : isTablet ? 120 : 100,
-          logoHeight: isDesktop ? 56 : isTablet ? 48 : 40,
+          logoWidth: isDesktop ? 160 : isTablet ? 140 : 120,
+          logoHeight: isDesktop ? 64 : isTablet ? 56 : 48,
           taglineFontSize: isDesktop ? 13 : 12,
         };
       case 'large':
         return {
-          logoWidth: isDesktop ? 220 : isTablet ? 200 : 180,
-          logoHeight: isDesktop ? 88 : isTablet ? 80 : 72,
+          logoWidth: isDesktop ? 280 : isTablet ? 260 : 220,
+          logoHeight: isDesktop ? 112 : isTablet ? 104 : 88,
           taglineFontSize: isDesktop ? 16 : isTablet ? 15 : 14,
         };
       case 'medium':
       default:
         return {
-          logoWidth: isDesktop ? 180 : isTablet ? 160 : 140,
-          logoHeight: isDesktop ? 72 : isTablet ? 64 : 56,
+          logoWidth: isDesktop ? 220 : isTablet ? 200 : 180,
+          logoHeight: isDesktop ? 88 : isTablet ? 80 : 72,
           taglineFontSize: isDesktop ? 15 : isTablet ? 14 : 13,
         };
     }
