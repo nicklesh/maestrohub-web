@@ -1,430 +1,660 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Alert,
   ActivityIndicator,
+  RefreshControl,
   useWindowDimensions,
+  Switch,
+  TextInput,
+  Alert,
+  Modal,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
+import { useTheme } from '@/src/context/ThemeContext';
 import { api } from '@/src/services/api';
-import { colors } from '@/src/theme/colors';
 
-interface Student {
-  student_id: string;
-  name: string;
-  age?: number;
-  grade?: string;
+interface Notification {
+  notification_id: string;
+  type: string;
+  title: string;
+  message: string;
+  read: boolean;
+  created_at: string;
+}
+
+interface Reminder {
+  reminder_id: string;
+  type: string;
+  title: string;
+  message: string;
+  due_at: string;
+  priority: string;
 }
 
 export default function ProfileScreen() {
-  const { user, logout, updateRole } = useAuth();
+  const { user, logout, token } = useAuth();
+  const { colors, isDark, toggleTheme } = useTheme();
   const router = useRouter();
   const { width } = useWindowDimensions();
-  const [students, setStudents] = useState<Student[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  // Responsive breakpoints
   const isTablet = width >= 768;
   const isDesktop = width >= 1024;
-  const contentMaxWidth = isDesktop ? 640 : isTablet ? 560 : undefined;
 
-  useEffect(() => {
-    loadStudents();
-  }, []);
+  const [loading, setLoading] = useState(false);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [reminders, setReminders] = useState<Reminder[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showReminders, setShowReminders] = useState(false);
+  const [showContactSheet, setShowContactSheet] = useState(false);
+  const [contactSubject, setContactSubject] = useState('');
+  const [contactMessage, setContactMessage] = useState('');
+  const [submittingContact, setSubmittingContact] = useState(false);
 
-  const loadStudents = async () => {
+  const containerMaxWidth = isDesktop ? 600 : isTablet ? 500 : undefined;
+
+  const fetchNotifications = async () => {
     try {
-      const response = await api.get('/students');
-      setStudents(response.data);
+      const response = await api.get('/notifications', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setNotifications(response.data.notifications || []);
+      setUnreadCount(response.data.unread_count || 0);
     } catch (error) {
-      console.error('Failed to load students:', error);
-    } finally {
-      setLoading(false);
+      console.error('Error fetching notifications:', error);
     }
   };
+
+  const fetchReminders = async () => {
+    try {
+      const response = await api.get('/reminders', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setReminders(response.data.reminders || []);
+    } catch (error) {
+      console.error('Error fetching reminders:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchNotifications();
+    fetchReminders();
+  }, []);
 
   const handleLogout = () => {
     Alert.alert('Logout', 'Are you sure you want to logout?', [
       { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Logout',
-        style: 'destructive',
-        onPress: async () => {
-          await logout();
-          router.replace('/');
-        },
-      },
+      { text: 'Logout', style: 'destructive', onPress: logout },
     ]);
   };
 
-  const handleSwitchToTutor = () => {
-    Alert.alert(
-      'Become a Tutor',
-      'Would you like to create a tutor profile?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Yes',
-          onPress: async () => {
-            await updateRole('tutor');
-            router.replace('/(tutor)/onboarding');
-          },
-        },
-      ]
-    );
+  const handleContactSubmit = async () => {
+    if (!contactSubject.trim() || !contactMessage.trim()) {
+      Alert.alert('Error', 'Please fill in all fields');
+      return;
+    }
+
+    setSubmittingContact(true);
+    try {
+      await api.post('/contact', {
+        subject: contactSubject,
+        message: contactMessage,
+        category: 'general'
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      Alert.alert('Success', 'Your message has been sent. We\'ll respond within 24-48 hours.');
+      setShowContactSheet(false);
+      setContactSubject('');
+      setContactMessage('');
+      fetchNotifications(); // Refresh to show new notification
+    } catch (error) {
+      Alert.alert('Error', 'Failed to send message. Please try again.');
+    } finally {
+      setSubmittingContact(false);
+    }
   };
 
-  const MenuItem = ({
-    icon,
-    label,
-    onPress,
-    rightElement,
-  }: {
-    icon: string;
-    label: string;
-    onPress?: () => void;
-    rightElement?: React.ReactNode;
-  }) => (
-    <TouchableOpacity style={[styles.menuItem, isTablet && styles.menuItemTablet]} onPress={onPress} disabled={!onPress}>
-      <View style={styles.menuItemLeft}>
-        <Ionicons name={icon as any} size={isTablet ? 24 : 22} color={colors.primary} />
-        <Text style={[styles.menuItemLabel, isDesktop && styles.menuItemLabelDesktop]}>{label}</Text>
-      </View>
-      {rightElement || <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />}
-    </TouchableOpacity>
-  );
+  const getRoleDisplay = (role: string) => {
+    switch (role) {
+      case 'consumer': return 'Parent / Guardian';
+      case 'tutor': return 'Tutor / Instructor';
+      case 'admin': return 'Administrator';
+      default: return role;
+    }
+  };
+
+  const getNotificationIcon = (type: string) => {
+    switch (type) {
+      case 'payment_completed': return 'checkmark-circle';
+      case 'session_canceled': return 'close-circle';
+      case 'system_maintenance': return 'construct';
+      case 'contact_received': return 'mail';
+      default: return 'notifications';
+    }
+  };
+
+  const styles = createStyles(colors);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={[styles.scrollContent, isTablet && styles.scrollContentTablet]}>
-        <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
-          {/* Profile Header */}
-          <View style={[styles.header, isTablet && styles.headerTablet]}>
-            <View style={[styles.avatar, isDesktop && styles.avatarDesktop]}>
-              <Text style={[styles.avatarText, isDesktop && styles.avatarTextDesktop]}>
-                {user?.name?.charAt(0)?.toUpperCase() || 'U'}
-              </Text>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['bottom']}>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <View style={[styles.contentWrapper, containerMaxWidth ? { maxWidth: containerMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
+          {/* Header */}
+          <View style={styles.header}>
+            <View style={styles.avatarContainer}>
+              <View style={[styles.avatar, { backgroundColor: colors.primary }]}>
+                <Text style={styles.avatarText}>{user?.name?.charAt(0) || 'U'}</Text>
+              </View>
+              <View style={styles.userInfo}>
+                <Text style={[styles.userName, { color: colors.text }]}>{user?.name}</Text>
+                <Text style={[styles.userRole, { color: colors.textMuted }]}>{getRoleDisplay(user?.role || '')}</Text>
+              </View>
             </View>
-            <Text style={[styles.userName, isDesktop && styles.userNameDesktop]}>{user?.name}</Text>
-            <Text style={[styles.userEmail, isDesktop && styles.userEmailDesktop]}>{user?.email}</Text>
-            <View style={styles.roleBadge}>
-              <Text style={styles.roleText}>
-                {user?.role === 'consumer' ? 'Parent' : user?.role}
-              </Text>
+            <View style={styles.headerRight}>
+              <TouchableOpacity 
+                style={[styles.notificationBadge, { backgroundColor: colors.surface }]} 
+                onPress={() => setShowNotifications(true)}
+              >
+                <Ionicons name="notifications-outline" size={22} color={colors.text} />
+                {unreadCount > 0 && (
+                  <View style={[styles.badge, { backgroundColor: colors.error }]}>
+                    <Text style={styles.badgeText}>{unreadCount}</Text>
+                  </View>
+                )}
+              </TouchableOpacity>
             </View>
           </View>
+          <View style={[styles.headerSeparator, { backgroundColor: colors.border }]} />
 
-          {/* Students Section */}
-          <View style={[styles.section, isTablet && styles.sectionTablet]}>
-            <View style={styles.sectionHeader}>
-              <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>My Students</Text>
-              <TouchableOpacity onPress={() => router.push('/(consumer)/students')}>
-                <Text style={styles.sectionAction}>Manage</Text>
-              </TouchableOpacity>
-            </View>
-            {loading ? (
-              <ActivityIndicator color={colors.primary} />
-            ) : students.length === 0 ? (
-              <TouchableOpacity
-                style={[styles.addStudentCard, isTablet && styles.addStudentCardTablet]}
-                onPress={() => router.push('/(consumer)/students')}
-              >
-                <Ionicons name="add-circle-outline" size={isTablet ? 40 : 32} color={colors.primary} />
-                <Text style={styles.addStudentText}>Add a student</Text>
-              </TouchableOpacity>
-            ) : (
-              <View style={styles.studentsList}>
-                {students.slice(0, 3).map((student) => (
-                  <View key={student.student_id} style={[styles.studentCard, isTablet && styles.studentCardTablet]}>
-                    <View style={[styles.studentAvatar, isTablet && styles.studentAvatarTablet]}>
-                      <Text style={[styles.studentInitial, isTablet && styles.studentInitialTablet]}>
-                        {student.name.charAt(0).toUpperCase()}
-                      </Text>
-                    </View>
-                    <View>
-                      <Text style={[styles.studentName, isDesktop && styles.studentNameDesktop]}>{student.name}</Text>
-                      {student.grade && (
-                        <Text style={styles.studentGrade}>Grade {student.grade}</Text>
-                      )}
-                    </View>
-                  </View>
-                ))}
+          {/* Theme Toggle */}
+          <View style={[styles.section, { backgroundColor: colors.surface }]}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>Appearance</Text>
+            <TouchableOpacity style={styles.menuItem} onPress={toggleTheme}>
+              <View style={styles.menuItemLeft}>
+                <Ionicons name={isDark ? "moon" : "sunny"} size={22} color={colors.primary} />
+                <Text style={[styles.menuItemText, { color: colors.text }]}>
+                  {isDark ? 'Dark Mode' : 'Light Mode'}
+                </Text>
               </View>
+              <Switch
+                value={isDark}
+                onValueChange={toggleTheme}
+                trackColor={{ false: colors.gray300, true: colors.primary }}
+                thumbColor={colors.white}
+              />
+            </TouchableOpacity>
+          </View>
+
+          {/* Reminders Section */}
+          {reminders.length > 0 && (
+            <TouchableOpacity 
+              style={[styles.section, { backgroundColor: colors.surface }]}
+              onPress={() => setShowReminders(true)}
+            >
+              <View style={styles.sectionHeader}>
+                <Text style={[styles.sectionTitle, { color: colors.text }]}>Reminders</Text>
+                <View style={[styles.reminderBadge, { backgroundColor: colors.warning }]}>
+                  <Text style={styles.reminderBadgeText}>{reminders.length}</Text>
+                </View>
+              </View>
+              {reminders.slice(0, 2).map((reminder, index) => (
+                <View key={index} style={styles.reminderItem}>
+                  <Ionicons 
+                    name={reminder.type === 'upcoming_session' ? 'calendar' : 'time'} 
+                    size={18} 
+                    color={reminder.priority === 'high' ? colors.error : colors.warning} 
+                  />
+                  <Text style={[styles.reminderText, { color: colors.text }]} numberOfLines={1}>
+                    {reminder.message}
+                  </Text>
+                </View>
+              ))}
+            </TouchableOpacity>
+          )}
+
+          {/* Account Section */}
+          <View style={[styles.section, { backgroundColor: colors.surface }]}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>Account</Text>
+            
+            <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(consumer)/edit-profile')}>
+              <View style={styles.menuItemLeft}>
+                <Ionicons name="person-outline" size={22} color={colors.primary} />
+                <Text style={[styles.menuItemText, { color: colors.text }]}>Edit Profile</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
+            
+            <TouchableOpacity style={styles.menuItem} onPress={() => setShowNotifications(true)}>
+              <View style={styles.menuItemLeft}>
+                <Ionicons name="notifications-outline" size={22} color={colors.primary} />
+                <Text style={[styles.menuItemText, { color: colors.text }]}>Notifications</Text>
+              </View>
+              {unreadCount > 0 && (
+                <View style={[styles.menuBadge, { backgroundColor: colors.error }]}>
+                  <Text style={styles.menuBadgeText}>{unreadCount}</Text>
+                </View>
+              )}
+              <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
+            
+            <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(consumer)/payment-methods')}>
+              <View style={styles.menuItemLeft}>
+                <Ionicons name="card-outline" size={22} color={colors.primary} />
+                <Text style={[styles.menuItemText, { color: colors.text }]}>Payment Methods</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
+
+            {user?.role === 'consumer' && (
+              <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(tutor)/onboarding')}>
+                <View style={styles.menuItemLeft}>
+                  <Ionicons name="school-outline" size={22} color={colors.primary} />
+                  <Text style={[styles.menuItemText, { color: colors.text }]}>Become a Tutor</Text>
+                </View>
+                <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+              </TouchableOpacity>
             )}
           </View>
 
-          {/* Menu Section */}
-          <View style={[styles.section, isTablet && styles.sectionTablet]}>
-            <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>Account</Text>
-            <View style={[styles.menuCard, isTablet && styles.menuCardTablet]}>
-              <MenuItem
-                icon="person-outline"
-                label="Edit Profile"
-                onPress={() => {}}
-              />
-              <MenuItem
-                icon="notifications-outline"
-                label="Notifications"
-                onPress={() => {}}
-              />
-              <MenuItem
-                icon="card-outline"
-                label="Payment Methods"
-                onPress={() => {}}
-              />
-              <MenuItem
-                icon="school-outline"
-                label="Become a Tutor"
-                onPress={handleSwitchToTutor}
-              />
-            </View>
+          {/* Support Section */}
+          <View style={[styles.section, { backgroundColor: colors.surface }]}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>Support</Text>
+            
+            <TouchableOpacity style={styles.menuItem} onPress={() => setShowContactSheet(true)}>
+              <View style={styles.menuItemLeft}>
+                <Ionicons name="chatbubble-outline" size={22} color={colors.primary} />
+                <Text style={[styles.menuItemText, { color: colors.text }]}>Contact Us</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
+            
+            <TouchableOpacity style={styles.menuItem} onPress={() => Alert.alert('Help Center', 'Help documentation coming soon')}>
+              <View style={styles.menuItemLeft}>
+                <Ionicons name="help-circle-outline" size={22} color={colors.primary} />
+                <Text style={[styles.menuItemText, { color: colors.text }]}>Help Center</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
           </View>
 
-          {/* Logout */}
-          <TouchableOpacity style={[styles.logoutButton, isTablet && styles.logoutButtonTablet]} onPress={handleLogout}>
+          {/* Logout Button */}
+          <TouchableOpacity 
+            style={[styles.logoutButton, { backgroundColor: colors.errorLight }]} 
+            onPress={handleLogout}
+          >
             <Ionicons name="log-out-outline" size={22} color={colors.error} />
-            <Text style={styles.logoutText}>Logout</Text>
+            <Text style={[styles.logoutText, { color: colors.error }]}>Logout</Text>
           </TouchableOpacity>
+
+          <Text style={[styles.version, { color: colors.textMuted }]}>Version 1.0.0</Text>
         </View>
       </ScrollView>
+
+      {/* Notifications Modal */}
+      <Modal visible={showNotifications} animationType="slide" transparent>
+        <View style={[styles.modalOverlay, { backgroundColor: 'rgba(0,0,0,0.5)' }]}>
+          <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
+            <View style={styles.modalHeader}>
+              <Text style={[styles.modalTitle, { color: colors.text }]}>Notifications</Text>
+              <TouchableOpacity onPress={() => setShowNotifications(false)}>
+                <Ionicons name="close" size={24} color={colors.text} />
+              </TouchableOpacity>
+            </View>
+            <ScrollView style={styles.modalScroll}>
+              {notifications.length === 0 ? (
+                <Text style={[styles.emptyText, { color: colors.textMuted }]}>No notifications</Text>
+              ) : (
+                notifications.map((notif, index) => (
+                  <View key={index} style={[styles.notifItem, !notif.read && { backgroundColor: colors.primaryLight }]}>
+                    <Ionicons name={getNotificationIcon(notif.type) as any} size={24} color={colors.primary} />
+                    <View style={styles.notifContent}>
+                      <Text style={[styles.notifTitle, { color: colors.text }]}>{notif.title}</Text>
+                      <Text style={[styles.notifMessage, { color: colors.textMuted }]}>{notif.message}</Text>
+                    </View>
+                  </View>
+                ))
+              )}
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Reminders Modal */}
+      <Modal visible={showReminders} animationType="slide" transparent>
+        <View style={[styles.modalOverlay, { backgroundColor: 'rgba(0,0,0,0.5)' }]}>
+          <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
+            <View style={styles.modalHeader}>
+              <Text style={[styles.modalTitle, { color: colors.text }]}>Reminders</Text>
+              <TouchableOpacity onPress={() => setShowReminders(false)}>
+                <Ionicons name="close" size={24} color={colors.text} />
+              </TouchableOpacity>
+            </View>
+            <ScrollView style={styles.modalScroll}>
+              {reminders.length === 0 ? (
+                <Text style={[styles.emptyText, { color: colors.textMuted }]}>No upcoming reminders</Text>
+              ) : (
+                reminders.map((reminder, index) => (
+                  <View key={index} style={[styles.notifItem, { borderLeftColor: reminder.priority === 'high' ? colors.error : colors.warning, borderLeftWidth: 3 }]}>
+                    <Ionicons name="alarm" size={24} color={reminder.priority === 'high' ? colors.error : colors.warning} />
+                    <View style={styles.notifContent}>
+                      <Text style={[styles.notifTitle, { color: colors.text }]}>{reminder.title}</Text>
+                      <Text style={[styles.notifMessage, { color: colors.textMuted }]}>{reminder.message}</Text>
+                    </View>
+                  </View>
+                ))
+              )}
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Contact Us Bottom Sheet */}
+      <Modal visible={showContactSheet} animationType="slide" transparent>
+        <KeyboardAvoidingView 
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.modalOverlay}
+        >
+          <TouchableOpacity 
+            style={styles.modalBackdrop} 
+            activeOpacity={1} 
+            onPress={() => setShowContactSheet(false)}
+          />
+          <View style={[styles.bottomSheet, { backgroundColor: colors.surface }]}>
+            <View style={styles.sheetHandle} />
+            <Text style={[styles.sheetTitle, { color: colors.text }]}>Contact Us</Text>
+            
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Subject</Text>
+            <TextInput
+              style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
+              placeholder="What can we help you with?"
+              placeholderTextColor={colors.textMuted}
+              value={contactSubject}
+              onChangeText={setContactSubject}
+            />
+            
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Message</Text>
+            <TextInput
+              style={[styles.input, styles.textArea, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
+              placeholder="Describe your issue or question..."
+              placeholderTextColor={colors.textMuted}
+              value={contactMessage}
+              onChangeText={setContactMessage}
+              multiline
+              numberOfLines={4}
+            />
+            
+            <TouchableOpacity 
+              style={[styles.submitButton, { backgroundColor: colors.primary }]}
+              onPress={handleContactSubmit}
+              disabled={submittingContact}
+            >
+              {submittingContact ? (
+                <ActivityIndicator color={colors.white} />
+              ) : (
+                <Text style={styles.submitButtonText}>Send Message</Text>
+              )}
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
+      </Modal>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: any) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
   },
   scrollContent: {
+    padding: 16,
     paddingBottom: 32,
-  },
-  scrollContentTablet: {
-    paddingVertical: 32,
   },
   contentWrapper: {
     flex: 1,
   },
   header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 32,
-    backgroundColor: colors.surface,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+    paddingVertical: 12,
   },
-  headerTablet: {
-    borderRadius: 20,
-    marginHorizontal: 20,
-    marginBottom: 8,
-    borderBottomWidth: 0,
-    borderWidth: 1,
-    borderColor: colors.border,
+  avatarContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
   },
   avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: colors.primaryLight,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 12,
-  },
-  avatarDesktop: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
   },
   avatarText: {
-    fontSize: 32,
-    fontWeight: '600',
-    color: colors.primary,
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
   },
-  avatarTextDesktop: {
-    fontSize: 40,
+  userInfo: {
+    gap: 2,
   },
   userName: {
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: '600',
-    color: colors.text,
   },
-  userNameDesktop: {
-    fontSize: 26,
+  userRole: {
+    fontSize: 13,
   },
-  userEmail: {
-    fontSize: 14,
-    color: colors.textMuted,
-    marginTop: 4,
+  headerRight: {
+    flexDirection: 'row',
+    gap: 8,
   },
-  userEmailDesktop: {
-    fontSize: 16,
+  notificationBadge: {
+    padding: 8,
+    borderRadius: 20,
+    position: 'relative',
   },
-  roleBadge: {
-    marginTop: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    backgroundColor: colors.primaryLight,
-    borderRadius: 12,
+  badge: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  roleText: {
-    fontSize: 12,
-    fontWeight: '500',
-    color: colors.primary,
-    textTransform: 'capitalize',
+  badgeText: {
+    color: '#FFFFFF',
+    fontSize: 10,
+    fontWeight: 'bold',
+  },
+  headerSeparator: {
+    height: 1,
+    marginVertical: 12,
   },
   section: {
-    marginTop: 24,
-    paddingHorizontal: 20,
-  },
-  sectionTablet: {
-    marginTop: 20,
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
   },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '600',
-    color: colors.text,
-    marginBottom: 12,
-  },
-  sectionTitleDesktop: {
-    fontSize: 18,
-  },
-  sectionAction: {
-    fontSize: 14,
-    color: colors.primary,
-    fontWeight: '500',
-  },
-  addStudentCard: {
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    padding: 24,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderStyle: 'dashed',
-  },
-  addStudentCardTablet: {
-    padding: 32,
-    borderRadius: 16,
-  },
-  addStudentText: {
-    marginTop: 8,
-    fontSize: 14,
-    color: colors.primary,
-    fontWeight: '500',
-  },
-  studentsList: {
-    gap: 12,
-  },
-  studentCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: colors.border,
-    gap: 12,
-  },
-  studentCardTablet: {
-    padding: 16,
-    borderRadius: 16,
-  },
-  studentAvatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.accent,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  studentAvatarTablet: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-  },
-  studentInitial: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#fff',
-  },
-  studentInitialTablet: {
-    fontSize: 18,
-  },
-  studentName: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: colors.text,
-  },
-  studentNameDesktop: {
-    fontSize: 16,
-  },
-  studentGrade: {
-    fontSize: 12,
-    color: colors.textMuted,
-  },
-  menuCard: {
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: colors.border,
-    overflow: 'hidden',
-  },
-  menuCardTablet: {
-    borderRadius: 16,
+    marginBottom: 8,
   },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  menuItemTablet: {
-    padding: 18,
+    paddingVertical: 12,
   },
   menuItemLeft: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
+    flex: 1,
   },
-  menuItemLabel: {
+  menuItemText: {
     fontSize: 15,
-    color: colors.text,
   },
-  menuItemLabelDesktop: {
-    fontSize: 17,
+  menuBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 10,
+    marginRight: 8,
+  },
+  menuBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 11,
+    fontWeight: '600',
+  },
+  reminderBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 10,
+  },
+  reminderBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 11,
+    fontWeight: '600',
+  },
+  reminderItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingVertical: 8,
+  },
+  reminderText: {
+    fontSize: 13,
+    flex: 1,
   },
   logoutButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 32,
-    marginHorizontal: 20,
-    padding: 16,
-    backgroundColor: colors.errorLight,
-    borderRadius: 12,
     gap: 8,
-  },
-  logoutButtonTablet: {
-    padding: 18,
-    borderRadius: 14,
+    padding: 14,
+    borderRadius: 12,
+    marginTop: 8,
   },
   logoutText: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '600',
-    color: colors.error,
+  },
+  version: {
+    textAlign: 'center',
+    marginTop: 16,
+    fontSize: 12,
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalContent: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    maxHeight: '80%',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  modalScroll: {
+    padding: 16,
+  },
+  emptyText: {
+    textAlign: 'center',
+    paddingVertical: 32,
+  },
+  notifItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 12,
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+  notifContent: {
+    flex: 1,
+  },
+  notifTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  notifMessage: {
+    fontSize: 13,
+    marginTop: 2,
+  },
+  bottomSheet: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+  },
+  sheetHandle: {
+    width: 40,
+    height: 4,
+    backgroundColor: colors.gray300,
+    borderRadius: 2,
+    alignSelf: 'center',
+    marginBottom: 16,
+  },
+  sheetTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 16,
+  },
+  inputLabel: {
+    fontSize: 13,
+    marginBottom: 6,
+  },
+  input: {
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 15,
+    marginBottom: 12,
+  },
+  textArea: {
+    height: 100,
+    textAlignVertical: 'top',
+  },
+  submitButton: {
+    padding: 14,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  submitButtonText: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '600',
   },
 });
