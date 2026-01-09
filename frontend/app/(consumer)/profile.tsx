@@ -234,7 +234,7 @@ export default function ProfileScreen() {
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
             
-            <TouchableOpacity style={styles.menuItem} onPress={() => setShowNotifications(true)}>
+            <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(consumer)/notifications')}>
               <View style={styles.menuItemLeft}>
                 <Ionicons name="notifications-outline" size={22} color={colors.primary} />
                 <Text style={[styles.menuItemText, { color: colors.text }]}>Notifications</Text>
@@ -246,11 +246,32 @@ export default function ProfileScreen() {
               )}
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
+
+            <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(consumer)/reminders')}>
+              <View style={styles.menuItemLeft}>
+                <Ionicons name="alarm-outline" size={22} color={colors.primary} />
+                <Text style={[styles.menuItemText, { color: colors.text }]}>Reminders</Text>
+              </View>
+              {reminders.length > 0 && (
+                <View style={[styles.menuBadge, { backgroundColor: colors.warning }]}>
+                  <Text style={styles.menuBadgeText}>{reminders.length}</Text>
+                </View>
+              )}
+              <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
             
-            <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(consumer)/payment-methods')}>
+            <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(consumer)/billing')}>
               <View style={styles.menuItemLeft}>
                 <Ionicons name="card-outline" size={22} color={colors.primary} />
-                <Text style={[styles.menuItemText, { color: colors.text }]}>Payment Methods</Text>
+                <Text style={[styles.menuItemText, { color: colors.text }]}>Billing</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(consumer)/invite-provider')}>
+              <View style={styles.menuItemLeft}>
+                <Ionicons name="person-add-outline" size={22} color={colors.primary} />
+                <Text style={[styles.menuItemText, { color: colors.text }]}>Invite Providers</Text>
               </View>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
