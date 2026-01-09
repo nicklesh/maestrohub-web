@@ -217,9 +217,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       console.error('Logout error:', error);
     }
     await clearAuth();
-    // Force redirect on web
+    // Force redirect on web using location.replace for hard refresh
     if (Platform.OS === 'web' && typeof window !== 'undefined') {
-      window.location.href = '/login';
+      // Use replace to prevent back navigation to logged-in state
+      window.location.replace('/login');
     }
   };
 
