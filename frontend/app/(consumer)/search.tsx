@@ -396,19 +396,21 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     marginBottom: 12,
   },
-  tagsRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 6,
+  subjectPillsContainer: {
     marginBottom: 12,
   },
-  tag: {
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 12,
+  subjectPillsRow: {
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+    gap: 6,
   },
-  tagText: {
-    fontSize: 12,
+  subjectPill: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 14,
+  },
+  subjectPillText: {
+    fontSize: 11,
     fontWeight: '500',
   },
   modalityRow: {
