@@ -137,6 +137,7 @@ export default function TutorDashboard() {
   if (!hasProfile) {
     return (
       <SafeAreaView style={styles.container}>
+        <AppHeader />
         <View style={[styles.onboardingPrompt, contentMaxWidth ? { maxWidth: contentMaxWidth } : undefined]}>
           <Ionicons name="school-outline" size={isTablet ? 80 : 64} color={colors.primary} />
           <Text style={[styles.onboardingTitle, isDesktop && styles.onboardingTitleDesktop]}>Complete Your Profile</Text>
