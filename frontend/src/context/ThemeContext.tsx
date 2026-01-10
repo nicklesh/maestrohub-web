@@ -92,55 +92,13 @@ interface ThemeProviderProps {
 }
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
+  // Theme is per-session only - starts as light mode for every user
   const [isDark, setIsDark] = useState(false);
-  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadThemePreference();
-  }, []);
-
-  // Update theme when user changes
-  const updateUserTheme = async (userId: string | null) => {
-    setCurrentUserId(userId);
-    if (userId) {
-      try {
-        const stored = await AsyncStorage.getItem(`theme_preference_${userId}`);
-        setIsDark(stored === 'dark');
-      } catch (error) {
-        // Default to light for new users
-        setIsDark(false);
-      }
-    } else {
-      // No user - reset to light
-      setIsDark(false);
-    }
-  };
-
-  const loadThemePreference = async () => {
-    try {
-      // Check for global theme first (backwards compatibility)
-      const stored = await AsyncStorage.getItem('theme_preference');
-      if (stored === 'dark') {
-        setIsDark(true);
-      }
-    } catch (error) {
-      console.error('Failed to load theme preference:', error);
-    }
-  };
-
-  const toggleTheme = async () => {
-    const newValue = !isDark;
-    setIsDark(newValue);
-    try {
-      // Save per-user preference if user is logged in
-      if (currentUserId) {
-        await AsyncStorage.setItem(`theme_preference_${currentUserId}`, newValue ? 'dark' : 'light');
-      }
-      // Also save global preference as fallback
-      await AsyncStorage.setItem('theme_preference', newValue ? 'dark' : 'light');
-    } catch (error) {
-      console.error('Failed to save theme preference:', error);
-    }
+  const toggleTheme = () => {
+    setIsDark(!isDark);
+    // Theme is NOT persisted - it resets on each session
+    // This ensures each user starts with light mode
   };
 
   const colors = isDark ? darkTheme : lightTheme;
