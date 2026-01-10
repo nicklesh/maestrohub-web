@@ -95,8 +95,13 @@ export default function ProfileScreen() {
     if (Platform.OS === 'web') {
       const confirmed = window.confirm('Are you sure you want to logout?');
       if (confirmed) {
-        await logout();
-        // AuthContext handles redirect for web
+        try {
+          await logout();
+        } catch (e) {
+          console.error('Logout error:', e);
+        }
+        // Force redirect after logout
+        window.location.href = '/login';
       }
     } else {
       Alert.alert('Logout', 'Are you sure you want to logout?', [
@@ -109,10 +114,8 @@ export default function ProfileScreen() {
               await logout();
             } catch (e) {
               console.error('Logout error:', e);
-            } finally {
-              // Always navigate to login regardless of logout API success
-              router.replace('/(auth)/login');
             }
+            router.replace('/(auth)/login');
           }
         },
       ]);
