@@ -375,6 +375,13 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   },
   flag: {
     fontSize: 32,
+    backgroundColor: '#1E3A5F',
+    width: 48,
+    height: 48,
+    textAlign: 'center',
+    lineHeight: 48,
+    borderRadius: 8,
+    overflow: 'hidden',
   },
   marketInfo: {
     flex: 1,
