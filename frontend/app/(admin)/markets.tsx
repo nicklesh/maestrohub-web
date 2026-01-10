@@ -9,11 +9,14 @@ import {
   RefreshControl,
   Alert,
   useWindowDimensions,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { api } from '@/src/services/api';
-import { colors } from '@/src/theme/colors';
+import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
+import { useAuth } from '@/src/context/AuthContext';
+import AppHeader from '@/src/components/AppHeader';
 
 interface MarketStats {
   published_tutors: number;
@@ -70,16 +73,19 @@ const COUNTRY_NAMES: Record<string, string> = {
 
 export default function AdminMarketsScreen() {
   const { width } = useWindowDimensions();
+  const { colors } = useTheme();
+  const { token } = useAuth();
   const [markets, setMarkets] = useState<Market[]>([]);
   const [analytics, setAnalytics] = useState<Record<string, MarketAnalytics>>({});
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedMarket, setSelectedMarket] = useState<string | null>(null);
 
-  // Responsive breakpoints
   const isTablet = width >= 768;
   const isDesktop = width >= 1024;
   const contentMaxWidth = isDesktop ? 960 : isTablet ? 720 : undefined;
+
+  const styles = getStyles(colors);
 
   useEffect(() => {
     loadData();
@@ -88,8 +94,8 @@ export default function AdminMarketsScreen() {
   const loadData = async () => {
     try {
       const [marketsRes, analyticsRes] = await Promise.all([
-        api.get('/admin/markets'),
-        api.get('/admin/analytics/markets'),
+        api.get('/admin/markets', { headers: { Authorization: `Bearer ${token}` } }),
+        api.get('/admin/analytics/markets', { headers: { Authorization: `Bearer ${token}` } }),
       ]);
       setMarkets(marketsRes.data.markets);
       setAnalytics(analyticsRes.data.analytics);
@@ -108,14 +114,19 @@ export default function AdminMarketsScreen() {
 
   const handleToggleMarket = async (marketId: string) => {
     try {
-      await api.post(`/admin/markets/${marketId}/toggle`);
-      Alert.alert(
-        'Market Toggle',
-        'Market toggle logged. Server restart required to apply changes.'
-      );
+      await api.post(`/admin/markets/${marketId}/toggle`, {}, { headers: { Authorization: `Bearer ${token}` } });
+      if (Platform.OS === 'web') {
+        window.alert('Market toggle logged. Server restart required to apply changes.');
+      } else {
+        Alert.alert('Market Toggle', 'Market toggle logged. Server restart required to apply changes.');
+      }
       loadData();
     } catch (error) {
-      Alert.alert('Error', 'Failed to toggle market');
+      if (Platform.OS === 'web') {
+        window.alert('Failed to toggle market');
+      } else {
+        Alert.alert('Error', 'Failed to toggle market');
+      }
     }
   };
 
@@ -124,10 +135,7 @@ export default function AdminMarketsScreen() {
     const isSelected = selectedMarket === market.market_id;
 
     return (
-      <View
-        key={market.market_id}
-        style={[styles.marketCard, isTablet && styles.marketCardTablet]}
-      >
+      <View key={market.market_id} style={[styles.marketCard, isTablet && styles.marketCardTablet]}>
         {/* Header */}
         <TouchableOpacity
           style={styles.marketHeader}
@@ -142,21 +150,12 @@ export default function AdminMarketsScreen() {
               {market.currency_symbol} {market.currency} • {market.default_timezone}
             </Text>
           </View>
-          <View
-            style={[
-              styles.statusBadge,
-              market.is_enabled ? styles.statusEnabled : styles.statusDisabled,
-            ]}
-          >
-            <Text style={styles.statusText}>
+          <View style={[styles.statusBadge, market.is_enabled ? styles.statusEnabled : styles.statusDisabled]}>
+            <Text style={[styles.statusText, { color: market.is_enabled ? colors.success : colors.error }]}>
               {market.is_enabled ? 'Active' : 'Disabled'}
             </Text>
           </View>
-          <Ionicons
-            name={isSelected ? 'chevron-up' : 'chevron-down'}
-            size={20}
-            color={colors.textMuted}
-          />
+          <Ionicons name={isSelected ? 'chevron-up' : 'chevron-down'} size={20} color={colors.textMuted} />
         </TouchableOpacity>
 
         {/* Stats Summary */}
@@ -179,10 +178,9 @@ export default function AdminMarketsScreen() {
             </Text>
             <Text style={styles.statLabel}>Bookings</Text>
           </View>
-          <View style={styles.statItem}>
+          <View style={[styles.statItem, { borderRightWidth: 0 }]}>
             <Text style={[styles.statValue, isDesktop && styles.statValueDesktop]}>
-              {market.currency_symbol}
-              {(market.stats?.total_revenue || 0).toLocaleString()}
+              {market.currency_symbol}{(market.stats?.total_revenue || 0).toLocaleString()}
             </Text>
             <Text style={styles.statLabel}>Revenue</Text>
           </View>
@@ -196,23 +194,17 @@ export default function AdminMarketsScreen() {
               <View style={styles.analyticsItem}>
                 <Ionicons name="checkmark-circle" size={18} color={colors.success} />
                 <Text style={styles.analyticsLabel}>Published</Text>
-                <Text style={styles.analyticsValue}>
-                  {marketAnalytics.supply.published_tutors}
-                </Text>
+                <Text style={styles.analyticsValue}>{marketAnalytics.supply.published_tutors}</Text>
               </View>
               <View style={styles.analyticsItem}>
                 <Ionicons name="time" size={18} color={colors.accent} />
                 <Text style={styles.analyticsLabel}>Pending</Text>
-                <Text style={styles.analyticsValue}>
-                  {marketAnalytics.supply.pending_tutors}
-                </Text>
+                <Text style={styles.analyticsValue}>{marketAnalytics.supply.pending_tutors}</Text>
               </View>
               <View style={styles.analyticsItem}>
                 <Ionicons name="calendar" size={18} color={colors.primary} />
                 <Text style={styles.analyticsLabel}>With Availability</Text>
-                <Text style={styles.analyticsValue}>
-                  {marketAnalytics.supply.active_tutors_with_availability}
-                </Text>
+                <Text style={styles.analyticsValue}>{marketAnalytics.supply.active_tutors_with_availability}</Text>
               </View>
             </View>
 
@@ -221,40 +213,28 @@ export default function AdminMarketsScreen() {
               <View style={styles.analyticsItem}>
                 <Ionicons name="checkmark-done" size={18} color={colors.success} />
                 <Text style={styles.analyticsLabel}>Completed</Text>
-                <Text style={styles.analyticsValue}>
-                  {marketAnalytics.bookings.completed}
-                </Text>
+                <Text style={styles.analyticsValue}>{marketAnalytics.bookings.completed}</Text>
               </View>
               <View style={styles.analyticsItem}>
                 <Ionicons name="close-circle" size={18} color={colors.error} />
                 <Text style={styles.analyticsLabel}>Canceled</Text>
-                <Text style={styles.analyticsValue}>
-                  {marketAnalytics.bookings.canceled}
-                </Text>
+                <Text style={styles.analyticsValue}>{marketAnalytics.bookings.canceled}</Text>
               </View>
               <View style={styles.analyticsItem}>
                 <Ionicons name="stats-chart" size={18} color={colors.primary} />
-                <Text style={styles.analyticsLabel}>Completion Rate</Text>
-                <Text style={styles.analyticsValue}>
-                  {marketAnalytics.bookings.completion_rate}%
-                </Text>
+                <Text style={styles.analyticsLabel}>Rate</Text>
+                <Text style={styles.analyticsValue}>{marketAnalytics.bookings.completion_rate}%</Text>
               </View>
             </View>
 
             {/* Actions */}
             <View style={styles.actionsRow}>
               <TouchableOpacity
-                style={[styles.actionButton, styles.actionButtonSecondary]}
+                style={styles.actionButton}
                 onPress={() => handleToggleMarket(market.market_id)}
               >
-                <Ionicons
-                  name={market.is_enabled ? 'pause' : 'play'}
-                  size={18}
-                  color={colors.primary}
-                />
-                <Text style={styles.actionButtonTextSecondary}>
-                  {market.is_enabled ? 'Disable' : 'Enable'}
-                </Text>
+                <Ionicons name={market.is_enabled ? 'pause' : 'play'} size={18} color={colors.primary} />
+                <Text style={styles.actionButtonText}>{market.is_enabled ? 'Disable' : 'Enable'}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -266,6 +246,7 @@ export default function AdminMarketsScreen() {
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
+        <AppHeader showBack={false} />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -275,11 +256,10 @@ export default function AdminMarketsScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <AppHeader showBack={false} />
       <ScrollView
         contentContainerStyle={[styles.scrollContent, isTablet && styles.scrollContentTablet]}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
         <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
           {/* Header */}
@@ -290,7 +270,7 @@ export default function AdminMarketsScreen() {
             </Text>
           </View>
 
-          {/* Feature Flags Info */}
+          {/* Info Card */}
           <View style={[styles.infoCard, isTablet && styles.infoCardTablet]}>
             <Ionicons name="information-circle" size={20} color={colors.primary} />
             <View style={styles.infoContent}>
@@ -311,7 +291,7 @@ export default function AdminMarketsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colors: ThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
@@ -368,12 +348,12 @@ const styles = StyleSheet.create({
   infoTitle: {
     fontSize: 14,
     fontWeight: '600',
-    color: colors.primaryDark,
+    color: colors.primary,
     marginBottom: 4,
   },
   infoText: {
     fontSize: 13,
-    color: colors.primary,
+    color: colors.text,
     lineHeight: 20,
   },
   marketCard: {
@@ -456,7 +436,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: colors.border,
     padding: 16,
-    backgroundColor: colors.gray100,
+    backgroundColor: colors.background,
   },
   analyticsSectionTablet: {
     padding: 20,
@@ -481,6 +461,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     padding: 10,
     borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   analyticsLabel: {
     flex: 1,
@@ -505,11 +487,9 @@ const styles = StyleSheet.create({
     gap: 6,
     paddingVertical: 12,
     borderRadius: 10,
-  },
-  actionButtonSecondary: {
     backgroundColor: colors.primaryLight,
   },
-  actionButtonTextSecondary: {
+  actionButtonText: {
     fontSize: 14,
     fontWeight: '600',
     color: colors.primary,
