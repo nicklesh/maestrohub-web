@@ -6,7 +6,7 @@ import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 
 export default function Index() {
   const { user, loading } = useAuth();
-  const { colors } = useTheme();
+  const { colors, loadUserTheme, isDark } = useTheme();
   const router = useRouter();
   const { width } = useWindowDimensions();
   
@@ -16,6 +16,13 @@ export default function Index() {
   const logoHeight = isDesktop ? 200 : isTablet ? 175 : 150;
 
   const styles = getStyles(colors);
+
+  // Load user's theme preference when user is available
+  useEffect(() => {
+    if (user?.user_id) {
+      loadUserTheme(user.user_id);
+    }
+  }, [user?.user_id]);
 
   useEffect(() => {
     if (!loading) {
