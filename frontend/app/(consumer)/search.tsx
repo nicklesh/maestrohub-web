@@ -42,7 +42,7 @@ export default function SearchScreen() {
   const { width } = useWindowDimensions();
   const { colors } = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
-  const [category, setCategory] = useState(params.category as string || 'all');
+  const [category, setCategory] = useState('all');
   const [tutors, setTutors] = useState<Tutor[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
@@ -54,6 +54,13 @@ export default function SearchScreen() {
   const isDesktop = width >= 1024;
   const containerMaxWidth = isDesktop ? 1200 : isTablet ? 900 : undefined;
   const numColumns = isDesktop ? 3 : isTablet ? 2 : 1;
+
+  // Update category when params change (from home page navigation)
+  useEffect(() => {
+    if (params.category && params.category !== category) {
+      setCategory(params.category as string);
+    }
+  }, [params.category]);
 
   useEffect(() => {
     loadCategories();
