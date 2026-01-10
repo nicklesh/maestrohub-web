@@ -16,10 +16,19 @@ export default function AdminLayout() {
         tabBarStyle: {
           backgroundColor: colors.surface,
           borderTopColor: colors.border,
-          height: Platform.OS === 'ios' ? 85 : 70,
-          paddingBottom: Platform.OS === 'ios' ? 25 : 10,
-          paddingTop: 10,
+          height: Platform.OS === 'ios' ? 88 : 65,
+          paddingBottom: Platform.OS === 'ios' ? 28 : 8,
+          paddingTop: 6,
         },
+        tabBarLabelStyle: {
+          fontSize: 10,
+          fontWeight: '500',
+          marginTop: 2,
+        },
+        tabBarIconStyle: {
+          marginTop: 4,
+        },
+      }}
         tabBarLabelStyle: {
           fontSize: 12,
           fontWeight: '500',
