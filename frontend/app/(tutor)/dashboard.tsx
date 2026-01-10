@@ -71,31 +71,58 @@ export default function TutorDashboard() {
         const profileRes = await api.get('/tutors/profile', {
           headers: { Authorization: `Bearer ${token}` }
         });
-        setHasProfile(true);
+        
+        // Profile exists
+        if (profileRes.data && (profileRes.data.bio || profileRes.data.subjects?.length > 0)) {
+          setHasProfile(true);
+          setStats({
+            total_bookings: 0,
+            completed_lessons: 0,
+            total_earnings: 0,
+            rating_avg: profileRes.data.rating_avg || 0,
+            rating_count: profileRes.data.rating_count || 0,
+          });
+        } else {
+          // Profile exists but incomplete
+          setHasProfile(false);
+          setLoading(false);
+          return;
+        }
+      } catch (error: any) {
+        // 404 means no profile
+        if (error.response?.status === 404) {
+          setHasProfile(false);
+          setLoading(false);
+          return;
+        }
+        // For 401/403 auth errors, log out
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          console.error('Auth error, token may be invalid');
+          setLoading(false);
+          return;
+        }
+        // For other errors (500, network, etc.), show dashboard with empty state
+        console.error('Profile check error:', error.message || error);
+        setHasProfile(true); // Assume profile exists to avoid infinite loop
         setStats({
           total_bookings: 0,
           completed_lessons: 0,
           total_earnings: 0,
-          rating_avg: profileRes.data.rating_avg || 0,
-          rating_count: profileRes.data.rating_count || 0,
+          rating_avg: 0,
+          rating_count: 0,
         });
-      } catch (error: any) {
-        // 404 means no profile, other errors might be auth issues
-        if (error.response?.status === 404) {
-          setHasProfile(false);
-        } else {
-          console.error('Profile check error:', error);
-          setHasProfile(false);
-        }
-        setLoading(false);
-        return;
       }
 
       // Load bookings
-      const bookingsRes = await api.get('/bookings?role=tutor', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setBookings(bookingsRes.data);
+      try {
+        const bookingsRes = await api.get('/bookings?role=tutor', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setBookings(bookingsRes.data || []);
+      } catch (e) {
+        console.log('Bookings not available');
+        setBookings([]);
+      }
 
       // Load billing stats
       try {
@@ -104,8 +131,8 @@ export default function TutorDashboard() {
         });
         setStats((prev) => ({
           ...prev!,
-          completed_lessons: billingRes.data.completed_lessons,
-          total_earnings: billingRes.data.total_earnings,
+          completed_lessons: billingRes.data.completed_lessons || 0,
+          total_earnings: billingRes.data.total_earnings || 0,
         }));
       } catch (e) {
         console.log('Billing not available');
