@@ -358,7 +358,7 @@ export default function CalendarScreen() {
         <View style={[styles.calendarGrid, { backgroundColor: colors.surface }]}>
           {/* Empty cells before first day */}
           {Array.from({ length: startingDay }, (_, i) => (
-            <View key={`empty-${i}`} style={styles.dayCell} />
+            <View key={`empty-${i}`} style={[styles.dayCell, styles.emptyDayCell, { borderColor: colors.border }]} />
           ))}
           {/* Day cells */}
           {Array.from({ length: daysInMonth }, (_, i) => renderCalendarDay(i + 1))}
