@@ -80,11 +80,11 @@ export default function AppHeader({ showBack = false, title, showUserName = fals
       if (confirmed) {
         try {
           await logout();
-          // AuthContext handles redirect for web
         } catch (error) {
           console.error('Logout error:', error);
-          window.location.replace('/login');
         }
+        // Force redirect after logout regardless of success/failure
+        window.location.href = '/login';
       }
     } else {
       Alert.alert('Logout', 'Are you sure you want to logout?', [
@@ -95,11 +95,10 @@ export default function AppHeader({ showBack = false, title, showUserName = fals
           onPress: async () => {
             try {
               await logout();
-              router.replace('/(auth)/login');
             } catch (error) {
               console.error('Logout error:', error);
-              router.replace('/(auth)/login');
             }
+            router.replace('/(auth)/login');
           }
         },
       ]);
