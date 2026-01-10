@@ -36,7 +36,7 @@ interface TutorStats {
 }
 
 export default function TutorDashboard() {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const { colors } = useTheme();
   const router = useRouter();
   const { width } = useWindowDimensions();
@@ -54,7 +54,9 @@ export default function TutorDashboard() {
   const styles = getStyles(colors);
 
   useEffect(() => {
-    loadData();
+    if (token) {
+      loadData();
+    }
   }, [token]);
 
   const loadData = async () => {
