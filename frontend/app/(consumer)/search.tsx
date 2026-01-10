@@ -404,18 +404,21 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     marginBottom: 12,
   },
+  subjectPillsWrapper: {
+    overflow: 'hidden',
+    marginBottom: 12,
+  },
   subjectPillsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 6,
-    marginBottom: 12,
   },
   subjectPill: {
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 14,
     marginBottom: 4,
-    flexShrink: 1,
+    maxWidth: 120,
   },
   subjectPillText: {
     fontSize: 11,
