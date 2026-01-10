@@ -2674,25 +2674,21 @@ async def get_categories():
             {"id": "culture_inclusion", "name": "Culture, Inclusion & Experiences", "subjects": [
                 "Diversity & Inclusion", "Team-Building", "Travel Coaching"
             ]},
-            # Performance & Creative Arts (updated)
+            # Performance & Creative Arts
             {"id": "performance_arts", "name": "Performance & Creative Arts", "subjects": [
                 "Performance Coaching", "Sports", "Music", "Acting", "Voice", "Dance", 
-                "Stage Presence & Theatre"
+                "Stage Presence & Theatre", "Piano", "Guitar", "Violin", "Drums", "Music Theory"
             ]},
-            # Academics (new/updated)
+            # Academics
             {"id": "academics", "name": "Academics", "subjects": [
                 "Homework Support", "Mathematics", "Advanced Mathematics", "Science", 
                 "Coding/Programming", "Languages & Writing", "Social Studies & Humanities", 
                 "Test Prep", "Study & Academic Skills"
             ]},
-            # Activities & Hobbies (new)
+            # Activities & Hobbies
             {"id": "activities_hobbies", "name": "Activities & Hobbies", "subjects": [
                 "Art & Design", "Yoga", "STEM & Interest Clubs", "Debates", "Photography", 
                 "Cooking & Baking", "Games", "Memory Training"
-            ]},
-            # Music
-            {"id": "music", "name": "Music", "subjects": [
-                "Piano", "Guitar", "Voice", "Violin", "Drums", "Music Theory"
             ]}
         ],
         "levels": [
