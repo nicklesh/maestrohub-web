@@ -1008,6 +1008,129 @@ async def send_student_schedule_email(student_id: str, request: Request):
         "bookings_count": len(bookings)
     }
 
+# ============== TUTOR SCHEDULE ROUTES ==============
+
+class WeeklyScheduleItem(BaseModel):
+    day: int  # 0-6 (Sun-Sat)
+    enabled: bool
+    startTime: str
+    endTime: str
+
+class ScheduleCreate(BaseModel):
+    weeklySchedule: List[WeeklyScheduleItem]
+    duration: str  # month, quarter, year, custom
+    customMonths: Optional[int] = None
+    startDate: str
+    endDate: str
+    autoRenew: bool
+    reminderDays: int = 14
+
+@api_router.get("/tutors/schedule")
+async def get_tutor_schedule(request: Request):
+    """Get tutor's schedule configuration"""
+    user = await require_auth(request)
+    
+    tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Tutor profile not found")
+    
+    schedule = await db.tutor_schedules.find_one({"tutor_id": tutor["tutor_id"]}, {"_id": 0})
+    if not schedule:
+        raise HTTPException(status_code=404, detail="No schedule found")
+    
+    return schedule
+
+@api_router.post("/tutors/schedule")
+async def save_tutor_schedule(data: ScheduleCreate, request: Request):
+    """Save tutor's recurring schedule"""
+    user = await require_auth(request)
+    
+    tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Tutor profile not found")
+    
+    schedule_doc = {
+        "tutor_id": tutor["tutor_id"],
+        "weeklySchedule": [s.dict() for s in data.weeklySchedule],
+        "duration": data.duration,
+        "customMonths": data.customMonths,
+        "startDate": data.startDate,
+        "endDate": data.endDate,
+        "autoRenew": data.autoRenew,
+        "reminderDays": data.reminderDays,
+        "updated_at": datetime.now(timezone.utc)
+    }
+    
+    # Upsert the schedule
+    await db.tutor_schedules.update_one(
+        {"tutor_id": tutor["tutor_id"]},
+        {"$set": schedule_doc},
+        upsert=True
+    )
+    
+    # Generate availability slots from the weekly schedule
+    await generate_availability_from_schedule(tutor["tutor_id"], data)
+    
+    # If auto-renew is enabled, create a reminder notification
+    if data.autoRenew:
+        reminder_date = datetime.strptime(data.endDate, "%Y-%m-%d") - timedelta(days=data.reminderDays)
+        await db.scheduled_notifications.insert_one({
+            "notification_id": f"notif_{uuid.uuid4().hex[:8]}",
+            "user_id": user.user_id,
+            "type": "schedule_renewal",
+            "title": "Schedule Auto-Renewal Reminder",
+            "message": f"Your schedule will auto-renew on {data.endDate}",
+            "scheduled_for": reminder_date,
+            "created_at": datetime.now(timezone.utc)
+        })
+    
+    return {"success": True, "message": "Schedule saved successfully"}
+
+async def generate_availability_from_schedule(tutor_id: str, schedule: ScheduleCreate):
+    """Generate availability slots from weekly schedule"""
+    from datetime import date as date_type
+    
+    start = datetime.strptime(schedule.startDate, "%Y-%m-%d")
+    end = datetime.strptime(schedule.endDate, "%Y-%m-%d")
+    
+    # Remove existing weekly rules for this tutor
+    await db.availability.delete_many({
+        "tutor_id": tutor_id,
+        "type": "weekly",
+        "source": "schedule_builder"
+    })
+    
+    # Create weekly rules for each enabled day
+    for day_schedule in schedule.weeklySchedule:
+        if not day_schedule.enabled:
+            continue
+        
+        # Parse times
+        start_hour, start_min = map(int, day_schedule.startTime.split(':'))
+        end_hour, end_min = map(int, day_schedule.endTime.split(':'))
+        
+        # Create 1-hour slots for each hour in the range
+        current_hour = start_hour
+        while current_hour < end_hour:
+            slot_start = f"{current_hour:02d}:00"
+            slot_end = f"{current_hour + 1:02d}:00"
+            
+            await db.availability.insert_one({
+                "availability_id": f"avail_{uuid.uuid4().hex[:8]}",
+                "tutor_id": tutor_id,
+                "type": "weekly",
+                "source": "schedule_builder",
+                "day_of_week": day_schedule.day,
+                "start_time": slot_start,
+                "end_time": slot_end,
+                "valid_from": start,
+                "valid_until": end,
+                "auto_renew": schedule.autoRenew,
+                "created_at": datetime.now(timezone.utc)
+            })
+            
+            current_hour += 1
+
 # ============== TUTOR PROFILE ROUTES ==============
 
 @api_router.post("/tutors/profile", response_model=TutorProfile)
