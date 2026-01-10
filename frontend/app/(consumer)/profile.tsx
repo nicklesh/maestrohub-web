@@ -91,17 +91,34 @@ export default function ProfileScreen() {
   }, []);
 
   const handleLogout = async () => {
+    const doLogout = async () => {
+      try {
+        // Clear storage first on web
+        if (Platform.OS === 'web') {
+          try {
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('user_data');
+            sessionStorage.clear();
+          } catch (e) {
+            console.error('Storage clear error:', e);
+          }
+        }
+        
+        // Call logout to clear auth state
+        await logout();
+      } catch (e) {
+        console.error('Logout error:', e);
+      }
+      
+      // Navigate to login - use router.replace for expo-router
+      router.replace('/(auth)/login');
+    };
+
     // On web, use window.confirm instead of Alert
     if (Platform.OS === 'web') {
       const confirmed = window.confirm('Are you sure you want to logout?');
       if (confirmed) {
-        try {
-          await logout();
-        } catch (e) {
-          console.error('Logout error:', e);
-        }
-        // Force redirect after logout
-        window.location.href = '/login';
+        await doLogout();
       }
     } else {
       Alert.alert('Logout', 'Are you sure you want to logout?', [
@@ -109,14 +126,7 @@ export default function ProfileScreen() {
         { 
           text: 'Logout', 
           style: 'destructive', 
-          onPress: async () => {
-            try {
-              await logout();
-            } catch (e) {
-              console.error('Logout error:', e);
-            }
-            router.replace('/(auth)/login');
-          }
+          onPress: doLogout
         },
       ]);
     }
