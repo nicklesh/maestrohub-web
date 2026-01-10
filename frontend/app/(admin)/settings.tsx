@@ -7,15 +7,17 @@ import {
   TouchableOpacity,
   Alert,
   useWindowDimensions,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
-import { colors } from '@/src/theme/colors';
+import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 
 export default function AdminSettings() {
   const { user, logout } = useAuth();
+  const { colors } = useTheme();
   const router = useRouter();
   const { width } = useWindowDimensions();
 
@@ -24,18 +26,28 @@ export default function AdminSettings() {
   const isDesktop = width >= 1024;
   const contentMaxWidth = isDesktop ? 600 : isTablet ? 520 : undefined;
 
-  const handleLogout = () => {
-    Alert.alert('Logout', 'Are you sure?', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Logout',
-        style: 'destructive',
-        onPress: async () => {
-          await logout();
-          router.replace('/');
+  const styles = getStyles(colors);
+
+  const handleLogout = async () => {
+    if (Platform.OS === 'web') {
+      const confirmed = window.confirm('Are you sure you want to logout?');
+      if (confirmed) {
+        await logout();
+        // AuthContext handles web redirect
+      }
+    } else {
+      Alert.alert('Logout', 'Are you sure?', [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Logout',
+          style: 'destructive',
+          onPress: async () => {
+            await logout();
+            router.replace('/(auth)/login');
+          },
         },
-      },
-    ]);
+      ]);
+    }
   };
 
   return (
