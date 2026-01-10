@@ -350,7 +350,6 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     borderWidth: 1,
     overflow: 'hidden',
-    flex: 1,
   },
   cardTablet: {
     padding: 20,
