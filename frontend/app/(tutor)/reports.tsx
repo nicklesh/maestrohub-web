@@ -160,8 +160,6 @@ export default function TutorReportsScreen() {
     } finally {
       setDownloading(false);
     }
-  };;
-    }
   };
 
   const formatCurrency = (cents: number) => {
