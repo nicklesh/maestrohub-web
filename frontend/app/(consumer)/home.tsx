@@ -122,19 +122,16 @@ export default function HomeScreen() {
       <View style={[styles.categoryIcon, isTablet && styles.categoryIconTablet]}>
         <Ionicons
           name={getCategoryIcon(category.id) as any}
-          size={isTablet ? 36 : 32}
+          size={isTablet ? 36 : 28}
           color={colors.primary}
         />
       </View>
-      <View style={styles.categoryInfo}>
-        <Text style={[styles.categoryName, isTablet && styles.categoryNameTablet]}>
-          {category.name}
-        </Text>
-        <Text style={styles.categorySubjects}>
-          {category.subjects.slice(0, 3).join(', ')}
-        </Text>
-      </View>
-      <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+      <Text style={[styles.categoryName, isTablet && styles.categoryNameTablet]} numberOfLines={2}>
+        {category.name}
+      </Text>
+      <Text style={styles.categorySubjects}>
+        {category.subjects.length} subjects
+      </Text>
     </TouchableOpacity>
   );
 
