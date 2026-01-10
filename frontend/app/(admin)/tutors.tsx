@@ -9,11 +9,14 @@ import {
   Alert,
   RefreshControl,
   useWindowDimensions,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { api } from '@/src/services/api';
-import { colors } from '@/src/theme/colors';
+import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
+import { useAuth } from '@/src/context/AuthContext';
+import AppHeader from '@/src/components/AppHeader';
 
 interface Tutor {
   tutor_id: string;
@@ -35,17 +38,19 @@ const STATUS_FILTER = [
 
 export default function AdminTutors() {
   const { width } = useWindowDimensions();
+  const { colors } = useTheme();
+  const { token } = useAuth();
   const [tutors, setTutors] = useState<Tutor[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [filter, setFilter] = useState('all');
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
-  // Responsive breakpoints
   const isTablet = width >= 768;
   const isDesktop = width >= 1024;
   const contentMaxWidth = isDesktop ? 960 : isTablet ? 720 : undefined;
-  const numColumns = isDesktop ? 2 : 1;
+
+  const styles = getStyles(colors);
 
   useEffect(() => {
     loadTutors();
@@ -54,7 +59,10 @@ export default function AdminTutors() {
   const loadTutors = async () => {
     try {
       const params = filter !== 'all' ? { status: filter } : {};
-      const response = await api.get('/admin/tutors', { params });
+      const response = await api.get('/admin/tutors', { 
+        params,
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setTutors(response.data);
     } catch (error) {
       console.error('Failed to load tutors:', error);
@@ -69,92 +77,111 @@ export default function AdminTutors() {
     loadTutors();
   };
 
+  const showAlert = (title: string, message: string) => {
+    if (Platform.OS === 'web') {
+      window.alert(`${title}: ${message}`);
+    } else {
+      Alert.alert(title, message);
+    }
+  };
+
   const handleApprove = async (tutorId: string) => {
     setActionLoading(tutorId);
     try {
-      await api.post(`/admin/tutors/${tutorId}/approve`);
-      Alert.alert('Success', 'Tutor approved!');
+      await api.post(`/admin/tutors/${tutorId}/approve`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      showAlert('Success', 'Tutor approved!');
       loadTutors();
     } catch (error) {
-      Alert.alert('Error', 'Failed to approve tutor');
+      showAlert('Error', 'Failed to approve tutor');
     } finally {
       setActionLoading(null);
     }
   };
 
-  const handleSuspend = (tutor: Tutor) => {
-    Alert.alert(
-      'Suspend Tutor',
-      `Are you sure you want to suspend ${tutor.user_name}?`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Suspend',
-          style: 'destructive',
-          onPress: async () => {
-            setActionLoading(tutor.tutor_id);
-            try {
-              await api.post(`/admin/tutors/${tutor.tutor_id}/suspend`);
-              Alert.alert('Success', 'Tutor suspended');
-              loadTutors();
-            } catch (error) {
-              Alert.alert('Error', 'Failed to suspend tutor');
-            } finally {
-              setActionLoading(null);
-            }
-          },
-        },
-      ]
-    );
+  const handleSuspend = async (tutorId: string) => {
+    setActionLoading(tutorId);
+    try {
+      await api.post(`/admin/tutors/${tutorId}/suspend`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      showAlert('Success', 'Tutor suspended');
+      loadTutors();
+    } catch (error) {
+      showAlert('Error', 'Failed to suspend tutor');
+    } finally {
+      setActionLoading(null);
+    }
   };
 
-  const renderTutorCard = ({ item, index }: { item: Tutor; index: number }) => (
-    <View
-      style={[
-        styles.tutorCard,
-        isTablet && styles.tutorCardTablet,
-        isDesktop && {
-          marginRight: index % 2 === 0 ? 8 : 0,
-          marginLeft: index % 2 === 1 ? 8 : 0,
-          flex: 1,
-        },
-      ]}
-    >
-      <View style={styles.tutorHeader}>
-        <View style={[styles.tutorAvatar, isTablet && styles.tutorAvatarTablet]}>
+  // Truncate text to max chars
+  const truncateText = (text: string, maxLength: number = 12) => {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + '...';
+  };
+
+  const renderTutor = ({ item }: { item: Tutor }) => (
+    <View style={[styles.card, isTablet && styles.cardTablet]}>
+      <View style={styles.cardHeader}>
+        <View style={[styles.avatar, isTablet && styles.avatarTablet]}>
           <Text style={[styles.avatarText, isTablet && styles.avatarTextTablet]}>
             {item.user_name?.charAt(0)?.toUpperCase() || 'T'}
           </Text>
         </View>
         <View style={styles.tutorInfo}>
-          <Text style={[styles.tutorName, isDesktop && styles.tutorNameDesktop]}>{item.user_name}</Text>
-          <Text style={styles.tutorEmail}>{item.user_email}</Text>
+          <Text style={[styles.tutorName, isDesktop && styles.tutorNameDesktop]} numberOfLines={1}>
+            {item.user_name}
+          </Text>
+          <Text style={styles.tutorEmail} numberOfLines={1}>{item.user_email}</Text>
         </View>
         <View
           style={[
             styles.statusBadge,
-            item.status === 'approved'
-              ? styles.statusApproved
-              : item.status === 'pending'
-              ? styles.statusPending
-              : styles.statusSuspended,
+            item.status === 'approved' && styles.statusApproved,
+            item.status === 'pending' && styles.statusPending,
+            item.status === 'suspended' && styles.statusSuspended,
           ]}
         >
-          <Text style={styles.statusText}>{item.status}</Text>
+          <Text style={styles.statusText}>
+            {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
+          </Text>
         </View>
       </View>
 
-      <View style={styles.tutorMeta}>
-        <Text style={styles.metaText}>
-          {item.categories.join(', ')} - {item.subjects.slice(0, 3).join(', ')}
-        </Text>
-        <Text style={[styles.metaPrice, isDesktop && styles.metaPriceDesktop]}>${item.base_price}/hr</Text>
+      {/* Categories and Subjects - Trimmed Pills */}
+      <View style={styles.tagsContainer}>
+        {(item.categories || []).slice(0, 2).map((cat) => (
+          <View key={cat} style={styles.categoryPill}>
+            <Text style={styles.categoryPillText}>{truncateText(cat, 15)}</Text>
+          </View>
+        ))}
+        {(item.subjects || []).slice(0, 2).map((subj) => (
+          <View key={subj} style={styles.subjectPill}>
+            <Text style={styles.subjectPillText}>{truncateText(subj, 12)}</Text>
+          </View>
+        ))}
+        {((item.categories?.length || 0) + (item.subjects?.length || 0)) > 4 && (
+          <View style={styles.morePill}>
+            <Text style={styles.morePillText}>
+              +{(item.categories?.length || 0) + (item.subjects?.length || 0) - 4}
+            </Text>
+          </View>
+        )}
       </View>
 
+      <View style={styles.priceRow}>
+        <Text style={styles.price}>${item.base_price}/hr</Text>
+        <Text style={styles.publishStatus}>
+          {item.is_published ? '✓ Published' : '○ Unpublished'}
+        </Text>
+      </View>
+
+      {/* Action Buttons */}
       <View style={styles.actions}>
-        {item.status === 'pending' && (
+        {item.status !== 'approved' && (
           <TouchableOpacity
-            style={[styles.approveButton, isTablet && styles.approveButtonTablet]}
+            style={[styles.actionBtn, styles.approveBtn, isTablet && styles.actionBtnTablet]}
             onPress={() => handleApprove(item.tutor_id)}
             disabled={actionLoading === item.tutor_id}
           >
@@ -162,88 +189,83 @@ export default function AdminTutors() {
               <ActivityIndicator size="small" color="#fff" />
             ) : (
               <>
-                <Ionicons name="checkmark" size={18} color="#fff" />
-                <Text style={styles.approveButtonText}>Approve</Text>
+                <Ionicons name="checkmark" size={16} color="#fff" />
+                <Text style={styles.actionBtnText}>Approve</Text>
               </>
             )}
           </TouchableOpacity>
         )}
         {item.status !== 'suspended' && (
           <TouchableOpacity
-            style={[styles.suspendButton, isTablet && styles.suspendButtonTablet]}
-            onPress={() => handleSuspend(item)}
+            style={[styles.actionBtn, styles.suspendBtn, isTablet && styles.actionBtnTablet]}
+            onPress={() => handleSuspend(item.tutor_id)}
             disabled={actionLoading === item.tutor_id}
           >
-            <Ionicons name="close" size={18} color={colors.error} />
-            <Text style={styles.suspendButtonText}>Suspend</Text>
-          </TouchableOpacity>
-        )}
-        {item.status === 'suspended' && (
-          <TouchableOpacity
-            style={[styles.approveButton, isTablet && styles.approveButtonTablet]}
-            onPress={() => handleApprove(item.tutor_id)}
-            disabled={actionLoading === item.tutor_id}
-          >
-            <Ionicons name="refresh" size={18} color="#fff" />
-            <Text style={styles.approveButtonText}>Reactivate</Text>
+            {actionLoading === item.tutor_id ? (
+              <ActivityIndicator size="small" color="#fff" />
+            ) : (
+              <>
+                <Ionicons name="close" size={16} color="#fff" />
+                <Text style={styles.actionBtnText}>Suspend</Text>
+              </>
+            )}
           </TouchableOpacity>
         )}
       </View>
     </View>
   );
 
-  if (loading) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={colors.primary} />
-        </View>
-      </SafeAreaView>
-    );
-  }
-
   return (
     <SafeAreaView style={styles.container}>
+      <AppHeader showBack={false} />
       <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
+        {/* Header */}
         <View style={[styles.header, isTablet && styles.headerTablet]}>
           <Text style={[styles.title, isDesktop && styles.titleDesktop]}>Manage Tutors</Text>
         </View>
 
-        {/* Filter */}
-        <FlatList
-          data={STATUS_FILTER}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={[styles.filterList, isTablet && styles.filterListTablet]}
-          renderItem={({ item }) => (
+        {/* Filter Tabs */}
+        <View style={[styles.filterRow, isTablet && styles.filterRowTablet]}>
+          {STATUS_FILTER.map((f) => (
             <TouchableOpacity
-              style={[styles.filterChip, isTablet && styles.filterChipTablet, filter === item.id && styles.filterChipActive]}
-              onPress={() => setFilter(item.id)}
+              key={f.id}
+              style={[
+                styles.filterChip,
+                filter === f.id && styles.filterChipActive,
+              ]}
+              onPress={() => setFilter(f.id)}
             >
-              <Text style={[styles.filterText, isTablet && styles.filterTextTablet, filter === item.id && styles.filterTextActive]}>
-                {item.name}
+              <Text
+                style={[
+                  styles.filterChipText,
+                  filter === f.id && styles.filterChipTextActive,
+                ]}
+              >
+                {f.name}
               </Text>
             </TouchableOpacity>
-          )}
-          keyExtractor={(item) => item.id}
-        />
+          ))}
+        </View>
 
         {/* Tutors List */}
-        {tutors.length === 0 ? (
-          <View style={styles.emptyContainer}>
-            <Ionicons name="people-outline" size={isTablet ? 80 : 64} color={colors.textMuted} />
-            <Text style={[styles.emptyText, isDesktop && styles.emptyTextDesktop]}>No tutors found</Text>
+        {loading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={colors.primary} />
           </View>
         ) : (
           <FlatList
             data={tutors}
-            renderItem={renderTutorCard}
+            renderItem={renderTutor}
             keyExtractor={(item) => item.tutor_id}
-            contentContainerStyle={[styles.listContent, isTablet && styles.listContentTablet]}
-            numColumns={numColumns}
-            key={numColumns}
+            contentContainerStyle={styles.listContent}
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            ListEmptyComponent={
+              <View style={styles.emptyContainer}>
+                <Ionicons name="people-outline" size={64} color={colors.textMuted} />
+                <Text style={styles.emptyText}>No tutors found</Text>
+              </View>
             }
           />
         )}
@@ -252,15 +274,10 @@ export default function AdminTutors() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colors: ThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   contentWrapper: {
     flex: 1,
@@ -270,22 +287,24 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
   },
   headerTablet: {
-    paddingHorizontal: 24,
+    padding: 24,
+    paddingBottom: 12,
   },
   title: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: 'bold',
     color: colors.text,
   },
   titleDesktop: {
-    fontSize: 32,
+    fontSize: 28,
   },
-  filterList: {
-    paddingHorizontal: 20,
-    paddingVertical: 12,
+  filterRow: {
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+    marginBottom: 16,
     gap: 8,
   },
-  filterListTablet: {
+  filterRowTablet: {
     paddingHorizontal: 24,
   },
   filterChip: {
@@ -295,36 +314,28 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
-    marginRight: 8,
-  },
-  filterChipTablet: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 24,
   },
   filterChipActive: {
     backgroundColor: colors.primary,
     borderColor: colors.primary,
   },
-  filterText: {
+  filterChipText: {
     fontSize: 14,
+    fontWeight: '500',
     color: colors.text,
   },
-  filterTextTablet: {
-    fontSize: 16,
+  filterChipTextActive: {
+    color: '#FFFFFF',
   },
-  filterTextActive: {
-    color: '#fff',
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   listContent: {
-    padding: 20,
-    paddingTop: 0,
+    padding: 16,
   },
-  listContentTablet: {
-    padding: 24,
-    paddingTop: 0,
-  },
-  tutorCard: {
+  card: {
     backgroundColor: colors.surface,
     borderRadius: 16,
     padding: 16,
@@ -332,15 +343,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
-  tutorCardTablet: {
+  cardTablet: {
     borderRadius: 20,
     padding: 20,
   },
-  tutorHeader: {
+  cardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 12,
   },
-  tutorAvatar: {
+  avatar: {
     width: 48,
     height: 48,
     borderRadius: 24,
@@ -348,7 +360,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  tutorAvatarTablet: {
+  avatarTablet: {
     width: 56,
     height: 56,
     borderRadius: 28,
@@ -376,11 +388,13 @@ const styles = StyleSheet.create({
   tutorEmail: {
     fontSize: 13,
     color: colors.textMuted,
+    marginTop: 2,
   },
   statusBadge: {
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 12,
+    backgroundColor: colors.gray200,
   },
   statusApproved: {
     backgroundColor: colors.successLight,
@@ -392,83 +406,101 @@ const styles = StyleSheet.create({
     backgroundColor: colors.errorLight,
   },
   statusText: {
-    fontSize: 12,
-    fontWeight: '500',
-    textTransform: 'capitalize',
-  },
-  tutorMeta: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 12,
-    paddingTop: 12,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-  },
-  metaText: {
-    fontSize: 13,
-    color: colors.textMuted,
-    flex: 1,
-  },
-  metaPrice: {
-    fontSize: 14,
+    fontSize: 11,
     fontWeight: '600',
+    color: colors.text,
+  },
+  tagsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+    marginBottom: 12,
+  },
+  categoryPill: {
+    backgroundColor: colors.primaryLight,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  categoryPillText: {
+    fontSize: 11,
+    fontWeight: '500',
     color: colors.primary,
   },
-  metaPriceDesktop: {
+  subjectPill: {
+    backgroundColor: colors.gray200,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  subjectPillText: {
+    fontSize: 11,
+    fontWeight: '500',
+    color: colors.text,
+  },
+  morePill: {
+    backgroundColor: colors.border,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  morePillText: {
+    fontSize: 11,
+    fontWeight: '500',
+    color: colors.textMuted,
+  },
+  priceRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  price: {
     fontSize: 16,
+    fontWeight: '700',
+    color: colors.primary,
+  },
+  publishStatus: {
+    fontSize: 12,
+    color: colors.textMuted,
   },
   actions: {
     flexDirection: 'row',
     gap: 8,
-    marginTop: 12,
   },
-  approveButton: {
+  actionBtn: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingVertical: 10,
+    borderRadius: 10,
     gap: 6,
+  },
+  actionBtnTablet: {
+    paddingVertical: 12,
+    borderRadius: 12,
+  },
+  approveBtn: {
     backgroundColor: colors.success,
-    paddingVertical: 10,
-    borderRadius: 8,
   },
-  approveButtonTablet: {
-    paddingVertical: 12,
-    borderRadius: 10,
+  suspendBtn: {
+    backgroundColor: colors.error,
   },
-  approveButtonText: {
+  actionBtnText: {
     color: '#fff',
-    fontWeight: '600',
-  },
-  suspendButton: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    backgroundColor: colors.errorLight,
-    paddingVertical: 10,
-    borderRadius: 8,
-  },
-  suspendButtonTablet: {
-    paddingVertical: 12,
-    borderRadius: 10,
-  },
-  suspendButtonText: {
-    color: colors.error,
+    fontSize: 14,
     fontWeight: '600',
   },
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 40,
   },
   emptyText: {
     fontSize: 16,
     color: colors.textMuted,
     marginTop: 16,
-  },
-  emptyTextDesktop: {
-    fontSize: 18,
   },
 });
