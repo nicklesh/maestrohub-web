@@ -88,7 +88,7 @@ export default function LoginScreen() {
             <View style={[styles.header, isDesktop && styles.headerDesktop]}>
               <Image
                 source={isDark 
-                  ? require('../../assets/images/mh_logo_trimmed.png')
+                  ? require('../../assets/images/mh_logo_dark_trimmed.png')
                   : require('../../assets/images/mh_logo_trimmed.png')
                 }
                 style={{ width: logoWidth, height: logoHeight }}
