@@ -408,15 +408,13 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 6,
     marginBottom: 12,
-    maxWidth: '100%',
-    overflow: 'hidden',
   },
   subjectPill: {
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 14,
     marginBottom: 4,
-    maxWidth: 120,
+    flexShrink: 1,
   },
   subjectPillText: {
     fontSize: 11,
