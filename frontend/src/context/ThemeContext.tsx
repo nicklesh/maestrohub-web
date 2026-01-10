@@ -77,12 +77,6 @@ interface ThemeContextType {
   isDark: boolean;
   colors: ThemeColors;
   toggleTheme: () => void;
-}
-
-interface ThemeContextType {
-  isDark: boolean;
-  colors: ThemeColors;
-  toggleTheme: () => void;
   setUserForTheme?: (userId: string | null) => void;
 }
 
