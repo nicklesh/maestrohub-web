@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   useWindowDimensions,
+  ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
@@ -30,12 +31,11 @@ interface Tutor {
   currency_symbol: string;
 }
 
-const CATEGORIES = [
-  { id: 'all', label: 'All' },
-  { id: 'academic', label: 'Academic' },
-  { id: 'music', label: 'Music' },
-  { id: 'activities', label: 'Activities' },
-];
+interface Category {
+  id: string;
+  name: string;
+  subjects: string[];
+}
 
 export default function SearchScreen() {
   const router = useRouter();
@@ -45,6 +45,7 @@ export default function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [category, setCategory] = useState(params.category as string || 'all');
   const [tutors, setTutors] = useState<Tutor[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -56,8 +57,21 @@ export default function SearchScreen() {
   const numColumns = isDesktop ? 3 : isTablet ? 2 : 1;
 
   useEffect(() => {
+    loadCategories();
+  }, []);
+
+  useEffect(() => {
     searchTutors(true);
   }, [category]);
+
+  const loadCategories = async () => {
+    try {
+      const response = await api.get('/categories');
+      setCategories(response.data.categories || []);
+    } catch (error) {
+      console.error('Failed to load categories:', error);
+    }
+  };
 
   const searchTutors = async (reset = false) => {
     const currentPage = reset ? 1 : page;
@@ -104,7 +118,7 @@ export default function SearchScreen() {
     >
       <View style={styles.cardHeader}>
         <View style={[styles.avatar, { backgroundColor: colors.primary }]}>
-          <Text style={styles.avatarText}>{item.user_name?.charAt(0) || 'T'}</Text>
+          <Text style={styles.avatarText}>{item.user_name?.charAt(0)?.toUpperCase() || 'T'}</Text>
         </View>
         <View style={styles.cardInfo}>
           <Text style={[styles.tutorName, { color: colors.text }]} numberOfLines={1}>{item.user_name}</Text>
@@ -127,30 +141,48 @@ export default function SearchScreen() {
         {item.bio || 'No bio available'}
       </Text>
 
-      <View style={styles.tagsRow}>
-        {(item.subjects || []).slice(0, 3).map((subject) => (
-          <View key={subject} style={[styles.tag, { backgroundColor: colors.primaryLight }]}>
-            <Text style={[styles.tagText, { color: colors.primary }]}>{subject}</Text>
+      {/* Subject Pills */}
+      <View style={styles.subjectPillsContainer}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <View style={styles.subjectPillsRow}>
+            {(item.subjects || []).slice(0, 5).map((subject, index) => (
+              <View key={`${subject}-${index}`} style={[styles.subjectPill, { backgroundColor: colors.primaryLight }]}>
+                <Text style={[styles.subjectPillText, { color: colors.primary }]}>{subject}</Text>
+              </View>
+            ))}
+            {(item.subjects || []).length > 5 && (
+              <View style={[styles.subjectPill, { backgroundColor: colors.gray200 }]}>
+                <Text style={[styles.subjectPillText, { color: colors.textMuted }]}>
+                  +{item.subjects.length - 5}
+                </Text>
+              </View>
+            )}
           </View>
-        ))}
+        </ScrollView>
       </View>
 
       <View style={styles.modalityRow}>
         {(item.modality || []).map((m) => (
           <View key={m} style={styles.modalityItem}>
             <Ionicons
-              name={m === 'online' ? 'videocam' : 'location'}
+              name={m === 'online' ? 'videocam' : m === 'hybrid' ? 'sync' : 'location'}
               size={14}
               color={colors.textMuted}
             />
             <Text style={[styles.modalityText, { color: colors.textMuted }]}>
-              {m === 'online' ? 'Online' : 'In-Person'}
+              {m === 'online' ? 'Online' : m === 'hybrid' ? 'Hybrid' : 'In-Person'}
             </Text>
           </View>
         ))}
       </View>
     </TouchableOpacity>
   );
+
+  // Prepare category filter list with "All" at the start
+  const categoryFilters = [
+    { id: 'all', name: 'All', subjects: [] },
+    ...categories
+  ];
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
@@ -182,7 +214,7 @@ export default function SearchScreen() {
           <FlatList
             horizontal
             showsHorizontalScrollIndicator={false}
-            data={CATEGORIES}
+            data={categoryFilters}
             keyExtractor={(item) => item.id}
             contentContainerStyle={styles.filterList}
             renderItem={({ item }) => (
@@ -198,6 +230,15 @@ export default function SearchScreen() {
                   style={[
                     styles.filterChipText,
                     { color: colors.text },
+                    category === item.id && { color: '#FFFFFF' }
+                  ]}
+                >
+                  {item.name}
+                </Text>
+              </TouchableOpacity>
+            )}
+          />
+        </View>
                     category === item.id && styles.filterChipTextActive
                   ]}
                 >
