@@ -79,10 +79,18 @@ interface ThemeContextType {
   toggleTheme: () => void;
 }
 
+interface ThemeContextType {
+  isDark: boolean;
+  colors: ThemeColors;
+  toggleTheme: () => void;
+  setUserForTheme?: (userId: string | null) => void;
+}
+
 const ThemeContext = createContext<ThemeContextType>({
   isDark: false,
   colors: lightTheme,
   toggleTheme: () => {},
+  setUserForTheme: () => {},
 });
 
 export const useTheme = () => useContext(ThemeContext);
