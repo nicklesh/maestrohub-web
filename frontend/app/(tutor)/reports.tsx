@@ -109,16 +109,58 @@ export default function TutorReportsScreen() {
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
         
-        Alert.alert('Success', 'Report downloaded successfully');
+        if (Platform.OS === 'web') {
+          window.alert('Report downloaded successfully');
+        } else {
+          Alert.alert('Success', 'Report downloaded successfully');
+        }
       } else {
-        // For mobile, show info about web availability
-        Alert.alert('Info', 'PDF download is available in the web version. Please use the web app to download reports.');
+        // For iOS/Android, download to file system and share
+        const fileName = `maestrohub_earnings_${new Date().toISOString().split('T')[0]}.pdf`;
+        const fileUri = FileSystem.documentDirectory + fileName;
+        
+        // Get the base URL from API config
+        const baseUrl = api.defaults.baseURL || '';
+        const downloadUrl = `${baseUrl}/reports/provider/pdf`;
+        
+        // Download the file with authorization
+        const downloadResult = await FileSystem.downloadAsync(
+          downloadUrl,
+          fileUri,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        
+        if (downloadResult.status === 200) {
+          // Check if sharing is available
+          const isAvailable = await Sharing.isAvailableAsync();
+          if (isAvailable) {
+            await Sharing.shareAsync(downloadResult.uri, {
+              mimeType: 'application/pdf',
+              dialogTitle: 'Share Earnings Report',
+              UTI: 'com.adobe.pdf',
+            });
+          } else {
+            Alert.alert('Success', `Report saved to ${fileName}`);
+          }
+        } else {
+          throw new Error('Download failed');
+        }
       }
     } catch (error) {
       console.error('PDF download error:', error);
-      Alert.alert('Error', 'Failed to download report. Please try again.');
+      if (Platform.OS === 'web') {
+        window.alert('Failed to download report. Please try again.');
+      } else {
+        Alert.alert('Error', 'Failed to download report. Please try again.');
+      }
     } finally {
       setDownloading(false);
+    }
+  };;
     }
   };
 
