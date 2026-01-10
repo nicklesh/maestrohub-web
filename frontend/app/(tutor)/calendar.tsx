@@ -42,6 +42,7 @@ const TIME_SLOTS = Array.from({ length: 14 }, (_, i) => {
 export default function CalendarScreen() {
   const { token } = useAuth();
   const { colors } = useTheme();
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [rules, setRules] = useState<AvailabilityRule[]>([]);
