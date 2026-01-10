@@ -239,15 +239,6 @@ export default function SearchScreen() {
             )}
           />
         </View>
-                    category === item.id && styles.filterChipTextActive
-                  ]}
-                >
-                  {item.label}
-                </Text>
-              </TouchableOpacity>
-            )}
-          />
-        </View>
 
         {/* Results */}
         {loading && tutors.length === 0 ? (
