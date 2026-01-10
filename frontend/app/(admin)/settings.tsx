@@ -8,20 +8,21 @@ import {
   Alert,
   useWindowDimensions,
   Platform,
+  Switch,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
 import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
+import AppHeader from '@/src/components/AppHeader';
 
 export default function AdminSettings() {
   const { user, logout } = useAuth();
-  const { colors } = useTheme();
+  const { colors, isDark, toggleTheme } = useTheme();
   const router = useRouter();
   const { width } = useWindowDimensions();
 
-  // Responsive breakpoints
   const isTablet = width >= 768;
   const isDesktop = width >= 1024;
   const contentMaxWidth = isDesktop ? 600 : isTablet ? 520 : undefined;
@@ -31,7 +32,6 @@ export default function AdminSettings() {
   const handleLogout = async () => {
     const doLogout = async () => {
       try {
-        // Clear storage first on web
         if (Platform.OS === 'web') {
           try {
             localStorage.removeItem('auth_token');
@@ -41,14 +41,10 @@ export default function AdminSettings() {
             console.error('Storage clear error:', e);
           }
         }
-        
-        // Call logout to clear auth state
         await logout();
       } catch (e) {
         console.error('Logout error:', e);
       }
-      
-      // Navigate to login - use router.replace for expo-router
       router.replace('/(auth)/login');
     };
 
@@ -60,19 +56,25 @@ export default function AdminSettings() {
     } else {
       Alert.alert('Logout', 'Are you sure?', [
         { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Logout',
-          style: 'destructive',
-          onPress: doLogout,
-        },
+        { text: 'Logout', style: 'destructive', onPress: doLogout },
       ]);
+    }
+  };
+
+  const showComingSoon = (feature: string) => {
+    if (Platform.OS === 'web') {
+      window.alert(`${feature} settings coming soon!`);
+    } else {
+      Alert.alert('Coming Soon', `${feature} settings will be available in a future update.`);
     }
   };
 
   return (
     <SafeAreaView style={styles.container}>
+      <AppHeader showBack={false} />
       <ScrollView contentContainerStyle={[styles.scrollContent, isTablet && styles.scrollContentTablet]}>
         <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
+          {/* Header */}
           <View style={styles.header}>
             <Text style={[styles.title, isDesktop && styles.titleDesktop]}>Settings</Text>
           </View>
@@ -93,19 +95,51 @@ export default function AdminSettings() {
             </View>
           </View>
 
-          {/* Menu */}
+          {/* Appearance Section */}
+          <View style={[styles.card, isTablet && styles.cardTablet]}>
+            <Text style={[styles.cardTitle, isDesktop && styles.cardTitleDesktop]}>Appearance</Text>
+            <View style={styles.themeRow}>
+              <View style={styles.themeLeft}>
+                <Ionicons 
+                  name={isDark ? 'moon' : 'sunny'} 
+                  size={isTablet ? 24 : 22} 
+                  color={colors.primary} 
+                />
+                <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>
+                  Dark Mode
+                </Text>
+              </View>
+              <Switch
+                value={isDark}
+                onValueChange={toggleTheme}
+                trackColor={{ false: colors.gray300, true: colors.primary }}
+                thumbColor={isDark ? colors.white : colors.white}
+              />
+            </View>
+          </View>
+
+          {/* Admin Menu */}
           <View style={[styles.menu, isTablet && styles.menuTablet]}>
-            <TouchableOpacity style={[styles.menuItem, isTablet && styles.menuItemTablet]}>
-              <Ionicons name="settings-outline" size={isTablet ? 24 : 22} color={colors.primary} />
+            <TouchableOpacity 
+              style={[styles.menuItem, isTablet && styles.menuItemTablet]}
+              onPress={() => showComingSoon('Pricing Policies')}
+            >
+              <Ionicons name="pricetag-outline" size={isTablet ? 24 : 22} color={colors.primary} />
               <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Pricing Policies</Text>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.menuItem, isTablet && styles.menuItemTablet]}>
+            <TouchableOpacity 
+              style={[styles.menuItem, isTablet && styles.menuItemTablet]}
+              onPress={() => showComingSoon('Notifications')}
+            >
               <Ionicons name="notifications-outline" size={isTablet ? 24 : 22} color={colors.primary} />
               <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Notifications</Text>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.menuItem, isTablet && styles.menuItemTablet]}>
+            <TouchableOpacity 
+              style={[styles.menuItem, isTablet && styles.menuItemTablet, { borderBottomWidth: 0 }]}
+              onPress={() => showComingSoon('Security')}
+            >
               <Ionicons name="shield-outline" size={isTablet ? 24 : 22} color={colors.primary} />
               <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Security</Text>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
@@ -130,6 +164,7 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   },
   scrollContent: {
     padding: 20,
+    paddingBottom: 40,
   },
   scrollContentTablet: {
     padding: 32,
@@ -204,25 +239,56 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     fontSize: 16,
   },
   roleBadge: {
-    alignSelf: 'flex-start',
     marginTop: 8,
     paddingHorizontal: 10,
     paddingVertical: 4,
-    backgroundColor: colors.accent + '30',
-    borderRadius: 12,
+    backgroundColor: colors.primaryLight,
+    borderRadius: 8,
+    alignSelf: 'flex-start',
   },
   roleText: {
     fontSize: 12,
     fontWeight: '500',
-    color: colors.accent,
+    color: colors.primary,
+  },
+  card: {
+    backgroundColor: colors.surface,
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  cardTablet: {
+    borderRadius: 20,
+    padding: 24,
+  },
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.text,
+    marginBottom: 16,
+  },
+  cardTitleDesktop: {
+    fontSize: 18,
+  },
+  themeRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  themeLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
   },
   menu: {
     backgroundColor: colors.surface,
     borderRadius: 16,
+    marginBottom: 24,
     borderWidth: 1,
     borderColor: colors.border,
     overflow: 'hidden',
-    marginBottom: 24,
   },
   menuTablet: {
     borderRadius: 20,
@@ -240,18 +306,18 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   },
   menuItemText: {
     flex: 1,
-    fontSize: 15,
+    fontSize: 16,
     color: colors.text,
   },
   menuItemTextDesktop: {
-    fontSize: 17,
+    fontSize: 18,
   },
   logoutButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 16,
     backgroundColor: colors.errorLight,
+    padding: 16,
     borderRadius: 12,
     gap: 8,
   },
