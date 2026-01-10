@@ -180,6 +180,14 @@ export default function CalendarScreen() {
     setSelectedSlots(newSlots);
   };
 
+  const showAlert = (title: string, message: string) => {
+    if (Platform.OS === 'web') {
+      window.alert(`${title}: ${message}`);
+    } else {
+      Alert.alert(title, message);
+    }
+  };
+
   const saveAvailability = async () => {
     setSaving(true);
     try {
@@ -221,11 +229,11 @@ export default function CalendarScreen() {
         headers: { Authorization: `Bearer ${token}` }
       });
       
-      Alert.alert('Success', 'Availability saved successfully!');
+      showAlert('Success', 'Availability saved successfully!');
       setShowTimeModal(false);
       loadData();
     } catch (error: any) {
-      Alert.alert('Error', error.response?.data?.detail || 'Failed to save availability');
+      showAlert('Error', error.response?.data?.detail || 'Failed to save availability');
     } finally {
       setSaving(false);
     }
@@ -244,14 +252,14 @@ export default function CalendarScreen() {
         headers: { Authorization: `Bearer ${token}` }
       });
       
-      Alert.alert('Success', 'Vacation period saved!');
+      showAlert('Success', 'Vacation period saved!');
       setShowVacationModal(false);
       setVacationStartDate(null);
       setVacationEndDate(null);
       setIsSelectingVacation(false);
       loadData();
     } catch (error: any) {
-      Alert.alert('Error', error.response?.data?.detail || 'Failed to save vacation');
+      showAlert('Error', error.response?.data?.detail || 'Failed to save vacation');
     } finally {
       setSaving(false);
     }
