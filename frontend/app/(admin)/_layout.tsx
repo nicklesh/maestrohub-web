@@ -29,11 +29,6 @@ export default function AdminLayout() {
           marginTop: 4,
         },
       }}
-        tabBarLabelStyle: {
-          fontSize: 12,
-          fontWeight: '500',
-        },
-      }}
     >
       <Tabs.Screen
         name="dashboard"
