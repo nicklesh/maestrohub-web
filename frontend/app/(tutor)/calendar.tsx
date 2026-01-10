@@ -258,23 +258,36 @@ export default function CalendarScreen() {
   };
 
   const deleteVacation = async (vacationId: string) => {
-    Alert.alert('Delete Vacation', 'Are you sure you want to delete this vacation period?', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Delete',
-        style: 'destructive',
-        onPress: async () => {
-          try {
-            await api.delete(`/availability/vacations/${vacationId}`, {
-              headers: { Authorization: `Bearer ${token}` }
-            });
-            loadData();
-          } catch (error) {
-            Alert.alert('Error', 'Failed to delete vacation');
-          }
+    const confirmDelete = async () => {
+      try {
+        await api.delete(`/availability/vacations/${vacationId}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        loadData();
+      } catch (error) {
+        if (Platform.OS === 'web') {
+          window.alert('Failed to delete vacation');
+        } else {
+          Alert.alert('Error', 'Failed to delete vacation');
         }
       }
-    ]);
+    };
+
+    if (Platform.OS === 'web') {
+      const confirmed = window.confirm('Are you sure you want to delete this vacation period?');
+      if (confirmed) {
+        await confirmDelete();
+      }
+    } else {
+      Alert.alert('Delete Vacation', 'Are you sure you want to delete this vacation period?', [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: confirmDelete
+        }
+      ]);
+    }
   };
 
   const renderCalendarDay = (day: number) => {
