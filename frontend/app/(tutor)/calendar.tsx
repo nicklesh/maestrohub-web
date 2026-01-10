@@ -439,6 +439,15 @@ export default function CalendarScreen() {
           <Text style={[styles.quickActionsHint, { color: colors.textMuted }]}>
             Tap any date on the calendar to set your available time slots for that day of the week.
           </Text>
+          
+          {/* Schedule Builder Button */}
+          <TouchableOpacity
+            style={[styles.scheduleBuilderBtn, { backgroundColor: colors.primary }]}
+            onPress={() => router.push('/(tutor)/schedule-builder')}
+          >
+            <Ionicons name="calendar-outline" size={20} color="#FFFFFF" />
+            <Text style={styles.scheduleBuilderBtnText}>Set Recurring Schedule</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
 
