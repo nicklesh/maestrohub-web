@@ -199,12 +199,15 @@ export default function AppHeader({ showBack = false, title, showUserName = fals
 
         {/* Right - Actions */}
         <View style={styles.headerRight}>
-          <TouchableOpacity 
-            onPress={() => setShowContactSheet(true)} 
-            style={[styles.iconButton, { backgroundColor: colors.background }]}
-          >
-            <Ionicons name="mail-outline" size={20} color={envelopeColor} />
-          </TouchableOpacity>
+          {/* Hide Contact Us for admin users */}
+          {user?.role !== 'admin' && (
+            <TouchableOpacity 
+              onPress={() => setShowContactSheet(true)} 
+              style={[styles.iconButton, { backgroundColor: colors.background }]}
+            >
+              <Ionicons name="mail-outline" size={20} color={envelopeColor} />
+            </TouchableOpacity>
+          )}
           <TouchableOpacity 
             onPress={handleLogout} 
             style={[styles.iconButton, { backgroundColor: colors.background }]}
