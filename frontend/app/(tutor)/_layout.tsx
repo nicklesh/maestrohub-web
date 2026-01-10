@@ -83,6 +83,18 @@ export default function TutorLayout() {
           href: null,
         }}
       />
+      <Tabs.Screen
+        name="faq"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="notifications"
+        options={{
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }
