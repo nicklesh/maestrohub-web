@@ -346,6 +346,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 12,
     borderWidth: 1,
+    overflow: 'hidden',
   },
   cardTablet: {
     padding: 20,
