@@ -25,6 +25,7 @@ export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   
   const { login, loginWithGoogle } = useAuth();
   const { colors, isDark } = useTheme();
@@ -43,8 +44,9 @@ export default function LoginScreen() {
   const styles = getStyles(colors);
 
   const handleLogin = async () => {
+    setErrorMessage('');
     if (!email || !password) {
-      Alert.alert('Error', 'Please fill in all fields');
+      setErrorMessage('Please fill in all fields');
       return;
     }
     
@@ -53,7 +55,12 @@ export default function LoginScreen() {
       await login(email, password);
       router.replace('/');
     } catch (error: any) {
-      Alert.alert('Login Failed', error.response?.data?.detail || 'Invalid credentials');
+      const message = error.response?.data?.detail || 'Invalid email or password';
+      setErrorMessage(message);
+      // Also show alert for native platforms
+      if (Platform.OS !== 'web') {
+        Alert.alert('Login Failed', message);
+      }
     } finally {
       setLoading(false);
     }
@@ -61,11 +68,16 @@ export default function LoginScreen() {
 
   const handleGoogleLogin = async () => {
     setGoogleLoading(true);
+    setErrorMessage('');
     try {
       await loginWithGoogle();
       router.replace('/');
-    } catch (error) {
-      Alert.alert('Error', 'Google login failed');
+    } catch (error: any) {
+      const message = 'Google login failed. Please try again.';
+      setErrorMessage(message);
+      if (Platform.OS !== 'web') {
+        Alert.alert('Error', message);
+      }
     } finally {
       setGoogleLoading(false);
     }
