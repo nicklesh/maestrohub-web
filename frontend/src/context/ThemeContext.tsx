@@ -92,19 +92,49 @@ interface ThemeProviderProps {
 }
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
-  // Theme is per-session only - starts as light mode for every user
   const [isDark, setIsDark] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
-  const toggleTheme = () => {
-    setIsDark(!isDark);
-    // Theme is NOT persisted - it resets on each session
-    // This ensures each user starts with light mode
+  // Function to load theme for a specific user
+  const loadUserTheme = async (userId: string) => {
+    if (!userId) return;
+    try {
+      const stored = await AsyncStorage.getItem(`theme_${userId}`);
+      setIsDark(stored === 'dark');
+    } catch (error) {
+      console.error('Failed to load theme:', error);
+      setIsDark(false); // Default to light
+    }
+  };
+
+  // Function to set current user (called when user logs in)
+  const setUserForTheme = async (userId: string | null) => {
+    setCurrentUserId(userId);
+    if (userId) {
+      await loadUserTheme(userId);
+    } else {
+      // Reset to light mode when logged out
+      setIsDark(false);
+    }
+  };
+
+  const toggleTheme = async () => {
+    const newValue = !isDark;
+    setIsDark(newValue);
+    // Save preference for current user
+    if (currentUserId) {
+      try {
+        await AsyncStorage.setItem(`theme_${currentUserId}`, newValue ? 'dark' : 'light');
+      } catch (error) {
+        console.error('Failed to save theme:', error);
+      }
+    }
   };
 
   const colors = isDark ? darkTheme : lightTheme;
 
   return (
-    <ThemeContext.Provider value={{ isDark, colors, toggleTheme }}>
+    <ThemeContext.Provider value={{ isDark, colors, toggleTheme, setUserForTheme }}>
       {children}
     </ThemeContext.Provider>
   );
