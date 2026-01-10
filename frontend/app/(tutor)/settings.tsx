@@ -9,6 +9,7 @@ import {
   Alert,
   useWindowDimensions,
   Platform,
+  Switch,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -32,8 +33,8 @@ interface TutorProfile {
 }
 
 export default function TutorSettings() {
-  const { user, logout } = useAuth();
-  const { colors } = useTheme();
+  const { user, logout, token } = useAuth();
+  const { colors, isDark, toggleTheme } = useTheme();
   const router = useRouter();
   const { width } = useWindowDimensions();
   const [loading, setLoading] = useState(true);
@@ -53,7 +54,9 @@ export default function TutorSettings() {
 
   const loadProfile = async () => {
     try {
-      const response = await api.get('/tutors/profile');
+      const response = await api.get('/tutors/profile', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setProfile(response.data);
     } catch (error) {
       console.error('Failed to load profile:', error);
@@ -67,13 +70,22 @@ export default function TutorSettings() {
     setToggling(true);
     try {
       if (profile.is_published) {
-        await api.post('/tutors/unpublish');
+        await api.post('/tutors/unpublish', {}, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
       } else {
-        await api.post('/tutors/publish');
+        await api.post('/tutors/publish', {}, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
       }
       loadProfile();
     } catch (error: any) {
-      Alert.alert('Error', error.response?.data?.detail || 'Failed to update');
+      const errorMsg = error.response?.data?.detail || 'Failed to update';
+      if (Platform.OS === 'web') {
+        window.alert(errorMsg);
+      } else {
+        Alert.alert('Error', errorMsg);
+      }
     } finally {
       setToggling(false);
     }
@@ -83,9 +95,16 @@ export default function TutorSettings() {
     if (Platform.OS === 'web') {
       const confirmed = window.confirm('Are you sure you want to logout?');
       if (confirmed) {
-        logout().then(() => {
-          // AuthContext handles web redirect
-        });
+        // Clear storage and redirect on web
+        try {
+          localStorage.removeItem('auth_token');
+          localStorage.removeItem('user_data');
+          sessionStorage.clear();
+        } catch (e) {
+          console.error('Storage clear error:', e);
+        }
+        // Force full page navigation to login
+        window.location.replace('/login');
       }
     } else {
       Alert.alert('Logout', 'Are you sure?', [
@@ -165,11 +184,11 @@ export default function TutorSettings() {
               </View>
               <View style={styles.infoRow}>
                 <Text style={[styles.infoLabel, isDesktop && styles.infoLabelDesktop]}>Categories</Text>
-                <Text style={[styles.infoValue, isDesktop && styles.infoValueDesktop]}>{profile.categories.join(', ')}</Text>
+                <Text style={[styles.infoValue, isDesktop && styles.infoValueDesktop]}>{profile.categories?.join(', ') || 'Not set'}</Text>
               </View>
               <View style={styles.infoRow}>
                 <Text style={[styles.infoLabel, isDesktop && styles.infoLabelDesktop]}>Subjects</Text>
-                <Text style={[styles.infoValue, isDesktop && styles.infoValueDesktop]}>{profile.subjects.join(', ')}</Text>
+                <Text style={[styles.infoValue, isDesktop && styles.infoValueDesktop]}>{profile.subjects?.join(', ') || 'Not set'}</Text>
               </View>
               <View style={styles.infoRow}>
                 <Text style={[styles.infoLabel, isDesktop && styles.infoLabelDesktop]}>Rate</Text>
@@ -179,7 +198,7 @@ export default function TutorSettings() {
               </View>
               <View style={styles.infoRow}>
                 <Text style={[styles.infoLabel, isDesktop && styles.infoLabelDesktop]}>Modality</Text>
-                <Text style={[styles.infoValue, isDesktop && styles.infoValueDesktop]}>{profile.modality.join(', ')}</Text>
+                <Text style={[styles.infoValue, isDesktop && styles.infoValueDesktop]}>{profile.modality?.join(', ') || 'Not set'}</Text>
               </View>
             </View>
           )}
@@ -215,14 +234,43 @@ export default function TutorSettings() {
             </View>
           )}
 
+          {/* Appearance Section */}
+          <View style={[styles.card, isTablet && styles.cardTablet]}>
+            <Text style={[styles.cardTitle, isDesktop && styles.cardTitleDesktop, { marginBottom: 16 }]}>Appearance</Text>
+            <View style={styles.themeRow}>
+              <View style={styles.themeLeft}>
+                <Ionicons 
+                  name={isDark ? 'moon' : 'sunny'} 
+                  size={isTablet ? 24 : 22} 
+                  color={colors.primary} 
+                />
+                <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>
+                  Dark Mode
+                </Text>
+              </View>
+              <Switch
+                value={isDark}
+                onValueChange={toggleTheme}
+                trackColor={{ false: colors.gray300, true: colors.primary }}
+                thumbColor={isDark ? colors.white : colors.white}
+              />
+            </View>
+          </View>
+
           {/* Menu Items */}
           <View style={[styles.menu, isTablet && styles.menuTablet]}>
-            <TouchableOpacity style={[styles.menuItem, isTablet && styles.menuItemTablet]}>
+            <TouchableOpacity 
+              style={[styles.menuItem, isTablet && styles.menuItemTablet]}
+              onPress={() => router.push('/(tutor)/notifications')}
+            >
               <Ionicons name="notifications-outline" size={isTablet ? 24 : 22} color={colors.primary} />
               <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Notifications</Text>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.menuItem, isTablet && styles.menuItemTablet]}>
+            <TouchableOpacity 
+              style={[styles.menuItem, isTablet && styles.menuItemTablet, { borderBottomWidth: 0 }]}
+              onPress={() => router.push('/(tutor)/faq')}
+            >
               <Ionicons name="help-circle-outline" size={isTablet ? 24 : 22} color={colors.primary} />
               <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Help & Support</Text>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
@@ -424,6 +472,16 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     color: '#fff',
     fontSize: 14,
     fontWeight: '500',
+  },
+  themeRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  themeLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
   },
   menu: {
     backgroundColor: colors.surface,
