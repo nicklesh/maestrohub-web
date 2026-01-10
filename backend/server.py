@@ -2635,20 +2635,74 @@ async def get_provider_report_pdf(
 async def get_categories():
     return {
         "categories": [
-            {"id": "academic", "name": "Academic", "subjects": ["Math", "Science", "English", "History", "Test Prep", "Writing"]},
-            {"id": "music", "name": "Music", "subjects": ["Piano", "Guitar", "Voice", "Violin", "Drums", "Music Theory"]},
-            {"id": "activities", "name": "Activities", "subjects": ["Coding", "Robotics", "Art", "Chess", "Debate", "Languages"]}
+            # Coaching & Personal Growth
+            {"id": "coaching_personal", "name": "Coaching & Personal Growth", "subjects": [
+                "Life Coaching", "Executive Coaching", "Career Coaching", "Leadership Coaching", 
+                "Agile Coaching", "Personal Development", "Confidence Coaching", 
+                "Transformational Coaching", "Motivational Coaching", "Public Speaking"
+            ]},
+            # Health, Mindfulness & Wellbeing
+            {"id": "health_mindfulness", "name": "Health, Mindfulness & Wellbeing", "subjects": [
+                "Health Coaching", "Wellness Coaching", "Mindfulness", "Meditation", 
+                "Spiritual Coaching", "Stress Management", "Mindset Coaching"
+            ]},
+            # Fitness & Nutrition
+            {"id": "fitness_nutrition", "name": "Fitness & Nutrition", "subjects": [
+                "Fitness Training", "Nutrition Coaching", "Weight Loss", "Recovery Coaching"
+            ]},
+            # Relationships & Family
+            {"id": "relationships_family", "name": "Relationships & Family", "subjects": [
+                "Relationship Coaching", "Marriage Coaching", "Parenting Coaching", 
+                "Fertility Coaching", "Divorce Coaching", "Grief Coaching"
+            ]},
+            # Business, Communication & Growth
+            {"id": "business_communication", "name": "Business, Communication & Growth", "subjects": [
+                "Sales Coaching", "Marketing Coaching", "Branding", "Communication Coaching", 
+                "Writing Coaching", "Productivity Coaching", "Business Strategy", 
+                "Image Consulting", "Personal Style"
+            ]},
+            # Finance, Legal & Negotiation
+            {"id": "finance_legal", "name": "Finance, Legal & Negotiation", "subjects": [
+                "Financial Planning", "Investment Coaching", "Retirement Planning", 
+                "Real Estate Coaching", "Legal Coaching", "Negotiation Coaching"
+            ]},
+            # Culture, Inclusion & Experiences
+            {"id": "culture_inclusion", "name": "Culture, Inclusion & Experiences", "subjects": [
+                "Diversity & Inclusion", "Team-Building", "Travel Coaching"
+            ]},
+            # Performance & Creative Arts
+            {"id": "performance_arts", "name": "Performance & Creative Arts", "subjects": [
+                "Performance Coaching", "Sports Coaching", "Music Coaching", 
+                "Acting Coaching", "Voice Coaching", "Performance Training"
+            ]},
+            # Academic (keeping original)
+            {"id": "academic", "name": "Academic", "subjects": [
+                "Math", "Science", "English", "History", "Test Prep", "Writing"
+            ]},
+            # Music (keeping original)
+            {"id": "music", "name": "Music", "subjects": [
+                "Piano", "Guitar", "Voice", "Violin", "Drums", "Music Theory"
+            ]},
+            # Activities (keeping original)
+            {"id": "activities", "name": "Activities", "subjects": [
+                "Coding", "Robotics", "Art", "Chess", "Debate", "Languages"
+            ]}
         ],
         "levels": [
+            {"id": "beginner", "name": "Beginner"},
+            {"id": "intermediate", "name": "Intermediate"},
+            {"id": "advanced", "name": "Advanced"},
             {"id": "elementary", "name": "Elementary (K-5)"},
             {"id": "middle_school", "name": "Middle School (6-8)"},
             {"id": "high_school", "name": "High School (9-12)"},
             {"id": "college", "name": "College"},
-            {"id": "adult", "name": "Adult"}
+            {"id": "adult", "name": "Adult"},
+            {"id": "professional", "name": "Professional"}
         ],
         "modalities": [
             {"id": "online", "name": "Online"},
-            {"id": "in_person", "name": "In-Person"}
+            {"id": "in_person", "name": "In-Person"},
+            {"id": "hybrid", "name": "Hybrid"}
         ]
     }
 
