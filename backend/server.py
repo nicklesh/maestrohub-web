@@ -1080,6 +1080,7 @@ async def unpublish_tutor_profile(request: Request):
 @api_router.get("/tutors/search")
 async def search_tutors(
     request: Request,
+    query: Optional[str] = None,  # Text search for name, category, subject
     category: Optional[str] = None,
     subject: Optional[str] = None,
     level: Optional[str] = None,
@@ -1090,7 +1091,7 @@ async def search_tutors(
     page: int = 1,
     limit: int = 20
 ):
-    query = {"is_published": True, "status": "approved"}
+    db_query = {"is_published": True, "status": "approved"}
     
     # Get consumer's market for filtering and exclude self from results
     current_user_id = None
@@ -1102,38 +1103,47 @@ async def search_tutors(
         
         # Enforce market filtering if market is set
         if consumer_market_id:
-            query["market_id"] = consumer_market_id
+            db_query["market_id"] = consumer_market_id
         
         # Prevent self-selection: exclude current user's tutor profile from results
         # This handles the case where a parent has also become a tutor
-        query["user_id"] = {"$ne": current_user_id}
+        db_query["user_id"] = {"$ne": current_user_id}
     except:
         # Allow unauthenticated browsing without market filter
         pass
     
+    # Text search - search in categories and subjects
+    if query:
+        # Search in categories and subjects arrays with case-insensitive regex
+        db_query["$or"] = [
+            {"categories": {"$regex": query, "$options": "i"}},
+            {"subjects": {"$regex": query, "$options": "i"}},
+            {"bio": {"$regex": query, "$options": "i"}}
+        ]
+    
     if category:
-        query["categories"] = category
+        db_query["categories"] = category
     if subject:
-        query["subjects"] = {"$regex": subject, "$options": "i"}
+        db_query["subjects"] = {"$regex": subject, "$options": "i"}
     if level:
-        query["levels"] = level
+        db_query["levels"] = level
     if modality:
-        query["modality"] = modality
+        db_query["modality"] = modality
     if min_price is not None:
-        query["base_price"] = {"$gte": min_price}
+        db_query["base_price"] = {"$gte": min_price}
     if max_price is not None:
-        if "base_price" in query:
-            query["base_price"]["$lte"] = max_price
+        if "base_price" in db_query:
+            db_query["base_price"]["$lte"] = max_price
         else:
-            query["base_price"] = {"$lte": max_price}
+            db_query["base_price"] = {"$lte": max_price}
     
     sort_field = "rating_avg" if sort_by == "rating" else "base_price" if sort_by == "price" else "created_at"
     sort_order = -1 if sort_by == "rating" else 1
     
     skip = (page - 1) * limit
-    tutors = await db.tutors.find(query, {"_id": 0}).sort(sort_field, sort_order).skip(skip).limit(limit).to_list(limit)
+    tutors = await db.tutors.find(db_query, {"_id": 0}).sort(sort_field, sort_order).skip(skip).limit(limit).to_list(limit)
     
-    # Get user info for each tutor
+    # Get user info for each tutor and also search by name if query provided
     results = []
     for tutor in tutors:
         user = await db.users.find_one({"user_id": tutor["user_id"]}, {"_id": 0})
@@ -1148,9 +1158,35 @@ async def search_tutors(
                 "currency_symbol": market_info.get("currency_symbol", "$")
             })
     
-    total = await db.tutors.count_documents(query)
+    # If query provided, also search for tutors by user name
+    if query and len(results) < limit:
+        # Search users by name
+        user_matches = await db.users.find(
+            {"name": {"$regex": query, "$options": "i"}, "role": "tutor"},
+            {"_id": 0, "user_id": 1, "name": 1, "picture": 1}
+        ).to_list(limit)
+        
+        existing_user_ids = {r["user_id"] for r in results}
+        for user_match in user_matches:
+            if user_match["user_id"] not in existing_user_ids:
+                tutor = await db.tutors.find_one({
+                    "user_id": user_match["user_id"],
+                    "is_published": True,
+                    "status": "approved"
+                }, {"_id": 0})
+                if tutor and (not current_user_id or tutor["user_id"] != current_user_id):
+                    market_info = MARKETS_CONFIG.get(tutor.get("market_id"), {})
+                    results.append({
+                        **tutor,
+                        "user_name": user_match["name"],
+                        "user_picture": user_match.get("picture"),
+                        "currency": market_info.get("currency", "USD"),
+                        "currency_symbol": market_info.get("currency_symbol", "$")
+                    })
     
-    return {"tutors": results, "total": total, "page": page, "limit": limit}
+    total = await db.tutors.count_documents(db_query)
+    
+    return {"tutors": results[:limit], "total": total, "page": page, "limit": limit}
 
 @api_router.get("/tutors/{tutor_id}")
 async def get_tutor(tutor_id: str, request: Request = None):
