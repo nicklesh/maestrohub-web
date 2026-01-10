@@ -434,7 +434,7 @@ export default function CalendarScreen() {
               <Text style={[styles.existingTitle, { color: colors.textMuted }]}>Scheduled Vacations</Text>
               {vacations.map((v) => (
                 <View key={v.vacation_id} style={[styles.vacationItem, { borderColor: colors.border }]}>
-                  <View>
+                  <View style={{ flex: 1 }}>
                     <Text style={[styles.vacationDates, { color: colors.text }]}>
                       {new Date(v.start_date).toLocaleDateString()} - {new Date(v.end_date).toLocaleDateString()}
                     </Text>
@@ -442,7 +442,11 @@ export default function CalendarScreen() {
                       <Text style={[styles.vacationReason, { color: colors.textMuted }]}>{v.reason}</Text>
                     )}
                   </View>
-                  <TouchableOpacity onPress={() => deleteVacation(v.vacation_id)}>
+                  <TouchableOpacity 
+                    style={styles.deleteVacationBtn}
+                    onPress={() => deleteVacation(v.vacation_id)}
+                    activeOpacity={0.7}
+                  >
                     <Ionicons name="trash-outline" size={20} color={colors.error} />
                   </TouchableOpacity>
                 </View>
