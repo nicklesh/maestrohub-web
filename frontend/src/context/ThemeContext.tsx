@@ -78,6 +78,7 @@ interface ThemeContextType {
   colors: ThemeColors;
   toggleTheme: () => void;
   loadUserTheme: (userId: string) => Promise<void>;
+  resetToDefault: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextType>({
@@ -85,6 +86,7 @@ const ThemeContext = createContext<ThemeContextType>({
   colors: lightTheme,
   toggleTheme: () => {},
   loadUserTheme: async () => {},
+  resetToDefault: () => {},
 });
 
 export const useTheme = () => useContext(ThemeContext);
@@ -93,55 +95,48 @@ interface ThemeProviderProps {
   children: ReactNode;
 }
 
-const THEME_KEY_PREFIX = 'theme_preference_';
-const GLOBAL_THEME_KEY = 'theme_preference';
+const THEME_KEY_PREFIX = 'user_theme_';
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
   const [isDark, setIsDark] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
-  // Load global theme preference on mount (for logged-out state)
-  useEffect(() => {
-    loadGlobalTheme();
+  // Reset to light mode (default) - used when logging out or new user
+  const resetToDefault = useCallback(() => {
+    setIsDark(false);
+    setCurrentUserId(null);
   }, []);
-
-  const loadGlobalTheme = async () => {
-    try {
-      const stored = await AsyncStorage.getItem(GLOBAL_THEME_KEY);
-      if (stored === 'dark') {
-        setIsDark(true);
-      }
-    } catch (error) {
-      console.error('Failed to load global theme:', error);
-    }
-  };
 
   // Load user-specific theme when user logs in
   const loadUserTheme = useCallback(async (userId: string) => {
     try {
+      // If same user, don't reload
+      if (currentUserId === userId) return;
+      
       setCurrentUserId(userId);
       const userThemeKey = `${THEME_KEY_PREFIX}${userId}`;
       const stored = await AsyncStorage.getItem(userThemeKey);
       
-      if (stored !== null) {
-        // User has a saved preference
-        setIsDark(stored === 'dark');
+      if (stored === 'dark') {
+        // User has dark mode saved
+        setIsDark(true);
+      } else {
+        // No preference or light mode saved - use light (default)
+        setIsDark(false);
       }
-      // If no user preference, keep current theme (from global or default)
     } catch (error) {
       console.error('Failed to load user theme:', error);
+      // On error, default to light
+      setIsDark(false);
     }
-  }, []);
+  }, [currentUserId]);
 
   const toggleTheme = async () => {
     const newValue = !isDark;
     setIsDark(newValue);
     
     try {
-      // Always save globally for logged-out state
-      await AsyncStorage.setItem(GLOBAL_THEME_KEY, newValue ? 'dark' : 'light');
-      
-      // If user is logged in, also save per-user
+      // Only save per-user if user is logged in
       if (currentUserId) {
         const userThemeKey = `${THEME_KEY_PREFIX}${currentUserId}`;
         await AsyncStorage.setItem(userThemeKey, newValue ? 'dark' : 'light');
@@ -154,7 +149,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   const colors = isDark ? darkTheme : lightTheme;
 
   return (
-    <ThemeContext.Provider value={{ isDark, colors, toggleTheme, loadUserTheme }}>
+    <ThemeContext.Provider value={{ isDark, colors, toggleTheme, loadUserTheme, resetToDefault }}>
       {children}
     </ThemeContext.Provider>
   );
