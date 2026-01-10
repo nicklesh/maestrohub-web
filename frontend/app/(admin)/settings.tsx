@@ -122,7 +122,7 @@ export default function AdminSettings() {
           <View style={[styles.menu, isTablet && styles.menuTablet]}>
             <TouchableOpacity 
               style={[styles.menuItem, isTablet && styles.menuItemTablet]}
-              onPress={() => showComingSoon('Pricing Policies')}
+              onPress={() => router.push('/(admin)/pricing')}
             >
               <Ionicons name="pricetag-outline" size={isTablet ? 24 : 22} color={colors.primary} />
               <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Pricing Policies</Text>
@@ -130,7 +130,7 @@ export default function AdminSettings() {
             </TouchableOpacity>
             <TouchableOpacity 
               style={[styles.menuItem, isTablet && styles.menuItemTablet]}
-              onPress={() => showComingSoon('Notifications')}
+              onPress={() => router.push('/(admin)/notifications-settings')}
             >
               <Ionicons name="notifications-outline" size={isTablet ? 24 : 22} color={colors.primary} />
               <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Notifications</Text>
@@ -138,7 +138,7 @@ export default function AdminSettings() {
             </TouchableOpacity>
             <TouchableOpacity 
               style={[styles.menuItem, isTablet && styles.menuItemTablet, { borderBottomWidth: 0 }]}
-              onPress={() => showComingSoon('Security')}
+              onPress={() => router.push('/(admin)/security')}
             >
               <Ionicons name="shield-outline" size={isTablet ? 24 : 22} color={colors.primary} />
               <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Security</Text>
