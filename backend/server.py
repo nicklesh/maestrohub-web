@@ -1019,11 +1019,16 @@ async def create_tutor_profile(data: TutorProfileCreate, request: Request):
     if existing:
         raise HTTPException(status_code=400, detail="Tutor profile already exists")
     
+    # Determine market_id from payout_country
+    payout_country = data.payout_country if hasattr(data, 'payout_country') else 'US'
+    market_id = f"{payout_country}_USD" if payout_country == 'US' else f"{payout_country}_INR"
+    
     tutor_id = f"tutor_{uuid.uuid4().hex[:12]}"
     tutor_doc = {
         "tutor_id": tutor_id,
         "user_id": user.user_id,
         **data.dict(),
+        "market_id": market_id,
         "status": "pending",
         "is_published": False,
         "trial_start_at": None,
