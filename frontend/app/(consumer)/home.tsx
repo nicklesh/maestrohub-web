@@ -343,6 +343,9 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   categoriesGrid: {
     paddingHorizontal: 20,
     gap: 12,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
   },
   categoriesGridTablet: {
     flexDirection: 'row',
