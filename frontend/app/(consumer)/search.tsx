@@ -141,24 +141,20 @@ export default function SearchScreen() {
         {item.bio || 'No bio available'}
       </Text>
 
-      {/* Subject Pills */}
+      {/* Subject Pills - Wrap within container */}
       <View style={styles.subjectPillsContainer}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <View style={styles.subjectPillsRow}>
-            {(item.subjects || []).slice(0, 5).map((subject, index) => (
-              <View key={`${subject}-${index}`} style={[styles.subjectPill, { backgroundColor: colors.primaryLight }]}>
-                <Text style={[styles.subjectPillText, { color: colors.primary }]}>{subject}</Text>
-              </View>
-            ))}
-            {(item.subjects || []).length > 5 && (
-              <View style={[styles.subjectPill, { backgroundColor: colors.gray200 }]}>
-                <Text style={[styles.subjectPillText, { color: colors.textMuted }]}>
-                  +{item.subjects.length - 5}
-                </Text>
-              </View>
-            )}
+        {(item.subjects || []).slice(0, 4).map((subject, index) => (
+          <View key={`${subject}-${index}`} style={[styles.subjectPill, { backgroundColor: colors.primaryLight }]}>
+            <Text style={[styles.subjectPillText, { color: colors.primary }]}>{subject}</Text>
           </View>
-        </ScrollView>
+        ))}
+        {(item.subjects || []).length > 4 && (
+          <View style={[styles.subjectPill, { backgroundColor: colors.gray200 }]}>
+            <Text style={[styles.subjectPillText, { color: colors.textMuted }]}>
+              +{item.subjects.length - 4}
+            </Text>
+          </View>
+        )}
       </View>
 
       <View style={styles.modalityRow}>
