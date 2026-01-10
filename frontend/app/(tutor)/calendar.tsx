@@ -701,6 +701,10 @@ const styles = StyleSheet.create({
   },
   vacationDates: { fontSize: 14, fontWeight: '500' },
   vacationReason: { fontSize: 12, marginTop: 2 },
+  deleteVacationBtn: {
+    padding: 10,
+    marginLeft: 8,
+  },
   quickActions: {
     padding: 16,
     borderRadius: 12,
