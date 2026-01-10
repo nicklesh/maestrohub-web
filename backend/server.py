@@ -2660,11 +2660,10 @@ async def get_categories():
                 "Relationship Coaching", "Marriage Coaching", "Parenting Coaching", 
                 "Fertility Coaching", "Divorce Coaching", "Grief Coaching"
             ]},
-            # Business, Communication & Growth
+            # Business, Communication & Growth (removed Writing)
             {"id": "business_communication", "name": "Business, Communication & Growth", "subjects": [
                 "Sales Coaching", "Marketing Coaching", "Branding", "Communication Coaching", 
-                "Writing Coaching", "Productivity Coaching", "Business Strategy", 
-                "Image Consulting", "Personal Style"
+                "Productivity Coaching", "Business Strategy", "Image Consulting", "Personal Style"
             ]},
             # Finance, Legal & Negotiation
             {"id": "finance_legal", "name": "Finance, Legal & Negotiation", "subjects": [
@@ -2675,22 +2674,25 @@ async def get_categories():
             {"id": "culture_inclusion", "name": "Culture, Inclusion & Experiences", "subjects": [
                 "Diversity & Inclusion", "Team-Building", "Travel Coaching"
             ]},
-            # Performance & Creative Arts
+            # Performance & Creative Arts (updated)
             {"id": "performance_arts", "name": "Performance & Creative Arts", "subjects": [
-                "Performance Coaching", "Sports Coaching", "Music Coaching", 
-                "Acting Coaching", "Voice Coaching", "Performance Training"
+                "Performance Coaching", "Sports", "Music", "Acting", "Voice", "Dance", 
+                "Stage Presence & Theatre"
             ]},
-            # Academic (keeping original)
-            {"id": "academic", "name": "Academic", "subjects": [
-                "Math", "Science", "English", "History", "Test Prep", "Writing"
+            # Academics (new/updated)
+            {"id": "academics", "name": "Academics", "subjects": [
+                "Homework Support", "Mathematics", "Advanced Mathematics", "Science", 
+                "Coding/Programming", "Languages & Writing", "Social Studies & Humanities", 
+                "Test Prep", "Study & Academic Skills"
             ]},
-            # Music (keeping original)
+            # Activities & Hobbies (new)
+            {"id": "activities_hobbies", "name": "Activities & Hobbies", "subjects": [
+                "Art & Design", "Yoga", "STEM & Interest Clubs", "Debates", "Photography", 
+                "Cooking & Baking", "Games", "Memory Training"
+            ]},
+            # Music
             {"id": "music", "name": "Music", "subjects": [
                 "Piano", "Guitar", "Voice", "Violin", "Drums", "Music Theory"
-            ]},
-            # Activities (keeping original)
-            {"id": "activities", "name": "Activities", "subjects": [
-                "Coding", "Robotics", "Art", "Chess", "Debate", "Languages"
             ]}
         ],
         "levels": [
