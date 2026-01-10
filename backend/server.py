@@ -1817,9 +1817,10 @@ async def admin_get_tutors(request: Request, status: Optional[str] = None):
 async def admin_approve_tutor(tutor_id: str, request: Request):
     user = await require_admin(request)
     
+    # Approve AND auto-publish the tutor
     result = await db.tutors.update_one(
         {"tutor_id": tutor_id},
-        {"$set": {"status": "approved"}}
+        {"$set": {"status": "approved", "is_published": True}}
     )
     if result.matched_count == 0:
         raise HTTPException(status_code=404, detail="Tutor not found")
@@ -1832,7 +1833,7 @@ async def admin_approve_tutor(tutor_id: str, request: Request):
         "created_at": datetime.now(timezone.utc)
     })
     
-    return {"message": "Tutor approved"}
+    return {"message": "Tutor approved and published"}
 
 @api_router.post("/admin/tutors/{tutor_id}/suspend")
 async def admin_suspend_tutor(tutor_id: str, reason: str = "", request: Request = None):
