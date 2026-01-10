@@ -3659,6 +3659,185 @@ async def cancel_invite(invite_id: str, request: Request):
     
     return {"success": True, "message": "Invite cancelled"}
 
+
+# ============== SEED DATA ==============
+@api_router.post("/admin/seed-bookings")
+async def seed_bookings(request: Request):
+    """Create seed booking data for testing"""
+    user = await require_admin(request)
+    
+    # Get all tutors and consumers
+    tutors = await db.tutors.find({"status": "approved"}, {"_id": 0}).to_list(10)
+    consumers = await db.users.find({"role": "consumer"}, {"_id": 0}).to_list(10)
+    
+    if not tutors:
+        raise HTTPException(status_code=400, detail="No approved tutors found")
+    if not consumers:
+        raise HTTPException(status_code=400, detail="No consumers found")
+    
+    bookings_created = []
+    
+    for i, tutor in enumerate(tutors[:3]):
+        consumer = consumers[i % len(consumers)]
+        
+        # Get or create a student for this consumer
+        student = await db.students.find_one({"user_id": consumer["user_id"]}, {"_id": 0})
+        if not student:
+            student = {
+                "student_id": f"student_{uuid.uuid4().hex[:8]}",
+                "user_id": consumer["user_id"],
+                "name": f"Test Child {i+1}",
+                "age_group": "6-12",
+                "notes": "Created for testing",
+                "created_at": datetime.now(timezone.utc)
+            }
+            await db.students.insert_one(student)
+        
+        # Create a booking for each status
+        for j, status in enumerate(["booked", "completed", "cancelled"]):
+            booking_date = datetime.now(timezone.utc) + timedelta(days=(j-1)*7)
+            amount = tutor.get("base_price", 50) * 100
+            
+            booking = {
+                "booking_id": f"booking_{uuid.uuid4().hex[:12]}",
+                "tutor_id": tutor["tutor_id"],
+                "consumer_id": consumer["user_id"],
+                "student_id": student["student_id"],
+                "market_id": tutor.get("market_id", "US_USD"),
+                "currency": "USD",
+                "start_at": booking_date,
+                "end_at": booking_date + timedelta(hours=1),
+                "status": status,
+                "price_snapshot": tutor.get("base_price", 50),
+                "amount_cents": amount,
+                "payment_id": f"pay_{uuid.uuid4().hex[:12]}",
+                "created_at": datetime.now(timezone.utc)
+            }
+            
+            await db.bookings.insert_one(booking)
+            bookings_created.append(booking["booking_id"])
+            
+            # Create payment record
+            payment = {
+                "payment_id": booking["payment_id"],
+                "booking_id": booking["booking_id"],
+                "consumer_id": consumer["user_id"],
+                "tutor_id": tutor["tutor_id"],
+                "amount_cents": amount,
+                "platform_fee_cents": int(amount * 0.15),
+                "tutor_payout_cents": amount - int(amount * 0.15),
+                "currency": "USD",
+                "status": "completed" if status == "completed" else ("refunded" if status == "cancelled" else "pending"),
+                "payment_method": "card",
+                "created_at": datetime.now(timezone.utc)
+            }
+            await db.payments.insert_one(payment)
+    
+    return {"success": True, "bookings_created": len(bookings_created), "booking_ids": bookings_created}
+
+
+# ============== PAYMENT SIMULATION ==============
+class ManualPaymentCreate(BaseModel):
+    booking_id: str
+    amount_cents: int
+    payment_type: str = "payment"  # "payment" or "refund"
+    notes: Optional[str] = None
+
+@api_router.post("/payments/manual")
+async def create_manual_payment(data: ManualPaymentCreate, request: Request):
+    """Create a manual payment or refund (for testing/admin)"""
+    user = await require_auth(request)
+    
+    # Get booking
+    booking = await db.bookings.find_one({"booking_id": data.booking_id}, {"_id": 0})
+    if not booking:
+        raise HTTPException(status_code=404, detail="Booking not found")
+    
+    # Verify user is part of this booking
+    if booking["consumer_id"] != user.user_id and user.role != "admin":
+        # Check if user is the tutor
+        tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+        if not tutor or tutor["tutor_id"] != booking["tutor_id"]:
+            raise HTTPException(status_code=403, detail="Not authorized")
+    
+    payment_id = f"pay_{uuid.uuid4().hex[:12]}"
+    
+    if data.payment_type == "refund":
+        # Create refund
+        payment = {
+            "payment_id": payment_id,
+            "booking_id": data.booking_id,
+            "consumer_id": booking["consumer_id"],
+            "tutor_id": booking["tutor_id"],
+            "amount_cents": -data.amount_cents,  # Negative for refunds
+            "platform_fee_cents": 0,
+            "tutor_payout_cents": -data.amount_cents,
+            "currency": booking.get("currency", "USD"),
+            "status": "refunded",
+            "payment_method": "manual_refund",
+            "notes": data.notes or "Manual refund",
+            "created_at": datetime.now(timezone.utc)
+        }
+        
+        # Update booking status
+        await db.bookings.update_one(
+            {"booking_id": data.booking_id},
+            {"$set": {"status": "cancelled", "refunded_at": datetime.now(timezone.utc)}}
+        )
+    else:
+        # Create payment
+        platform_fee = int(data.amount_cents * 0.15)
+        payment = {
+            "payment_id": payment_id,
+            "booking_id": data.booking_id,
+            "consumer_id": booking["consumer_id"],
+            "tutor_id": booking["tutor_id"],
+            "amount_cents": data.amount_cents,
+            "platform_fee_cents": platform_fee,
+            "tutor_payout_cents": data.amount_cents - platform_fee,
+            "currency": booking.get("currency", "USD"),
+            "status": "completed",
+            "payment_method": "manual_payment",
+            "notes": data.notes or "Manual payment",
+            "created_at": datetime.now(timezone.utc)
+        }
+        
+        # Update booking status
+        await db.bookings.update_one(
+            {"booking_id": data.booking_id},
+            {"$set": {"status": "completed", "paid_at": datetime.now(timezone.utc)}}
+        )
+    
+    await db.payments.insert_one(payment)
+    
+    return {"success": True, "payment_id": payment_id, "payment": payment}
+
+
+@api_router.get("/payments/history")
+async def get_payment_history(request: Request, role: str = "consumer"):
+    """Get payment history for current user"""
+    user = await require_auth(request)
+    
+    if role == "tutor":
+        tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+        if not tutor:
+            return {"payments": []}
+        query = {"tutor_id": tutor["tutor_id"]}
+    else:
+        query = {"consumer_id": user.user_id}
+    
+    payments = await db.payments.find(query, {"_id": 0}).sort("created_at", -1).to_list(100)
+    
+    # Enrich with booking info
+    for p in payments:
+        booking = await db.bookings.find_one({"booking_id": p.get("booking_id")}, {"_id": 0})
+        if booking:
+            p["booking_status"] = booking.get("status")
+            p["booking_date"] = booking.get("start_at")
+    
+    return {"payments": payments}
+
+
 # Include router
 app.include_router(api_router)
 
