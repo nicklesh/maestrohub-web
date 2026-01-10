@@ -17,7 +17,8 @@ import { useAuth } from '@/src/context/AuthContext';
 import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 import AppHeader from '@/src/components/AppHeader';
 import { api } from '@/src/services/api';
-import Constants from 'expo-constants';
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
 
 interface ReportSummary {
   total_sessions: number;
