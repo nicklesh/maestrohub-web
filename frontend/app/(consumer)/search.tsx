@@ -393,17 +393,16 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   subjectPillsContainer: {
-    marginBottom: 12,
-  },
-  subjectPillsRow: {
     flexDirection: 'row',
-    flexWrap: 'nowrap',
+    flexWrap: 'wrap',
     gap: 6,
+    marginBottom: 12,
   },
   subjectPill: {
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 14,
+    marginBottom: 4,
   },
   subjectPillText: {
     fontSize: 11,
