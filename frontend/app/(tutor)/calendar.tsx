@@ -273,11 +273,7 @@ export default function CalendarScreen() {
         });
         loadData();
       } catch (error) {
-        if (Platform.OS === 'web') {
-          window.alert('Failed to delete vacation');
-        } else {
-          Alert.alert('Error', 'Failed to delete vacation');
-        }
+        showAlert('Error', 'Failed to delete vacation');
       }
     };
 
