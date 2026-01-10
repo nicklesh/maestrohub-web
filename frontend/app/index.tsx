@@ -6,7 +6,7 @@ import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 
 export default function Index() {
   const { user, loading } = useAuth();
-  const { colors, loadUserTheme, isDark } = useTheme();
+  const { colors, loadUserTheme, resetToDefault } = useTheme();
   const router = useRouter();
   const { width } = useWindowDimensions();
   
@@ -17,12 +17,15 @@ export default function Index() {
 
   const styles = getStyles(colors);
 
-  // Load user's theme preference when user is available
+  // Load user's theme preference when user changes
   useEffect(() => {
     if (user?.user_id) {
       loadUserTheme(user.user_id);
+    } else if (!loading) {
+      // No user logged in - reset to light mode (default)
+      resetToDefault();
     }
-  }, [user?.user_id]);
+  }, [user?.user_id, loading]);
 
   useEffect(() => {
     if (!loading) {
