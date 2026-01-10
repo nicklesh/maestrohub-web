@@ -686,6 +686,20 @@ const styles = StyleSheet.create({
   },
   quickActionsTitle: { fontSize: 16, fontWeight: '600', marginBottom: 8 },
   quickActionsHint: { fontSize: 13, lineHeight: 18 },
+  scheduleBuilderBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    padding: 14,
+    borderRadius: 10,
+    marginTop: 16,
+  },
+  scheduleBuilderBtnText: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '600',
+  },
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.5)',
