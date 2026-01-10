@@ -91,11 +91,21 @@ export default function HomeScreen() {
     loadData();
   };
 
-  const getCategoryIcon = (categoryId: string) => {
+  const getCategoryIcon = (categoryId: string): string => {
     switch (categoryId) {
+      case 'coaching_personal': return 'rocket';
+      case 'health_mindfulness': return 'leaf';
+      case 'fitness_nutrition': return 'fitness';
+      case 'relationships_family': return 'heart';
+      case 'business_communication': return 'briefcase';
+      case 'finance_legal': return 'cash';
+      case 'culture_inclusion': return 'globe';
+      case 'performance_arts': return 'mic';
+      case 'academics': return 'school';
+      case 'activities_hobbies': return 'color-palette';
       case 'academic': return 'school';
       case 'music': return 'musical-notes';
-      default: return 'game-controller';
+      default: return 'apps';
     }
   };
 
