@@ -16,9 +16,9 @@ export default function ConsumerLayout() {
         tabBarStyle: {
           backgroundColor: colors.surface,
           borderTopColor: colors.border,
-          height: Platform.OS === 'ios' ? 55 : 60,
-          paddingBottom: Platform.OS === 'ios' ? 3 : 8,
-          paddingTop: 8,
+          height: Platform.OS === 'ios' ? 85 : 70,
+          paddingBottom: Platform.OS === 'ios' ? 25 : 10,
+          paddingTop: 10,
         },
         tabBarLabelStyle: {
           fontSize: 12,
