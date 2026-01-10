@@ -71,6 +71,24 @@ export default function AdminLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="pricing"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="notifications-settings"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="security"
+        options={{
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }
