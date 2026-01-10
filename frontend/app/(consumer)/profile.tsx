@@ -326,7 +326,7 @@ export default function ProfileScreen() {
             </TouchableOpacity>
 
             {user?.role === 'consumer' && (
-              <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(tutor)/onboarding')}>
+              <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(consumer)/become-tutor')}>
                 <View style={styles.menuItemLeft}>
                   <Ionicons name="school-outline" size={22} color={colors.primary} />
                   <Text style={[styles.menuItemText, { color: colors.text }]}>Become a Tutor</Text>
