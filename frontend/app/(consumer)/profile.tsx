@@ -348,13 +348,7 @@ export default function ProfileScreen() {
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
             
-            <TouchableOpacity style={styles.menuItem} onPress={() => {
-              if (Platform.OS === 'web') {
-                window.alert('Help Center: Help documentation coming soon. Visit our FAQ section for common questions.');
-              } else {
-                Alert.alert('Help Center', 'Help documentation coming soon. Visit our FAQ section for common questions.');
-              }
-            }}>
+            <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(consumer)/faq')}>
               <View style={styles.menuItemLeft}>
                 <Ionicons name="help-circle-outline" size={22} color={colors.primary} />
                 <Text style={[styles.menuItemText, { color: colors.text }]}>Help Center</Text>
