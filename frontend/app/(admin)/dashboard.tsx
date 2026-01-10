@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,57 +6,88 @@ import {
   ScrollView,
   TouchableOpacity,
   useWindowDimensions,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
-import { colors } from '@/src/theme/colors';
-import LogoHeader from '@/src/components/LogoHeader';
+import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
+import AppHeader from '@/src/components/AppHeader';
+import { api } from '@/src/services/api';
 
 export default function AdminDashboard() {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
+  const { colors } = useTheme();
   const router = useRouter();
   const { width } = useWindowDimensions();
+  const [stats, setStats] = useState({ tutors: 0, bookings: 0, revenue: 0 });
+  const [loading, setLoading] = useState(true);
 
-  // Responsive breakpoints
   const isTablet = width >= 768;
   const isDesktop = width >= 1024;
   const contentMaxWidth = isDesktop ? 960 : isTablet ? 720 : undefined;
+  
+  const styles = getStyles(colors);
+
+  useEffect(() => {
+    loadStats();
+  }, []);
+
+  const loadStats = async () => {
+    try {
+      const [tutorsRes, analyticsRes] = await Promise.all([
+        api.get('/admin/tutors', { headers: { Authorization: `Bearer ${token}` } }),
+        api.get('/admin/analytics/markets', { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: { markets: [] } }))
+      ]);
+      
+      const totalRevenue = analyticsRes.data.markets?.reduce((sum: number, m: any) => sum + (m.total_revenue_cents || 0), 0) || 0;
+      
+      setStats({
+        tutors: tutorsRes.data?.length || 0,
+        bookings: analyticsRes.data.markets?.reduce((sum: number, m: any) => sum + (m.total_bookings || 0), 0) || 0,
+        revenue: totalRevenue / 100
+      });
+    } catch (error) {
+      console.error('Failed to load stats:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
+      <AppHeader showBack={false} />
       <ScrollView contentContainerStyle={[styles.scrollContent, isTablet && styles.scrollContentTablet]}>
         <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
-          {/* Header with Logo */}
+          {/* Header */}
           <View style={[styles.header, isTablet && styles.headerTablet]}>
-            <View style={styles.headerLeft}>
-              <LogoHeader size="small" showTagline={false} alignment="left" />
-            </View>
-            <View style={styles.headerRight}>
-              <Text style={[styles.title, isDesktop && styles.titleDesktop]}>Admin Dashboard</Text>
-              <Text style={[styles.subtitle, isDesktop && styles.subtitleDesktop]}>Manage your marketplace</Text>
-            </View>
+            <Text style={[styles.title, isDesktop && styles.titleDesktop]}>Admin Dashboard</Text>
+            <Text style={[styles.subtitle, isDesktop && styles.subtitleDesktop]}>Manage your marketplace</Text>
           </View>
 
           {/* Quick Stats */}
-          <View style={[styles.statsGrid, isTablet && styles.statsGridTablet]}>
-            <View style={[styles.statCard, isTablet && styles.statCardTablet]}>
-              <Ionicons name="people" size={isTablet ? 28 : 24} color={colors.primary} />
-              <Text style={[styles.statValue, isDesktop && styles.statValueDesktop]}>0</Text>
-              <Text style={styles.statLabel}>Tutors</Text>
+          {loading ? (
+            <ActivityIndicator size="large" color={colors.primary} style={{ marginVertical: 40 }} />
+          ) : (
+            <View style={[styles.statsGrid, isTablet && styles.statsGridTablet]}>
+              <View style={[styles.statCard, isTablet && styles.statCardTablet]}>
+                <Ionicons name="people" size={isTablet ? 28 : 24} color={colors.primary} />
+                <Text style={[styles.statValue, isDesktop && styles.statValueDesktop]}>{stats.tutors}</Text>
+                <Text style={styles.statLabel}>Tutors</Text>
+              </View>
+              <View style={[styles.statCard, isTablet && styles.statCardTablet]}>
+                <Ionicons name="calendar" size={isTablet ? 28 : 24} color={colors.accent} />
+                <Text style={[styles.statValue, isDesktop && styles.statValueDesktop]}>{stats.bookings}</Text>
+                <Text style={styles.statLabel}>Bookings</Text>
+              </View>
+              <View style={[styles.statCard, isTablet && styles.statCardTablet]}>
+                <Ionicons name="cash" size={isTablet ? 28 : 24} color={colors.success} />
+                <Text style={[styles.statValue, isDesktop && styles.statValueDesktop]}>${stats.revenue.toFixed(0)}</Text>
+                <Text style={styles.statLabel}>Revenue</Text>
+              </View>
             </View>
-            <View style={[styles.statCard, isTablet && styles.statCardTablet]}>
-              <Ionicons name="calendar" size={isTablet ? 28 : 24} color={colors.accent} />
-              <Text style={[styles.statValue, isDesktop && styles.statValueDesktop]}>0</Text>
-              <Text style={styles.statLabel}>Bookings</Text>
-            </View>
-            <View style={[styles.statCard, isTablet && styles.statCardTablet]}>
-              <Ionicons name="cash" size={isTablet ? 28 : 24} color={colors.success} />
-              <Text style={[styles.statValue, isDesktop && styles.statValueDesktop]}>$0</Text>
-              <Text style={styles.statLabel}>Revenue</Text>
-            </View>
-          </View>
+          )}
 
           {/* Quick Actions */}
           <View style={[styles.section, isTablet && styles.sectionTablet]}>
@@ -71,6 +102,20 @@ export default function AdminDashboard() {
               <View style={styles.actionInfo}>
                 <Text style={[styles.actionTitle, isDesktop && styles.actionTitleDesktop]}>Review Tutors</Text>
                 <Text style={[styles.actionSubtitle, isDesktop && styles.actionSubtitleDesktop]}>Approve or suspend tutor profiles</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
+            
+            <TouchableOpacity
+              style={[styles.actionCard, isTablet && styles.actionCardTablet]}
+              onPress={() => router.push('/(admin)/inbox')}
+            >
+              <View style={[styles.actionIcon, isTablet && styles.actionIconTablet]}>
+                <Ionicons name="mail" size={isTablet ? 28 : 24} color={colors.accent} />
+              </View>
+              <View style={styles.actionInfo}>
+                <Text style={[styles.actionTitle, isDesktop && styles.actionTitleDesktop]}>Inbox</Text>
+                <Text style={[styles.actionSubtitle, isDesktop && styles.actionSubtitleDesktop]}>View contact form submissions</Text>
               </View>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
@@ -90,7 +135,7 @@ export default function AdminDashboard() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colors: ThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
@@ -105,27 +150,18 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
     marginBottom: 24,
   },
   headerTablet: {
     marginBottom: 32,
   },
-  headerLeft: {
-    flex: 1,
-  },
-  headerRight: {
-    alignItems: 'flex-end',
-  },
   title: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
     color: colors.text,
   },
   titleDesktop: {
-    fontSize: 24,
+    fontSize: 28,
   },
   subtitle: {
     fontSize: 14,
@@ -177,13 +213,13 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '600',
     color: colors.text,
-    marginBottom: 12,
+    marginBottom: 16,
   },
   sectionTitleDesktop: {
-    fontSize: 18,
+    fontSize: 20,
   },
   actionCard: {
     flexDirection: 'row',
@@ -193,25 +229,25 @@ const styles = StyleSheet.create({
     padding: 16,
     borderWidth: 1,
     borderColor: colors.border,
+    marginBottom: 12,
   },
   actionCardTablet: {
-    borderRadius: 20,
     padding: 20,
+    borderRadius: 20,
   },
   actionIcon: {
     width: 48,
     height: 48,
-    borderRadius: 24,
+    borderRadius: 12,
     backgroundColor: colors.primaryLight,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
+    marginRight: 16,
   },
   actionIconTablet: {
     width: 56,
     height: 56,
-    borderRadius: 28,
-    marginRight: 16,
+    borderRadius: 14,
   },
   actionInfo: {
     flex: 1,
@@ -236,13 +272,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: colors.primaryLight,
-    borderRadius: 12,
+    borderRadius: 16,
     padding: 16,
     gap: 12,
   },
   infoCardTablet: {
-    borderRadius: 16,
     padding: 20,
+    borderRadius: 20,
   },
   infoText: {
     flex: 1,
@@ -250,14 +286,14 @@ const styles = StyleSheet.create({
   infoTitle: {
     fontSize: 14,
     fontWeight: '600',
-    color: colors.primaryDark,
+    color: colors.text,
   },
   infoTitleDesktop: {
     fontSize: 16,
   },
   infoSubtitle: {
-    fontSize: 13,
-    color: colors.primary,
+    fontSize: 12,
+    color: colors.textMuted,
     marginTop: 2,
   },
 });
