@@ -55,13 +55,20 @@ export default function TutorDashboard() {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [token]);
 
   const loadData = async () => {
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+    
     try {
       // Check if tutor has profile
       try {
-        const profileRes = await api.get('/tutors/profile');
+        const profileRes = await api.get('/tutors/profile', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
         setHasProfile(true);
         setStats({
           total_bookings: 0,
@@ -70,19 +77,29 @@ export default function TutorDashboard() {
           rating_avg: profileRes.data.rating_avg || 0,
           rating_count: profileRes.data.rating_count || 0,
         });
-      } catch (error) {
-        setHasProfile(false);
+      } catch (error: any) {
+        // 404 means no profile, other errors might be auth issues
+        if (error.response?.status === 404) {
+          setHasProfile(false);
+        } else {
+          console.error('Profile check error:', error);
+          setHasProfile(false);
+        }
         setLoading(false);
         return;
       }
 
       // Load bookings
-      const bookingsRes = await api.get('/bookings?role=tutor');
+      const bookingsRes = await api.get('/bookings?role=tutor', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setBookings(bookingsRes.data);
 
       // Load billing stats
       try {
-        const billingRes = await api.get('/billing/summary');
+        const billingRes = await api.get('/billing/summary', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
         setStats((prev) => ({
           ...prev!,
           completed_lessons: billingRes.data.completed_lessons,
