@@ -186,7 +186,7 @@ export default function ProfileScreen() {
   const styles = createStyles(colors);
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['bottom']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
       <AppHeader title="Account" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={[styles.contentWrapper, containerMaxWidth ? { maxWidth: containerMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
