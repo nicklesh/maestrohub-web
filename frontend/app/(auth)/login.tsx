@@ -118,6 +118,14 @@ export default function LoginScreen() {
                 Sign in to your account
               </Text>
 
+              {/* Error Message */}
+              {errorMessage ? (
+                <View style={styles.errorContainer}>
+                  <Ionicons name="alert-circle" size={18} color={colors.error} />
+                  <Text style={styles.errorText}>{errorMessage}</Text>
+                </View>
+              ) : null}
+
               <View style={[styles.inputContainer, isTablet && styles.inputContainerTablet]}>
                 <Ionicons name="mail-outline" size={20} color={colors.textMuted} style={styles.inputIcon} />
                 <TextInput
