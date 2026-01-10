@@ -342,6 +342,9 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     marginBottom: 12,
     borderWidth: 1,
     borderColor: colors.border,
+    maxWidth: 400,
+    alignSelf: 'center',
+    width: '100%',
   },
   cardTablet: {
     borderRadius: 20,
