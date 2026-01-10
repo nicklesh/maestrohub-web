@@ -57,8 +57,8 @@ export default function SearchScreen() {
 
   // Update category when params change (from home page navigation)
   useEffect(() => {
-    if (params.category && params.category !== category) {
-      setCategory(params.category as string);
+    if (params.category && typeof params.category === 'string') {
+      setCategory(params.category);
     }
   }, [params.category]);
 
@@ -66,8 +66,11 @@ export default function SearchScreen() {
     loadCategories();
   }, []);
 
+  // Search tutors when category changes
   useEffect(() => {
-    searchTutors(true);
+    if (!loading || tutors.length === 0) {
+      searchTutors(true);
+    }
   }, [category]);
 
   const loadCategories = async () => {
