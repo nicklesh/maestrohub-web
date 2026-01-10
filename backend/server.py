@@ -424,7 +424,7 @@ async def login(data: UserLogin, response: Response):
         logger.error(f"Login failed: user not found for {data.email}")
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
-    logger.info(f"Login attempt for {data.email}, has password_hash: {'password_hash' in user_doc}")
+    logger.info(f"Login attempt for {data.email}, has password_hash: {'password_hash' in user_doc}, role: {user_doc.get('role')}")
     
     if not user_doc.get("password_hash"):
         logger.error(f"Login failed: no password_hash for {data.email}")
@@ -453,7 +453,12 @@ async def login(data: UserLogin, response: Response):
         max_age=JWT_EXPIRATION_DAYS * 24 * 60 * 60
     )
     
-    return {"user_id": user_doc["user_id"], "token": token, "role": user_doc["role"]}
+    # Fetch fresh user data to ensure we return correct role
+    fresh_user = await db.users.find_one({"email": data.email}, {"_id": 0})
+    user_role = fresh_user.get("role", "consumer") if fresh_user else "consumer"
+    logger.info(f"Login success for {data.email}, returning role: {user_role}")
+    
+    return {"user_id": user_doc["user_id"], "token": token, "role": user_role}
 
 @api_router.post("/auth/google/callback")
 async def google_callback(request: Request, response: Response):
