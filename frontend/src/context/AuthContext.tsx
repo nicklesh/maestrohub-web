@@ -214,16 +214,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       await api.post('/auth/logout');
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error('Logout API error:', error);
     }
     await clearAuth();
-    // Force redirect on web using location.replace for hard refresh
-    if (Platform.OS === 'web' && typeof window !== 'undefined') {
-      // Use replace to prevent back navigation to logged-in state
-      window.location.replace('/login');
-    }
-    // For native platforms, the caller should handle navigation
-    // The user state will be null after clearAuth(), which triggers index.tsx to redirect
+    // NOTE: Navigation should be handled by the calling component
+    // Do NOT redirect here - let components handle it via router.replace
+    // This ensures proper state management with expo-router
   };
 
   const updateRole = async (role: string) => {
