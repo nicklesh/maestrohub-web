@@ -115,7 +115,7 @@ export default function HomeScreen() {
       style={[
         styles.categoryCard,
         isTablet && styles.categoryCardTablet,
-        { width: isDesktop ? '31%' : isTablet ? '48%' : '100%' },
+        { width: isDesktop ? '31%' : isTablet ? '48%' : '48%' },
       ]}
       onPress={() => router.push(`/(consumer)/search?category=${category.id}`)}
     >
