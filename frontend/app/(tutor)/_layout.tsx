@@ -99,6 +99,12 @@ export default function TutorLayout() {
           href: null,
         }}
       />
+      <Tabs.Screen
+        name="schedule-builder"
+        options={{
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }
