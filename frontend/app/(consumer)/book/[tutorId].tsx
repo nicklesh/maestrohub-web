@@ -38,7 +38,16 @@ interface TutorProfile {
   };
 }
 
-type Step = 'student' | 'intake' | 'confirm';
+interface PaymentMethod {
+  payment_method_id: string;
+  card_type: string;
+  last_four: string;
+  expiry_month: number;
+  expiry_year: number;
+  is_default: boolean;
+}
+
+type Step = 'student' | 'intake' | 'payment' | 'confirm';
 
 export default function BookingScreen() {
   const router = useRouter();
