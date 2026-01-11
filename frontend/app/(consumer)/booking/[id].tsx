@@ -246,6 +246,8 @@ export default function BookingDetailScreen() {
   const statusText = booking.status.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
   const isUpcoming = !isPast(parseISO(booking.start_at)) && ['booked', 'confirmed'].includes(booking.status);
   const canReview = booking.status === 'completed';
+  // Can report no-show if session time has passed and status is still booked/confirmed
+  const canReportNoShow = isPast(parseISO(booking.start_at)) && ['booked', 'confirmed'].includes(booking.status);
 
   return (
     <SafeAreaView style={styles.container}>
