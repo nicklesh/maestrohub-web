@@ -1572,19 +1572,25 @@ async def get_tutor_availability(tutor_id: str, date: str = None, from_date: str
                 while slot_current + timedelta(minutes=duration) <= slot_end:
                     slot_end_time = slot_current + timedelta(minutes=duration)
                     
-                    # Check if slot conflicts with existing bookings
+                    # Check if slot conflicts with existing bookings (compare as naive datetimes)
+                    slot_current_naive = slot_current.replace(tzinfo=None)
+                    slot_end_naive = slot_end_time.replace(tzinfo=None)
+                    now_naive = now.replace(tzinfo=None)
+                    
                     is_booked = any(
-                        b["start_at"] < slot_end_time and b["end_at"] > slot_current
+                        (b["start_at"].replace(tzinfo=None) if hasattr(b["start_at"], 'replace') else b["start_at"]) < slot_end_naive and 
+                        (b["end_at"].replace(tzinfo=None) if hasattr(b["end_at"], 'replace') else b["end_at"]) > slot_current_naive
                         for b in bookings
                     )
                     
                     # Check if slot is on hold
                     is_held = any(
-                        h["start_at"] < slot_end_time and h["end_at"] > slot_current
+                        (h["start_at"].replace(tzinfo=None) if hasattr(h["start_at"], 'replace') else h["start_at"]) < slot_end_naive and 
+                        (h["end_at"].replace(tzinfo=None) if hasattr(h["end_at"], 'replace') else h["end_at"]) > slot_current_naive
                         for h in holds
                     )
                     
-                    if not is_booked and not is_held and slot_current > now:
+                    if not is_booked and not is_held and slot_current_naive > now_naive:
                         slots.append({
                             "start_at": slot_current.isoformat(),
                             "end_at": slot_end_time.isoformat(),
