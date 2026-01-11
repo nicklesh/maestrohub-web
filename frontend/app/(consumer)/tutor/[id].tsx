@@ -92,13 +92,16 @@ export default function TutorDetailScreen() {
 
   const handleBook = () => {
     if (!selectedSlot || !tutor) return;
+    const dateStr = format(selectedDate, 'yyyy-MM-dd');
+    // Create full ISO datetime strings
+    const startAt = `${dateStr}T${selectedSlot.start_time}:00`;
+    const endAt = `${dateStr}T${selectedSlot.end_time}:00`;
     router.push({
       pathname: '/(consumer)/book/[tutorId]',
       params: {
         tutorId: tutor.tutor_id,
-        date: format(selectedDate, 'yyyy-MM-dd'),
-        startTime: selectedSlot.start_time,
-        endTime: selectedSlot.end_time,
+        startAt,
+        endAt,
       },
     });
   };
