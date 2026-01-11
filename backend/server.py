@@ -149,7 +149,7 @@ class User(UserBase):
     country: Optional[str] = None  # ISO country code
     timezone: Optional[str] = None  # IANA timezone
     devices: List[DeviceInfo] = []
-    created_at: datetime
+    created_at: Optional[datetime] = None
 
 class StudentCreate(BaseModel):
     name: str
