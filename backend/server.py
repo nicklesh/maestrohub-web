@@ -3025,9 +3025,10 @@ async def get_consumer_report_pdf(
     try:
         from reportlab.lib import colors
         from reportlab.lib.pagesizes import letter
-        from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+        from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
         from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
         from reportlab.lib.units import inch
+        from reportlab.lib.enums import TA_CENTER
     except ImportError:
         raise HTTPException(status_code=500, detail="PDF generation not available")
     
@@ -3035,14 +3036,26 @@ async def get_consumer_report_pdf(
     doc = SimpleDocTemplate(buffer, pagesize=letter, rightMargin=72, leftMargin=72, topMargin=72, bottomMargin=72)
     
     styles = getSampleStyleSheet()
-    title_style = ParagraphStyle('Title', parent=styles['Heading1'], fontSize=24, spaceAfter=30)
+    title_style = ParagraphStyle('Title', parent=styles['Heading1'], fontSize=24, spaceAfter=10, alignment=TA_CENTER)
+    tagline_style = ParagraphStyle('Tagline', parent=styles['Normal'], fontSize=12, spaceAfter=20, alignment=TA_CENTER, textColor=colors.grey)
     heading_style = ParagraphStyle('Heading', parent=styles['Heading2'], fontSize=16, spaceAfter=12)
+    subheading_style = ParagraphStyle('SubHeading', parent=styles['Heading3'], fontSize=13, spaceAfter=8, textColor=colors.HexColor('#2563eb'))
     
     story = []
     
-    # Title
-    story.append(Paragraph("Maestro Hub - Session Report", title_style))
-    story.append(Paragraph(f"Report for: {user.name}", styles['Normal']))
+    # Logo and Header
+    logo_path = os.path.join(os.path.dirname(__file__), 'assets', 'mh_logo_trimmed.png')
+    if os.path.exists(logo_path):
+        logo = Image(logo_path, width=1.5*inch, height=1*inch)
+        logo.hAlign = 'CENTER'
+        story.append(logo)
+    
+    story.append(Paragraph("Maestro Hub", title_style))
+    story.append(Paragraph("Find your coach, master your skill", tagline_style))
+    story.append(Spacer(1, 10))
+    
+    # Report info
+    story.append(Paragraph(f"<b>Session Report</b> for {user.name}", styles['Normal']))
     story.append(Paragraph(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')}", styles['Normal']))
     story.append(Spacer(1, 20))
     
@@ -3069,6 +3082,60 @@ async def get_consumer_report_pdf(
     ]))
     story.append(summary_table)
     story.append(Spacer(1, 20))
+    
+    # By Student with Category Grouping
+    if report.get("by_student_category"):
+        story.append(Paragraph("Sessions by Student & Category", heading_style))
+        for student_group in report["by_student_category"]:
+            # Student header
+            story.append(Paragraph(f"{student_group['student_name']}", subheading_style))
+            
+            student_data = [["Category", "Subject", "Sessions", "Amount"]]
+            for cat in student_group.get("categories", []):
+                for subj in cat.get("subjects", []):
+                    student_data.append([
+                        cat["category_name"],
+                        subj["subject_name"],
+                        str(subj["sessions"]),
+                        f"{symbol}{subj['spent_cents']/100:.2f}"
+                    ])
+                if not cat.get("subjects"):
+                    student_data.append([cat["category_name"], "-", str(cat["sessions"]), f"{symbol}{cat['spent_cents']/100:.2f}"])
+            
+            # Add student total row
+            student_data.append(["", "TOTAL", str(student_group["total_sessions"]), f"{symbol}{student_group['total_spent_cents']/100:.2f}"])
+            
+            student_table = Table(student_data, colWidths=[1.8*inch, 1.8*inch, 1*inch, 1.2*inch])
+            student_table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2563eb')),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+                ('BACKGROUND', (0, -1), (-1, -1), colors.HexColor('#f0f4ff')),
+                ('FONTNAME', (0, -1), (-1, -1), 'Helvetica-Bold'),
+                ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, -1), 9),
+                ('PADDING', (0, 0), (-1, -1), 5),
+            ]))
+            story.append(student_table)
+            story.append(Spacer(1, 12))
+    elif report["by_student"]:
+        # Fallback to simple student list
+        story.append(Paragraph("Sessions by Student", heading_style))
+        student_data = [["Student", "Sessions", "Amount"]]
+        for s in report["by_student"]:
+            student_data.append([s["student_name"], str(s["sessions"]), f"{symbol}{s['spent_cents']/100:.2f}"])
+        
+        student_table = Table(student_data, colWidths=[3*inch, 1.5*inch, 1.5*inch])
+        student_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2563eb')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+            ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('PADDING', (0, 0), (-1, -1), 6),
+        ]))
+        story.append(student_table)
+        story.append(Spacer(1, 20))
     
     # By Tutor
     if report["by_tutor"]:
