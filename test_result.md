@@ -599,10 +599,7 @@ test_plan:
     - "OWASP Top 10 Security Testing"
     - "Authentication & Authorization Security"
     - "Rate Limiting & Security Headers"
-  stuck_tasks:
-    - "OWASP Top 10 Security Testing"
-    - "Authentication & Authorization Security"
-    - "Rate Limiting & Security Headers"
+  stuck_tasks: []
   test_all: true
   test_priority: "high_first"
 
