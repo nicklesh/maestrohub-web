@@ -583,6 +583,15 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   menuTablet: {
     borderRadius: 20,
   },
+  sectionLabel: {
+    fontSize: 12,
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 8,
+  },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
