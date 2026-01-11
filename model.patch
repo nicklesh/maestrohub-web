@@ -29,7 +29,7 @@ index 0000000..c5ef264
 +import os
 +
 +# Configuration
-+BASE_URL = "https://bookcoach.preview.emergentagent.com/api"
++BASE_URL = "https://mentor-match-82.preview.emergentagent.com/api"
 +TIMEOUT = 30
 +
 +# Test credentials from the request
@@ -895,7 +895,7 @@ index 0000000..1efcc74
 +from datetime import datetime, timezone, timedelta
 +
 +# Configuration
-+BASE_URL = "https://bookcoach.preview.emergentagent.com/api"
++BASE_URL = "https://mentor-match-82.preview.emergentagent.com/api"
 +TIMEOUT = 30
 +
 +# Test credentials
@@ -2266,7 +2266,7 @@ index 271b3fd..354581f 100644
 --------------+load_dotenv('/app/frontend/.env')
 --------------+
 --------------+# Get backend URL from environment
---------------+BACKEND_URL = os.getenv('EXPO_PUBLIC_BACKEND_URL', 'https://bookcoach.preview.emergentagent.com')
+--------------+BACKEND_URL = os.getenv('EXPO_PUBLIC_BACKEND_URL', 'https://mentor-match-82.preview.emergentagent.com')
 --------------+API_BASE = f"{BACKEND_URL}/api"
 --------------+
 --------------+class TestSession:

@@ -5896,8 +5896,8 @@ app.include_router(api_router)
 ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:8001",
-    "https://bookcoach.preview.emergentagent.com",
-    "https://bookcoach.preview.emergentagent.com",
+    "https://mentor-match-82.preview.emergentagent.com",
+    "https://mentor-match-82.preview.emergentagent.com",
 ]
 
 app.add_middleware(

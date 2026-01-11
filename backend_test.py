@@ -11,7 +11,7 @@ from datetime import datetime, timezone, timedelta
 import uuid
 
 # Configuration
-BACKEND_URL = "https://bookcoach.preview.emergentagent.com/api"
+BACKEND_URL = "https://mentor-match-82.preview.emergentagent.com/api"
 TEST_CREDENTIALS = {
     "consumer": {"email": "parent2@test.com", "password": "password123"},
     "tutor": {"email": "tutor3@test.com", "password": "password123"}
