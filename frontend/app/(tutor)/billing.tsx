@@ -431,4 +431,64 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     textAlign: 'center',
     marginTop: 12,
   },
+  // Sponsorship Promo Styles
+  sponsorPromo: {
+    marginTop: 8,
+    marginBottom: 24,
+    borderRadius: 16,
+    overflow: 'hidden',
+  },
+  sponsorPromoTablet: {
+    borderRadius: 20,
+  },
+  sponsorPromoInner: {
+    backgroundColor: colors.primary,
+    padding: 16,
+  },
+  sponsorPromoHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  sponsorPromoIconWrap: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  sponsorPromoTextWrap: {
+    flex: 1,
+  },
+  sponsorPromoTitle: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  sponsorPromoTitleTablet: {
+    fontSize: 18,
+  },
+  sponsorPromoSubtitle: {
+    color: 'rgba(255,255,255,0.85)',
+    fontSize: 12,
+    marginTop: 2,
+  },
+  sponsorPromoBenefits: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 14,
+    paddingTop: 14,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255,255,255,0.2)',
+  },
+  sponsorBenefit: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  sponsorBenefitText: {
+    color: 'rgba(255,255,255,0.9)',
+    fontSize: 11,
+  },
 });
