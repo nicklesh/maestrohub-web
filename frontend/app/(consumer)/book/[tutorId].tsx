@@ -115,6 +115,13 @@ export default function BookingScreen() {
 
   const createHold = async () => {
     try {
+      console.log('Creating hold with:', {
+        tutor_id: tutorId,
+        start_at: startAt,
+        duration_minutes: tutor?.duration_minutes || 60,
+        token: token ? 'present' : 'missing'
+      });
+      
       const response = await api.post('/booking-holds', {
         tutor_id: tutorId,
         start_at: startAt,
@@ -122,15 +129,20 @@ export default function BookingScreen() {
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      console.log('Hold created:', response.data);
       setHoldId(response.data.hold_id);
       return response.data.hold_id;
     } catch (error: any) {
+      console.error('Hold creation error:', {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message
+      });
       if (error.response?.status === 409) {
         Alert.alert('Slot Unavailable', 'This time slot is no longer available. Please select another time.');
         router.back();
       } else {
-        console.error('Hold error:', error.response?.data || error.message);
-        Alert.alert('Error', 'Failed to reserve slot');
+        Alert.alert('Error', error.response?.data?.detail || 'Failed to reserve slot');
       }
       return null;
     }
