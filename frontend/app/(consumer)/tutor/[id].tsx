@@ -42,12 +42,35 @@ interface TimeSlot {
   is_available: boolean;
 }
 
+interface SessionPackage {
+  package_id: string;
+  name: string;
+  session_count: number;
+  price_per_session: number;
+  total_price: number;
+  discount_percent: number;
+  validity_days: number;
+}
+
+interface Review {
+  review_id: string;
+  consumer_name: string;
+  overall_rating: number;
+  comment?: string;
+  would_recommend: boolean;
+  created_at: string;
+  coach_response?: string;
+}
+
 export default function TutorDetailScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams();
   const { width } = useWindowDimensions();
   const { colors } = useTheme();
   const [tutor, setTutor] = useState<Tutor | null>(null);
+  const [packages, setPackages] = useState<SessionPackage[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviewStats, setReviewStats] = useState({ total: 0, recommend_pct: 0 });
   const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
