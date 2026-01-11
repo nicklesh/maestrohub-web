@@ -33,6 +33,8 @@ interface TutorProfile {
   user_name: string;
   base_price: number;
   duration_minutes: number;
+  currency?: string;
+  currency_symbol?: string;
   policies: {
     cancel_window_hours: number;
     no_show_policy: string;
