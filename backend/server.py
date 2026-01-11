@@ -4850,6 +4850,9 @@ async def create_session_package(data: SessionPackageCreate, request: Request):
     
     await db.session_packages.insert_one(package)
     
+    # Remove _id before returning (MongoDB adds it during insert)
+    package.pop("_id", None)
+    
     return {"success": True, "package": package, "bulk_discount_applied": data.session_count >= 12}
 
 @api_router.get("/tutor/packages")
