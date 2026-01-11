@@ -652,22 +652,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-        
-        try:
-            if method.upper() == "GET":
-                response = self.session.get(url, headers=req_headers)
-            elif method.upper() == "POST":
-                response = self.session.post(url, json=data, headers=req_headers)
-            elif method.upper() == "PUT":
-                response = self.session.put(url, json=data, headers=req_headers)
-            elif method.upper() == "DELETE":
-                response = self.session.delete(url, headers=req_headers)
-            else:
-                raise ValueError(f"Unsupported method: {method}")
-            
-            return response
-        except Exception as e:
-            return None, str(e)
     
     def test_login(self):
         """Test user login with provided credentials"""
