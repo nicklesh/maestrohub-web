@@ -746,19 +746,15 @@ async def add_payment_method(data: PaymentMethodCreate, request: Request):
     
     # Get current user document
     user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
-    existing_methods = user_doc.get("payment_methods", [])
+    existing_methods = user_doc.get("payment_methods") or []
     
     # If this is the first payment method or is set as default
     is_default = data.is_default or len(existing_methods) == 0
     
     # If setting as default, unset other defaults
-    if is_default and existing_methods:
+    if is_default:
         for method in existing_methods:
             method["is_default"] = False
-        await db.users.update_one(
-            {"user_id": user.user_id},
-            {"$set": {"payment_methods": existing_methods}}
-        )
     
     payment_method = {
         "payment_method_id": payment_method_id,
@@ -771,17 +767,13 @@ async def add_payment_method(data: PaymentMethodCreate, request: Request):
         "created_at": datetime.now(timezone.utc).isoformat()
     }
     
-    # Add to array (initialize if doesn't exist)
+    # Add to existing methods
+    existing_methods.append(payment_method)
+    
+    # Update the user document with the full payment_methods array
     await db.users.update_one(
         {"user_id": user.user_id},
-        {"$push": {"payment_methods": payment_method}},
-        upsert=False
-    )
-    
-    # If payment_methods field didn't exist, set it
-    await db.users.update_one(
-        {"user_id": user.user_id, "payment_methods": {"$exists": False}},
-        {"$set": {"payment_methods": [payment_method]}}
+        {"$set": {"payment_methods": existing_methods}}
     )
     
     return {"success": True, "payment_method": payment_method}
