@@ -2438,6 +2438,9 @@ async def get_billing_summary(request: Request):
     if not tutor:
         raise HTTPException(status_code=404, detail="Tutor profile not found")
     
+    # Get market info
+    market_info = MARKETS_CONFIG.get(tutor.get("market_id"), MARKETS_CONFIG.get("US_USD"))
+    
     # Calculate trial status
     trial_status = "not_started"
     trial_days_remaining = 0
@@ -2476,7 +2479,9 @@ async def get_billing_summary(request: Request):
         "pending_fees_cents": pending_fees,
         "total_earnings": total_earnings,
         "completed_lessons": len(completed_bookings),
-        "fee_events": fee_events[-10:]  # Last 10 events
+        "fee_events": fee_events[-10:],  # Last 10 events
+        "currency": market_info.get("currency", "USD"),
+        "currency_symbol": market_info.get("currency_symbol", "$")
     }
 
 @api_router.get("/billing/fee-events")
