@@ -651,11 +651,10 @@ async def register(request: Request, data: UserCreate, response: Response):
     if existing:
         raise HTTPException(status_code=400, detail="Email already registered")
     
-    # Validate password strength (if password provided)
-    if data.password:
-        is_valid, error_msg = validate_password_strength(data.password)
-        if not is_valid:
-            raise HTTPException(status_code=400, detail=error_msg)
+    # Validate password strength (password is required for registration)
+    is_valid, error_msg = validate_password_strength(data.password or "")
+    if not is_valid:
+        raise HTTPException(status_code=400, detail=error_msg)
     
     # Sanitize user inputs
     sanitized_name = sanitize_html(data.name) if data.name else data.name
