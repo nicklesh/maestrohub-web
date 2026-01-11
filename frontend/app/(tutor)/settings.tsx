@@ -10,6 +10,7 @@ import {
   useWindowDimensions,
   Platform,
   Switch,
+  TextInput,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -23,6 +24,7 @@ interface TutorProfile {
   tutor_id: string;
   bio: string;
   categories: string[];
+  meeting_link?: string;
   subjects: string[];
   levels: string[];
   modality: string[];
