@@ -235,14 +235,14 @@ class PaymentProviderTester:
             data = response.json()
             linked_providers = data.get('linked_providers', [])
             
-            if len(linked_providers) < 1:
-                # Need to link another provider first
+            # If we have less than 2 providers, try to link another one
+            if len(linked_providers) < 2:
                 available_providers = data.get('available_providers', [])
                 if len(available_providers) < 2:
                     self.log_test("Set Default Provider - Setup", False, "Need at least 2 available providers")
                     return False
                 
-                # Link a second provider
+                # Find a provider that's not already linked
                 second_provider = None
                 for provider in available_providers:
                     if not any(p.get('provider_id') == provider['id'] for p in linked_providers):
@@ -261,13 +261,19 @@ class PaymentProviderTester:
                                                 })
                 
                 if link_response.status_code != 200:
-                    self.log_test("Set Default Provider - Setup", False, "Could not link second provider")
-                    return False
-                
-                # Refresh linked providers
-                response = self.make_request('GET', '/payment-providers', token=self.consumer_token)
-                data = response.json()
-                linked_providers = data.get('linked_providers', [])
+                    # Provider might already be linked, let's refresh and continue
+                    response = self.make_request('GET', '/payment-providers', token=self.consumer_token)
+                    data = response.json()
+                    linked_providers = data.get('linked_providers', [])
+                    
+                    if len(linked_providers) < 2:
+                        self.log_test("Set Default Provider - Setup", False, "Could not link second provider")
+                        return False
+                else:
+                    # Refresh linked providers after successful link
+                    response = self.make_request('GET', '/payment-providers', token=self.consumer_token)
+                    data = response.json()
+                    linked_providers = data.get('linked_providers', [])
             
             if len(linked_providers) < 2:
                 self.log_test("Set Default Provider - Setup", False, "Need at least 2 linked providers")
