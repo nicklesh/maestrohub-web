@@ -572,4 +572,74 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   actionTextDesktop: {
     fontSize: 15,
   },
+  // Sponsorship Banner Styles
+  sponsorBanner: {
+    marginHorizontal: 20,
+    marginTop: 24,
+    marginBottom: 20,
+    borderRadius: 16,
+    overflow: 'hidden',
+  },
+  sponsorBannerTablet: {
+    marginHorizontal: 0,
+    borderRadius: 20,
+  },
+  sponsorBannerGradient: {
+    backgroundColor: colors.primary,
+    padding: 16,
+  },
+  sponsorBannerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  sponsorBannerIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  sponsorBannerText: {
+    flex: 1,
+  },
+  sponsorBannerTitle: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '700',
+    marginBottom: 2,
+  },
+  sponsorBannerTitleTablet: {
+    fontSize: 18,
+  },
+  sponsorBannerSubtitle: {
+    color: 'rgba(255,255,255,0.85)',
+    fontSize: 12,
+  },
+  sponsorBannerStats: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 16,
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255,255,255,0.2)',
+  },
+  sponsorStat: {
+    alignItems: 'center',
+  },
+  sponsorStatValue: {
+    color: '#FFD700',
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  sponsorStatLabel: {
+    color: 'rgba(255,255,255,0.85)',
+    fontSize: 11,
+    marginTop: 2,
+  },
+  sponsorStatDivider: {
+    width: 1,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+  },
 });
