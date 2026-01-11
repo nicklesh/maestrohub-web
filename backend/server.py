@@ -4659,6 +4659,489 @@ async def get_payment_history(request: Request, role: str = "consumer"):
     return {"payments": payments}
 
 
+# ============== SESSION PACKAGES ==============
+
+@api_router.get("/tutors/{tutor_id}/packages")
+async def get_tutor_packages(tutor_id: str):
+    """Get session packages offered by a coach"""
+    tutor = await db.tutors.find_one({"tutor_id": tutor_id}, {"_id": 0})
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Coach not found")
+    
+    packages = await db.session_packages.find(
+        {"tutor_id": tutor_id, "is_active": True},
+        {"_id": 0}
+    ).to_list(20)
+    
+    # Get market info for currency
+    market_config = MARKETS_CONFIG.get(tutor.get("market_id", "US_USD"), MARKETS_CONFIG["US_USD"])
+    
+    return {
+        "packages": packages,
+        "base_price": tutor.get("base_price", 0),
+        "currency": market_config["currency"],
+        "currency_symbol": market_config["currency_symbol"]
+    }
+
+@api_router.post("/tutor/packages")
+async def create_session_package(data: SessionPackageCreate, request: Request):
+    """Create a new session package (coach only)"""
+    user = await require_tutor(request)
+    tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+    
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Coach profile not found")
+    
+    # Calculate pricing
+    base_price = tutor.get("base_price", 0)
+    discounted_price = base_price * (1 - data.discount_percent / 100)
+    total_price = round(discounted_price * data.session_count, 2)
+    
+    package = {
+        "package_id": f"pkg_{uuid.uuid4().hex[:12]}",
+        "tutor_id": tutor["tutor_id"],
+        "name": data.name,
+        "session_count": data.session_count,
+        "price_per_session": round(discounted_price, 2),
+        "total_price": total_price,
+        "discount_percent": data.discount_percent,
+        "validity_days": data.validity_days,
+        "description": data.description,
+        "is_active": True,
+        "created_at": datetime.now(timezone.utc)
+    }
+    
+    await db.session_packages.insert_one(package)
+    
+    return {"success": True, "package": package}
+
+@api_router.get("/tutor/packages")
+async def get_my_packages(request: Request):
+    """Get packages for current coach"""
+    user = await require_tutor(request)
+    tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+    
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Coach profile not found")
+    
+    packages = await db.session_packages.find(
+        {"tutor_id": tutor["tutor_id"]},
+        {"_id": 0}
+    ).to_list(50)
+    
+    return {"packages": packages}
+
+@api_router.put("/tutor/packages/{package_id}")
+async def update_package(package_id: str, request: Request):
+    """Toggle package active status"""
+    user = await require_tutor(request)
+    tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+    
+    package = await db.session_packages.find_one({"package_id": package_id}, {"_id": 0})
+    if not package or package["tutor_id"] != tutor["tutor_id"]:
+        raise HTTPException(status_code=404, detail="Package not found")
+    
+    new_status = not package.get("is_active", True)
+    await db.session_packages.update_one(
+        {"package_id": package_id},
+        {"$set": {"is_active": new_status}}
+    )
+    
+    return {"success": True, "is_active": new_status}
+
+@api_router.delete("/tutor/packages/{package_id}")
+async def delete_package(package_id: str, request: Request):
+    """Delete a session package"""
+    user = await require_tutor(request)
+    tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+    
+    package = await db.session_packages.find_one({"package_id": package_id}, {"_id": 0})
+    if not package or package["tutor_id"] != tutor["tutor_id"]:
+        raise HTTPException(status_code=404, detail="Package not found")
+    
+    await db.session_packages.delete_one({"package_id": package_id})
+    
+    return {"success": True}
+
+@api_router.post("/packages/{package_id}/purchase")
+async def purchase_package(package_id: str, request: Request, student_id: str = None):
+    """Purchase a session package"""
+    user = await require_auth(request)
+    
+    package = await db.session_packages.find_one({"package_id": package_id, "is_active": True}, {"_id": 0})
+    if not package:
+        raise HTTPException(status_code=404, detail="Package not found or inactive")
+    
+    tutor = await db.tutors.find_one({"tutor_id": package["tutor_id"]}, {"_id": 0})
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Coach not found")
+    
+    # Get student
+    if student_id:
+        student = await db.students.find_one({"student_id": student_id, "user_id": user.user_id}, {"_id": 0})
+        if not student:
+            raise HTTPException(status_code=404, detail="Student not found")
+    else:
+        # Use first student
+        student = await db.students.find_one({"user_id": user.user_id}, {"_id": 0})
+        if not student:
+            raise HTTPException(status_code=400, detail="Please add a student first")
+    
+    # Get market info
+    market_config = MARKETS_CONFIG.get(tutor.get("market_id", "US_USD"), MARKETS_CONFIG["US_USD"])
+    
+    # Check payment methods
+    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    linked_providers = user_doc.get("payment_providers", [])
+    
+    if not linked_providers:
+        return {
+            "success": False,
+            "error": "no_payment_method",
+            "message": "Please add a payment method first",
+            "redirect_to_billing": True
+        }
+    
+    # Process payment (simulated)
+    amount_cents = int(package["total_price"] * 100)
+    platform_fee = int(amount_cents * PLATFORM_FEE_PERCENT / 100)
+    tutor_payout = amount_cents - platform_fee
+    
+    payment_id = f"pay_{uuid.uuid4().hex[:12]}"
+    
+    # Create purchase record
+    purchase = {
+        "purchase_id": f"pur_{uuid.uuid4().hex[:12]}",
+        "package_id": package_id,
+        "tutor_id": package["tutor_id"],
+        "consumer_id": user.user_id,
+        "student_id": student["student_id"],
+        "package_name": package["name"],
+        "total_sessions": package["session_count"],
+        "sessions_used": 0,
+        "sessions_remaining": package["session_count"],
+        "price_paid": package["total_price"],
+        "currency": market_config["currency"],
+        "currency_symbol": market_config["currency_symbol"],
+        "purchased_at": datetime.now(timezone.utc),
+        "expires_at": datetime.now(timezone.utc) + timedelta(days=package["validity_days"]),
+        "status": "active",
+        "payment_id": payment_id
+    }
+    
+    await db.purchased_packages.insert_one(purchase)
+    
+    # Record payment
+    payment_record = {
+        "payment_id": payment_id,
+        "purchase_id": purchase["purchase_id"],
+        "tutor_id": package["tutor_id"],
+        "consumer_id": user.user_id,
+        "amount_cents": amount_cents,
+        "currency": market_config["currency"],
+        "platform_fee_cents": platform_fee,
+        "tutor_payout_cents": tutor_payout,
+        "type": "package_purchase",
+        "status": "completed",
+        "processed_at": datetime.now(timezone.utc)
+    }
+    await db.payments.insert_one(payment_record)
+    
+    return {
+        "success": True,
+        "purchase": purchase,
+        "payment_id": payment_id
+    }
+
+@api_router.get("/my-packages")
+async def get_my_purchased_packages(request: Request):
+    """Get consumer's purchased packages"""
+    user = await require_auth(request)
+    
+    packages = await db.purchased_packages.find(
+        {"consumer_id": user.user_id},
+        {"_id": 0}
+    ).sort("purchased_at", -1).to_list(50)
+    
+    # Update expired packages
+    now = datetime.now(timezone.utc)
+    for pkg in packages:
+        if pkg["status"] == "active":
+            expires_at = pkg["expires_at"]
+            if isinstance(expires_at, str):
+                expires_at = datetime.fromisoformat(expires_at.replace('Z', '+00:00'))
+            if expires_at.tzinfo is None:
+                expires_at = expires_at.replace(tzinfo=timezone.utc)
+            if now > expires_at:
+                pkg["status"] = "expired"
+                await db.purchased_packages.update_one(
+                    {"purchase_id": pkg["purchase_id"]},
+                    {"$set": {"status": "expired"}}
+                )
+    
+    return {"packages": packages}
+
+@api_router.post("/bookings/use-package")
+async def book_with_package(request: Request):
+    """Create a booking using a purchased package"""
+    user = await require_auth(request)
+    body = await request.json()
+    
+    purchase_id = body.get("purchase_id")
+    start_at = body.get("start_at")
+    student_id = body.get("student_id")
+    
+    # Get purchase
+    purchase = await db.purchased_packages.find_one(
+        {"purchase_id": purchase_id, "consumer_id": user.user_id, "status": "active"},
+        {"_id": 0}
+    )
+    
+    if not purchase:
+        raise HTTPException(status_code=404, detail="Active package not found")
+    
+    if purchase["sessions_remaining"] <= 0:
+        raise HTTPException(status_code=400, detail="No sessions remaining in this package")
+    
+    # Check expiry
+    expires_at = purchase["expires_at"]
+    if isinstance(expires_at, str):
+        expires_at = datetime.fromisoformat(expires_at.replace('Z', '+00:00'))
+    if expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+    if datetime.now(timezone.utc) > expires_at:
+        await db.purchased_packages.update_one(
+            {"purchase_id": purchase_id},
+            {"$set": {"status": "expired"}}
+        )
+        raise HTTPException(status_code=400, detail="Package has expired")
+    
+    # Get tutor
+    tutor = await db.tutors.find_one({"tutor_id": purchase["tutor_id"]}, {"_id": 0})
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Coach not found")
+    
+    tutor_user = await db.users.find_one({"user_id": tutor["user_id"]}, {"_id": 0})
+    
+    # Parse start time
+    if isinstance(start_at, str):
+        start_at = datetime.fromisoformat(start_at.replace('Z', '+00:00'))
+    if start_at.tzinfo is None:
+        start_at = start_at.replace(tzinfo=timezone.utc)
+    
+    duration = tutor.get("duration_minutes", 60)
+    end_at = start_at + timedelta(minutes=duration)
+    
+    # Calculate per-session price
+    price_per_session = purchase["price_paid"] / purchase["total_sessions"]
+    
+    # Create booking
+    booking_id = f"booking_{uuid.uuid4().hex[:12]}"
+    market_config = MARKETS_CONFIG.get(tutor.get("market_id", "US_USD"), MARKETS_CONFIG["US_USD"])
+    
+    booking = {
+        "booking_id": booking_id,
+        "tutor_id": tutor["tutor_id"],
+        "consumer_id": user.user_id,
+        "student_id": student_id or purchase["student_id"],
+        "start_at": start_at,
+        "end_at": end_at,
+        "status": "booked",
+        "price_snapshot": round(price_per_session, 2),
+        "amount_cents": int(price_per_session * 100),
+        "market_id": tutor.get("market_id", "US_USD"),
+        "policy_snapshot": tutor.get("policies", {}),
+        "payment_status": "paid",
+        "package_purchase_id": purchase_id,
+        "created_at": datetime.now(timezone.utc)
+    }
+    
+    await db.bookings.insert_one(booking)
+    
+    # Update package usage
+    new_remaining = purchase["sessions_remaining"] - 1
+    new_status = "completed" if new_remaining == 0 else "active"
+    
+    await db.purchased_packages.update_one(
+        {"purchase_id": purchase_id},
+        {
+            "$set": {
+                "sessions_used": purchase["sessions_used"] + 1,
+                "sessions_remaining": new_remaining,
+                "status": new_status
+            }
+        }
+    )
+    
+    return {
+        "success": True,
+        "booking": booking,
+        "sessions_remaining": new_remaining
+    }
+
+
+# ============== DETAILED REVIEWS ==============
+
+@api_router.post("/reviews")
+async def create_detailed_review(data: DetailedReviewCreate, request: Request):
+    """Create a detailed review for a coach"""
+    user = await require_auth(request)
+    
+    # Check if tutor exists
+    tutor = await db.tutors.find_one({"tutor_id": data.tutor_id}, {"_id": 0})
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Coach not found")
+    
+    # Check if user has had a session with this tutor
+    has_booking = await db.bookings.find_one({
+        "consumer_id": user.user_id,
+        "tutor_id": data.tutor_id,
+        "status": {"$in": ["completed", "booked", "confirmed"]}
+    })
+    
+    if not has_booking:
+        raise HTTPException(status_code=400, detail="You can only review coaches you've had sessions with")
+    
+    # Check if already reviewed this tutor recently
+    existing_review = await db.detailed_reviews.find_one({
+        "consumer_id": user.user_id,
+        "tutor_id": data.tutor_id,
+        "created_at": {"$gte": datetime.now(timezone.utc) - timedelta(days=30)}
+    })
+    
+    if existing_review:
+        raise HTTPException(status_code=400, detail="You've already reviewed this coach recently")
+    
+    # Calculate overall rating
+    overall = (data.teaching_quality + data.communication + data.punctuality + 
+               data.knowledge + data.value_for_money) / 5
+    
+    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    
+    review = {
+        "review_id": f"rev_{uuid.uuid4().hex[:12]}",
+        "booking_id": data.booking_id,
+        "tutor_id": data.tutor_id,
+        "consumer_id": user.user_id,
+        "consumer_name": user_doc.get("name", "Anonymous"),
+        "teaching_quality": data.teaching_quality,
+        "communication": data.communication,
+        "punctuality": data.punctuality,
+        "knowledge": data.knowledge,
+        "value_for_money": data.value_for_money,
+        "overall_rating": round(overall, 1),
+        "comment": data.comment,
+        "would_recommend": data.would_recommend,
+        "created_at": datetime.now(timezone.utc)
+    }
+    
+    await db.detailed_reviews.insert_one(review)
+    
+    # Update tutor's average rating
+    all_reviews = await db.detailed_reviews.find({"tutor_id": data.tutor_id}, {"_id": 0}).to_list(1000)
+    avg_rating = sum(r["overall_rating"] for r in all_reviews) / len(all_reviews)
+    
+    await db.tutors.update_one(
+        {"tutor_id": data.tutor_id},
+        {"$set": {"rating_avg": round(avg_rating, 1), "rating_count": len(all_reviews)}}
+    )
+    
+    return {"success": True, "review": review}
+
+@api_router.get("/reviews/my-reviews")
+async def get_my_reviews(request: Request):
+    """Get reviews written by current user"""
+    user = await require_auth(request)
+    
+    reviews = await db.detailed_reviews.find(
+        {"consumer_id": user.user_id},
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(50)
+    
+    # Enrich with tutor info
+    for review in reviews:
+        tutor = await db.tutors.find_one({"tutor_id": review["tutor_id"]}, {"_id": 0})
+        tutor_user = await db.users.find_one({"user_id": tutor["user_id"]}, {"_id": 0}) if tutor else None
+        review["tutor_name"] = tutor_user.get("name") if tutor_user else "Unknown"
+    
+    return {"reviews": reviews}
+
+@api_router.get("/reviews/pending")
+async def get_pending_reviews(request: Request):
+    """Get coaches that can be reviewed (had sessions but not reviewed recently)"""
+    user = await require_auth(request)
+    
+    # Get completed bookings
+    bookings = await db.bookings.find({
+        "consumer_id": user.user_id,
+        "status": "completed"
+    }, {"_id": 0}).to_list(100)
+    
+    tutor_ids = list(set(b["tutor_id"] for b in bookings))
+    
+    # Get recent reviews
+    recent_reviews = await db.detailed_reviews.find({
+        "consumer_id": user.user_id,
+        "created_at": {"$gte": datetime.now(timezone.utc) - timedelta(days=30)}
+    }, {"_id": 0}).to_list(100)
+    
+    reviewed_tutor_ids = set(r["tutor_id"] for r in recent_reviews)
+    
+    # Get tutors not reviewed recently
+    pending = []
+    for tutor_id in tutor_ids:
+        if tutor_id not in reviewed_tutor_ids:
+            tutor = await db.tutors.find_one({"tutor_id": tutor_id}, {"_id": 0})
+            if tutor:
+                tutor_user = await db.users.find_one({"user_id": tutor["user_id"]}, {"_id": 0})
+                pending.append({
+                    "tutor_id": tutor_id,
+                    "tutor_name": tutor_user.get("name") if tutor_user else "Unknown",
+                    "subjects": tutor.get("subjects", [])
+                })
+    
+    return {"pending_reviews": pending}
+
+@api_router.get("/tutors/{tutor_id}/reviews")
+async def get_tutor_reviews(tutor_id: str, limit: int = 10):
+    """Get reviews for a coach"""
+    reviews = await db.detailed_reviews.find(
+        {"tutor_id": tutor_id},
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(limit)
+    
+    # Get aggregate stats
+    if reviews:
+        avg_teaching = sum(r["teaching_quality"] for r in reviews) / len(reviews)
+        avg_communication = sum(r["communication"] for r in reviews) / len(reviews)
+        avg_punctuality = sum(r["punctuality"] for r in reviews) / len(reviews)
+        avg_knowledge = sum(r["knowledge"] for r in reviews) / len(reviews)
+        avg_value = sum(r["value_for_money"] for r in reviews) / len(reviews)
+        recommend_pct = sum(1 for r in reviews if r["would_recommend"]) / len(reviews) * 100
+        
+        stats = {
+            "total_reviews": len(reviews),
+            "avg_teaching_quality": round(avg_teaching, 1),
+            "avg_communication": round(avg_communication, 1),
+            "avg_punctuality": round(avg_punctuality, 1),
+            "avg_knowledge": round(avg_knowledge, 1),
+            "avg_value_for_money": round(avg_value, 1),
+            "recommend_percentage": round(recommend_pct, 0)
+        }
+    else:
+        stats = {
+            "total_reviews": 0,
+            "avg_teaching_quality": 0,
+            "avg_communication": 0,
+            "avg_punctuality": 0,
+            "avg_knowledge": 0,
+            "avg_value_for_money": 0,
+            "recommend_percentage": 0
+        }
+    
+    return {"reviews": reviews, "stats": stats}
+
+
 # Include router
 app.include_router(api_router)
 
