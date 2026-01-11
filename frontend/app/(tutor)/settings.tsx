@@ -588,6 +588,37 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   menuItemTextDesktop: {
     fontSize: 17,
   },
+  // Meeting Link Styles
+  meetingHint: {
+    fontSize: 13,
+    lineHeight: 18,
+    marginBottom: 12,
+  },
+  meetingInputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+    gap: 10,
+    marginBottom: 12,
+  },
+  meetingInput: {
+    flex: 1,
+    fontSize: 14,
+    padding: 0,
+  },
+  saveMeetingButton: {
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  saveMeetingButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
+  },
   logoutButton: {
     flexDirection: 'row',
     alignItems: 'center',
