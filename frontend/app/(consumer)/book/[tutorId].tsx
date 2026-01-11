@@ -94,12 +94,17 @@ export default function BookingScreen() {
 
   const loadData = async () => {
     try {
-      const [tutorRes, studentsRes] = await Promise.all([
+      const [tutorRes, studentsRes, paymentRes] = await Promise.all([
         api.get(`/tutors/${tutorId}`),
         api.get('/students'),
+        api.get('/payment-methods'),
       ]);
       setTutor(tutorRes.data);
       setStudents(studentsRes.data);
+      setPaymentMethods(paymentRes.data.payment_methods || []);
+      // Set default payment method
+      const defaultMethod = paymentRes.data.payment_methods?.find((m: PaymentMethod) => m.is_default);
+      if (defaultMethod) setSelectedPaymentMethod(defaultMethod);
     } catch (error) {
       console.error('Failed to load data:', error);
       Alert.alert('Error', 'Failed to load booking data');
