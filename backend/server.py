@@ -715,7 +715,117 @@ async def update_auto_pay_settings(data: AutoPaySettings, request: Request):
         }}
     )
     
-    return {"success": True, "auto_pay": data.dict()}
+    return {"success": True, "auto_pay": data.model_dump()}
+
+# Payment Methods Management
+class PaymentMethodCreate(BaseModel):
+    card_type: str  # visa, mastercard, amex
+    last_four: str
+    expiry_month: int
+    expiry_year: int
+    cardholder_name: str
+    is_default: bool = False
+
+@api_router.get("/payment-methods")
+async def get_payment_methods(request: Request):
+    """Get user's saved payment methods"""
+    user = await require_auth(request)
+    
+    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    payment_methods = user_doc.get("payment_methods", [])
+    
+    return {"payment_methods": payment_methods}
+
+@api_router.post("/payment-methods")
+async def add_payment_method(data: PaymentMethodCreate, request: Request):
+    """Add a new payment method"""
+    user = await require_auth(request)
+    
+    # Generate a mock payment method ID (in production, this comes from Stripe)
+    payment_method_id = f"pm_{uuid.uuid4().hex[:24]}"
+    
+    payment_method = {
+        "payment_method_id": payment_method_id,
+        "card_type": data.card_type,
+        "last_four": data.last_four,
+        "expiry_month": data.expiry_month,
+        "expiry_year": data.expiry_year,
+        "cardholder_name": data.cardholder_name,
+        "is_default": data.is_default,
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    # If this is set as default, unset other defaults
+    if data.is_default:
+        await db.users.update_one(
+            {"user_id": user.user_id},
+            {"$set": {"payment_methods.$[].is_default": False}}
+        )
+    
+    # If this is the first payment method, make it default
+    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    existing_methods = user_doc.get("payment_methods", [])
+    if len(existing_methods) == 0:
+        payment_method["is_default"] = True
+    
+    await db.users.update_one(
+        {"user_id": user.user_id},
+        {"$push": {"payment_methods": payment_method}}
+    )
+    
+    return {"success": True, "payment_method": payment_method}
+
+@api_router.delete("/payment-methods/{payment_method_id}")
+async def remove_payment_method(payment_method_id: str, request: Request):
+    """Remove a payment method"""
+    user = await require_auth(request)
+    
+    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    payment_methods = user_doc.get("payment_methods", [])
+    
+    # Find the method to remove
+    method_to_remove = next((m for m in payment_methods if m["payment_method_id"] == payment_method_id), None)
+    if not method_to_remove:
+        raise HTTPException(status_code=404, detail="Payment method not found")
+    
+    # Remove the method
+    await db.users.update_one(
+        {"user_id": user.user_id},
+        {"$pull": {"payment_methods": {"payment_method_id": payment_method_id}}}
+    )
+    
+    # If removed method was default and there are other methods, set first one as default
+    if method_to_remove.get("is_default") and len(payment_methods) > 1:
+        remaining_methods = [m for m in payment_methods if m["payment_method_id"] != payment_method_id]
+        if remaining_methods:
+            await db.users.update_one(
+                {"user_id": user.user_id, "payment_methods.payment_method_id": remaining_methods[0]["payment_method_id"]},
+                {"$set": {"payment_methods.$.is_default": True}}
+            )
+    
+    return {"success": True, "message": "Payment method removed"}
+
+@api_router.put("/payment-methods/{payment_method_id}/default")
+async def set_default_payment_method(payment_method_id: str, request: Request):
+    """Set a payment method as default"""
+    user = await require_auth(request)
+    
+    # Unset all defaults first
+    await db.users.update_one(
+        {"user_id": user.user_id},
+        {"$set": {"payment_methods.$[].is_default": False}}
+    )
+    
+    # Set the new default
+    result = await db.users.update_one(
+        {"user_id": user.user_id, "payment_methods.payment_method_id": payment_method_id},
+        {"$set": {"payment_methods.$.is_default": True}}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Payment method not found")
+    
+    return {"success": True, "message": "Default payment method updated"}
 
 # ============== CONSUMER INVITES TO PROVIDERS ==============
 
