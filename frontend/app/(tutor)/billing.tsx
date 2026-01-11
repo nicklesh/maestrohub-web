@@ -146,7 +146,7 @@ export default function BillingScreen() {
                     <Text style={styles.eventStatus}>{event.status}</Text>
                   </View>
                   <Text style={[styles.eventAmount, isDesktop && styles.eventAmountDesktop]}>
-                    ${(event.amount_cents / 100).toFixed(2)}
+                    {summary?.currency_symbol || '$'}{(event.amount_cents / 100).toFixed(2)}
                   </Text>
                 </View>
               ))
