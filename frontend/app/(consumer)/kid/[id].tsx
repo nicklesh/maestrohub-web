@@ -224,20 +224,22 @@ export default function KidDetailScreen() {
                 </Text>
               </View>
             ) : (
-              filteredBookings.map((booking) => (
-                <View key={booking.booking_id} style={[styles.bookingCard, { backgroundColor: colors.surface }]}>
-                  <View style={styles.bookingHeader}>
-                    <View>
-                      <Text style={[styles.bookingSubject, { color: colors.text }]}>{booking.subject}</Text>
-                      <Text style={[styles.bookingTutor, { color: colors.textMuted }]}>with {booking.tutor_name}</Text>
+              filteredBookings.map((booking) => {
+                const isCanceled = booking.status.includes('canceled');
+                return (
+                  <View key={booking.booking_id} style={[styles.bookingCard, { backgroundColor: colors.surface }, isCanceled && { opacity: 0.7 }]}>
+                    <View style={styles.bookingHeader}>
+                      <View>
+                        <Text style={[styles.bookingSubject, { color: colors.text }]}>{booking.subject}</Text>
+                        <Text style={[styles.bookingTutor, { color: colors.textMuted }]}>with {booking.tutor_name}</Text>
+                      </View>
+                      <View style={[styles.statusBadge, { backgroundColor: getStatusColor(booking.status) + '20' }]}>
+                        <Text style={[styles.statusText, { color: getStatusColor(booking.status) }]}>
+                          {getStatusDisplay(booking.status)}
+                        </Text>
+                      </View>
                     </View>
-                    <View style={[styles.statusBadge, { backgroundColor: getStatusColor(booking.status) + '20' }]}>
-                      <Text style={[styles.statusText, { color: getStatusColor(booking.status) }]}>
-                        {booking.status}
-                      </Text>
-                    </View>
-                  </View>
-                  <View style={styles.bookingFooter}>
+                    <View style={styles.bookingFooter}>
                     <Ionicons name="time-outline" size={14} color={colors.textMuted} />
                     <Text style={[styles.bookingTime, { color: colors.textMuted }]}>
                       {formatDate(booking.start_at)} · {booking.duration_minutes} min
