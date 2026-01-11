@@ -5346,10 +5346,10 @@ async def purchase_sponsorship(data: SponsorshipCreate, request: Request):
             "redirect_to_billing": True
         }
     
-    # Calculate fees (5% platform fee)
+    # Pricing is flat - no additional platform fee shown to user
+    # Fee is already built into the weekly rates ($15/week, $10/week for 12+ weeks)
     price_cents = plan["price_cents"]
-    platform_fee_cents = int(price_cents * 0.05)
-    total_charge = price_cents + platform_fee_cents
+    total_charge = price_cents  # No extra fee
     
     # Process payment (simulated)
     payment_id = f"pay_{uuid.uuid4().hex[:12]}"
@@ -5360,10 +5360,11 @@ async def purchase_sponsorship(data: SponsorshipCreate, request: Request):
         "tutor_id": tutor["tutor_id"],
         "amount_cents": total_charge,
         "base_amount_cents": price_cents,
-        "platform_fee_cents": platform_fee_cents,
+        "platform_fee_cents": 0,  # Fee built into price
         "currency": plan["currency"],
         "type": "sponsorship",
         "plan_id": data.plan_id,
+        "weeks": plan.get("weeks", 1),
         "status": "completed",
         "processed_at": datetime.now(timezone.utc)
     }
@@ -5376,9 +5377,10 @@ async def purchase_sponsorship(data: SponsorshipCreate, request: Request):
         "tutor_id": tutor["tutor_id"],
         "plan_id": plan["plan_id"],
         "plan_name": plan["name"],
+        "weeks": plan.get("weeks", 1),
         "categories": data.categories,
         "price_paid_cents": price_cents,
-        "platform_fee_cents": platform_fee_cents,
+        "platform_fee_cents": 0,
         "currency": plan["currency"],
         "started_at": now,
         "expires_at": now + timedelta(days=plan["duration_days"]),
