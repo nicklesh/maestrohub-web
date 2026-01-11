@@ -538,15 +538,52 @@ def verify_password(password: str, hashed: str) -> bool:
 def create_jwt_token(user_id: str) -> str:
     payload = {
         "user_id": user_id,
+        "iat": datetime.now(timezone.utc),
         "exp": datetime.now(timezone.utc) + timedelta(days=JWT_EXPIRATION_DAYS)
     }
     return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
 
 def decode_jwt_token(token: str) -> Optional[str]:
+    """
+    Securely decode and validate JWT token.
+    Returns user_id if valid, None if invalid.
+    """
+    if not token:
+        return None
+    
+    # Basic format validation - JWT should have 3 parts separated by dots
+    parts = token.split('.')
+    if len(parts) != 3:
+        logger.warning(f"Invalid JWT format: expected 3 parts, got {len(parts)}")
+        return None
+    
     try:
-        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
-        return payload.get("user_id")
-    except:
+        payload = jwt.decode(
+            token, 
+            JWT_SECRET, 
+            algorithms=[JWT_ALGORITHM],
+            options={
+                "verify_signature": True,
+                "verify_exp": True,
+                "require": ["user_id", "exp"]
+            }
+        )
+        user_id = payload.get("user_id")
+        if not user_id:
+            logger.warning("JWT missing user_id claim")
+            return None
+        return user_id
+    except ExpiredSignatureError:
+        logger.info("JWT token expired")
+        return None
+    except InvalidTokenError as e:
+        logger.warning(f"Invalid JWT token: {str(e)}")
+        return None
+    except DecodeError as e:
+        logger.warning(f"JWT decode error: {str(e)}")
+        return None
+    except Exception as e:
+        logger.error(f"Unexpected JWT error: {str(e)}")
         return None
 
 async def get_current_user(request: Request) -> Optional[User]:
@@ -562,6 +599,10 @@ async def get_current_user(request: Request) -> Optional[User]:
     if not session_token:
         return None
     
+    # Validate token is not empty or just whitespace
+    if not session_token.strip():
+        return None
+    
     # Check if it's a JWT token
     user_id = decode_jwt_token(session_token)
     if user_id:
@@ -569,7 +610,7 @@ async def get_current_user(request: Request) -> Optional[User]:
         if user_doc:
             return User(**user_doc)
     
-    # Check session in database
+    # Check session in database (for Google OAuth sessions)
     session = await db.user_sessions.find_one({"session_token": session_token}, {"_id": 0})
     if session:
         expires_at = session["expires_at"]
