@@ -516,7 +516,7 @@ export default function BookingScreen() {
           </View>
         ) : (
           <Text style={[styles.primaryButtonText, isTablet && styles.primaryButtonTextTablet]}>
-            Pay ${tutor?.base_price?.toFixed(2)}
+            Pay {tutor?.currency_symbol || '$'}{tutor?.base_price?.toFixed(2)}
           </Text>
         )}
       </TouchableOpacity>
