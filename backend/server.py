@@ -371,6 +371,53 @@ class DetailedReview(DetailedReviewCreate):
     consumer_name: str
     overall_rating: float  # Average of all categories
     created_at: datetime
+    coach_response: Optional[str] = None
+    coach_response_at: Optional[datetime] = None
+
+class CoachResponseCreate(BaseModel):
+    response: str = Field(min_length=1, max_length=500)
+
+# ============== SPONSORSHIP/ADVERTISING ==============
+class SponsorshipPlan(BaseModel):
+    plan_id: str = Field(default_factory=lambda: f"plan_{uuid.uuid4().hex[:8]}")
+    name: str
+    duration_days: int
+    price_cents: int
+    currency: str = "USD"
+    description: str
+    is_active: bool = True
+
+class SponsorshipCreate(BaseModel):
+    plan_id: str
+    categories: List[str]  # Categories to be sponsored in
+    auto_renew: bool = False
+
+class ActiveSponsorship(BaseModel):
+    sponsorship_id: str = Field(default_factory=lambda: f"spon_{uuid.uuid4().hex[:12]}")
+    tutor_id: str
+    plan_id: str
+    plan_name: str
+    categories: List[str]
+    price_paid_cents: int
+    platform_fee_cents: int
+    currency: str
+    started_at: datetime
+    expires_at: datetime
+    auto_renew: bool = False
+    status: str = "active"  # active, expired, cancelled
+
+# Default sponsorship plans
+SPONSORSHIP_PLANS = [
+    {"plan_id": "spon_week", "name": "Weekly Spotlight", "duration_days": 7, "price_cents": 1999, "currency": "USD", "description": "7 days of premium visibility"},
+    {"plan_id": "spon_month", "name": "Monthly Feature", "duration_days": 30, "price_cents": 5999, "currency": "USD", "description": "30 days of top placement"},
+    {"plan_id": "spon_quarter", "name": "Quarterly Boost", "duration_days": 90, "price_cents": 14999, "currency": "USD", "description": "90 days of maximum exposure"},
+]
+
+SPONSORSHIP_PLANS_INR = [
+    {"plan_id": "spon_week_inr", "name": "Weekly Spotlight", "duration_days": 7, "price_cents": 49900, "currency": "INR", "description": "7 days of premium visibility"},
+    {"plan_id": "spon_month_inr", "name": "Monthly Feature", "duration_days": 30, "price_cents": 149900, "currency": "INR", "description": "30 days of top placement"},
+    {"plan_id": "spon_quarter_inr", "name": "Quarterly Boost", "duration_days": 90, "price_cents": 399900, "currency": "INR", "description": "90 days of maximum exposure"},
+]
 
 class ProviderFeeEvent(BaseModel):
     event_id: str
