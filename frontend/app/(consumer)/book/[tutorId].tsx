@@ -351,118 +351,81 @@ export default function BookingScreen() {
     <ScrollView style={styles.stepContent} contentContainerStyle={styles.intakeScroll}>
       <Text style={[styles.stepTitle, isDesktop && styles.stepTitleDesktop]}>Payment Method</Text>
       <Text style={[styles.stepSubtitle, isDesktop && styles.stepSubtitleDesktop]}>
-        Select how you'd like to pay for this session
+        Select your preferred payment method
       </Text>
       
-      {/* Existing Payment Methods */}
-      {paymentMethods.length > 0 && (
-        <View style={styles.paymentMethodsContainer}>
-          {paymentMethods.map((method) => (
-            <TouchableOpacity
-              key={method.payment_method_id}
-              style={[
-                styles.paymentMethodCard,
-                { borderColor: selectedPaymentMethod?.payment_method_id === method.payment_method_id ? colors.primary : colors.border },
-                selectedPaymentMethod?.payment_method_id === method.payment_method_id && { borderWidth: 2 }
-              ]}
-              onPress={() => setSelectedPaymentMethod(method)}
-            >
-              <View style={styles.paymentMethodLeft}>
-                <Ionicons 
-                  name={method.card_type === 'visa' ? 'card' : method.card_type === 'mastercard' ? 'card' : 'card-outline'} 
-                  size={24} 
-                  color={colors.primary} 
-                />
-                <View style={styles.paymentMethodInfo}>
-                  <Text style={[styles.paymentMethodTitle, { color: colors.text }]}>
-                    {method.card_type.charAt(0).toUpperCase() + method.card_type.slice(1)} •••• {method.last_four}
-                  </Text>
-                  <Text style={[styles.paymentMethodExpiry, { color: colors.textMuted }]}>
-                    Expires {method.expiry_month}/{method.expiry_year}
-                  </Text>
-                </View>
-              </View>
-              {selectedPaymentMethod?.payment_method_id === method.payment_method_id && (
-                <Ionicons name="checkmark-circle" size={24} color={colors.primary} />
-              )}
-            </TouchableOpacity>
-          ))}
+      {/* Order Summary */}
+      <View style={[styles.paymentSummaryCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+        <Text style={[styles.paymentSummaryTitle, { color: colors.text }]}>Order Summary</Text>
+        <View style={styles.paymentSummaryRow}>
+          <Text style={[styles.paymentSummaryLabel, { color: colors.textMuted }]}>
+            {tutor?.duration_minutes || 60} min lesson with {tutor?.user_name}
+          </Text>
+          <Text style={[styles.paymentSummaryValue, { color: colors.text }]}>
+            ${tutor?.base_price?.toFixed(2)}
+          </Text>
         </View>
-      )}
+        <View style={[styles.paymentSummaryRow, styles.paymentTotalRow]}>
+          <Text style={[styles.paymentTotalLabel, { color: colors.text }]}>Total</Text>
+          <Text style={[styles.paymentTotalValue, { color: colors.primary }]}>
+            ${tutor?.base_price?.toFixed(2)}
+          </Text>
+        </View>
+      </View>
       
-      {/* Add New Card */}
-      {!showAddCard ? (
-        <TouchableOpacity
-          style={[styles.addCardButton, { borderColor: colors.border }]}
-          onPress={() => setShowAddCard(true)}
-        >
-          <Ionicons name="add-circle-outline" size={24} color={colors.primary} />
-          <Text style={[styles.addCardText, { color: colors.primary }]}>Add New Card</Text>
-        </TouchableOpacity>
-      ) : (
-        <View style={[styles.addCardForm, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-          <Text style={[styles.inputLabel, { color: colors.text }]}>Card Number</Text>
-          <TextInput
-            style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-            placeholder="4242 4242 4242 4242"
-            placeholderTextColor={colors.textMuted}
-            value={newCardNumber}
-            onChangeText={setNewCardNumber}
-            keyboardType="numeric"
-            maxLength={19}
-          />
-          
-          <View style={styles.cardRow}>
-            <View style={{ flex: 1, marginRight: 8 }}>
-              <Text style={[styles.inputLabel, { color: colors.text }]}>Expiry (MM/YY)</Text>
-              <TextInput
-                style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-                placeholder="12/28"
-                placeholderTextColor={colors.textMuted}
-                value={newCardExpiry}
-                onChangeText={setNewCardExpiry}
-                maxLength={5}
-              />
+      {/* Payment Provider Options */}
+      <View style={styles.paymentProvidersContainer}>
+        {PAYMENT_PROVIDERS.map((provider) => (
+          <TouchableOpacity
+            key={provider.id}
+            style={[
+              styles.paymentProviderCard,
+              { 
+                borderColor: selectedProvider === provider.id ? colors.primary : colors.border,
+                backgroundColor: colors.surface
+              },
+              selectedProvider === provider.id && { borderWidth: 2 }
+            ]}
+            onPress={() => setSelectedProvider(provider.id)}
+          >
+            <View style={styles.paymentProviderLeft}>
+              <View style={[styles.providerIconContainer, { backgroundColor: provider.color + '15' }]}>
+                <Ionicons name={provider.icon as any} size={24} color={provider.color} />
+              </View>
+              <Text style={[styles.paymentProviderName, { color: colors.text }]}>
+                {provider.name}
+              </Text>
             </View>
-          </View>
-          
-          <Text style={[styles.inputLabel, { color: colors.text }]}>Cardholder Name</Text>
-          <TextInput
-            style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-            placeholder="John Doe"
-            placeholderTextColor={colors.textMuted}
-            value={newCardName}
-            onChangeText={setNewCardName}
-          />
-          
-          <View style={styles.cardFormButtons}>
-            <TouchableOpacity 
-              style={[styles.cancelButton, { borderColor: colors.border }]}
-              onPress={() => setShowAddCard(false)}
-            >
-              <Text style={[styles.cancelButtonText, { color: colors.textMuted }]}>Cancel</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
-              style={[styles.saveCardButton, { backgroundColor: colors.primary }]}
-              onPress={handleAddCard}
-              disabled={submitting}
-            >
-              {submitting ? (
-                <ActivityIndicator size="small" color="#fff" />
-              ) : (
-                <Text style={styles.saveCardButtonText}>Save Card</Text>
-              )}
-            </TouchableOpacity>
-          </View>
-        </View>
-      )}
+            {selectedProvider === provider.id && (
+              <Ionicons name="checkmark-circle" size={24} color={colors.primary} />
+            )}
+          </TouchableOpacity>
+        ))}
+      </View>
+      
+      {/* Security Note */}
+      <View style={[styles.securityNote, { backgroundColor: colors.successLight }]}>
+        <Ionicons name="shield-checkmark" size={20} color={colors.success} />
+        <Text style={[styles.securityNoteText, { color: colors.success }]}>
+          Secure payment • Your card details are never stored on our servers
+        </Text>
+      </View>
       
       <TouchableOpacity 
-        style={[styles.primaryButton, isTablet && styles.primaryButtonTablet, !selectedPaymentMethod && { opacity: 0.5 }]} 
+        style={[styles.primaryButton, isTablet && styles.primaryButtonTablet, submitting && { opacity: 0.7 }]} 
         onPress={handlePaymentSubmit}
-        disabled={!selectedPaymentMethod}
+        disabled={submitting}
       >
-        <Text style={[styles.primaryButtonText, isTablet && styles.primaryButtonTextTablet]}>Continue to Review</Text>
+        {submitting ? (
+          <View style={styles.processingContainer}>
+            <ActivityIndicator size="small" color="#fff" />
+            <Text style={[styles.primaryButtonText, { marginLeft: 8 }]}>Processing...</Text>
+          </View>
+        ) : (
+          <Text style={[styles.primaryButtonText, isTablet && styles.primaryButtonTextTablet]}>
+            Pay ${tutor?.base_price?.toFixed(2)}
+          </Text>
+        )}
       </TouchableOpacity>
     </ScrollView>
   );
