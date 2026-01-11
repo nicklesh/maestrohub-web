@@ -174,7 +174,7 @@ export default function AdminTutors() {
       </View>
 
       <View style={styles.priceRow}>
-        <Text style={styles.price}>${item.base_price}/hr</Text>
+        <Text style={styles.price}>{item.currency_symbol || '$'}{item.base_price}/hr</Text>
         <Text style={styles.publishStatus}>
           {item.is_published ? '✓ Published' : '○ Unpublished'}
         </Text>
