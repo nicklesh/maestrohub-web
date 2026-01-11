@@ -744,6 +744,22 @@ async def add_payment_method(data: PaymentMethodCreate, request: Request):
     # Generate a mock payment method ID (in production, this comes from Stripe)
     payment_method_id = f"pm_{uuid.uuid4().hex[:24]}"
     
+    # Get current user document
+    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    existing_methods = user_doc.get("payment_methods", [])
+    
+    # If this is the first payment method or is set as default
+    is_default = data.is_default or len(existing_methods) == 0
+    
+    # If setting as default, unset other defaults
+    if is_default and existing_methods:
+        for method in existing_methods:
+            method["is_default"] = False
+        await db.users.update_one(
+            {"user_id": user.user_id},
+            {"$set": {"payment_methods": existing_methods}}
+        )
+    
     payment_method = {
         "payment_method_id": payment_method_id,
         "card_type": data.card_type,
@@ -751,26 +767,21 @@ async def add_payment_method(data: PaymentMethodCreate, request: Request):
         "expiry_month": data.expiry_month,
         "expiry_year": data.expiry_year,
         "cardholder_name": data.cardholder_name,
-        "is_default": data.is_default,
+        "is_default": is_default,
         "created_at": datetime.now(timezone.utc).isoformat()
     }
     
-    # If this is set as default, unset other defaults
-    if data.is_default:
-        await db.users.update_one(
-            {"user_id": user.user_id},
-            {"$set": {"payment_methods.$[].is_default": False}}
-        )
-    
-    # If this is the first payment method, make it default
-    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
-    existing_methods = user_doc.get("payment_methods", [])
-    if len(existing_methods) == 0:
-        payment_method["is_default"] = True
-    
+    # Add to array (initialize if doesn't exist)
     await db.users.update_one(
         {"user_id": user.user_id},
-        {"$push": {"payment_methods": payment_method}}
+        {"$push": {"payment_methods": payment_method}},
+        upsert=False
+    )
+    
+    # If payment_methods field didn't exist, set it
+    await db.users.update_one(
+        {"user_id": user.user_id, "payment_methods": {"$exists": False}},
+        {"$set": {"payment_methods": [payment_method]}}
     )
     
     return {"success": True, "payment_method": payment_method}
