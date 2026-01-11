@@ -1710,6 +1710,7 @@ async def get_tutor_availability(tutor_id: str, date: str = None, from_date: str
 
 @api_router.post("/booking-holds", response_model=BookingHold)
 async def create_booking_hold(data: BookingHoldCreate, request: Request):
+    logger.info(f"Creating booking hold: tutor_id={data.tutor_id}, start_at={data.start_at}, duration={data.duration_minutes}")
     user = await require_auth(request)
     
     # Check tutor exists
