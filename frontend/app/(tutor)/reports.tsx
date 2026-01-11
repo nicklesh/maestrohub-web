@@ -283,6 +283,88 @@ export default function TutorReportsScreen() {
             </View>
           )}
 
+          {/* Sponsorship Section */}
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>Sponsorship & Advertising</Text>
+              <View style={[styles.sectionBadge, { backgroundColor: colors.warning + '20' }]}>
+                <Ionicons name="megaphone" size={14} color={colors.warning} />
+              </View>
+            </View>
+            
+            {sponsorship && sponsorship.total_purchases > 0 ? (
+              <>
+                {/* Sponsorship Stats */}
+                <View style={[styles.sponsorshipCard, { backgroundColor: colors.surface, borderColor: colors.warning }]}>
+                  <View style={styles.sponsorshipRow}>
+                    <View style={styles.sponsorshipStat}>
+                      <Ionicons name="cash-outline" size={24} color={colors.warning} />
+                      <Text style={[styles.sponsorshipValue, { color: colors.text }]}>
+                        {formatCurrency(sponsorship.total_spent_cents)}
+                      </Text>
+                      <Text style={[styles.sponsorshipLabel, { color: colors.textMuted }]}>Total Spent</Text>
+                    </View>
+                    <View style={styles.sponsorshipStatDivider} />
+                    <View style={styles.sponsorshipStat}>
+                      <Ionicons name="receipt-outline" size={24} color={colors.primary} />
+                      <Text style={[styles.sponsorshipValue, { color: colors.text }]}>
+                        {sponsorship.total_purchases}
+                      </Text>
+                      <Text style={[styles.sponsorshipLabel, { color: colors.textMuted }]}>Purchases</Text>
+                    </View>
+                    <View style={styles.sponsorshipStatDivider} />
+                    <View style={styles.sponsorshipStat}>
+                      <Ionicons name="checkmark-circle-outline" size={24} color={sponsorship.active_count > 0 ? colors.success : colors.textMuted} />
+                      <Text style={[styles.sponsorshipValue, { color: sponsorship.active_count > 0 ? colors.success : colors.text }]}>
+                        {sponsorship.active_count}
+                      </Text>
+                      <Text style={[styles.sponsorshipLabel, { color: colors.textMuted }]}>Active Now</Text>
+                    </View>
+                  </View>
+                  
+                  {/* Current Active Sponsorship */}
+                  {sponsorship.current_active && (
+                    <View style={[styles.activeSponsorship, { backgroundColor: colors.success + '15', borderColor: colors.success }]}>
+                      <View style={styles.activeSponsorshipHeader}>
+                        <Ionicons name="star" size={18} color={colors.success} />
+                        <Text style={[styles.activeSponsorshipTitle, { color: colors.success }]}>Currently Active</Text>
+                      </View>
+                      <Text style={[styles.activeSponsorshipPlan, { color: colors.text }]}>
+                        {sponsorship.current_active.plan_name} ({sponsorship.current_active.weeks} weeks)
+                      </Text>
+                      <Text style={[styles.activeSponsorshipExpires, { color: colors.textMuted }]}>
+                        Expires: {new Date(sponsorship.current_active.expires_at).toLocaleDateString()}
+                      </Text>
+                      {sponsorship.current_active.categories.length > 0 && (
+                        <View style={styles.activeSponsorshipCategories}>
+                          {sponsorship.current_active.categories.map((cat, i) => (
+                            <View key={i} style={[styles.categoryPill, { backgroundColor: colors.primary + '20' }]}>
+                              <Text style={[styles.categoryPillText, { color: colors.primary }]}>{cat}</Text>
+                            </View>
+                          ))}
+                        </View>
+                      )}
+                    </View>
+                  )}
+                </View>
+              </>
+            ) : (
+              <View style={[styles.sponsorshipEmpty, { backgroundColor: colors.surface }]}>
+                <Ionicons name="megaphone-outline" size={40} color={colors.textMuted} />
+                <Text style={[styles.sponsorshipEmptyTitle, { color: colors.text }]}>No Sponsorships Yet</Text>
+                <Text style={[styles.sponsorshipEmptyText, { color: colors.textMuted }]}>
+                  Boost your visibility by becoming a sponsored coach
+                </Text>
+                <TouchableOpacity 
+                  style={[styles.sponsorshipCTA, { backgroundColor: colors.warning }]}
+                  onPress={() => router.push('/(tutor)/sponsorship')}
+                >
+                  <Text style={styles.sponsorshipCTAText}>Get Sponsored</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
+
           {/* Empty State */}
           {!byStudent.length && !byMonth.length && (
             <View style={styles.emptyState}>
