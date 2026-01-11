@@ -98,9 +98,10 @@ export default function BookingScreen() {
 
   const loadData = async () => {
     try {
+      const headers = { Authorization: `Bearer ${token}` };
       const [tutorRes, studentsRes] = await Promise.all([
         api.get(`/tutors/${tutorId}`),
-        api.get('/students'),
+        api.get('/students', { headers }),
       ]);
       setTutor(tutorRes.data);
       setStudents(studentsRes.data);
