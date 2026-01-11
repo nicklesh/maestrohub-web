@@ -409,6 +409,33 @@ export default function BookingDetailScreen() {
               )}
             </View>
           )}
+
+          {/* No-Show Report Section */}
+          {canReportNoShow && (
+            <View style={[styles.card, isTablet && styles.cardTablet, { borderColor: colors.warning, borderWidth: 1 }]}>
+              <View style={styles.noShowHeader}>
+                <Ionicons name="alert-circle" size={24} color={colors.warning} />
+                <Text style={[styles.cardTitle, { color: colors.warning, marginLeft: 8 }]}>Session Issue?</Text>
+              </View>
+              <Text style={[styles.noShowText, { color: colors.textMuted }]}>
+                If your coach didn't show up for the session, you can report it here. We'll review and process a full refund.
+              </Text>
+              <TouchableOpacity
+                style={[styles.noShowButton, { backgroundColor: colors.warning }]}
+                onPress={handleReportNoShow}
+                disabled={reportingNoShow}
+              >
+                {reportingNoShow ? (
+                  <ActivityIndicator color="#fff" size="small" />
+                ) : (
+                  <>
+                    <Ionicons name="flag" size={18} color="#fff" />
+                    <Text style={styles.noShowButtonText}>Report Coach No-Show</Text>
+                  </>
+                )}
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
