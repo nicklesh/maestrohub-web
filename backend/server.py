@@ -644,17 +644,27 @@ async def require_admin(request: Request) -> User:
 # ============== AUTH ROUTES ==============
 
 @api_router.post("/auth/register")
-async def register(data: UserCreate, response: Response):
+@limiter.limit("5/minute")
+async def register(request: Request, data: UserCreate, response: Response):
     # Check if email exists
     existing = await db.users.find_one({"email": data.email}, {"_id": 0})
     if existing:
         raise HTTPException(status_code=400, detail="Email already registered")
     
+    # Validate password strength (if password provided)
+    if data.password:
+        is_valid, error_msg = validate_password_strength(data.password)
+        if not is_valid:
+            raise HTTPException(status_code=400, detail=error_msg)
+    
+    # Sanitize user inputs
+    sanitized_name = sanitize_html(data.name) if data.name else data.name
+    
     user_id = f"user_{uuid.uuid4().hex[:12]}"
     user_doc = {
         "user_id": user_id,
         "email": data.email,
-        "name": data.name,
+        "name": sanitized_name,
         "picture": data.picture,
         "role": data.role,
         "password_hash": hash_password(data.password) if data.password else None,
@@ -679,7 +689,8 @@ async def register(data: UserCreate, response: Response):
     return {"user_id": user_id, "token": token, "role": data.role}
 
 @api_router.post("/auth/login")
-async def login(data: UserLogin, response: Response):
+@limiter.limit("5/minute")
+async def login(request: Request, data: UserLogin, response: Response):
     user_doc = await db.users.find_one({"email": data.email}, {"_id": 0})
     if not user_doc:
         logger.error(f"Login failed: user not found for {data.email}")
