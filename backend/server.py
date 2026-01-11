@@ -1717,6 +1717,9 @@ async def unpublish_tutor_profile(request: Request):
 
 # ============== SEARCH/DISCOVERY ROUTES ==============
 
+# Constants for sponsor rotation
+MAX_SPONSORED_PER_SEARCH = 3
+
 @api_router.get("/tutors/search")
 async def search_tutors(
     request: Request,
@@ -1735,6 +1738,7 @@ async def search_tutors(
     
     # Get consumer's market for filtering and exclude self from results
     current_user_id = None
+    consumer_market_id = None
     try:
         user = await require_auth(request)
         current_user_id = user.user_id
@@ -1780,26 +1784,83 @@ async def search_tutors(
     sort_field = "rating_avg" if sort_by == "rating" else "base_price" if sort_by == "price" else "created_at"
     sort_order = -1 if sort_by == "rating" else 1
     
+    # === SPONSOR ROTATION LOGIC ===
+    # Get all sponsored tutors matching the query for rotation
+    sponsored_query = {**db_query, "is_sponsored": True}
+    if category:
+        sponsored_query["sponsored_categories"] = category
+    
+    all_sponsored = await db.tutors.find(sponsored_query, {"_id": 0}).to_list(100)
+    
+    # Get user's sponsor view history for rotation
+    seen_sponsors = []
+    if current_user_id:
+        user_doc = await db.users.find_one({"user_id": current_user_id}, {"_id": 0})
+        seen_sponsors = user_doc.get("seen_sponsors", []) if user_doc else []
+    
+    # Rotate sponsors: prioritize unseen ones, then cycle back
+    unseen_sponsored = [t for t in all_sponsored if t["tutor_id"] not in seen_sponsors]
+    seen_sponsored = [t for t in all_sponsored if t["tutor_id"] in seen_sponsors]
+    
+    # If all have been seen, reset rotation (start fresh but still rotate)
+    if len(unseen_sponsored) == 0 and len(all_sponsored) > 0:
+        # All sponsors have been seen - reset the tracking
+        if current_user_id:
+            await db.users.update_one(
+                {"user_id": current_user_id},
+                {"$set": {"seen_sponsors": []}}
+            )
+        unseen_sponsored = all_sponsored
+        seen_sponsored = []
+    
+    # Select up to MAX_SPONSORED_PER_SEARCH sponsors (prioritize unseen)
+    selected_sponsored = unseen_sponsored[:MAX_SPONSORED_PER_SEARCH]
+    if len(selected_sponsored) < MAX_SPONSORED_PER_SEARCH:
+        remaining = MAX_SPONSORED_PER_SEARCH - len(selected_sponsored)
+        selected_sponsored.extend(seen_sponsored[:remaining])
+    
+    selected_sponsor_ids = {t["tutor_id"] for t in selected_sponsored}
+    
+    # Track which sponsors this user has now seen
+    if current_user_id and selected_sponsor_ids:
+        new_seen = list(set(seen_sponsors) | selected_sponsor_ids)
+        await db.users.update_one(
+            {"user_id": current_user_id},
+            {"$set": {"seen_sponsors": new_seen}}
+        )
+    
+    # Get non-sponsored tutors
+    non_sponsored_query = {**db_query}
+    non_sponsored_query["$or"] = [
+        {"is_sponsored": {"$ne": True}},
+        {"is_sponsored": {"$exists": False}}
+    ]
+    # Also exclude selected sponsors from regular results to avoid duplicates
+    if selected_sponsor_ids:
+        non_sponsored_query["tutor_id"] = {"$nin": list(selected_sponsor_ids)}
+    
     skip = (page - 1) * limit
+    # Adjust skip/limit for non-sponsored based on page
+    non_sponsored_skip = max(0, skip - len(selected_sponsored)) if page == 1 else skip
+    non_sponsored_limit = limit - len(selected_sponsored) if page == 1 else limit
     
-    # Sort sponsored coaches first, then by selected criteria
-    tutors = await db.tutors.find(db_query, {"_id": 0}).sort([
-        ("is_sponsored", -1),  # Sponsored coaches first
-        (sort_field, sort_order)
-    ]).skip(skip).limit(limit).to_list(limit)
+    non_sponsored_tutors = await db.tutors.find(non_sponsored_query, {"_id": 0}).sort(
+        sort_field, sort_order
+    ).skip(non_sponsored_skip).limit(non_sponsored_limit).to_list(non_sponsored_limit)
     
-    # Get user info for each tutor and also search by name if query provided
+    # Combine: sponsored first (page 1 only), then non-sponsored
+    if page == 1:
+        all_tutors = selected_sponsored + non_sponsored_tutors
+    else:
+        all_tutors = non_sponsored_tutors
+    
+    # Get user info for each tutor
     results = []
-    for tutor in tutors:
+    for tutor in all_tutors:
         user = await db.users.find_one({"user_id": tutor["user_id"]}, {"_id": 0})
         if user:
             # Check if sponsored for this specific category
-            is_sponsored_for_category = False
-            if tutor.get("is_sponsored") and category:
-                sponsored_cats = tutor.get("sponsored_categories", [])
-                is_sponsored_for_category = category in sponsored_cats
-            elif tutor.get("is_sponsored"):
-                is_sponsored_for_category = True
+            is_sponsored_display = tutor["tutor_id"] in selected_sponsor_ids
             
             # Include market info in results
             market_info = MARKETS_CONFIG.get(tutor.get("market_id"), {})
@@ -1809,7 +1870,7 @@ async def search_tutors(
                 "user_picture": user.get("picture"),
                 "currency": market_info.get("currency", "USD"),
                 "currency_symbol": market_info.get("currency_symbol", "$"),
-                "is_sponsored": is_sponsored_for_category
+                "is_sponsored": is_sponsored_display
             })
     
     # If query provided, also search for tutors by user name
