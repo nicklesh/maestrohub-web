@@ -161,13 +161,46 @@ class PaymentProviderTester:
             
             data = response.json()
             available_providers = data.get('available_providers', [])
+            linked_providers = data.get('linked_providers', [])
+            
             if not available_providers:
                 self.log_test("Link Payment Provider - Setup", False, "No available providers found")
                 return False
             
-            # Try to link the first available provider
-            provider_to_link = available_providers[0]['id']
+            # Find a provider that's not already linked
+            provider_to_link = None
+            for provider in available_providers:
+                if not any(p.get('provider_id') == provider['id'] for p in linked_providers):
+                    provider_to_link = provider['id']
+                    break
             
+            if not provider_to_link:
+                # All providers are already linked, test that we get proper error
+                provider_to_link = available_providers[0]['id']
+                
+                link_response = self.make_request('POST', '/payment-providers', 
+                                                token=self.consumer_token,
+                                                json={
+                                                    "provider_id": provider_to_link,
+                                                    "is_default": False
+                                                })
+                
+                if link_response.status_code == 400:
+                    error_data = link_response.json()
+                    if "already linked" in error_data.get('detail', '').lower():
+                        self.log_test("Link Payment Provider", True, 
+                                    f"Correctly rejected already linked provider {provider_to_link}")
+                        return True
+                    else:
+                        self.log_test("Link Payment Provider", False, 
+                                    f"Unexpected error: {error_data.get('detail')}", error_data)
+                        return False
+                else:
+                    self.log_test("Link Payment Provider", False, 
+                                f"Expected 400 for already linked provider, got {link_response.status_code}")
+                    return False
+            
+            # Try to link the available provider
             link_response = self.make_request('POST', '/payment-providers', 
                                             token=self.consumer_token,
                                             json={
@@ -193,16 +226,16 @@ class PaymentProviderTester:
                 verify_response = self.make_request('GET', '/payment-providers', token=self.consumer_token)
                 if verify_response.status_code == 200:
                     verify_data = verify_response.json()
-                    linked_providers = verify_data.get('linked_providers', [])
+                    updated_linked_providers = verify_data.get('linked_providers', [])
                     
-                    if not any(p.get('provider_id') == provider_to_link for p in linked_providers):
+                    if not any(p.get('provider_id') == provider_to_link for p in updated_linked_providers):
                         self.log_test("Link Payment Provider - Verification", False, 
                                     f"Provider {provider_to_link} not found in linked providers")
                         return False
                     
                     # Check if first provider is automatically set as default
-                    if len(linked_providers) == 1:
-                        if not linked_providers[0].get('is_default'):
+                    if len(linked_providers) == 0 and len(updated_linked_providers) == 1:
+                        if not updated_linked_providers[0].get('is_default'):
                             self.log_test("Link Payment Provider - Default Logic", False, 
                                         "First provider should be automatically set as default")
                             return False
