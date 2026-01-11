@@ -3123,7 +3123,8 @@ async def get_consumer_report_pdf(
     # Logo and Header
     logo_path = os.path.join(os.path.dirname(__file__), 'assets', 'mh_logo_trimmed.png')
     if os.path.exists(logo_path):
-        logo = Image(logo_path, width=1.5*inch, height=1*inch)
+        # Logo is 595x793 (vertical), maintain aspect ratio
+        logo = Image(logo_path, width=0.75*inch, height=1*inch)
         logo.hAlign = 'CENTER'
         story.append(logo)
     
@@ -3298,7 +3299,8 @@ async def get_provider_report_pdf(
     # Logo and Header
     logo_path = os.path.join(os.path.dirname(__file__), 'assets', 'mh_logo_trimmed.png')
     if os.path.exists(logo_path):
-        logo = Image(logo_path, width=1.5*inch, height=1*inch)
+        # Logo is 595x793 (vertical), maintain aspect ratio
+        logo = Image(logo_path, width=0.75*inch, height=1*inch)
         logo.hAlign = 'CENTER'
         story.append(logo)
     
