@@ -121,22 +121,44 @@ export default function BookingScreen() {
   const createHold = async () => {
     // Validate required params
     if (!startAt || !tutorId) {
-      console.error('Missing required params:', { startAt, tutorId });
+      console.error('Missing required params:', { startAt, tutorId, endAt });
       Alert.alert('Error', 'Missing booking parameters. Please go back and try again.');
       return null;
     }
     
     try {
+      // Ensure datetime is in valid ISO format
+      // URL params might have URL encoding issues, so decode and clean up
+      let cleanStartAt = decodeURIComponent(startAt);
+      
+      // If the datetime doesn't have seconds, add them
+      if (cleanStartAt.length === 16) {
+        cleanStartAt = cleanStartAt + ':00';
+      }
+      
+      // Ensure it's a valid date
+      const dateTest = new Date(cleanStartAt);
+      if (isNaN(dateTest.getTime())) {
+        console.error('Invalid datetime format:', cleanStartAt);
+        Alert.alert('Error', 'Invalid booking time. Please go back and select a time slot again.');
+        return null;
+      }
+      
+      // Convert to ISO string for the API (includes timezone info)
+      const isoStartAt = dateTest.toISOString();
+      
       console.log('Creating hold with:', {
         tutor_id: tutorId,
-        start_at: startAt,
+        start_at: isoStartAt,
+        original_start_at: startAt,
+        cleaned_start_at: cleanStartAt,
         duration_minutes: tutor?.duration_minutes || 60,
         token: token ? 'present' : 'missing'
       });
       
       const response = await api.post('/booking-holds', {
         tutor_id: tutorId,
-        start_at: startAt,
+        start_at: isoStartAt,
         duration_minutes: tutor?.duration_minutes || 60,
       }, {
         headers: { Authorization: `Bearer ${token}` }
