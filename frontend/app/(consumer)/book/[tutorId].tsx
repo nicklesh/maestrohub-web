@@ -38,14 +38,19 @@ interface TutorProfile {
   };
 }
 
-interface PaymentMethod {
-  payment_method_id: string;
-  card_type: string;
-  last_four: string;
-  expiry_month: number;
-  expiry_year: number;
-  is_default: boolean;
+interface PaymentProvider {
+  id: string;
+  name: string;
+  icon: string;
+  color: string;
 }
+
+const PAYMENT_PROVIDERS: PaymentProvider[] = [
+  { id: 'stripe', name: 'Credit/Debit Card', icon: 'card', color: '#635BFF' },
+  { id: 'paypal', name: 'PayPal', icon: 'logo-paypal', color: '#003087' },
+  { id: 'google_pay', name: 'Google Pay', icon: 'logo-google', color: '#4285F4' },
+  { id: 'apple_pay', name: 'Apple Pay', icon: 'logo-apple', color: '#000000' },
+];
 
 type Step = 'student' | 'intake' | 'payment' | 'confirm';
 
