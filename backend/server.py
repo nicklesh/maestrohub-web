@@ -839,9 +839,10 @@ async def update_profile(data: ProfileUpdate, request: Request):
     
     update_data = {}
     if data.name:
-        update_data["name"] = data.name
+        # Sanitize name to prevent XSS
+        update_data["name"] = sanitize_html(data.name)
     if data.phone:
-        update_data["phone"] = data.phone
+        update_data["phone"] = sanitize_html(data.phone)
     
     if not update_data:
         raise HTTPException(status_code=400, detail="No fields to update")
