@@ -217,6 +217,7 @@ class TutorProfileCreate(BaseModel):
     base_price: float
     duration_minutes: int = 60
     payout_country: Optional[str] = "US"  # ISO code: US, IN
+    meeting_link: Optional[str] = None  # Zoom/Google Meet link for online sessions
     policies: TutorPolicies = TutorPolicies()
 
 class TutorProfile(TutorProfileCreate):
