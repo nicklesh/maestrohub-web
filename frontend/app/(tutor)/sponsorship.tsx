@@ -433,12 +433,10 @@ export default function SponsorshipScreen() {
               <View style={[styles.pricingSummary, { backgroundColor: colors.background }]}>
                 <Text style={[styles.pricingTitle, { color: colors.text }]}>Payment Summary</Text>
                 <View style={styles.pricingRow}>
-                  <Text style={[styles.pricingLabel, { color: colors.textMuted }]}>Plan Price</Text>
+                  <Text style={[styles.pricingLabel, { color: colors.textMuted }]}>
+                    {selectedPlan?.name} ({selectedPlan?.weeks} {selectedPlan?.weeks === 1 ? 'week' : 'weeks'})
+                  </Text>
                   <Text style={[styles.pricingValue, { color: colors.text }]}>{formatPrice(pricing.base)}</Text>
-                </View>
-                <View style={styles.pricingRow}>
-                  <Text style={[styles.pricingLabel, { color: colors.textMuted }]}>Platform Fee ({platformFee}%)</Text>
-                  <Text style={[styles.pricingValue, { color: colors.text }]}>{formatPrice(pricing.fee)}</Text>
                 </View>
                 <View style={[styles.pricingRow, styles.pricingTotal]}>
                   <Text style={[styles.pricingTotalLabel, { color: colors.text }]}>Total</Text>
