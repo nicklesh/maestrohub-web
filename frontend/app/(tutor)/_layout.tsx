@@ -71,9 +71,9 @@ export default function TutorLayout() {
       <Tabs.Screen
         name="settings"
         options={{
-          title: 'Settings',
+          title: 'Account',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="settings-outline" size={size} color={color} />
+            <Ionicons name="person-circle-outline" size={size} color={color} />
           ),
         }}
       />
@@ -103,6 +103,24 @@ export default function TutorLayout() {
       />
       <Tabs.Screen
         name="schedule-builder"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="packages"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="reviews"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="sponsorship"
         options={{
           href: null,
         }}
