@@ -71,7 +71,7 @@ const faqData: FAQItem[] = [
   {
     category: 'For Coaches',
     question: 'How do I become a coach on Maestro Hub?',
-    answer: 'From your Parent account, go to Account > "Become a Tutor" to start the onboarding process. You\'ll need to create a new account with a different email address, complete your profile, set your availability and pricing, and submit for review.'
+    answer: 'From your Parent account, go to Account > "Become a Coach" to start the onboarding process. You\'ll need to create a new account with a different email address, complete your profile, set your availability and pricing, and submit for review.'
   },
   {
     category: 'For Coaches',

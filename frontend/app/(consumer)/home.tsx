@@ -215,11 +215,11 @@ export default function HomeScreen() {
             </View>
           </View>
 
-          {/* Featured Tutors */}
+          {/* Featured Coaches */}
           <View style={styles.section}>
             <View style={[styles.sectionHeader, isTablet && styles.sectionHeaderTablet]}>
               <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>
-                Featured Tutors
+                Featured Coaches
               </Text>
               <TouchableOpacity onPress={() => router.push('/(consumer)/search')}>
                 <Text style={styles.seeAll}>See All</Text>

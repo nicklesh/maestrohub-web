@@ -233,7 +233,7 @@ export default function BecomeTutorScreen() {
 
   const renderStep1 = () => (
     <View style={styles.stepContent}>
-      <Text style={[styles.stepTitle, { color: colors.text }]}>Create Your Tutor Account</Text>
+      <Text style={[styles.stepTitle, { color: colors.text }]}>Create Your Coach Account</Text>
       <Text style={[styles.stepDescription, { color: colors.textMuted }]}>
         To become a tutor, you'll need a separate account with a different email address. 
         This keeps your parent and tutor roles separate.
@@ -247,7 +247,7 @@ export default function BecomeTutorScreen() {
       </View>
 
       <View style={styles.inputGroup}>
-        <Text style={[styles.label, { color: colors.text }]}>Tutor Email *</Text>
+        <Text style={[styles.label, { color: colors.text }]}>Coach Email *</Text>
         <TextInput
           style={[styles.input, { backgroundColor: colors.surface, borderColor: colors.border, color: colors.text }]}
           placeholder="tutor@example.com"
@@ -477,7 +477,7 @@ export default function BecomeTutorScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <AppHeader title="Become a Tutor" showBack onBack={handleBack} />
+      <AppHeader title="Become a Coach" showBack onBack={handleBack} />
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardView}
@@ -522,7 +522,7 @@ export default function BecomeTutorScreen() {
                 <ActivityIndicator color="#FFFFFF" />
               ) : (
                 <>
-                  <Text style={styles.nextButtonText}>Create Tutor Account</Text>
+                  <Text style={styles.nextButtonText}>Create Coach Account</Text>
                   <Ionicons name="checkmark" size={20} color="#FFFFFF" />
                 </>
               )}

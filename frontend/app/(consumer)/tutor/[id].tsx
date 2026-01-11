@@ -124,7 +124,7 @@ export default function TutorDetailScreen() {
       <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
         <AppHeader showBack />
         <View style={styles.loadingContainer}>
-          <Text style={{ color: colors.text }}>Tutor not found</Text>
+          <Text style={{ color: colors.text }}>Coach not found</Text>
         </View>
       </SafeAreaView>
     );

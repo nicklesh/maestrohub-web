@@ -342,7 +342,7 @@ export default function ProfileScreen() {
               <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(consumer)/become-tutor')}>
                 <View style={styles.menuItemLeft}>
                   <Ionicons name="school-outline" size={22} color={colors.primary} />
-                  <Text style={[styles.menuItemText, { color: colors.text }]}>Become a Tutor</Text>
+                  <Text style={[styles.menuItemText, { color: colors.text }]}>Become a Coach</Text>
                 </View>
                 <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
               </TouchableOpacity>

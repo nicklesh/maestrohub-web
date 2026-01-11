@@ -239,7 +239,7 @@ export default function ConsumerReportsScreen() {
           {/* By Tutor Section */}
           {byTutor.length > 0 && (
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Sessions by Tutor</Text>
+              <Text style={styles.sectionTitle}>Sessions by Coach</Text>
               {byTutor.map((item, index) => (
                 <View key={index} style={styles.listItem}>
                   <View style={styles.listItemLeft}>
