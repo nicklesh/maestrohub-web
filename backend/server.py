@@ -406,17 +406,25 @@ class ActiveSponsorship(BaseModel):
     auto_renew: bool = False
     status: str = "active"  # active, expired, cancelled
 
-# Default sponsorship plans
+# Default sponsorship plans - Weekly pricing: $15/week, $10/week from week 13
+# Price logic: First 12 weeks = $15/week, weeks 13+ = $10/week
 SPONSORSHIP_PLANS = [
-    {"plan_id": "spon_week", "name": "Weekly Spotlight", "duration_days": 7, "price_cents": 1999, "currency": "USD", "description": "7 days of premium visibility"},
-    {"plan_id": "spon_month", "name": "Monthly Feature", "duration_days": 30, "price_cents": 5999, "currency": "USD", "description": "30 days of top placement"},
-    {"plan_id": "spon_quarter", "name": "Quarterly Boost", "duration_days": 90, "price_cents": 14999, "currency": "USD", "description": "90 days of maximum exposure"},
+    {"plan_id": "spon_1w", "name": "1 Week", "weeks": 1, "duration_days": 7, "price_cents": 1500, "currency": "USD", "description": "1 week of premium visibility"},
+    {"plan_id": "spon_4w", "name": "4 Weeks", "weeks": 4, "duration_days": 28, "price_cents": 6000, "currency": "USD", "description": "4 weeks of top placement ($15/week)"},
+    {"plan_id": "spon_8w", "name": "8 Weeks", "weeks": 8, "duration_days": 56, "price_cents": 12000, "currency": "USD", "description": "8 weeks of great exposure ($15/week)"},
+    {"plan_id": "spon_12w", "name": "12 Weeks", "weeks": 12, "duration_days": 84, "price_cents": 18000, "currency": "USD", "description": "12 weeks of maximum reach ($15/week)"},
+    {"plan_id": "spon_16w", "name": "16 Weeks", "weeks": 16, "duration_days": 112, "price_cents": 22000, "currency": "USD", "description": "Best value! $15/week for 12 weeks, then $10/week"},
+    {"plan_id": "spon_24w", "name": "24 Weeks", "weeks": 24, "duration_days": 168, "price_cents": 30000, "currency": "USD", "description": "Best value! $15/week for 12 weeks, then $10/week"},
 ]
 
+# INR pricing: ₹1200/week, ₹800/week from week 13 (approx 80x USD)
 SPONSORSHIP_PLANS_INR = [
-    {"plan_id": "spon_week_inr", "name": "Weekly Spotlight", "duration_days": 7, "price_cents": 49900, "currency": "INR", "description": "7 days of premium visibility"},
-    {"plan_id": "spon_month_inr", "name": "Monthly Feature", "duration_days": 30, "price_cents": 149900, "currency": "INR", "description": "30 days of top placement"},
-    {"plan_id": "spon_quarter_inr", "name": "Quarterly Boost", "duration_days": 90, "price_cents": 399900, "currency": "INR", "description": "90 days of maximum exposure"},
+    {"plan_id": "spon_1w_inr", "name": "1 Week", "weeks": 1, "duration_days": 7, "price_cents": 120000, "currency": "INR", "description": "1 week of premium visibility"},
+    {"plan_id": "spon_4w_inr", "name": "4 Weeks", "weeks": 4, "duration_days": 28, "price_cents": 480000, "currency": "INR", "description": "4 weeks of top placement (₹1200/week)"},
+    {"plan_id": "spon_8w_inr", "name": "8 Weeks", "weeks": 8, "duration_days": 56, "price_cents": 960000, "currency": "INR", "description": "8 weeks of great exposure (₹1200/week)"},
+    {"plan_id": "spon_12w_inr", "name": "12 Weeks", "weeks": 12, "duration_days": 84, "price_cents": 1440000, "currency": "INR", "description": "12 weeks of maximum reach (₹1200/week)"},
+    {"plan_id": "spon_16w_inr", "name": "16 Weeks", "weeks": 16, "duration_days": 112, "price_cents": 1760000, "currency": "INR", "description": "Best value! ₹1200/week for 12 weeks, then ₹800/week"},
+    {"plan_id": "spon_24w_inr", "name": "24 Weeks", "weeks": 24, "duration_days": 168, "price_cents": 2400000, "currency": "INR", "description": "Best value! ₹1200/week for 12 weeks, then ₹800/week"},
 ]
 
 class ProviderFeeEvent(BaseModel):
