@@ -87,7 +87,9 @@ export default function BookingDetailScreen() {
 
   const loadBooking = async () => {
     try {
-      const response = await api.get(`/bookings/${id}`);
+      const response = await api.get(`/bookings/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setBooking(response.data);
     } catch (error) {
       console.error('Failed to load booking:', error);
