@@ -111,7 +111,7 @@ export default function BillingScreen() {
           {/* Earnings Summary */}
           <View style={[styles.earningsCard, isTablet && styles.earningsCardTablet]}>
             <Text style={styles.cardTitle}>Total Earnings</Text>
-            <Text style={[styles.earningsAmount, isDesktop && styles.earningsAmountDesktop]}>${summary?.total_earnings || 0}</Text>
+            <Text style={[styles.earningsAmount, isDesktop && styles.earningsAmountDesktop]}>{summary?.currency_symbol || '$'}{summary?.total_earnings || 0}</Text>
             <Text style={[styles.earningsSubtext, isDesktop && styles.earningsSubtextDesktop]}>
               from {summary?.completed_lessons || 0} completed lessons
             </Text>
@@ -125,7 +125,7 @@ export default function BillingScreen() {
             <View style={styles.feeRow}>
               <Text style={[styles.feeLabel, isDesktop && styles.feeLabelDesktop]}>Pending Fees</Text>
               <Text style={[styles.feeValue, isDesktop && styles.feeValueDesktop]}>
-                ${((summary?.pending_fees_cents || 0) / 100).toFixed(2)}
+                {summary?.currency_symbol || '$'}{((summary?.pending_fees_cents || 0) / 100).toFixed(2)}
               </Text>
             </View>
             <Text style={styles.feeNote}>
