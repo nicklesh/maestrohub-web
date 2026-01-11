@@ -4739,9 +4739,14 @@ async def create_session_package(data: SessionPackageCreate, request: Request):
     if not tutor:
         raise HTTPException(status_code=404, detail="Coach profile not found")
     
+    # Enforce flat 5% discount for 12+ sessions (bulk discount rule)
+    discount_percent = data.discount_percent
+    if data.session_count >= 12:
+        discount_percent = 5.0  # Flat 5% for bulk orders
+    
     # Calculate pricing
     base_price = tutor.get("base_price", 0)
-    discounted_price = base_price * (1 - data.discount_percent / 100)
+    discounted_price = base_price * (1 - discount_percent / 100)
     total_price = round(discounted_price * data.session_count, 2)
     
     package = {
@@ -4751,7 +4756,7 @@ async def create_session_package(data: SessionPackageCreate, request: Request):
         "session_count": data.session_count,
         "price_per_session": round(discounted_price, 2),
         "total_price": total_price,
-        "discount_percent": data.discount_percent,
+        "discount_percent": discount_percent,
         "validity_days": data.validity_days,
         "description": data.description,
         "is_active": True,
@@ -4760,7 +4765,7 @@ async def create_session_package(data: SessionPackageCreate, request: Request):
     
     await db.session_packages.insert_one(package)
     
-    return {"success": True, "package": package}
+    return {"success": True, "package": package, "bulk_discount_applied": data.session_count >= 12}
 
 @api_router.get("/tutor/packages")
 async def get_my_packages(request: Request):
