@@ -347,12 +347,28 @@ class PaymentProviderTester:
         print("📅 Testing POST /api/booking-holds...")
         
         try:
-            # Create a booking hold for future date
-            future_time = datetime.now(timezone.utc) + timedelta(days=1)
+            # Get available tutors first
+            tutors_response = self.make_request('GET', '/tutors/search', token=self.consumer_token)
+            if tutors_response.status_code != 200:
+                self.log_test("Create Booking Hold - Setup", False, "Could not get available tutors")
+                return None
+            
+            tutors_data = tutors_response.json()
+            tutors = tutors_data.get('tutors', [])
+            
+            if not tutors:
+                self.log_test("Create Booking Hold - Setup", False, "No tutors available")
+                return None
+            
+            # Use the first available tutor
+            tutor_id = tutors[0]['tutor_id']
+            
+            # Create a booking hold for future date with more unique time
+            future_time = datetime.now(timezone.utc) + timedelta(days=2, hours=3, minutes=15)
             iso_time = future_time.isoformat()
             
             hold_data = {
-                "tutor_id": "tutor_emily",  # Using the tutor_id from review request
+                "tutor_id": tutor_id,
                 "start_at": iso_time,
                 "duration_minutes": 60
             }
@@ -379,7 +395,7 @@ class PaymentProviderTester:
                     return None
                 
                 self.log_test("Create Booking Hold", True, 
-                            f"Created hold {hold_id} for {iso_time}")
+                            f"Created hold {hold_id} for {tutor_id} at {iso_time}")
                 return hold_id
                 
             else:
