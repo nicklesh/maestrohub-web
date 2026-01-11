@@ -70,8 +70,7 @@ export default function BookingScreen() {
   const [holdId, setHoldId] = useState<string | null>(null);
   const [paramsError, setParamsError] = useState<string | null>(null);
   
-  // Payment provider selection
-  const [selectedProvider, setSelectedProvider] = useState<string>('stripe');
+  // Payment state
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [paymentId, setPaymentId] = useState<string | null>(null);
   
