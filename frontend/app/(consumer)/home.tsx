@@ -86,6 +86,41 @@ export default function HomeScreen() {
       ]);
       setCategories(catRes.data.categories);
       setFeaturedTutors(tutorRes.data.tutors);
+      
+      // Fetch upcoming reminders if logged in
+      if (token) {
+        try {
+          const remindersRes = await api.get('/reminders', {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          const reminders = remindersRes.data.reminders || [];
+          
+          // Find the nearest upcoming reminder (within next 48 hours)
+          const now = new Date();
+          const upcomingReminders = reminders.filter((r: any) => {
+            const startAt = new Date(r.start_at);
+            const hoursUntil = (startAt.getTime() - now.getTime()) / (1000 * 60 * 60);
+            return hoursUntil > 0 && hoursUntil <= 48;
+          }).sort((a: any, b: any) => new Date(a.start_at).getTime() - new Date(b.start_at).getTime());
+          
+          if (upcomingReminders.length > 0) {
+            const nearest = upcomingReminders[0];
+            const startAt = new Date(nearest.start_at);
+            const hoursUntil = Math.round((startAt.getTime() - now.getTime()) / (1000 * 60 * 60));
+            setUpcomingReminder({
+              booking_id: nearest.booking_id,
+              tutor_name: nearest.tutor_name,
+              start_at: nearest.start_at,
+              hours_until: hoursUntil
+            });
+          } else {
+            setUpcomingReminder(null);
+          }
+        } catch (e) {
+          // Silently fail - reminders are optional
+          console.log('Failed to fetch reminders:', e);
+        }
+      }
     } catch (error) {
       console.error('Failed to load data:', error);
     } finally {
