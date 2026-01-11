@@ -60,11 +60,15 @@ export default function BookingScreen() {
   const { width } = useWindowDimensions();
   const { colors } = useTheme();
   const { token } = useAuth();
-  const { tutorId, startAt, endAt } = useLocalSearchParams<{
+  const params = useLocalSearchParams<{
     tutorId: string;
     startAt: string;
     endAt: string;
   }>();
+  
+  const tutorId = params.tutorId;
+  const startAt = params.startAt;
+  const endAt = params.endAt;
 
   // Responsive breakpoints
   const isTablet = width >= 768;
@@ -78,6 +82,7 @@ export default function BookingScreen() {
   const [students, setStudents] = useState<Student[]>([]);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [holdId, setHoldId] = useState<string | null>(null);
+  const [paramsError, setParamsError] = useState<string | null>(null);
   
   // Payment provider selection
   const [selectedProvider, setSelectedProvider] = useState<string>('stripe');
