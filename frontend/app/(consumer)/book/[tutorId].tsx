@@ -528,12 +528,12 @@ export default function BookingScreen() {
 
       {/* Progress */}
       <View style={[styles.progress, isTablet && styles.progressTablet, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
-        {['student', 'intake', 'confirm'].map((s, i) => (
+        {['student', 'intake', 'payment', 'confirm'].map((s, i) => (
           <View
             key={s}
             style={[
               styles.progressStep,
-              (step === s || i < ['student', 'intake', 'confirm'].indexOf(step)) &&
+              (step === s || i < ['student', 'intake', 'payment', 'confirm'].indexOf(step)) &&
                 styles.progressStepActive,
             ]}
           />
@@ -544,6 +544,7 @@ export default function BookingScreen() {
       <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
         {step === 'student' && renderStudentStep()}
         {step === 'intake' && renderIntakeStep()}
+        {step === 'payment' && renderPaymentStep()}
         {step === 'confirm' && renderConfirmStep()}
       </View>
     </SafeAreaView>
