@@ -5194,6 +5194,392 @@ async def get_tutor_reviews(tutor_id: str, limit: int = 10):
     return {"reviews": reviews, "stats": stats}
 
 
+# ============== COACH RESPONSE TO REVIEWS ==============
+
+@api_router.post("/reviews/{review_id}/respond")
+async def respond_to_review(review_id: str, data: CoachResponseCreate, request: Request):
+    """Coach responds to a review"""
+    user = await require_tutor(request)
+    tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+    
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Coach profile not found")
+    
+    # Get the review
+    review = await db.detailed_reviews.find_one({"review_id": review_id}, {"_id": 0})
+    if not review:
+        raise HTTPException(status_code=404, detail="Review not found")
+    
+    # Verify review is for this coach
+    if review["tutor_id"] != tutor["tutor_id"]:
+        raise HTTPException(status_code=403, detail="You can only respond to your own reviews")
+    
+    # Check if already responded
+    if review.get("coach_response"):
+        raise HTTPException(status_code=400, detail="You have already responded to this review")
+    
+    # Add response
+    await db.detailed_reviews.update_one(
+        {"review_id": review_id},
+        {
+            "$set": {
+                "coach_response": data.response,
+                "coach_response_at": datetime.now(timezone.utc)
+            }
+        }
+    )
+    
+    return {"success": True, "message": "Response added successfully"}
+
+@api_router.get("/tutor/reviews")
+async def get_my_reviews_as_coach(request: Request):
+    """Get all reviews for current coach"""
+    user = await require_tutor(request)
+    tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+    
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Coach profile not found")
+    
+    reviews = await db.detailed_reviews.find(
+        {"tutor_id": tutor["tutor_id"]},
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(100)
+    
+    return {"reviews": reviews}
+
+
+# ============== SPONSORSHIP/ADVERTISING ==============
+
+@api_router.get("/sponsorship/plans")
+async def get_sponsorship_plans(request: Request):
+    """Get available sponsorship plans for current coach's market"""
+    user = await require_tutor(request)
+    tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+    
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Coach profile not found")
+    
+    market_id = tutor.get("market_id", "US_USD")
+    
+    if market_id == "IN_INR":
+        plans = SPONSORSHIP_PLANS_INR
+        currency_symbol = "₹"
+    else:
+        plans = SPONSORSHIP_PLANS
+        currency_symbol = "$"
+    
+    return {
+        "plans": plans,
+        "currency_symbol": currency_symbol,
+        "platform_fee_percent": 5
+    }
+
+@api_router.get("/sponsorship/my-sponsorships")
+async def get_my_sponsorships(request: Request):
+    """Get coach's active and past sponsorships"""
+    user = await require_tutor(request)
+    tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+    
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Coach profile not found")
+    
+    sponsorships = await db.sponsorships.find(
+        {"tutor_id": tutor["tutor_id"]},
+        {"_id": 0}
+    ).sort("started_at", -1).to_list(50)
+    
+    # Update expired sponsorships
+    now = datetime.now(timezone.utc)
+    for s in sponsorships:
+        if s["status"] == "active":
+            expires_at = s["expires_at"]
+            if isinstance(expires_at, str):
+                expires_at = datetime.fromisoformat(expires_at.replace('Z', '+00:00'))
+            if expires_at.tzinfo is None:
+                expires_at = expires_at.replace(tzinfo=timezone.utc)
+            if now > expires_at:
+                s["status"] = "expired"
+                await db.sponsorships.update_one(
+                    {"sponsorship_id": s["sponsorship_id"]},
+                    {"$set": {"status": "expired"}}
+                )
+    
+    active = [s for s in sponsorships if s["status"] == "active"]
+    past = [s for s in sponsorships if s["status"] != "active"]
+    
+    return {"active": active, "past": past}
+
+@api_router.post("/sponsorship/purchase")
+async def purchase_sponsorship(data: SponsorshipCreate, request: Request):
+    """Purchase a sponsorship plan"""
+    user = await require_tutor(request)
+    tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+    
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Coach profile not found")
+    
+    market_id = tutor.get("market_id", "US_USD")
+    plans = SPONSORSHIP_PLANS_INR if market_id == "IN_INR" else SPONSORSHIP_PLANS
+    
+    # Find the plan
+    plan = next((p for p in plans if p["plan_id"] == data.plan_id), None)
+    if not plan:
+        raise HTTPException(status_code=404, detail="Plan not found")
+    
+    # Check payment methods
+    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    linked_providers = user_doc.get("payment_providers", [])
+    
+    if not linked_providers:
+        return {
+            "success": False,
+            "error": "no_payment_method",
+            "message": "Please add a payment method first",
+            "redirect_to_billing": True
+        }
+    
+    # Calculate fees (5% platform fee)
+    price_cents = plan["price_cents"]
+    platform_fee_cents = int(price_cents * 0.05)
+    total_charge = price_cents + platform_fee_cents
+    
+    # Process payment (simulated)
+    payment_id = f"pay_{uuid.uuid4().hex[:12]}"
+    
+    # Record payment
+    payment_record = {
+        "payment_id": payment_id,
+        "tutor_id": tutor["tutor_id"],
+        "amount_cents": total_charge,
+        "base_amount_cents": price_cents,
+        "platform_fee_cents": platform_fee_cents,
+        "currency": plan["currency"],
+        "type": "sponsorship",
+        "plan_id": data.plan_id,
+        "status": "completed",
+        "processed_at": datetime.now(timezone.utc)
+    }
+    await db.payments.insert_one(payment_record)
+    
+    # Create sponsorship
+    now = datetime.now(timezone.utc)
+    sponsorship = {
+        "sponsorship_id": f"spon_{uuid.uuid4().hex[:12]}",
+        "tutor_id": tutor["tutor_id"],
+        "plan_id": plan["plan_id"],
+        "plan_name": plan["name"],
+        "categories": data.categories,
+        "price_paid_cents": price_cents,
+        "platform_fee_cents": platform_fee_cents,
+        "currency": plan["currency"],
+        "started_at": now,
+        "expires_at": now + timedelta(days=plan["duration_days"]),
+        "auto_renew": data.auto_renew,
+        "status": "active",
+        "payment_id": payment_id
+    }
+    
+    await db.sponsorships.insert_one(sponsorship)
+    
+    # Update tutor as sponsored
+    await db.tutors.update_one(
+        {"tutor_id": tutor["tutor_id"]},
+        {"$set": {"is_sponsored": True, "sponsored_categories": data.categories}}
+    )
+    
+    market_config = MARKETS_CONFIG.get(market_id, MARKETS_CONFIG["US_USD"])
+    
+    return {
+        "success": True,
+        "sponsorship": sponsorship,
+        "payment_id": payment_id,
+        "total_charged": f"{market_config['currency_symbol']}{total_charge/100:.2f}",
+        "breakdown": {
+            "plan_price": f"{market_config['currency_symbol']}{price_cents/100:.2f}",
+            "platform_fee": f"{market_config['currency_symbol']}{platform_fee_cents/100:.2f}"
+        }
+    }
+
+@api_router.post("/sponsorship/{sponsorship_id}/renew")
+async def renew_sponsorship(sponsorship_id: str, request: Request):
+    """Manually renew a sponsorship"""
+    user = await require_tutor(request)
+    tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+    
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Coach profile not found")
+    
+    sponsorship = await db.sponsorships.find_one(
+        {"sponsorship_id": sponsorship_id, "tutor_id": tutor["tutor_id"]},
+        {"_id": 0}
+    )
+    
+    if not sponsorship:
+        raise HTTPException(status_code=404, detail="Sponsorship not found")
+    
+    # Get the plan
+    market_id = tutor.get("market_id", "US_USD")
+    plans = SPONSORSHIP_PLANS_INR if market_id == "IN_INR" else SPONSORSHIP_PLANS
+    plan = next((p for p in plans if p["plan_id"] == sponsorship["plan_id"]), None)
+    
+    if not plan:
+        raise HTTPException(status_code=404, detail="Original plan no longer available")
+    
+    # Check payment methods
+    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    linked_providers = user_doc.get("payment_providers", [])
+    
+    if not linked_providers:
+        return {
+            "success": False,
+            "error": "no_payment_method",
+            "message": "Please add a payment method first"
+        }
+    
+    # Calculate fees
+    price_cents = plan["price_cents"]
+    platform_fee_cents = int(price_cents * 0.05)
+    total_charge = price_cents + platform_fee_cents
+    
+    # Process payment
+    payment_id = f"pay_{uuid.uuid4().hex[:12]}"
+    
+    payment_record = {
+        "payment_id": payment_id,
+        "tutor_id": tutor["tutor_id"],
+        "amount_cents": total_charge,
+        "base_amount_cents": price_cents,
+        "platform_fee_cents": platform_fee_cents,
+        "currency": plan["currency"],
+        "type": "sponsorship_renewal",
+        "sponsorship_id": sponsorship_id,
+        "status": "completed",
+        "processed_at": datetime.now(timezone.utc)
+    }
+    await db.payments.insert_one(payment_record)
+    
+    # Extend sponsorship
+    now = datetime.now(timezone.utc)
+    current_expiry = sponsorship["expires_at"]
+    if isinstance(current_expiry, str):
+        current_expiry = datetime.fromisoformat(current_expiry.replace('Z', '+00:00'))
+    if current_expiry.tzinfo is None:
+        current_expiry = current_expiry.replace(tzinfo=timezone.utc)
+    
+    # If expired, start from now; otherwise extend from current expiry
+    new_start = max(now, current_expiry)
+    new_expiry = new_start + timedelta(days=plan["duration_days"])
+    
+    await db.sponsorships.update_one(
+        {"sponsorship_id": sponsorship_id},
+        {
+            "$set": {
+                "expires_at": new_expiry,
+                "status": "active"
+            }
+        }
+    )
+    
+    market_config = MARKETS_CONFIG.get(market_id, MARKETS_CONFIG["US_USD"])
+    
+    return {
+        "success": True,
+        "new_expiry": new_expiry.isoformat(),
+        "total_charged": f"{market_config['currency_symbol']}{total_charge/100:.2f}"
+    }
+
+@api_router.put("/sponsorship/{sponsorship_id}/auto-renew")
+async def toggle_auto_renew(sponsorship_id: str, request: Request):
+    """Toggle auto-renew for a sponsorship"""
+    user = await require_tutor(request)
+    tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+    
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Coach profile not found")
+    
+    sponsorship = await db.sponsorships.find_one(
+        {"sponsorship_id": sponsorship_id, "tutor_id": tutor["tutor_id"]},
+        {"_id": 0}
+    )
+    
+    if not sponsorship:
+        raise HTTPException(status_code=404, detail="Sponsorship not found")
+    
+    new_auto_renew = not sponsorship.get("auto_renew", False)
+    
+    await db.sponsorships.update_one(
+        {"sponsorship_id": sponsorship_id},
+        {"$set": {"auto_renew": new_auto_renew}}
+    )
+    
+    return {"success": True, "auto_renew": new_auto_renew}
+
+@api_router.post("/sponsorship/{sponsorship_id}/cancel")
+async def cancel_sponsorship(sponsorship_id: str, request: Request):
+    """Cancel a sponsorship (stops auto-renew, lets current period expire)"""
+    user = await require_tutor(request)
+    tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+    
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Coach profile not found")
+    
+    sponsorship = await db.sponsorships.find_one(
+        {"sponsorship_id": sponsorship_id, "tutor_id": tutor["tutor_id"]},
+        {"_id": 0}
+    )
+    
+    if not sponsorship:
+        raise HTTPException(status_code=404, detail="Sponsorship not found")
+    
+    await db.sponsorships.update_one(
+        {"sponsorship_id": sponsorship_id},
+        {"$set": {"auto_renew": False, "status": "cancelled"}}
+    )
+    
+    # Check if this was the only active sponsorship
+    active_count = await db.sponsorships.count_documents({
+        "tutor_id": tutor["tutor_id"],
+        "status": "active"
+    })
+    
+    if active_count == 0:
+        await db.tutors.update_one(
+            {"tutor_id": tutor["tutor_id"]},
+            {"$set": {"is_sponsored": False, "sponsored_categories": []}}
+        )
+    
+    return {"success": True, "message": "Sponsorship cancelled. Your current period will remain active until expiry."}
+
+
+# Update tutor search to show sponsored coaches first
+@api_router.get("/tutors/search/sponsored")
+async def get_sponsored_tutors(category: Optional[str] = None):
+    """Get sponsored coaches for a category"""
+    query = {"is_sponsored": True, "status": "approved", "is_published": True}
+    
+    if category:
+        query["$or"] = [
+            {"sponsored_categories": category},
+            {"categories": category}
+        ]
+    
+    sponsored = await db.tutors.find(query, {"_id": 0}).to_list(10)
+    
+    # Enrich with user info
+    results = []
+    for tutor in sponsored:
+        user = await db.users.find_one({"user_id": tutor["user_id"]}, {"_id": 0})
+        market_config = MARKETS_CONFIG.get(tutor.get("market_id", "US_USD"), MARKETS_CONFIG["US_USD"])
+        results.append({
+            **tutor,
+            "user_name": user["name"] if user else "Unknown",
+            "currency_symbol": market_config["currency_symbol"],
+            "is_sponsored": True
+        })
+    
+    return {"sponsored_tutors": results}
+
+
 # Include router
 app.include_router(api_router)
 
