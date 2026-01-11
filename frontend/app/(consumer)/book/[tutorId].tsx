@@ -119,6 +119,13 @@ export default function BookingScreen() {
   };
 
   const createHold = async () => {
+    // Validate required params
+    if (!startAt || !tutorId) {
+      console.error('Missing required params:', { startAt, tutorId });
+      Alert.alert('Error', 'Missing booking parameters. Please go back and try again.');
+      return null;
+    }
+    
     try {
       console.log('Creating hold with:', {
         tutor_id: tutorId,
@@ -147,7 +154,9 @@ export default function BookingScreen() {
         Alert.alert('Slot Unavailable', 'This time slot is no longer available. Please select another time.');
         router.back();
       } else {
-        Alert.alert('Error', error.response?.data?.detail || 'Failed to reserve slot');
+        const errorMsg = error.response?.data?.detail;
+        const displayError = Array.isArray(errorMsg) ? errorMsg[0]?.msg || 'Failed to reserve slot' : (errorMsg || 'Failed to reserve slot');
+        Alert.alert('Error', displayError);
       }
       return null;
     }
