@@ -1087,17 +1087,15 @@ async def save_tutor_schedule(data: ScheduleCreate, request: Request):
     return {"success": True, "message": "Schedule saved successfully"}
 
 async def generate_availability_from_schedule(tutor_id: str, schedule: ScheduleCreate):
-    """Generate availability slots from weekly schedule"""
+    """Generate availability rules from weekly schedule"""
     from datetime import date as date_type
     
     start = datetime.strptime(schedule.startDate, "%Y-%m-%d")
     end = datetime.strptime(schedule.endDate, "%Y-%m-%d")
     
-    # Remove existing weekly rules for this tutor
-    await db.availability.delete_many({
-        "tutor_id": tutor_id,
-        "type": "weekly",
-        "source": "schedule_builder"
+    # Remove existing rules for this tutor (from any source)
+    await db.availability_rules.delete_many({
+        "tutor_id": tutor_id
     })
     
     # Create weekly rules for each enabled day
@@ -1105,31 +1103,20 @@ async def generate_availability_from_schedule(tutor_id: str, schedule: ScheduleC
         if not day_schedule.enabled:
             continue
         
-        # Parse times
-        start_hour, start_min = map(int, day_schedule.startTime.split(':'))
-        end_hour, end_min = map(int, day_schedule.endTime.split(':'))
-        
-        # Create 1-hour slots for each hour in the range
-        current_hour = start_hour
-        while current_hour < end_hour:
-            slot_start = f"{current_hour:02d}:00"
-            slot_end = f"{current_hour + 1:02d}:00"
-            
-            await db.availability.insert_one({
-                "availability_id": f"avail_{uuid.uuid4().hex[:8]}",
-                "tutor_id": tutor_id,
-                "type": "weekly",
-                "source": "schedule_builder",
-                "day_of_week": day_schedule.day,
-                "start_time": slot_start,
-                "end_time": slot_end,
-                "valid_from": start,
-                "valid_until": end,
-                "auto_renew": schedule.autoRenew,
-                "created_at": datetime.now(timezone.utc)
-            })
-            
-            current_hour += 1
+        # Create a single rule for the entire time block
+        rule_id = f"rule_{uuid.uuid4().hex[:12]}"
+        await db.availability_rules.insert_one({
+            "rule_id": rule_id,
+            "tutor_id": tutor_id,
+            "day_of_week": day_schedule.day,
+            "start_time": day_schedule.startTime,
+            "end_time": day_schedule.endTime,
+            "timezone": "America/New_York",
+            "source": "schedule_builder",
+            "valid_from": start,
+            "valid_until": end,
+            "created_at": datetime.now(timezone.utc)
+        })
 
 # ============== TUTOR PROFILE ROUTES ==============
 
