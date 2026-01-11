@@ -124,7 +124,11 @@ class SecurityTester:
         
         for password, test_name in test_passwords:
             try:
-                test_email = f"test_{int(time.time())}@test.com"
+                # Use unique email with timestamp and password hash to avoid conflicts
+                import hashlib
+                email_hash = hashlib.md5(f"{password}{time.time()}".encode()).hexdigest()[:8]
+                test_email = f"test_{email_hash}@test.com"
+                
                 payload = {
                     "email": test_email,
                     "name": "Test User",
@@ -132,7 +136,9 @@ class SecurityTester:
                     "role": "consumer"
                 }
                 
-                response = self.session.post(f"{BASE_URL}/auth/register", json=payload)
+                # Use fresh session to avoid rate limiting conflicts
+                fresh_session = requests.Session()
+                response = fresh_session.post(f"{BASE_URL}/auth/register", json=payload)
                 
                 if password == "SecurePass123":
                     # Valid password should succeed
@@ -147,6 +153,7 @@ class SecurityTester:
                         details += f" - {error_msg}"
                 
                 self.log_test("password_policy", test_name, passed, details)
+                time.sleep(0.2)  # Small delay to avoid rate limiting
                 
             except Exception as e:
                 self.log_test("password_policy", test_name, False, f"Error: {str(e)}")
