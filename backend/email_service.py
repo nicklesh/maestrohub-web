@@ -7,6 +7,12 @@ import os
 import logging
 from typing import Optional, Dict, Any
 from datetime import datetime
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+ROOT_DIR = Path(__file__).parent
+load_dotenv(ROOT_DIR / '.env')
 
 logger = logging.getLogger(__name__)
 
@@ -14,8 +20,8 @@ logger = logging.getLogger(__name__)
 RESEND_API_KEY = os.environ.get('RESEND_API_KEY', '')
 IS_MOCK_MODE = not RESEND_API_KEY or RESEND_API_KEY.startswith('re_placeholder') or RESEND_API_KEY == ''
 
-# Email sender
-FROM_EMAIL = os.environ.get('FROM_EMAIL', 'Maestro Hub <notifications@maestrohub.com>')
+# Email sender - using Resend's test domain by default
+FROM_EMAIL = os.environ.get('FROM_EMAIL', 'Maestro Hub <onboarding@resend.dev>')
 
 
 class EmailService:
