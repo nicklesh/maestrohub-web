@@ -275,6 +275,14 @@ export default function TutorSettings() {
             </TouchableOpacity>
             <TouchableOpacity 
               style={[styles.menuItem, isTablet && styles.menuItemTablet]}
+              onPress={() => router.push('/(tutor)/sponsorship')}
+            >
+              <Ionicons name="star-outline" size={isTablet ? 24 : 22} color={colors.warning} />
+              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Become Sponsored</Text>
+              <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={[styles.menuItem, isTablet && styles.menuItemTablet]}
               onPress={() => router.push('/(tutor)/notifications')}
             >
               <Ionicons name="notifications-outline" size={isTablet ? 24 : 22} color={colors.primary} />
