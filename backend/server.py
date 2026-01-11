@@ -315,6 +315,63 @@ class Review(ReviewCreate):
     student_name: str
     created_at: datetime
 
+# ============== SESSION PACKAGES ==============
+class SessionPackage(BaseModel):
+    package_id: str = Field(default_factory=lambda: f"pkg_{uuid.uuid4().hex[:12]}")
+    tutor_id: str
+    name: str  # e.g., "4-Session Bundle", "Monthly Package"
+    session_count: int  # Number of sessions in package
+    price_per_session: float  # Price per session (can be discounted)
+    total_price: float  # Total package price
+    discount_percent: float = 0  # Discount percentage off regular price
+    validity_days: int = 90  # How long the package is valid
+    description: Optional[str] = None
+    is_active: bool = True
+    created_at: Optional[datetime] = None
+
+class SessionPackageCreate(BaseModel):
+    name: str
+    session_count: int = Field(ge=2, le=52)
+    discount_percent: float = Field(ge=0, le=50)
+    validity_days: int = Field(ge=30, le=365)
+    description: Optional[str] = None
+
+class PurchasedPackage(BaseModel):
+    purchase_id: str = Field(default_factory=lambda: f"pur_{uuid.uuid4().hex[:12]}")
+    package_id: str
+    tutor_id: str
+    consumer_id: str
+    student_id: str
+    package_name: str
+    total_sessions: int
+    sessions_used: int = 0
+    sessions_remaining: int
+    price_paid: float
+    currency: str = "USD"
+    currency_symbol: str = "$"
+    purchased_at: datetime
+    expires_at: datetime
+    status: str = "active"  # active, expired, completed
+
+# ============== DETAILED REVIEWS ==============
+class DetailedReviewCreate(BaseModel):
+    booking_id: Optional[str] = None  # Can review without specific booking
+    tutor_id: str
+    teaching_quality: int = Field(ge=1, le=5)
+    communication: int = Field(ge=1, le=5)
+    punctuality: int = Field(ge=1, le=5)
+    knowledge: int = Field(ge=1, le=5)
+    value_for_money: int = Field(ge=1, le=5)
+    comment: Optional[str] = None
+    would_recommend: bool = True
+
+class DetailedReview(DetailedReviewCreate):
+    review_id: str
+    consumer_id: str
+    consumer_name: str
+    overall_rating: float  # Average of all categories
+    created_at: datetime
+
 class ProviderFeeEvent(BaseModel):
     event_id: str
     tutor_id: str
