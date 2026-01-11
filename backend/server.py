@@ -219,6 +219,8 @@ class TutorProfile(TutorProfileCreate):
     base_city: Optional[str] = None
     status: str = "pending"  # pending, approved, suspended
     is_published: bool = False
+    is_sponsored: Optional[bool] = False  # Whether tutor has active sponsorship
+    sponsored_categories: Optional[List[str]] = []  # Categories tutor is sponsored in
     trial_start_at: Optional[datetime] = None
     rating_avg: float = 0.0
     rating_count: int = 0
