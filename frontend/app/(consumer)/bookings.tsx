@@ -26,6 +26,8 @@ interface Booking {
   end_at: string;
   status: string;
   price_snapshot: number;
+  currency?: string;
+  currency_symbol?: string;
 }
 
 export default function BookingsScreen() {
