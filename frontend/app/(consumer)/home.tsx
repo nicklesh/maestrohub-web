@@ -249,31 +249,33 @@ export default function HomeScreen() {
         }
       >
         <View style={[styles.contentWrapper, containerMaxWidth ? { maxWidth: containerMaxWidth } : undefined]}>
-          {/* Upcoming Session Reminder Banner */}
+          {/* Reminders Section - same style as Account page */}
           {upcomingReminder && (
             <TouchableOpacity
-              style={[styles.reminderBanner, isTablet && styles.reminderBannerTablet]}
+              style={[styles.remindersCard, isTablet && styles.remindersCardTablet]}
               onPress={() => router.push('/(consumer)/reminders')}
-              activeOpacity={0.8}
+              activeOpacity={0.7}
             >
-              <View style={styles.reminderIconWrap}>
-                <Ionicons name="alarm" size={24} color="#fff" />
+              <View style={styles.remindersHeader}>
+                <Text style={[styles.remindersTitle, { color: colors.text }]}>Reminders</Text>
+                <View style={styles.reminderBadge}>
+                  <Text style={styles.reminderBadgeText}>1</Text>
+                </View>
               </View>
-              <View style={styles.reminderContent}>
-                <Text style={styles.reminderTitle}>Upcoming Session</Text>
-                <Text style={styles.reminderText}>
-                  {upcomingReminder.tutor_name} • {upcomingReminder.hours_until <= 1 
-                    ? 'Starting soon!' 
-                    : `In ${upcomingReminder.hours_until} hours`}
+              <View style={styles.reminderItem}>
+                <View style={styles.reminderCalendarIcon}>
+                  <Ionicons name="calendar" size={18} color="#DC2626" />
+                </View>
+                <Text style={[styles.reminderItemText, { color: colors.text }]}>
+                  Session with {upcomingReminder.tutor_name} in {upcomingReminder.hours_until} hours
                 </Text>
               </View>
-              <Ionicons name="chevron-forward" size={20} color="rgba(255,255,255,0.8)" />
             </TouchableOpacity>
           )}
 
           {/* Search Bar */}
           <TouchableOpacity
-            style={[styles.searchBar, isTablet && styles.searchBarTablet]}
+            style={[styles.searchBar, isTablet && styles.searchBarTablet, upcomingReminder && { marginTop: 12 }]}
             onPress={() => router.push('/(consumer)/search')}
           >
             <Ionicons name="search" size={20} color={colors.textMuted} />
