@@ -307,8 +307,9 @@ export default function TutorSettings() {
             </View>
           </View>
 
-          {/* Menu Items */}
+          {/* Grow Your Business Section */}
           <View style={[styles.menu, isTablet && styles.menuTablet]}>
+            <Text style={[styles.sectionLabel, { color: colors.textMuted }]}>Grow Your Business</Text>
             <TouchableOpacity 
               style={[styles.menuItem, isTablet && styles.menuItemTablet]}
               onPress={() => router.push('/(tutor)/reviews')}
@@ -326,11 +327,24 @@ export default function TutorSettings() {
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
             <TouchableOpacity 
-              style={[styles.menuItem, isTablet && styles.menuItemTablet]}
+              style={[styles.menuItem, isTablet && styles.menuItemTablet, { borderBottomWidth: 0 }]}
               onPress={() => router.push('/(tutor)/sponsorship')}
             >
               <Ionicons name="megaphone-outline" size={isTablet ? 24 : 22} color={colors.warning} />
               <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Become Sponsored</Text>
+              <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
+          </View>
+
+          {/* Account Settings Section */}
+          <View style={[styles.menu, isTablet && styles.menuTablet]}>
+            <Text style={[styles.sectionLabel, { color: colors.textMuted }]}>Settings</Text>
+            <TouchableOpacity 
+              style={[styles.menuItem, isTablet && styles.menuItemTablet]}
+              onPress={() => router.push('/(tutor)/billing')}
+            >
+              <Ionicons name="wallet-outline" size={isTablet ? 24 : 22} color={colors.primary} />
+              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Billing & Payouts</Text>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
             <TouchableOpacity 
