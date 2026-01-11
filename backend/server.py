@@ -3411,14 +3411,6 @@ async def get_provider_report_pdf(
         media_type="application/pdf",
         headers={"Content-Disposition": f"attachment; filename={filename}"}
     )
-    buffer.seek(0)
-    
-    filename = f"maestrohub_earnings_{datetime.now().strftime('%Y%m%d')}.pdf"
-    return StreamingResponse(
-        buffer,
-        media_type="application/pdf",
-        headers={"Content-Disposition": f"attachment; filename={filename}"}
-    )
 
 # ============== CATEGORIES ==============
 
