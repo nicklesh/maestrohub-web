@@ -313,6 +313,14 @@ export default function ProfileScreen() {
               )}
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
+
+            <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(consumer)/reviews')}>
+              <View style={styles.menuItemLeft}>
+                <Ionicons name="star-outline" size={22} color={colors.primary} />
+                <Text style={[styles.menuItemText, { color: colors.text }]}>Reviews</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
             
             <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(consumer)/billing')}>
               <View style={styles.menuItemLeft}>
