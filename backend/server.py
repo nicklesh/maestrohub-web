@@ -2348,10 +2348,13 @@ async def admin_get_tutors(request: Request, status: Optional[str] = None):
     results = []
     for t in tutors:
         user = await db.users.find_one({"user_id": t["user_id"]}, {"_id": 0})
+        market_info = MARKETS_CONFIG.get(t.get("market_id"), MARKETS_CONFIG.get("US_USD"))
         results.append({
             **t,
             "user_name": user["name"] if user else "Unknown",
-            "user_email": user["email"] if user else "Unknown"
+            "user_email": user["email"] if user else "Unknown",
+            "currency": market_info.get("currency", "USD"),
+            "currency_symbol": market_info.get("currency_symbol", "$")
         })
     
     return results
