@@ -324,6 +324,9 @@ export default function SponsorshipScreen() {
         {/* Available Plans */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: colors.text }]}>Available Plans</Text>
+          <Text style={[styles.pricingInfo, { color: colors.textMuted }]}>
+            {currencySymbol === '₹' ? '₹1,200/week • ₹800/week from week 13' : '$15/week • $10/week from week 13'}
+          </Text>
           {plans.map((plan) => (
             <TouchableOpacity
               key={plan.plan_id}
@@ -333,13 +336,17 @@ export default function SponsorshipScreen() {
               <View style={styles.planHeader}>
                 <Text style={[styles.planName, { color: colors.text }]}>{plan.name}</Text>
                 <View style={[styles.durationBadge, { backgroundColor: colors.primary + '20' }]}>
-                  <Text style={[styles.durationText, { color: colors.primary }]}>{plan.duration_days} days</Text>
+                  <Text style={[styles.durationText, { color: colors.primary }]}>{plan.weeks} {plan.weeks === 1 ? 'week' : 'weeks'}</Text>
                 </View>
               </View>
               <Text style={[styles.planDescription, { color: colors.textMuted }]}>{plan.description}</Text>
               <View style={styles.planFooter}>
                 <Text style={[styles.planPrice, { color: colors.primary }]}>{formatPrice(plan.price_cents)}</Text>
-                <Text style={[styles.planPriceNote, { color: colors.textMuted }]}>+ {platformFee}% platform fee</Text>
+                {plan.weeks > 1 && (
+                  <Text style={[styles.planPriceNote, { color: colors.textMuted }]}>
+                    ({currencySymbol}{(plan.price_cents / 100 / plan.weeks).toFixed(0)}/week avg)
+                  </Text>
+                )}
               </View>
             </TouchableOpacity>
           ))}
