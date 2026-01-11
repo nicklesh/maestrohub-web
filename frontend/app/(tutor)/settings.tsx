@@ -267,6 +267,14 @@ export default function TutorSettings() {
           <View style={[styles.menu, isTablet && styles.menuTablet]}>
             <TouchableOpacity 
               style={[styles.menuItem, isTablet && styles.menuItemTablet]}
+              onPress={() => router.push('/(tutor)/packages')}
+            >
+              <Ionicons name="pricetags-outline" size={isTablet ? 24 : 22} color={colors.primary} />
+              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Session Packages</Text>
+              <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={[styles.menuItem, isTablet && styles.menuItemTablet]}
               onPress={() => router.push('/(tutor)/notifications')}
             >
               <Ionicons name="notifications-outline" size={isTablet ? 24 : 22} color={colors.primary} />
