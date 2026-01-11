@@ -108,6 +108,71 @@ security = HTTPBearer(auto_error=False)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+# ============== SECURITY: Rate Limiting ==============
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+
+# Rate limit exceeded handler
+@app.exception_handler(RateLimitExceeded)
+async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
+    return JSONResponse(
+        status_code=429,
+        content={"detail": "Too many requests. Please try again later."}
+    )
+
+# ============== SECURITY: Headers Middleware ==============
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        response = await call_next(request)
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["X-XSS-Protection"] = "1; mode=block"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
+        # Note: Strict-Transport-Security should be added by the reverse proxy in production
+        return response
+
+app.add_middleware(SecurityHeadersMiddleware)
+app.add_middleware(SlowAPIMiddleware)
+
+# ============== SECURITY: Input Sanitization ==============
+def sanitize_html(text: str) -> str:
+    """Sanitize HTML content to prevent XSS"""
+    if not text:
+        return text
+    return html.escape(text)
+
+def sanitize_for_mongo(value: Any) -> Any:
+    """Sanitize input to prevent NoSQL injection"""
+    if isinstance(value, str):
+        # Block MongoDB operators
+        dangerous_patterns = ['$where', '$regex', '$gt', '$lt', '$ne', '$or', '$and', '$not', '$exists']
+        for pattern in dangerous_patterns:
+            if pattern in value.lower():
+                return value.replace(pattern, '')
+        return value
+    elif isinstance(value, dict):
+        # Recursively check for operators in dict keys
+        return {k: sanitize_for_mongo(v) for k, v in value.items() if not k.startswith('$')}
+    elif isinstance(value, list):
+        return [sanitize_for_mongo(item) for item in value]
+    return value
+
+# ============== SECURITY: Password Validation ==============
+def validate_password_strength(password: str) -> tuple[bool, str]:
+    """Validate password meets security requirements"""
+    if not password:
+        return False, "Password is required"
+    if len(password) < 8:
+        return False, "Password must be at least 8 characters long"
+    if not re.search(r"[A-Z]", password):
+        return False, "Password must contain at least one uppercase letter"
+    if not re.search(r"[a-z]", password):
+        return False, "Password must contain at least one lowercase letter"
+    if not re.search(r"\d", password):
+        return False, "Password must contain at least one number"
+    return True, "Password is valid"
+
 # Add validation error handler to log the actual error
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
