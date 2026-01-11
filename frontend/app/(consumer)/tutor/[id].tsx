@@ -265,6 +265,110 @@ export default function TutorDetailScreen() {
           </View>
         )}
 
+        {/* Session Packages Section */}
+        {packages.length > 0 && (
+          <View style={[styles.section, { backgroundColor: colors.surface }]}>
+            <View style={styles.sectionHeader}>
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>Session Packages</Text>
+              <View style={[styles.saveBadge, { backgroundColor: colors.success + '20' }]}>
+                <Text style={[styles.saveBadgeText, { color: colors.success }]}>Save up to {Math.max(...packages.map(p => p.discount_percent))}%</Text>
+              </View>
+            </View>
+            <Text style={[styles.packageHint, { color: colors.textMuted }]}>
+              Book multiple sessions and save!
+            </Text>
+            {packages.map((pkg) => (
+              <TouchableOpacity
+                key={pkg.package_id}
+                style={[styles.packageCard, { backgroundColor: colors.background, borderColor: colors.success }]}
+                onPress={() => router.push({
+                  pathname: '/(consumer)/book/[tutorId]',
+                  params: { tutorId: tutor.tutor_id, packageId: pkg.package_id }
+                })}
+              >
+                <View style={styles.packageHeader}>
+                  <View>
+                    <Text style={[styles.packageName, { color: colors.text }]}>{pkg.name}</Text>
+                    <Text style={[styles.packageSessions, { color: colors.textMuted }]}>
+                      {pkg.session_count} sessions • Valid {pkg.validity_days} days
+                    </Text>
+                  </View>
+                  <View style={[styles.discountTag, { backgroundColor: colors.success }]}>
+                    <Text style={styles.discountTagText}>{pkg.discount_percent}% OFF</Text>
+                  </View>
+                </View>
+                <View style={styles.packagePricing}>
+                  <View>
+                    <Text style={[styles.perSessionLabel, { color: colors.textMuted }]}>Per session</Text>
+                    <Text style={[styles.perSessionPrice, { color: colors.text }]}>
+                      {tutor.currency_symbol}{pkg.price_per_session.toFixed(0)}
+                    </Text>
+                  </View>
+                  <View style={{ alignItems: 'flex-end' }}>
+                    <Text style={[styles.totalLabel, { color: colors.textMuted }]}>Total</Text>
+                    <Text style={[styles.totalPrice, { color: colors.primary }]}>
+                      {tutor.currency_symbol}{pkg.total_price.toFixed(0)}
+                    </Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
+
+        {/* Reviews Section */}
+        {reviews.length > 0 && (
+          <View style={[styles.section, { backgroundColor: colors.surface }]}>
+            <View style={styles.sectionHeader}>
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>Reviews</Text>
+              <View style={styles.reviewStats}>
+                <Ionicons name="star" size={14} color="#FFB800" />
+                <Text style={[styles.reviewStatText, { color: colors.text }]}>
+                  {tutor.rating_avg?.toFixed(1)} ({reviewStats.total})
+                </Text>
+              </View>
+            </View>
+            {reviewStats.recommend_pct > 0 && (
+              <Text style={[styles.recommendText, { color: colors.success }]}>
+                {reviewStats.recommend_pct}% would recommend
+              </Text>
+            )}
+            {reviews.slice(0, 3).map((review) => (
+              <View key={review.review_id} style={[styles.reviewCard, { borderColor: colors.border }]}>
+                <View style={styles.reviewHeader}>
+                  <View style={[styles.reviewAvatar, { backgroundColor: colors.primary + '20' }]}>
+                    <Text style={[styles.reviewAvatarText, { color: colors.primary }]}>
+                      {review.consumer_name.charAt(0)}
+                    </Text>
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Text style={[styles.reviewerName, { color: colors.text }]}>{review.consumer_name}</Text>
+                    <View style={styles.reviewRating}>
+                      {[1,2,3,4,5].map(i => (
+                        <Ionicons 
+                          key={i} 
+                          name={i <= review.overall_rating ? 'star' : 'star-outline'} 
+                          size={12} 
+                          color={i <= review.overall_rating ? '#FFB800' : colors.gray300} 
+                        />
+                      ))}
+                    </View>
+                  </View>
+                </View>
+                {review.comment && (
+                  <Text style={[styles.reviewComment, { color: colors.textMuted }]}>"{review.comment}"</Text>
+                )}
+                {review.coach_response && (
+                  <View style={[styles.coachResponse, { backgroundColor: colors.primary + '10' }]}>
+                    <Text style={[styles.coachResponseLabel, { color: colors.primary }]}>Coach's Response:</Text>
+                    <Text style={[styles.coachResponseText, { color: colors.text }]}>{review.coach_response}</Text>
+                  </View>
+                )}
+              </View>
+            ))}
+          </View>
+        )}
+
         {/* Date Selection */}
         <View style={[styles.section, { backgroundColor: colors.surface }]}>
           <Text style={[styles.sectionTitle, { color: colors.text }]}>Select Date</Text>
