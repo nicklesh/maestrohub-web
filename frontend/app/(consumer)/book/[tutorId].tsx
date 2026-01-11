@@ -226,10 +226,12 @@ export default function BookingScreen() {
       // Has payment methods - proceed to payment step
       setSubmitting(false);
       setStep('payment');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error checking payment methods:', error);
-      setSubmitting(false);
-      setStep('payment'); // Allow proceeding in case of error
+      const errorMessage = error.response?.data?.detail || 'Failed to verify payment methods. Please try again.';
+      Alert.alert('Error', errorMessage, [
+        { text: 'OK', onPress: () => setSubmitting(false) }
+      ]);
     }
   };
 
