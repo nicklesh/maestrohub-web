@@ -12,7 +12,7 @@ from datetime import datetime, timezone
 import uuid
 
 # Configuration
-BACKEND_URL = "https://bugbusters-mobile.preview.emergentagent.com/api"
+BACKEND_URL = "https://tutorhub-fix.preview.emergentagent.com/api"
 TEST_EMAIL = "parent2@test.com"
 TEST_PASSWORD = "password123"
 

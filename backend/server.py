@@ -4115,8 +4115,8 @@ app.include_router(api_router)
 ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:8001",
-    "https://bugbusters-mobile.preview.emergentagent.com",
-    "https://bugbusters-mobile.preview.emergentagent.com",
+    "https://tutorhub-fix.preview.emergentagent.com",
+    "https://tutorhub-fix.preview.emergentagent.com",
 ]
 
 app.add_middleware(
