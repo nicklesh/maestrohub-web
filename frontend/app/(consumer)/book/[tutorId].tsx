@@ -327,15 +327,11 @@ export default function BookingScreen() {
         headers: { Authorization: `Bearer ${token}` }
       });
       
-      Alert.alert(
-        'Booking Confirmed!',
-        'Your lesson has been booked successfully.',
-        [{ text: 'OK', onPress: () => router.replace('/(consumer)/bookings') }]
-      );
+      // Navigate directly to bookings page
+      router.replace('/(consumer)/bookings');
     } catch (error) {
       console.error('Booking failed:', error);
       Alert.alert('Error', 'Failed to confirm booking. Please try again.');
-    } finally {
       setSubmitting(false);
     }
   };
