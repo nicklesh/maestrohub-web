@@ -1497,7 +1497,7 @@ async def delete_vacation(vacation_id: str, request: Request):
     return {"success": True, "message": "Vacation deleted"}
 
 @api_router.get("/tutors/{tutor_id}/availability")
-async def get_tutor_availability(tutor_id: str, from_date: str = None, to_date: str = None):
+async def get_tutor_availability(tutor_id: str, date: str = None, from_date: str = None, to_date: str = None):
     """Get available time slots for a tutor"""
     tutor = await db.tutors.find_one({"tutor_id": tutor_id}, {"_id": 0})
     if not tutor:
@@ -1523,10 +1523,16 @@ async def get_tutor_availability(tutor_id: str, from_date: str = None, to_date: 
         "expires_at": {"$gt": now}
     }, {"_id": 0}).to_list(100)
     
-    # Generate available slots for next 30 days
+    # Generate available slots
     slots = []
-    from_dt = datetime.fromisoformat(from_date) if from_date else now
-    to_dt = datetime.fromisoformat(to_date) if to_date else now + timedelta(days=30)
+    
+    # Handle single date parameter (used by frontend)
+    if date:
+        from_dt = datetime.fromisoformat(date)
+        to_dt = from_dt + timedelta(days=1)
+    else:
+        from_dt = datetime.fromisoformat(from_date) if from_date else now
+        to_dt = datetime.fromisoformat(to_date) if to_date else now + timedelta(days=30)
     
     current = from_dt
     while current < to_dt:
