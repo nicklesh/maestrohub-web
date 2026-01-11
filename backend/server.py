@@ -2573,6 +2573,129 @@ async def complete_booking(booking_id: str, request: Request):
     
     return {"message": "Booking completed"}
 
+@api_router.post("/bookings/{booking_id}/no-show")
+async def mark_booking_no_show(booking_id: str, request: Request, who: str = "consumer"):
+    """Mark a booking as no-show (consumer didn't show or coach didn't show)
+    
+    Args:
+        who: 'consumer' if student didn't show, 'coach' if coach didn't show
+    """
+    user = await require_auth(request)
+    booking = await db.bookings.find_one({"booking_id": booking_id}, {"_id": 0})
+    
+    if not booking:
+        raise HTTPException(status_code=404, detail="Booking not found")
+    
+    # Only allow marking as no-show for booked/confirmed bookings
+    if booking["status"] not in ["booked", "confirmed"]:
+        raise HTTPException(status_code=400, detail="Can only mark active bookings as no-show")
+    
+    # Check session time has passed
+    start_at = booking["start_at"]
+    if start_at.tzinfo is None:
+        start_at = start_at.replace(tzinfo=timezone.utc)
+    
+    if start_at > datetime.now(timezone.utc):
+        raise HTTPException(status_code=400, detail="Cannot mark as no-show before session time")
+    
+    # Verify requester has permission
+    tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+    is_coach = tutor and tutor["tutor_id"] == booking["tutor_id"]
+    is_consumer = booking["consumer_id"] == user.user_id
+    
+    if not (is_coach or is_consumer):
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    # Determine no-show type and status
+    if who == "consumer":
+        new_status = "no_show_consumer"
+        # Coach reports consumer didn't show - consumer loses payment
+        refund_consumer = False
+        pay_coach = True
+    else:
+        new_status = "no_show_coach"
+        # Consumer reports coach didn't show - full refund + possible compensation
+        refund_consumer = True
+        pay_coach = False
+    
+    # Update booking
+    await db.bookings.update_one(
+        {"booking_id": booking_id},
+        {"$set": {
+            "status": new_status,
+            "no_show_reported_by": user.user_id,
+            "no_show_at": datetime.now(timezone.utc)
+        }}
+    )
+    
+    # Get user info for emails
+    market_config = MARKETS_CONFIG.get(booking.get("market_id", "US_USD"), MARKETS_CONFIG["US_USD"])
+    tutor_info = await db.tutors.find_one({"tutor_id": booking["tutor_id"]}, {"_id": 0})
+    tutor_user = await db.users.find_one({"user_id": tutor_info["user_id"]}, {"_id": 0}) if tutor_info else None
+    consumer_user = await db.users.find_one({"user_id": booking["consumer_id"]}, {"_id": 0})
+    
+    # Send no-show notifications
+    try:
+        if consumer_user and tutor_user:
+            if who == "consumer":
+                # Email to consumer - they missed
+                consumer_email = no_show_notification_email(
+                    recipient_name=consumer_user["name"],
+                    other_party_name=tutor_user["name"],
+                    session_date=start_at.strftime("%B %d, %Y"),
+                    session_time=start_at.strftime("%I:%M %p"),
+                    is_consumer=True,
+                    penalty_info="Payment will be charged as per the no-show policy."
+                )
+                await email_service.send_email(
+                    to=consumer_user["email"],
+                    subject=consumer_email["subject"],
+                    html=consumer_email["html"],
+                    text=consumer_email["text"]
+                )
+                
+                # Email to coach - student didn't show
+                coach_email = no_show_notification_email(
+                    recipient_name=tutor_user["name"],
+                    other_party_name=consumer_user["name"],
+                    session_date=start_at.strftime("%B %d, %Y"),
+                    session_time=start_at.strftime("%I:%M %p"),
+                    is_consumer=False
+                )
+                await email_service.send_email(
+                    to=tutor_user["email"],
+                    subject=coach_email["subject"],
+                    html=coach_email["html"],
+                    text=coach_email["text"]
+                )
+            else:
+                # Coach no-show - refund consumer
+                consumer_email = no_show_notification_email(
+                    recipient_name=consumer_user["name"],
+                    other_party_name=tutor_user["name"],
+                    session_date=start_at.strftime("%B %d, %Y"),
+                    session_time=start_at.strftime("%I:%M %p"),
+                    is_consumer=True,
+                    penalty_info=f"Full refund of {market_config['currency_symbol']}{booking['price_snapshot']:.2f} will be processed."
+                )
+                await email_service.send_email(
+                    to=consumer_user["email"],
+                    subject=consumer_email["subject"],
+                    html=consumer_email["html"],
+                    text=consumer_email["text"]
+                )
+        
+        logger.info(f"No-show notifications sent for booking {booking_id}")
+    except Exception as e:
+        logger.error(f"Failed to send no-show notifications: {str(e)}")
+    
+    return {
+        "message": f"Booking marked as no-show ({who})",
+        "status": new_status,
+        "refund_consumer": refund_consumer,
+        "pay_coach": pay_coach
+    }
+
 # ============== REVIEW ROUTES ==============
 
 @api_router.post("/bookings/{booking_id}/review")
