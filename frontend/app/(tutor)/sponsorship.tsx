@@ -21,6 +21,7 @@ import { api } from '@/src/services/api';
 interface SponsorshipPlan {
   plan_id: string;
   name: string;
+  weeks: number;
   duration_days: number;
   price_cents: number;
   currency: string;
