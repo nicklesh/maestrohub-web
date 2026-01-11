@@ -497,41 +497,22 @@ export default function BookingScreen() {
         </View>
       </View>
       
-      {/* Payment Provider Options */}
-      <View style={styles.paymentProvidersContainer}>
-        {PAYMENT_PROVIDERS.map((provider) => (
-          <TouchableOpacity
-            key={provider.id}
-            style={[
-              styles.paymentProviderCard,
-              { 
-                borderColor: selectedProvider === provider.id ? colors.primary : colors.border,
-                backgroundColor: colors.surface
-              },
-              selectedProvider === provider.id && { borderWidth: 2 }
-            ]}
-            onPress={() => setSelectedProvider(provider.id)}
-          >
-            <View style={styles.paymentProviderLeft}>
-              <View style={[styles.providerIconContainer, { backgroundColor: provider.color + '15' }]}>
-                <Ionicons name={provider.icon as any} size={24} color={provider.color} />
-              </View>
-              <Text style={[styles.paymentProviderName, { color: colors.text }]}>
-                {provider.name}
-              </Text>
-            </View>
-            {selectedProvider === provider.id && (
-              <Ionicons name="checkmark-circle" size={24} color={colors.primary} />
-            )}
-          </TouchableOpacity>
-        ))}
+      {/* Auto-Charge Info */}
+      <View style={[styles.paymentSummaryCard, { backgroundColor: colors.primaryLight, borderColor: colors.primary }]}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+          <Ionicons name="flash" size={20} color={colors.primary} />
+          <Text style={[styles.paymentSummaryTitle, { color: colors.primary, marginBottom: 0 }]}>Auto-Payment</Text>
+        </View>
+        <Text style={{ fontSize: 13, color: colors.primary, lineHeight: 18 }}>
+          Your default payment method will be charged automatically. If the primary method fails, we'll try your other linked payment methods.
+        </Text>
       </View>
       
       {/* Security Note */}
       <View style={[styles.securityNote, { backgroundColor: colors.successLight }]}>
         <Ionicons name="shield-checkmark" size={20} color={colors.success} />
         <Text style={[styles.securityNoteText, { color: colors.success }]}>
-          Secure payment • Your card details are never stored on our servers
+          Secure payment • 90% goes to tutor, 10% platform fee
         </Text>
       </View>
       
@@ -543,13 +524,22 @@ export default function BookingScreen() {
         {submitting ? (
           <View style={styles.processingContainer}>
             <ActivityIndicator size="small" color="#fff" />
-            <Text style={[styles.primaryButtonText, { marginLeft: 8 }]}>Processing...</Text>
+            <Text style={[styles.primaryButtonText, { marginLeft: 8 }]}>Processing Payment...</Text>
           </View>
         ) : (
           <Text style={[styles.primaryButtonText, isTablet && styles.primaryButtonTextTablet]}>
             Pay ${tutor?.base_price?.toFixed(2)}
           </Text>
         )}
+      </TouchableOpacity>
+      
+      <TouchableOpacity 
+        style={{ alignItems: 'center', marginTop: 16 }}
+        onPress={() => router.push('/(consumer)/billing')}
+      >
+        <Text style={{ color: colors.primary, fontSize: 14 }}>
+          Manage Payment Methods
+        </Text>
       </TouchableOpacity>
     </ScrollView>
   );
