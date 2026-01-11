@@ -360,49 +360,62 @@ class PaymentProviderTester:
                 self.log_test("Create Booking Hold - Setup", False, "No tutors available")
                 return None
             
-            # Use the first available tutor
-            tutor_id = tutors[0]['tutor_id']
+            # Try different tutors to avoid conflicts
+            import random
+            random.shuffle(tutors)
             
-            # Create a booking hold for future date with more unique time
-            future_time = datetime.now(timezone.utc) + timedelta(days=2, hours=3, minutes=15)
-            iso_time = future_time.isoformat()
-            
-            hold_data = {
-                "tutor_id": tutor_id,
-                "start_at": iso_time,
-                "duration_minutes": 60
-            }
-            
-            response = self.make_request('POST', '/booking-holds', 
-                                       token=self.consumer_token,
-                                       json=hold_data)
-            
-            if response.status_code == 200 or response.status_code == 201:
-                data = response.json()
+            for tutor in tutors:
+                tutor_id = tutor['tutor_id']
                 
-                # Verify response structure
-                required_keys = ['hold_id', 'tutor_id', 'consumer_id', 'start_at', 'end_at', 'expires_at']
-                missing_keys = [key for key in required_keys if key not in data]
+                # Create a booking hold for future date with random time offset
+                random_hours = random.randint(25, 72)  # 1-3 days ahead
+                random_minutes = random.randint(0, 59)
+                future_time = datetime.now(timezone.utc) + timedelta(hours=random_hours, minutes=random_minutes)
+                iso_time = future_time.isoformat()
                 
-                if missing_keys:
-                    self.log_test("Create Booking Hold - Structure", False, 
-                                f"Missing keys: {missing_keys}", data)
+                hold_data = {
+                    "tutor_id": tutor_id,
+                    "start_at": iso_time,
+                    "duration_minutes": 60
+                }
+                
+                response = self.make_request('POST', '/booking-holds', 
+                                           token=self.consumer_token,
+                                           json=hold_data)
+                
+                if response.status_code == 200 or response.status_code == 201:
+                    data = response.json()
+                    
+                    # Verify response structure
+                    required_keys = ['hold_id', 'tutor_id', 'consumer_id', 'start_at', 'end_at', 'expires_at']
+                    missing_keys = [key for key in required_keys if key not in data]
+                    
+                    if missing_keys:
+                        self.log_test("Create Booking Hold - Structure", False, 
+                                    f"Missing keys: {missing_keys}", data)
+                        return None
+                    
+                    hold_id = data.get('hold_id')
+                    if not hold_id:
+                        self.log_test("Create Booking Hold", False, "No hold_id in response", data)
+                        return None
+                    
+                    self.log_test("Create Booking Hold", True, 
+                                f"Created hold {hold_id} for {tutor_id} at {iso_time}")
+                    return hold_id
+                
+                elif response.status_code == 409:
+                    # Slot conflict, try next tutor
+                    continue
+                else:
+                    error_data = response.json() if response.content else None
+                    self.log_test("Create Booking Hold", False, 
+                                f"HTTP {response.status_code} for {tutor_id}", error_data)
                     return None
-                
-                hold_id = data.get('hold_id')
-                if not hold_id:
-                    self.log_test("Create Booking Hold", False, "No hold_id in response", data)
-                    return None
-                
-                self.log_test("Create Booking Hold", True, 
-                            f"Created hold {hold_id} for {tutor_id} at {iso_time}")
-                return hold_id
-                
-            else:
-                error_data = response.json() if response.content else None
-                self.log_test("Create Booking Hold", False, 
-                            f"HTTP {response.status_code}", error_data)
-                return None
+            
+            # If we get here, all tutors had conflicts
+            self.log_test("Create Booking Hold", False, "All tutors have slot conflicts")
+            return None
                 
         except Exception as e:
             self.log_test("Create Booking Hold", False, f"Exception: {str(e)}")
