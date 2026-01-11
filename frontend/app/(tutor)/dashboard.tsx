@@ -299,6 +299,46 @@ export default function TutorDashboard() {
               </TouchableOpacity>
             </View>
           </View>
+
+          {/* Sponsorship Promotion Banner */}
+          <TouchableOpacity 
+            style={[styles.sponsorBanner, isTablet && styles.sponsorBannerTablet]}
+            onPress={() => router.push('/(tutor)/sponsorship')}
+            activeOpacity={0.8}
+          >
+            <View style={styles.sponsorBannerGradient}>
+              <View style={styles.sponsorBannerContent}>
+                <View style={styles.sponsorBannerIcon}>
+                  <Ionicons name="star" size={isTablet ? 32 : 28} color="#FFD700" />
+                </View>
+                <View style={styles.sponsorBannerText}>
+                  <Text style={[styles.sponsorBannerTitle, isTablet && styles.sponsorBannerTitleTablet]}>
+                    Boost Your Visibility
+                  </Text>
+                  <Text style={styles.sponsorBannerSubtitle}>
+                    Get featured at the top of search results • Reach more students
+                  </Text>
+                </View>
+                <Ionicons name="chevron-forward" size={24} color="#fff" />
+              </View>
+              <View style={styles.sponsorBannerStats}>
+                <View style={styles.sponsorStat}>
+                  <Text style={styles.sponsorStatValue}>3x</Text>
+                  <Text style={styles.sponsorStatLabel}>More Views</Text>
+                </View>
+                <View style={styles.sponsorStatDivider} />
+                <View style={styles.sponsorStat}>
+                  <Text style={styles.sponsorStatValue}>$15</Text>
+                  <Text style={styles.sponsorStatLabel}>Per Week</Text>
+                </View>
+                <View style={styles.sponsorStatDivider} />
+                <View style={styles.sponsorStat}>
+                  <Text style={styles.sponsorStatValue}>Top</Text>
+                  <Text style={styles.sponsorStatLabel}>Placement</Text>
+                </View>
+              </View>
+            </View>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
