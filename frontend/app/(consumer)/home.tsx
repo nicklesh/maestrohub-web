@@ -364,43 +364,60 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     width: '100%',
     alignSelf: 'center',
   },
-  // Reminder Banner
-  reminderBanner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#4F46E5',
+  // Reminders Card (matches Account page style)
+  remindersCard: {
+    backgroundColor: colors.surface,
     marginHorizontal: 20,
     marginTop: 16,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
     borderRadius: 12,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  remindersCardTablet: {
+    borderRadius: 16,
+    padding: 20,
+  },
+  remindersHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  remindersTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  reminderBadge: {
+    backgroundColor: '#F97316',
+    minWidth: 20,
+    height: 20,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 6,
+  },
+  reminderBadgeText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  reminderItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 12,
   },
-  reminderBannerTablet: {
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    borderRadius: 16,
-  },
-  reminderIconWrap: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: 'rgba(255,255,255,0.2)',
+  reminderCalendarIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 8,
+    backgroundColor: '#FEE2E2',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  reminderContent: {
+  reminderItemText: {
     flex: 1,
-  },
-  reminderTitle: {
-    color: '#fff',
     fontSize: 14,
-    fontWeight: '700',
-  },
-  reminderText: {
-    color: 'rgba(255,255,255,0.85)',
-    fontSize: 13,
-    marginTop: 2,
   },
   searchBar: {
     flexDirection: 'row',
