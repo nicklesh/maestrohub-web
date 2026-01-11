@@ -5404,10 +5404,6 @@ async def purchase_sponsorship(data: SponsorshipCreate, request: Request):
         "sponsorship": sponsorship,
         "payment_id": payment_id,
         "total_charged": f"{market_config['currency_symbol']}{total_charge/100:.2f}",
-        "breakdown": {
-            "plan_price": f"{market_config['currency_symbol']}{price_cents/100:.2f}",
-            "platform_fee": f"{market_config['currency_symbol']}{platform_fee_cents/100:.2f}"
-        }
     }
 
 @api_router.post("/sponsorship/{sponsorship_id}/renew")
