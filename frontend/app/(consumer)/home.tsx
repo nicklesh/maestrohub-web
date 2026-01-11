@@ -239,6 +239,28 @@ export default function HomeScreen() {
         }
       >
         <View style={[styles.contentWrapper, containerMaxWidth ? { maxWidth: containerMaxWidth } : undefined]}>
+          {/* Upcoming Session Reminder Banner */}
+          {upcomingReminder && (
+            <TouchableOpacity
+              style={[styles.reminderBanner, isTablet && styles.reminderBannerTablet]}
+              onPress={() => router.push('/(consumer)/reminders')}
+              activeOpacity={0.8}
+            >
+              <View style={styles.reminderIconWrap}>
+                <Ionicons name="alarm" size={24} color="#fff" />
+              </View>
+              <View style={styles.reminderContent}>
+                <Text style={styles.reminderTitle}>Upcoming Session</Text>
+                <Text style={styles.reminderText}>
+                  {upcomingReminder.tutor_name} • {upcomingReminder.hours_until <= 1 
+                    ? 'Starting soon!' 
+                    : `In ${upcomingReminder.hours_until} hours`}
+                </Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color="rgba(255,255,255,0.8)" />
+            </TouchableOpacity>
+          )}
+
           {/* Search Bar */}
           <TouchableOpacity
             style={[styles.searchBar, isTablet && styles.searchBarTablet]}
