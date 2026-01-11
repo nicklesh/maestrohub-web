@@ -2465,8 +2465,52 @@ async def cancel_booking(booking_id: str, request: Request):
         {"$set": {"status": new_status, "canceled_at": datetime.now(timezone.utc)}}
     )
     
-    # TODO: Process refund via Stripe based on policy
-    # TODO: Send cancellation emails
+    # Send cancellation emails
+    try:
+        tutor_info = await db.tutors.find_one({"tutor_id": booking["tutor_id"]}, {"_id": 0})
+        tutor_user = await db.users.find_one({"user_id": tutor_info["user_id"]}, {"_id": 0}) if tutor_info else None
+        consumer_user = await db.users.find_one({"user_id": booking["consumer_id"]}, {"_id": 0})
+        
+        if consumer_user and tutor_user:
+            start_dt = booking["start_at"]
+            if start_dt.tzinfo is None:
+                start_dt = start_dt.replace(tzinfo=timezone.utc)
+            
+            market_config = MARKETS_CONFIG.get(booking.get("market_id", "US_USD"), MARKETS_CONFIG["US_USD"])
+            
+            # Email to consumer
+            consumer_email_data = booking_cancellation_email(
+                recipient_name=consumer_user["name"],
+                other_party_name=tutor_user["name"],
+                session_date=start_dt.strftime("%B %d, %Y"),
+                session_time=start_dt.strftime("%I:%M %p"),
+                is_consumer=True,
+                refund_info=f"Full refund of {market_config['currency_symbol']}{booking['price_snapshot']:.2f} will be processed within 5-7 days"
+            )
+            await email_service.send_email(
+                to=consumer_user["email"],
+                subject=consumer_email_data["subject"],
+                html=consumer_email_data["html"],
+                text=consumer_email_data["text"]
+            )
+            
+            # Email to coach
+            coach_email_data = booking_cancellation_email(
+                recipient_name=tutor_user["name"],
+                other_party_name=consumer_user["name"],
+                session_date=start_dt.strftime("%B %d, %Y"),
+                session_time=start_dt.strftime("%I:%M %p"),
+                is_consumer=False
+            )
+            await email_service.send_email(
+                to=tutor_user["email"],
+                subject=coach_email_data["subject"],
+                html=coach_email_data["html"],
+                text=coach_email_data["text"]
+            )
+            logger.info(f"Cancellation emails sent for booking {booking_id}")
+    except Exception as e:
+        logger.error(f"Failed to send cancellation emails: {str(e)}")
     
     return {"message": "Booking canceled", "status": new_status}
 
