@@ -2198,7 +2198,22 @@ async def get_booking(booking_id: str, request: Request):
     if booking["consumer_id"] != user.user_id and (not tutor or tutor["tutor_id"] != booking["tutor_id"]):
         raise HTTPException(status_code=403, detail="Access denied")
     
-    return booking
+    # Enrich with tutor/student info and currency
+    booking_tutor = await db.tutors.find_one({"tutor_id": booking["tutor_id"]}, {"_id": 0})
+    tutor_user = await db.users.find_one({"user_id": booking_tutor["user_id"]}, {"_id": 0}) if booking_tutor else None
+    student = await db.students.find_one({"student_id": booking.get("student_id")}, {"_id": 0})
+    
+    # Get market info for currency
+    market_id = booking.get("market_id") or (booking_tutor.get("market_id") if booking_tutor else "US_USD") or "US_USD"
+    market_config = MARKETS_CONFIG.get(market_id, MARKETS_CONFIG["US_USD"])
+    
+    return {
+        **booking,
+        "tutor_name": tutor_user["name"] if tutor_user else "Unknown",
+        "student_name": student["name"] if student else "Unknown",
+        "currency": market_config["currency"],
+        "currency_symbol": market_config["currency_symbol"]
+    }
 
 @api_router.post("/bookings/{booking_id}/cancel")
 async def cancel_booking(booking_id: str, request: Request):
