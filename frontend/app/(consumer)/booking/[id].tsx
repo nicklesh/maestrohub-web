@@ -665,4 +665,28 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
   },
+  // No-Show styles
+  noShowHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  noShowText: {
+    fontSize: 14,
+    lineHeight: 20,
+    marginBottom: 16,
+  },
+  noShowButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 14,
+    borderRadius: 12,
+    gap: 8,
+  },
+  noShowButtonText: {
+    color: '#fff',
+    fontSize: 15,
+    fontWeight: '600',
+  },
 });
