@@ -5177,6 +5177,9 @@ async def create_detailed_review(data: DetailedReviewCreate, request: Request):
     
     await db.detailed_reviews.insert_one(review)
     
+    # Remove _id before returning
+    review.pop("_id", None)
+    
     # Update tutor's average rating
     all_reviews = await db.detailed_reviews.find({"tutor_id": data.tutor_id}, {"_id": 0}).to_list(1000)
     avg_rating = sum(r["overall_rating"] for r in all_reviews) / len(all_reviews)
