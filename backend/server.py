@@ -1530,7 +1530,9 @@ async def get_tutor_availability(tutor_id: str, from_date: str = None, to_date: 
     
     current = from_dt
     while current < to_dt:
-        day_of_week = current.weekday()
+        # Convert Python weekday (Monday=0) to JS weekday (Sunday=0)
+        python_weekday = current.weekday()
+        js_day_of_week = (python_weekday + 1) % 7  # Convert: Mon=0 -> Mon=1, Sun=6 -> Sun=0
         date_str = current.strftime("%Y-%m-%d")
         
         # Check for exceptions on this date
@@ -1538,8 +1540,8 @@ async def get_tutor_availability(tutor_id: str, from_date: str = None, to_date: 
         blocked_dates = [e for e in date_exceptions if not e["is_available"]]
         
         if not blocked_dates:
-            # Find rules for this day
-            day_rules = [r for r in rules if r["day_of_week"] == day_of_week]
+            # Find rules for this day (using JS convention where Sunday=0)
+            day_rules = [r for r in rules if r["day_of_week"] == js_day_of_week]
             
             for rule in day_rules:
                 start_parts = rule["start_time"].split(":")
