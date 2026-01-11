@@ -3504,6 +3504,31 @@ async def get_provider_report(
             if payout and payout["status"] == "completed":
                 by_month[month_key]["earned_cents"] += payout["amount_cents"]
     
+    # Get sponsorship data
+    sponsorships = await db.sponsorships.find(
+        {"tutor_id": tutor["tutor_id"]}, {"_id": 0}
+    ).sort("started_at", -1).to_list(100)
+    
+    total_sponsorship_spent_cents = sum(s.get("price_paid_cents", 0) for s in sponsorships)
+    active_sponsorships = [s for s in sponsorships if s.get("status") == "active"]
+    
+    # Sponsorship summary
+    sponsorship_summary = {
+        "total_spent_cents": total_sponsorship_spent_cents,
+        "active_count": len(active_sponsorships),
+        "total_purchases": len(sponsorships),
+        "current_active": None
+    }
+    
+    if active_sponsorships:
+        active = active_sponsorships[0]
+        sponsorship_summary["current_active"] = {
+            "plan_name": active.get("plan_name"),
+            "weeks": active.get("weeks", 1),
+            "expires_at": active.get("expires_at").isoformat() if active.get("expires_at") else None,
+            "categories": active.get("categories", [])
+        }
+    
     return {
         "summary": {
             "total_sessions": total_sessions,
@@ -3516,6 +3541,7 @@ async def get_provider_report(
             "currency": market_config["currency"],
             "currency_symbol": market_config["currency_symbol"]
         },
+        "sponsorship": sponsorship_summary,
         "by_student": list(by_student.values()),
         "by_month": sorted(by_month.values(), key=lambda x: x["month"], reverse=True),
         "bookings": bookings[:50],  # Last 50 bookings
