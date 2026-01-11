@@ -62,6 +62,7 @@ export default function TutorReportsScreen() {
   const { token } = useAuth();
   const { colors } = useTheme();
   const { width } = useWindowDimensions();
+  const router = useRouter();
   const isTablet = width >= 768;
   const isDesktop = width >= 1024;
 
