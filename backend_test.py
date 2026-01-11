@@ -68,30 +68,34 @@ class SecurityTester:
         print("\n🔐 Testing JWT Token Validation...")
         
         # Test 1: Invalid token format
+        fresh_session = requests.Session()  # Use fresh session to avoid cookies
         headers = {"Authorization": "Bearer invalid.token.here"}
-        response = self.session.get(f"{BASE_URL}/auth/me", headers=headers)
+        response = fresh_session.get(f"{BASE_URL}/auth/me", headers=headers)
         passed = response.status_code == 401
         self.log_test("jwt_validation", "Invalid token format rejected", passed, 
                      f"Expected 401, got {response.status_code}")
         
         # Test 2: Empty token
+        fresh_session = requests.Session()
         headers = {"Authorization": "Bearer "}
-        response = self.session.get(f"{BASE_URL}/auth/me", headers=headers)
+        response = fresh_session.get(f"{BASE_URL}/auth/me", headers=headers)
         passed = response.status_code == 401
         self.log_test("jwt_validation", "Empty token rejected", passed,
                      f"Expected 401, got {response.status_code}")
         
         # Test 3: Malformed Bearer token
+        fresh_session = requests.Session()
         headers = {"Authorization": "Bearer malformed"}
-        response = self.session.get(f"{BASE_URL}/auth/me", headers=headers)
+        response = fresh_session.get(f"{BASE_URL}/auth/me", headers=headers)
         passed = response.status_code == 401
         self.log_test("jwt_validation", "Malformed Bearer token rejected", passed,
                      f"Expected 401, got {response.status_code}")
         
         # Test 4: Random JWT token (not signed with our secret)
+        fresh_session = requests.Session()
         fake_jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZmFrZSIsImV4cCI6OTk5OTk5OTk5OX0.invalid_signature"
         headers = {"Authorization": f"Bearer {fake_jwt}"}
-        response = self.session.get(f"{BASE_URL}/auth/me", headers=headers)
+        response = fresh_session.get(f"{BASE_URL}/auth/me", headers=headers)
         passed = response.status_code == 401
         self.log_test("jwt_validation", "Invalid signature JWT rejected", passed,
                      f"Expected 401, got {response.status_code}")
