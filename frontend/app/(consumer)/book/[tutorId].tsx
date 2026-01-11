@@ -432,6 +432,16 @@ export default function BookingScreen() {
 
   const renderConfirmStep = () => (
     <View style={styles.stepContent}>
+      {/* Payment Success Banner */}
+      {paymentSuccess && (
+        <View style={[styles.successBanner, { backgroundColor: colors.successLight }]}>
+          <Ionicons name="checkmark-circle" size={24} color={colors.success} />
+          <Text style={[styles.successBannerText, { color: colors.success }]}>
+            Payment successful!
+          </Text>
+        </View>
+      )}
+      
       <Text style={[styles.stepTitle, isDesktop && styles.stepTitleDesktop]}>Confirm Booking</Text>
       <Text style={[styles.stepSubtitle, isDesktop && styles.stepSubtitleDesktop]}>Review your booking details</Text>
       
@@ -456,17 +466,16 @@ export default function BookingScreen() {
             {format(parseISO(startAt!), 'h:mm a')} - {format(parseISO(endAt!), 'h:mm a')}
           </Text>
         </View>
+        <View style={styles.summaryRow}>
+          <Text style={[styles.summaryLabel, isDesktop && styles.summaryLabelDesktop]}>Payment</Text>
+          <Text style={[styles.summaryValue, isDesktop && styles.summaryValueDesktop, { color: colors.success }]}>
+            {paymentSuccess ? '✓ Paid' : 'Pending'}
+          </Text>
+        </View>
         <View style={[styles.summaryRow, styles.summaryRowTotal]}>
           <Text style={styles.summaryLabelTotal}>Total</Text>
           <Text style={[styles.summaryValueTotal, isDesktop && styles.summaryValueTotalDesktop]}>${tutor?.base_price}</Text>
         </View>
-      </View>
-      
-      <View style={[styles.paymentNote, isTablet && styles.paymentNoteTablet]}>
-        <Ionicons name="information-circle" size={20} color={colors.primary} />
-        <Text style={[styles.paymentNoteText, isDesktop && styles.paymentNoteTextDesktop]}>
-          Payment will be processed when you confirm the booking.
-        </Text>
       </View>
       
       <TouchableOpacity
@@ -477,7 +486,9 @@ export default function BookingScreen() {
         {submitting ? (
           <ActivityIndicator color="#fff" />
         ) : (
-          <Text style={[styles.primaryButtonText, isTablet && styles.primaryButtonTextTablet]}>Confirm & Pay ${tutor?.base_price}</Text>
+          <Text style={[styles.primaryButtonText, isTablet && styles.primaryButtonTextTablet]}>
+            Complete Booking
+          </Text>
         )}
       </TouchableOpacity>
     </View>
