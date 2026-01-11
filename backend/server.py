@@ -2536,11 +2536,39 @@ async def create_review(booking_id: str, data: ReviewCreate, request: Request):
     return review_doc
 
 @api_router.get("/tutors/{tutor_id}/reviews")
-async def get_tutor_reviews(tutor_id: str, page: int = 1, limit: int = 20):
+async def get_tutor_reviews_endpoint(tutor_id: str, page: int = 1, limit: int = 20):
+    """Get reviews for a coach (combining simple and detailed reviews)"""
     skip = (page - 1) * limit
-    reviews = await db.reviews.find({"tutor_id": tutor_id}, {"_id": 0}).sort("created_at", -1).skip(skip).limit(limit).to_list(limit)
-    total = await db.reviews.count_documents({"tutor_id": tutor_id})
-    return {"reviews": reviews, "total": total, "page": page}
+    
+    # Get detailed reviews first (primary source)
+    detailed_reviews = await db.detailed_reviews.find(
+        {"tutor_id": tutor_id}, {"_id": 0}
+    ).sort("created_at", -1).skip(skip).limit(limit).to_list(limit)
+    
+    # Get aggregate stats
+    all_detailed = await db.detailed_reviews.find({"tutor_id": tutor_id}, {"_id": 0}).to_list(1000)
+    
+    if all_detailed:
+        avg_teaching = sum(r.get("teaching_quality", 0) for r in all_detailed) / len(all_detailed)
+        avg_communication = sum(r.get("communication", 0) for r in all_detailed) / len(all_detailed)
+        avg_punctuality = sum(r.get("punctuality", 0) for r in all_detailed) / len(all_detailed)
+        avg_knowledge = sum(r.get("knowledge", 0) for r in all_detailed) / len(all_detailed)
+        avg_value = sum(r.get("value_for_money", 0) for r in all_detailed) / len(all_detailed)
+        recommend_pct = sum(1 for r in all_detailed if r.get("would_recommend", False)) / len(all_detailed) * 100
+        
+        stats = {
+            "total_reviews": len(all_detailed),
+            "avg_teaching_quality": round(avg_teaching, 1),
+            "avg_communication": round(avg_communication, 1),
+            "avg_punctuality": round(avg_punctuality, 1),
+            "avg_knowledge": round(avg_knowledge, 1),
+            "avg_value_for_money": round(avg_value, 1),
+            "recommend_percentage": round(recommend_pct, 0)
+        }
+    else:
+        stats = {"total_reviews": 0}
+    
+    return {"reviews": detailed_reviews, "stats": stats}
 
 # ============== ADMIN ROUTES ==============
 
