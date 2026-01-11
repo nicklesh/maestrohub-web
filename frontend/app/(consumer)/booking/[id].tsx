@@ -177,6 +177,49 @@ export default function BookingDetailScreen() {
     }
   };
 
+  const handleReportNoShow = async () => {
+    const confirmMsg = "Are you sure you want to report that the coach didn't show up? This will be reviewed and you'll receive a full refund if confirmed.";
+    
+    const doReport = async () => {
+      setReportingNoShow(true);
+      try {
+        await api.post(`/bookings/${id}/no-show?who=coach`, {}, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (Platform.OS === 'web') {
+          window.alert('No-show reported. We\'ll review this and process your refund.');
+        } else {
+          Alert.alert('Reported', 'No-show reported. We\'ll review this and process your refund.');
+        }
+        loadBooking();
+      } catch (error: any) {
+        const errorMsg = error.response?.data?.detail || 'Failed to report no-show';
+        if (Platform.OS === 'web') {
+          window.alert(errorMsg);
+        } else {
+          Alert.alert('Error', errorMsg);
+        }
+      } finally {
+        setReportingNoShow(false);
+      }
+    };
+
+    if (Platform.OS === 'web') {
+      if (window.confirm(confirmMsg)) {
+        await doReport();
+      }
+    } else {
+      Alert.alert(
+        'Report No-Show',
+        confirmMsg,
+        [
+          { text: 'Cancel', style: 'cancel' },
+          { text: 'Report', style: 'destructive', onPress: doReport }
+        ]
+      );
+    }
+  };
+
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
