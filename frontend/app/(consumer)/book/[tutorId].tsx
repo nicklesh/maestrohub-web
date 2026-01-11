@@ -576,7 +576,7 @@ export default function BookingScreen() {
         </View>
         <View style={[styles.summaryRow, styles.summaryRowTotal]}>
           <Text style={styles.summaryLabelTotal}>Total</Text>
-          <Text style={[styles.summaryValueTotal, isDesktop && styles.summaryValueTotalDesktop]}>${tutor?.base_price}</Text>
+          <Text style={[styles.summaryValueTotal, isDesktop && styles.summaryValueTotalDesktop]}>{tutor?.currency_symbol || '$'}{tutor?.base_price}</Text>
         </View>
       </View>
       
