@@ -94,7 +94,15 @@ from fastapi.responses import JSONResponse
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
-    logger.error(f"Validation error for {request.method} {request.url}: {exc.errors()}")
+    # Try to get the body
+    try:
+        body = await request.body()
+        body_str = body.decode('utf-8')[:500]
+    except:
+        body_str = "Could not read body"
+    logger.error(f"Validation error for {request.method} {request.url.path}")
+    logger.error(f"Request body: {body_str}")
+    logger.error(f"Validation errors: {exc.errors()}")
     return JSONResponse(
         status_code=422,
         content={"detail": exc.errors()}
