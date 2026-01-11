@@ -1,476 +1,125 @@
 {
+  "jwt_validation": [
+    {
+      "test": "Invalid token format rejected",
+      "passed": false,
+      "details": "Expected 401, got 200",
+      "timestamp": "2026-01-11T20:23:16.303421"
+    },
+    {
+      "test": "Empty token rejected",
+      "passed": false,
+      "details": "Expected 401, got 200",
+      "timestamp": "2026-01-11T20:23:16.317225"
+    },
+    {
+      "test": "Malformed Bearer token rejected",
+      "passed": false,
+      "details": "Expected 401, got 200",
+      "timestamp": "2026-01-11T20:23:16.328323"
+    },
+    {
+      "test": "Invalid signature JWT rejected",
+      "passed": false,
+      "details": "Expected 401, got 200",
+      "timestamp": "2026-01-11T20:23:16.340108"
+    },
+    {
+      "test": "Valid token accepted",
+      "passed": true,
+      "details": "Expected 200, got 200",
+      "timestamp": "2026-01-11T20:23:16.350355"
+    }
+  ],
+  "password_policy": [
+    {
+      "test": "Empty password rejected",
+      "passed": false,
+      "details": "Expected 400, got 200",
+      "timestamp": "2026-01-11T20:23:16.405887"
+    },
+    {
+      "test": "Short password rejected",
+      "passed": true,
+      "details": "Expected 400, got 400 - Email already registered",
+      "timestamp": "2026-01-11T20:23:16.421085"
+    },
+    {
+      "test": "Simple password rejected",
+      "passed": true,
+      "details": "Expected 400, got 400 - Email already registered",
+      "timestamp": "2026-01-11T20:23:16.473730"
+    },
+    {
+      "test": "No uppercase password rejected",
+      "passed": true,
+      "details": "Expected 400, got 400 - Email already registered",
+      "timestamp": "2026-01-11T20:23:16.523494"
+    },
+    {
+      "test": "No lowercase password rejected",
+      "passed": true,
+      "details": "Expected 400, got 400 - Email already registered",
+      "timestamp": "2026-01-11T20:23:16.533048"
+    },
+    {
+      "test": "No number password rejected",
+      "passed": true,
+      "details": "Expected 400, got 400 - Email already registered",
+      "timestamp": "2026-01-11T20:23:16.583578"
+    },
+    {
+      "test": "Valid password accepted",
+      "passed": false,
+      "details": "Expected 200, got 400",
+      "timestamp": "2026-01-11T20:23:16.592539"
+    }
+  ],
+  "rate_limiting": [
+    {
+      "test": "Rate limiting on login attempts",
+      "passed": false,
+      "details": "Made 7 failed attempts, rate limited: False",
+      "timestamp": "2026-01-11T20:23:17.362770"
+    }
+  ],
+  "security_headers": [
+    {
+      "test": "X-Content-Type-Options header present",
+      "passed": true,
+      "details": "Expected 'nosniff', got 'nosniff'",
+      "timestamp": "2026-01-11T20:23:17.370670"
+    },
+    {
+      "test": "X-Frame-Options header present",
+      "passed": true,
+      "details": "Expected 'DENY', got 'DENY'",
+      "timestamp": "2026-01-11T20:23:17.370698"
+    },
+    {
+      "test": "X-XSS-Protection header present",
+      "passed": true,
+      "details": "Expected '1; mode=block', got '1; mode=block'",
+      "timestamp": "2026-01-11T20:23:17.370703"
+    }
+  ],
+  "input_sanitization": [
+    {
+      "test": "XSS payload sanitization",
+      "passed": true,
+      "details": "XSS payload sanitized: &lt;script&gt;alert(&#x27;XSS&#x27;)&lt;/script&gt;",
+      "timestamp": "2026-01-11T20:23:17.380515"
+    },
+    {
+      "test": "NoSQL injection prevention",
+      "passed": true,
+      "details": "NoSQL injection handled safely: 200",
+      "timestamp": "2026-01-11T20:23:17.401282"
+    }
+  ],
   "summary": {
-    "passed": 34,
-    "failed": 16,
-    "critical_issues": 5,
-    "high_priority_issues": 9,
-    "security_score": 68.0
-  },
-  "critical_issues": [
-    {
-      "test": "JWT Validation - Invalid token accepted: invalid.token.here...",
-      "passed": false,
-      "details": "System accepts invalid JWT tokens",
-      "severity": "critical",
-      "timestamp": "2026-01-11T19:54:26.022915"
-    },
-    {
-      "test": "JWT Validation - Invalid token accepted: eyJhbGciOiJIUzI1NiIs...",
-      "passed": false,
-      "details": "System accepts invalid JWT tokens",
-      "severity": "critical",
-      "timestamp": "2026-01-11T19:54:26.032318"
-    },
-    {
-      "test": "JWT Validation - Invalid token accepted: ...",
-      "passed": false,
-      "details": "System accepts invalid JWT tokens",
-      "severity": "critical",
-      "timestamp": "2026-01-11T19:54:26.082728"
-    },
-    {
-      "test": "JWT Validation - Invalid token accepted: Bearer malformed...",
-      "passed": false,
-      "details": "System accepts invalid JWT tokens",
-      "severity": "critical",
-      "timestamp": "2026-01-11T19:54:26.093201"
-    },
-    {
-      "test": "JWT Validation - Invalid token accepted: null...",
-      "passed": false,
-      "details": "System accepts invalid JWT tokens",
-      "severity": "critical",
-      "timestamp": "2026-01-11T19:54:26.101712"
-    }
-  ],
-  "warnings": [
-    {
-      "test": "NoSQL Injection - Search endpoint vulnerable: {\"$where\": \"function() { retur...",
-      "passed": false,
-      "details": "Search endpoint may be vulnerable to NoSQL injection",
-      "severity": "high",
-      "timestamp": "2026-01-11T19:54:24.936977"
-    },
-    {
-      "test": "NoSQL Injection - Search endpoint vulnerable: {\"subjects\": {\"$regex\": \".*\"}}...",
-      "passed": false,
-      "details": "Search endpoint may be vulnerable to NoSQL injection",
-      "severity": "high",
-      "timestamp": "2026-01-11T19:54:24.952411"
-    },
-    {
-      "test": "NoSQL Injection - Search endpoint vulnerable: {\"$or\": [{\"status\": \"approved\"...",
-      "passed": false,
-      "details": "Search endpoint may be vulnerable to NoSQL injection",
-      "severity": "high",
-      "timestamp": "2026-01-11T19:54:24.968229"
-    },
-    {
-      "test": "Weak Password Policy - Accepted: '123'",
-      "passed": false,
-      "details": "System accepts weak password: '123'",
-      "severity": "high",
-      "timestamp": "2026-01-11T19:54:25.246086"
-    },
-    {
-      "test": "Weak Password Policy - Accepted: 'password'",
-      "passed": false,
-      "details": "System accepts weak password: 'password'",
-      "severity": "high",
-      "timestamp": "2026-01-11T19:54:25.480192"
-    },
-    {
-      "test": "Weak Password Policy - Accepted: 'admin'",
-      "passed": false,
-      "details": "System accepts weak password: 'admin'",
-      "severity": "high",
-      "timestamp": "2026-01-11T19:54:25.720549"
-    },
-    {
-      "test": "Weak Password Policy - Accepted: 'test'",
-      "passed": false,
-      "details": "System accepts weak password: 'test'",
-      "severity": "high",
-      "timestamp": "2026-01-11T19:54:25.959006"
-    },
-    {
-      "test": "Weak Password Policy - Accepted: ''",
-      "passed": false,
-      "details": "System accepts weak password: ''",
-      "severity": "high",
-      "timestamp": "2026-01-11T19:54:25.972698"
-    },
-    {
-      "test": "XSS Vulnerability - Payload reflected: <script>alert('XSS')</script>...",
-      "passed": false,
-      "details": "XSS payload reflected in response: <script>alert('XSS')</script>",
-      "severity": "high",
-      "timestamp": "2026-01-11T19:54:26.402709"
-    }
-  ],
-  "all_results": [
-    {
-      "test": "NoSQL Injection - Login protected against: {\"$ne\": null}...",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:24.742699"
-    },
-    {
-      "test": "NoSQL Injection - Login protected against: {\"$gt\": \"\"}...",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:24.750534"
-    },
-    {
-      "test": "NoSQL Injection - Login protected against: {\"$regex\": \".*\"}...",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:24.761304"
-    },
-    {
-      "test": "NoSQL Injection - Login protected against: {\"$where\": \"this.password\"}...",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:24.810082"
-    },
-    {
-      "test": "NoSQL Injection - Login protected against: \"; return true; var dummy=\"...",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:24.859915"
-    },
-    {
-      "test": "NoSQL Injection - Login protected against: admin' || '1'=='1...",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:24.869117"
-    },
-    {
-      "test": "NoSQL Injection - Login protected against: {\"$or\": [{\"password\": {\"$exist...",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:24.920103"
-    },
-    {
-      "test": "NoSQL Injection - Search endpoint vulnerable: {\"$where\": \"function() { retur...",
-      "passed": false,
-      "details": "Search endpoint may be vulnerable to NoSQL injection",
-      "severity": "high",
-      "timestamp": "2026-01-11T19:54:24.936977"
-    },
-    {
-      "test": "NoSQL Injection - Search endpoint vulnerable: {\"subjects\": {\"$regex\": \".*\"}}...",
-      "passed": false,
-      "details": "Search endpoint may be vulnerable to NoSQL injection",
-      "severity": "high",
-      "timestamp": "2026-01-11T19:54:24.952411"
-    },
-    {
-      "test": "NoSQL Injection - Search endpoint vulnerable: {\"$or\": [{\"status\": \"approved\"...",
-      "passed": false,
-      "details": "Search endpoint may be vulnerable to NoSQL injection",
-      "severity": "high",
-      "timestamp": "2026-01-11T19:54:24.968229"
-    },
-    {
-      "test": "Weak Password Policy - Accepted: '123'",
-      "passed": false,
-      "details": "System accepts weak password: '123'",
-      "severity": "high",
-      "timestamp": "2026-01-11T19:54:25.246086"
-    },
-    {
-      "test": "Weak Password Policy - Accepted: 'password'",
-      "passed": false,
-      "details": "System accepts weak password: 'password'",
-      "severity": "high",
-      "timestamp": "2026-01-11T19:54:25.480192"
-    },
-    {
-      "test": "Weak Password Policy - Accepted: 'admin'",
-      "passed": false,
-      "details": "System accepts weak password: 'admin'",
-      "severity": "high",
-      "timestamp": "2026-01-11T19:54:25.720549"
-    },
-    {
-      "test": "Weak Password Policy - Accepted: 'test'",
-      "passed": false,
-      "details": "System accepts weak password: 'test'",
-      "severity": "high",
-      "timestamp": "2026-01-11T19:54:25.959006"
-    },
-    {
-      "test": "Weak Password Policy - Accepted: ''",
-      "passed": false,
-      "details": "System accepts weak password: ''",
-      "severity": "high",
-      "timestamp": "2026-01-11T19:54:25.972698"
-    },
-    {
-      "test": "JWT Validation - Invalid token accepted: invalid.token.here...",
-      "passed": false,
-      "details": "System accepts invalid JWT tokens",
-      "severity": "critical",
-      "timestamp": "2026-01-11T19:54:26.022915"
-    },
-    {
-      "test": "JWT Validation - Invalid token accepted: eyJhbGciOiJIUzI1NiIs...",
-      "passed": false,
-      "details": "System accepts invalid JWT tokens",
-      "severity": "critical",
-      "timestamp": "2026-01-11T19:54:26.032318"
-    },
-    {
-      "test": "JWT Validation - Invalid token accepted: ...",
-      "passed": false,
-      "details": "System accepts invalid JWT tokens",
-      "severity": "critical",
-      "timestamp": "2026-01-11T19:54:26.082728"
-    },
-    {
-      "test": "JWT Validation - Invalid token accepted: Bearer malformed...",
-      "passed": false,
-      "details": "System accepts invalid JWT tokens",
-      "severity": "critical",
-      "timestamp": "2026-01-11T19:54:26.093201"
-    },
-    {
-      "test": "JWT Validation - Invalid token accepted: null...",
-      "passed": false,
-      "details": "System accepts invalid JWT tokens",
-      "severity": "critical",
-      "timestamp": "2026-01-11T19:54:26.101712"
-    },
-    {
-      "test": "Session Fixation - Proper role separation",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:26.110854"
-    },
-    {
-      "test": "Password Protection - No password data exposed",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:26.119973"
-    },
-    {
-      "test": "Information Protection - Generic login error messages",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:26.128453"
-    },
-    {
-      "test": "API Security - No sensitive data in public endpoints",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:26.176716"
-    },
-    {
-      "test": "Access Control - Proper user data isolation",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:26.237610"
-    },
-    {
-      "test": "Access Control - Admin endpoint protected: /admin/markets",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:26.246646"
-    },
-    {
-      "test": "Access Control - Admin endpoint protected: /admin/analytics/markets",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:26.255481"
-    },
-    {
-      "test": "Access Control - Admin endpoint protected: /admin/users",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:26.264504"
-    },
-    {
-      "test": "CORS Configuration - Restricted origins",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:26.377928"
-    },
-    {
-      "test": "Security Headers - Missing: X-Content-Type-Options, X-Frame-Options, X-XSS-Protection, Strict-Transport-Security, Content-Security-Policy",
-      "passed": false,
-      "details": "Missing security headers: ['X-Content-Type-Options', 'X-Frame-Options', 'X-XSS-Protection', 'Strict-Transport-Security', 'Content-Security-Policy']",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:26.385529"
-    },
-    {
-      "test": "Error Handling - Clean 404 responses",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:26.392842"
-    },
-    {
-      "test": "XSS Vulnerability - Payload reflected: <script>alert('XSS')</script>...",
-      "passed": false,
-      "details": "XSS payload reflected in response: <script>alert('XSS')</script>",
-      "severity": "high",
-      "timestamp": "2026-01-11T19:54:26.402709"
-    },
-    {
-      "test": "XSS Protection - Payload sanitized: javascript:alert('XSS')...",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:26.453721"
-    },
-    {
-      "test": "XSS Protection - Payload sanitized: <img src=x onerror=alert('XSS'...",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:26.464570"
-    },
-    {
-      "test": "XSS Protection - Payload sanitized: ';alert('XSS');//...",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:26.514921"
-    },
-    {
-      "test": "XSS Protection - Payload sanitized: <svg onload=alert('XSS')>...",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:26.525105"
-    },
-    {
-      "test": "XSS Protection - Payload sanitized: {{7*7}}...",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:26.534965"
-    },
-    {
-      "test": "XSS Protection - Payload sanitized: ${7*7}...",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:26.586396"
-    },
-    {
-      "test": "Deserialization - Malformed payload rejected: {\"email\": \"test@test.com\", \"pa...",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:26.635596"
-    },
-    {
-      "test": "Deserialization - Malformed payload rejected: {\"email\": \"test@test.com\", \"pa...",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:26.644866"
-    },
-    {
-      "test": "Deserialization - Malformed payload rejected: {\"email\": \"test@test.com\", \"pa...",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:26.653430"
-    },
-    {
-      "test": "Version Protection - No version information disclosed",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:26.660829"
-    },
-    {
-      "test": "Rate Limiting - No protection against brute force attacks",
-      "passed": false,
-      "details": "System allows unlimited failed login attempts",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:27.247183"
-    },
-    {
-      "test": "SSRF Protection - Quick response for: http://localhost:27017...",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:27.256187"
-    },
-    {
-      "test": "SSRF Protection - Quick response for: http://127.0.0.1:22...",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:27.264296"
-    },
-    {
-      "test": "SSRF Protection - Quick response for: http://169.254.169.254/latest/...",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:27.273975"
-    },
-    {
-      "test": "SSRF Protection - Quick response for: file:///etc/passwd...",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:27.322516"
-    },
-    {
-      "test": "SSRF Protection - Quick response for: gopher://localhost:6379/_INFO...",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:27.334128"
-    },
-    {
-      "test": "Business Logic - Negative duration rejected",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:27.385094"
-    },
-    {
-      "test": "Business Logic - Past date booking rejected",
-      "passed": true,
-      "details": "",
-      "severity": "medium",
-      "timestamp": "2026-01-11T19:54:27.397096"
-    }
-  ],
-  "owasp_coverage": {
-    "A01:2021 - Broken Access Control": "\u2705 Tested",
-    "A02:2021 - Cryptographic Failures": "\u2705 Tested",
-    "A03:2021 - Injection": "\u2705 Tested",
-    "A04:2021 - Insecure Design": "\u26a0\ufe0f  Partially Tested",
-    "A05:2021 - Security Misconfiguration": "\u2705 Tested",
-    "A06:2021 - Vulnerable Components": "\u2705 Tested",
-    "A07:2021 - Authentication Failures": "\u2705 Tested",
-    "A08:2021 - Data Integrity Failures": "\u2705 Tested",
-    "A09:2021 - Logging Failures": "\u2705 Tested",
-    "A10:2021 - Server-Side Request Forgery": "\u2705 Tested"
-  },
-  "timestamp": "2026-01-11T19:54:27.397335"
+    "passed": 11,
+    "failed": 7,
+    "total": 18
+  }
 }
