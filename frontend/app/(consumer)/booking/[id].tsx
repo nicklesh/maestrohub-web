@@ -292,7 +292,7 @@ export default function BookingDetailScreen() {
           <View style={[styles.card, isTablet && styles.cardTablet]}>
             <View style={styles.priceRow}>
               <Text style={[styles.priceLabel, isDesktop && styles.priceLabelDesktop]}>Total Paid</Text>
-              <Text style={[styles.priceValue, isDesktop && styles.priceValueDesktop]}>${booking.price_snapshot}</Text>
+              <Text style={[styles.priceValue, isDesktop && styles.priceValueDesktop]}>{booking.currency_symbol || '$'}{booking.price_snapshot}</Text>
             </View>
           </View>
 
