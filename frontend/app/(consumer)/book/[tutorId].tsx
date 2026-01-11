@@ -156,6 +156,51 @@ export default function BookingScreen() {
       Alert.alert('Required', 'Please acknowledge the policies');
       return;
     }
+    setStep('payment');
+  };
+
+  const handleAddCard = async () => {
+    if (!newCardNumber || !newCardExpiry || !newCardName) {
+      Alert.alert('Required', 'Please fill all card details');
+      return;
+    }
+    
+    // Parse card details
+    const last_four = newCardNumber.slice(-4);
+    const [expiryMonth, expiryYear] = newCardExpiry.split('/').map(s => parseInt(s.trim()));
+    const card_type = newCardNumber.startsWith('4') ? 'visa' : 
+                      newCardNumber.startsWith('5') ? 'mastercard' : 'card';
+    
+    setSubmitting(true);
+    try {
+      const response = await api.post('/payment-methods', {
+        card_type,
+        last_four,
+        expiry_month: expiryMonth,
+        expiry_year: 2000 + expiryYear,
+        cardholder_name: newCardName,
+        is_default: paymentMethods.length === 0,
+      });
+      
+      const newMethod = response.data.payment_method;
+      setPaymentMethods([...paymentMethods, newMethod]);
+      setSelectedPaymentMethod(newMethod);
+      setShowAddCard(false);
+      setNewCardNumber('');
+      setNewCardExpiry('');
+      setNewCardName('');
+    } catch (error) {
+      Alert.alert('Error', 'Failed to add card');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handlePaymentSubmit = () => {
+    if (!selectedPaymentMethod) {
+      Alert.alert('Required', 'Please select a payment method');
+      return;
+    }
     setStep('confirm');
   };
 
