@@ -541,6 +541,110 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     fontWeight: '600',
     color: colors.success,
   },
+  // Sponsorship styles
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  sectionBadge: {
+    padding: 6,
+    borderRadius: 8,
+  },
+  sponsorshipCard: {
+    borderRadius: 12,
+    padding: 16,
+    borderWidth: 2,
+  },
+  sponsorshipRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  sponsorshipStat: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  sponsorshipStatDivider: {
+    width: 1,
+    height: 50,
+    backgroundColor: colors.border,
+  },
+  sponsorshipValue: {
+    fontSize: 22,
+    fontWeight: '700',
+    marginTop: 8,
+  },
+  sponsorshipLabel: {
+    fontSize: 12,
+    marginTop: 4,
+  },
+  activeSponsorship: {
+    marginTop: 16,
+    padding: 14,
+    borderRadius: 10,
+    borderWidth: 1,
+  },
+  activeSponsorshipHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 8,
+  },
+  activeSponsorshipTitle: {
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  activeSponsorshipPlan: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+  activeSponsorshipExpires: {
+    fontSize: 13,
+  },
+  activeSponsorshipCategories: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+    marginTop: 10,
+  },
+  categoryPill: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  categoryPillText: {
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  sponsorshipEmpty: {
+    borderRadius: 12,
+    padding: 24,
+    alignItems: 'center',
+  },
+  sponsorshipEmptyTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginTop: 12,
+  },
+  sponsorshipEmptyText: {
+    fontSize: 14,
+    marginTop: 6,
+    textAlign: 'center',
+  },
+  sponsorshipCTA: {
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 8,
+    marginTop: 16,
+  },
+  sponsorshipCTAText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
+  },
   emptyState: {
     alignItems: 'center',
     justifyContent: 'center',
