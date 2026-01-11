@@ -614,4 +614,139 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
+  // Package styles
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  saveBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  saveBadgeText: {
+    fontSize: 11,
+    fontWeight: '700',
+  },
+  packageHint: {
+    fontSize: 13,
+    marginBottom: 12,
+  },
+  packageCard: {
+    borderRadius: 12,
+    padding: 14,
+    marginBottom: 10,
+    borderWidth: 2,
+  },
+  packageHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
+  packageName: {
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  packageSessions: {
+    fontSize: 12,
+    marginTop: 2,
+  },
+  discountTag: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 10,
+  },
+  discountTagText: {
+    color: '#fff',
+    fontSize: 11,
+    fontWeight: '700',
+  },
+  packagePricing: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+  },
+  perSessionLabel: {
+    fontSize: 11,
+  },
+  perSessionPrice: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  totalLabel: {
+    fontSize: 11,
+  },
+  totalPrice: {
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  // Review styles
+  reviewStats: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  reviewStatText: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  recommendText: {
+    fontSize: 12,
+    fontWeight: '500',
+    marginBottom: 12,
+  },
+  reviewCard: {
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+  },
+  reviewHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  reviewAvatar: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  reviewAvatarText: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  reviewerName: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  reviewRating: {
+    flexDirection: 'row',
+    gap: 2,
+    marginTop: 2,
+  },
+  reviewComment: {
+    fontSize: 13,
+    fontStyle: 'italic',
+    marginTop: 8,
+    lineHeight: 18,
+  },
+  coachResponse: {
+    marginTop: 10,
+    padding: 10,
+    borderRadius: 8,
+  },
+  coachResponseLabel: {
+    fontSize: 12,
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+  coachResponseText: {
+    fontSize: 13,
+    lineHeight: 18,
+  },
 });
