@@ -38,6 +38,7 @@ interface FeeEvent {
 export default function BillingScreen() {
   const { width } = useWindowDimensions();
   const { colors } = useTheme();
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [summary, setSummary] = useState<BillingSummary | null>(null);
