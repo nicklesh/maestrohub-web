@@ -56,6 +56,7 @@ export default function BookingDetailScreen() {
   const [rating, setRating] = useState(5);
   const [reviewComment, setReviewComment] = useState('');
   const [submittingReview, setSubmittingReview] = useState(false);
+  const [reportingNoShow, setReportingNoShow] = useState(false);
 
   // Responsive breakpoints
   const isTablet = width >= 768;
