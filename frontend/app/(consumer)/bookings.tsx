@@ -85,13 +85,14 @@ export default function BookingsScreen() {
   const filteredBookings = bookings.filter((booking) => {
     const bookingDate = parseISO(booking.start_at);
     const isBookingPast = isPast(bookingDate);
-    const isCanceled = booking.status.includes('canceled');
     
-    // Show canceled in past section, upcoming shows only active bookings
-    if (filter === 'past') {
-      return isBookingPast || isCanceled;
+    // Filter based on booking date only
+    // Upcoming: future date bookings (including canceled future bookings)
+    // Past: past date bookings (including canceled past bookings)
+    if (filter === 'upcoming') {
+      return !isBookingPast;
     }
-    return !isBookingPast && !isCanceled;
+    return isBookingPast;
   });
 
   const getStatusDisplay = (status: string) => {
