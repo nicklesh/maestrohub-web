@@ -29,6 +29,7 @@ interface Tutor {
   rating_avg: number;
   rating_count: number;
   currency_symbol: string;
+  is_sponsored?: boolean;
 }
 
 interface Category {
