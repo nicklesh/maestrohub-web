@@ -181,7 +181,7 @@ class TutorProfileCreate(BaseModel):
     bio: str
     categories: List[str]  # academic, music, activities
     subjects: List[str]
-    levels: List[str]  # elementary, middle_school, high_school, college, adult
+    levels: Optional[List[str]] = []  # elementary, middle_school, high_school, college, adult
     modality: List[str]  # online, in_person
     service_area_radius: Optional[int] = 10  # miles
     base_price: float
