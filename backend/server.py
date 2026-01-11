@@ -1874,6 +1874,18 @@ async def search_tutors(
     page: int = 1,
     limit: int = 20
 ):
+    # Sanitize query parameters to prevent NoSQL injection
+    if query:
+        query = sanitize_for_mongo(query)
+    if category:
+        category = sanitize_for_mongo(category)
+    if subject:
+        subject = sanitize_for_mongo(subject)
+    if level:
+        level = sanitize_for_mongo(level)
+    if modality:
+        modality = sanitize_for_mongo(modality)
+    
     db_query = {"is_published": True, "status": "approved"}
     
     # Get consumer's market for filtering and exclude self from results
