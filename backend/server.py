@@ -16,6 +16,16 @@ import bcrypt
 import jwt
 import io
 
+# Import email service
+from email_service import (
+    email_service, 
+    booking_confirmation_email, 
+    booking_cancellation_email,
+    session_reminder_email,
+    new_review_notification_email,
+    no_show_notification_email
+)
+
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
