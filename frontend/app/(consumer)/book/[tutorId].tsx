@@ -77,13 +77,10 @@ export default function BookingScreen() {
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [holdId, setHoldId] = useState<string | null>(null);
   
-  // Payment methods
-  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod | null>(null);
-  const [showAddCard, setShowAddCard] = useState(false);
-  const [newCardNumber, setNewCardNumber] = useState('');
-  const [newCardExpiry, setNewCardExpiry] = useState('');
-  const [newCardName, setNewCardName] = useState('');
+  // Payment provider selection
+  const [selectedProvider, setSelectedProvider] = useState<string>('stripe');
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [paymentId, setPaymentId] = useState<string | null>(null);
   
   // Intake form
   const [goals, setGoals] = useState('');
