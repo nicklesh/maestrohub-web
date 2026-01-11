@@ -41,8 +41,15 @@ interface Tutor {
   currency_symbol?: string;
 }
 
+interface UpcomingReminder {
+  booking_id: string;
+  tutor_name: string;
+  start_at: string;
+  hours_until: number;
+}
+
 export default function HomeScreen() {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const { currentMarket, needsSelection } = useMarket();
   const { colors } = useTheme();
   const router = useRouter();
@@ -52,6 +59,7 @@ export default function HomeScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [showMarketModal, setShowMarketModal] = useState(false);
+  const [upcomingReminder, setUpcomingReminder] = useState<UpcomingReminder | null>(null);
 
   // Responsive breakpoints
   const isTablet = width >= 768;
