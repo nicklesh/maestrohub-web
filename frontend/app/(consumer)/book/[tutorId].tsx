@@ -156,49 +156,50 @@ export default function BookingScreen() {
     setStep('payment');
   };
 
-  const handleAddCard = async () => {
-    if (!newCardNumber || !newCardExpiry || !newCardName) {
-      Alert.alert('Required', 'Please fill all card details');
-      return;
-    }
-    
-    // Parse card details
-    const last_four = newCardNumber.slice(-4);
-    const [expiryMonth, expiryYear] = newCardExpiry.split('/').map(s => parseInt(s.trim()));
-    const card_type = newCardNumber.startsWith('4') ? 'visa' : 
-                      newCardNumber.startsWith('5') ? 'mastercard' : 'card';
+  const handlePaymentWithProvider = async () => {
+    if (!holdId || !tutor || !selectedStudent) return;
     
     setSubmitting(true);
     try {
-      const response = await api.post('/payment-methods', {
-        card_type,
-        last_four,
-        expiry_month: expiryMonth,
-        expiry_year: 2000 + expiryYear,
-        cardholder_name: newCardName,
-        is_default: paymentMethods.length === 0,
+      // Create payment session with selected provider
+      const amount = tutor.base_price * 100; // cents
+      const response = await api.post('/payments/create-session', {
+        booking_hold_id: holdId,
+        amount_cents: amount,
+        provider: selectedProvider,
+        success_url: `${window.location.origin}/(consumer)/book/${tutorId}?payment=success&hold_id=${holdId}`,
+        cancel_url: `${window.location.origin}/(consumer)/book/${tutorId}?payment=cancelled`,
       });
       
-      const newMethod = response.data.payment_method;
-      setPaymentMethods([...paymentMethods, newMethod]);
-      setSelectedPaymentMethod(newMethod);
-      setShowAddCard(false);
-      setNewCardNumber('');
-      setNewCardExpiry('');
-      setNewCardName('');
+      // For simulation, we'll mock the payment success
+      // In production, this would redirect to the payment provider
+      if (selectedProvider === 'stripe' && response.data.checkout_url) {
+        // Would redirect: window.location.href = response.data.checkout_url;
+        // For demo, simulate success
+        simulatePaymentSuccess(response.data.payment_intent_id || `sim_${Date.now()}`);
+      } else {
+        // Simulate payment for other providers
+        simulatePaymentSuccess(`${selectedProvider}_${Date.now()}`);
+      }
     } catch (error) {
-      Alert.alert('Error', 'Failed to add card');
-    } finally {
+      console.error('Payment error:', error);
+      Alert.alert('Error', 'Failed to initiate payment. Please try again.');
       setSubmitting(false);
     }
   };
 
+  const simulatePaymentSuccess = (paymentIntentId: string) => {
+    // Simulate payment provider callback
+    setTimeout(() => {
+      setPaymentId(paymentIntentId);
+      setPaymentSuccess(true);
+      setSubmitting(false);
+      setStep('confirm');
+    }, 1500);
+  };
+
   const handlePaymentSubmit = () => {
-    if (!selectedPaymentMethod) {
-      Alert.alert('Required', 'Please select a payment method');
-      return;
-    }
-    setStep('confirm');
+    handlePaymentWithProvider();
   };
 
   const handleConfirmBooking = async () => {
