@@ -1528,11 +1528,11 @@ async def get_tutor_availability(tutor_id: str, date: str = None, from_date: str
     
     # Handle single date parameter (used by frontend)
     if date:
-        from_dt = datetime.fromisoformat(date)
+        from_dt = datetime.fromisoformat(date).replace(tzinfo=timezone.utc)
         to_dt = from_dt + timedelta(days=1)
     else:
-        from_dt = datetime.fromisoformat(from_date) if from_date else now
-        to_dt = datetime.fromisoformat(to_date) if to_date else now + timedelta(days=30)
+        from_dt = datetime.fromisoformat(from_date).replace(tzinfo=timezone.utc) if from_date else now
+        to_dt = datetime.fromisoformat(to_date).replace(tzinfo=timezone.utc) if to_date else now + timedelta(days=30)
     
     current = from_dt
     while current < to_dt:
