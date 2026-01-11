@@ -919,7 +919,7 @@ async def process_payment(data: ProcessPaymentRequest, request: Request):
     
     tutor = await db.tutors.find_one({"tutor_id": hold["tutor_id"]}, {"_id": 0})
     if not tutor:
-        raise HTTPException(status_code=404, detail="Tutor not found")
+        raise HTTPException(status_code=404, detail="Coach not found")
     
     # Calculate split: 90% to tutor, 10% platform fee
     platform_fee_percent = PLATFORM_FEE_PERCENT
@@ -1444,7 +1444,7 @@ async def get_tutor_schedule(request: Request):
     
     tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
     if not tutor:
-        raise HTTPException(status_code=404, detail="Tutor profile not found")
+        raise HTTPException(status_code=404, detail="Coach profile not found")
     
     schedule = await db.tutor_schedules.find_one({"tutor_id": tutor["tutor_id"]}, {"_id": 0})
     if not schedule:
@@ -1459,7 +1459,7 @@ async def save_tutor_schedule(data: ScheduleCreate, request: Request):
     
     tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
     if not tutor:
-        raise HTTPException(status_code=404, detail="Tutor profile not found")
+        raise HTTPException(status_code=404, detail="Coach profile not found")
     
     schedule_doc = {
         "tutor_id": tutor["tutor_id"],
@@ -1570,7 +1570,7 @@ async def get_my_tutor_profile(request: Request):
     user = await require_auth(request)
     tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
     if not tutor:
-        raise HTTPException(status_code=404, detail="Tutor profile not found")
+        raise HTTPException(status_code=404, detail="Coach profile not found")
     return TutorProfile(**tutor)
 
 @api_router.put("/tutors/profile", response_model=TutorProfile)
@@ -1581,7 +1581,7 @@ async def update_tutor_profile(data: TutorProfileCreate, request: Request):
         {"$set": data.dict()}
     )
     if result.matched_count == 0:
-        raise HTTPException(status_code=404, detail="Tutor profile not found")
+        raise HTTPException(status_code=404, detail="Coach profile not found")
     tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
     return TutorProfile(**tutor)
 
@@ -1590,7 +1590,7 @@ async def publish_tutor_profile(request: Request):
     user = await require_auth(request)
     tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
     if not tutor:
-        raise HTTPException(status_code=404, detail="Tutor profile not found")
+        raise HTTPException(status_code=404, detail="Coach profile not found")
     if tutor["status"] == "suspended":
         raise HTTPException(status_code=400, detail="Profile is suspended")
     await db.tutors.update_one({"user_id": user.user_id}, {"$set": {"is_published": True}})
@@ -1719,7 +1719,7 @@ async def search_tutors(
 async def get_tutor(tutor_id: str, request: Request = None):
     tutor = await db.tutors.find_one({"tutor_id": tutor_id}, {"_id": 0})
     if not tutor:
-        raise HTTPException(status_code=404, detail="Tutor not found")
+        raise HTTPException(status_code=404, detail="Coach not found")
     
     # Check if consumer is accessing a tutor from a different market
     if request:
@@ -1763,7 +1763,7 @@ async def get_availability_rules(request: Request):
     user = await require_tutor(request)
     tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
     if not tutor:
-        raise HTTPException(status_code=404, detail="Tutor profile not found")
+        raise HTTPException(status_code=404, detail="Coach profile not found")
     
     rules = await db.availability_rules.find({"tutor_id": tutor["tutor_id"]}, {"_id": 0}).to_list(100)
     return rules
@@ -1773,7 +1773,7 @@ async def create_availability_rule(rule: AvailabilityRule, request: Request):
     user = await require_tutor(request)
     tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
     if not tutor:
-        raise HTTPException(status_code=404, detail="Tutor profile not found")
+        raise HTTPException(status_code=404, detail="Coach profile not found")
     
     rule_doc = rule.dict()
     rule_doc["tutor_id"] = tutor["tutor_id"]
@@ -1786,7 +1786,7 @@ async def set_availability_rules(rules: List[AvailabilityRuleCreate], request: R
     user = await require_tutor(request)
     tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
     if not tutor:
-        raise HTTPException(status_code=404, detail="Tutor profile not found")
+        raise HTTPException(status_code=404, detail="Coach profile not found")
     
     # Delete existing rules
     await db.availability_rules.delete_many({"tutor_id": tutor["tutor_id"]})
@@ -1805,7 +1805,7 @@ async def delete_availability_rule(rule_id: str, request: Request):
     user = await require_tutor(request)
     tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
     if not tutor:
-        raise HTTPException(status_code=404, detail="Tutor profile not found")
+        raise HTTPException(status_code=404, detail="Coach profile not found")
     
     result = await db.availability_rules.delete_one({"rule_id": rule_id, "tutor_id": tutor["tutor_id"]})
     if result.deleted_count == 0:
@@ -1817,7 +1817,7 @@ async def create_availability_exception(exc: AvailabilityException, request: Req
     user = await require_tutor(request)
     tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
     if not tutor:
-        raise HTTPException(status_code=404, detail="Tutor profile not found")
+        raise HTTPException(status_code=404, detail="Coach profile not found")
     
     exc_doc = exc.dict()
     exc_doc["tutor_id"] = tutor["tutor_id"]
@@ -1830,7 +1830,7 @@ async def get_availability_exceptions(request: Request):
     user = await require_tutor(request)
     tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
     if not tutor:
-        raise HTTPException(status_code=404, detail="Tutor profile not found")
+        raise HTTPException(status_code=404, detail="Coach profile not found")
     
     exceptions = await db.availability_exceptions.find({"tutor_id": tutor["tutor_id"]}, {"_id": 0}).to_list(100)
     return exceptions
@@ -1843,7 +1843,7 @@ async def get_vacations(request: Request):
     user = await require_tutor(request)
     tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
     if not tutor:
-        raise HTTPException(status_code=404, detail="Tutor profile not found")
+        raise HTTPException(status_code=404, detail="Coach profile not found")
     
     vacations = await db.vacations.find({"tutor_id": tutor["tutor_id"]}, {"_id": 0}).to_list(100)
     return vacations
@@ -1854,7 +1854,7 @@ async def create_vacation(data: VacationPeriodCreate, request: Request):
     user = await require_tutor(request)
     tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
     if not tutor:
-        raise HTTPException(status_code=404, detail="Tutor profile not found")
+        raise HTTPException(status_code=404, detail="Coach profile not found")
     
     # Validate dates
     try:
@@ -1883,7 +1883,7 @@ async def delete_vacation(vacation_id: str, request: Request):
     user = await require_tutor(request)
     tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
     if not tutor:
-        raise HTTPException(status_code=404, detail="Tutor profile not found")
+        raise HTTPException(status_code=404, detail="Coach profile not found")
     
     result = await db.vacations.delete_one({
         "vacation_id": vacation_id,
@@ -1900,7 +1900,7 @@ async def get_tutor_availability(tutor_id: str, date: str = None, from_date: str
     """Get available time slots for a tutor"""
     tutor = await db.tutors.find_one({"tutor_id": tutor_id}, {"_id": 0})
     if not tutor:
-        raise HTTPException(status_code=404, detail="Tutor not found")
+        raise HTTPException(status_code=404, detail="Coach not found")
     
     # Get availability rules
     rules = await db.availability_rules.find({"tutor_id": tutor_id}, {"_id": 0}).to_list(100)
@@ -2015,7 +2015,7 @@ async def create_booking_hold(data: BookingHoldCreate, request: Request):
     # Check tutor exists
     tutor = await db.tutors.find_one({"tutor_id": data.tutor_id}, {"_id": 0})
     if not tutor:
-        raise HTTPException(status_code=404, detail="Tutor not found")
+        raise HTTPException(status_code=404, detail="Coach not found")
     
     start_at = data.start_at
     if start_at.tzinfo is None:
@@ -2375,7 +2375,7 @@ async def admin_approve_tutor(tutor_id: str, request: Request):
         {"$set": {"status": "approved", "is_published": True}}
     )
     if result.matched_count == 0:
-        raise HTTPException(status_code=404, detail="Tutor not found")
+        raise HTTPException(status_code=404, detail="Coach not found")
     
     # Log action
     await db.audit_logs.insert_one({
@@ -2396,7 +2396,7 @@ async def admin_suspend_tutor(tutor_id: str, reason: str = "", request: Request 
         {"$set": {"status": "suspended", "is_published": False}}
     )
     if result.matched_count == 0:
-        raise HTTPException(status_code=404, detail="Tutor not found")
+        raise HTTPException(status_code=404, detail="Coach not found")
     
     await db.audit_logs.insert_one({
         "action": "suspend_tutor",
@@ -2442,7 +2442,7 @@ async def get_billing_summary(request: Request):
     user = await require_tutor(request)
     tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
     if not tutor:
-        raise HTTPException(status_code=404, detail="Tutor profile not found")
+        raise HTTPException(status_code=404, detail="Coach profile not found")
     
     # Get market info
     market_info = MARKETS_CONFIG.get(tutor.get("market_id"), MARKETS_CONFIG.get("US_USD"))
@@ -2495,7 +2495,7 @@ async def get_fee_events(request: Request):
     user = await require_tutor(request)
     tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
     if not tutor:
-        raise HTTPException(status_code=404, detail="Tutor profile not found")
+        raise HTTPException(status_code=404, detail="Coach profile not found")
     
     events = await db.provider_fee_events.find(
         {"tutor_id": tutor["tutor_id"]},
@@ -2531,7 +2531,7 @@ async def create_payment_intent(data: PaymentIntentRequest, request: Request):
     # Get tutor
     tutor = await db.tutors.find_one({"tutor_id": hold["tutor_id"]}, {"_id": 0})
     if not tutor:
-        raise HTTPException(status_code=404, detail="Tutor not found")
+        raise HTTPException(status_code=404, detail="Coach not found")
     
     # Get market config
     market_id = tutor.get("market_id", "US_USD")
@@ -2769,7 +2769,7 @@ async def get_payouts(request: Request):
     user = await require_tutor(request)
     tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
     if not tutor:
-        raise HTTPException(status_code=404, detail="Tutor profile not found")
+        raise HTTPException(status_code=404, detail="Coach profile not found")
     
     payouts = await db.payouts.find(
         {"tutor_id": tutor["tutor_id"]},
@@ -2798,7 +2798,7 @@ async def get_payout_summary(request: Request):
     user = await require_tutor(request)
     tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
     if not tutor:
-        raise HTTPException(status_code=404, detail="Tutor profile not found")
+        raise HTTPException(status_code=404, detail="Coach profile not found")
     
     payouts = await db.payouts.find(
         {"tutor_id": tutor["tutor_id"]},
@@ -3001,7 +3001,7 @@ async def get_provider_report(
     user = await require_tutor(request)
     tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
     if not tutor:
-        raise HTTPException(status_code=404, detail="Tutor profile not found")
+        raise HTTPException(status_code=404, detail="Coach profile not found")
     
     # Build query for bookings
     query = {"tutor_id": tutor["tutor_id"]}
@@ -3663,7 +3663,7 @@ async def set_provider_market(data: ProviderMarketSetRequest, request: Request):
             }}
         )
     else:
-        raise HTTPException(status_code=404, detail="Tutor profile not found. Create a profile first.")
+        raise HTTPException(status_code=404, detail="Coach profile not found. Create a profile first.")
     
     # Log the action
     await db.audit_logs.insert_one({
@@ -3689,7 +3689,7 @@ async def get_provider_market(request: Request):
     
     tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
     if not tutor:
-        raise HTTPException(status_code=404, detail="Tutor profile not found")
+        raise HTTPException(status_code=404, detail="Coach profile not found")
     
     market_id = tutor.get("market_id")
     payout_country = tutor.get("payout_country")
@@ -3783,7 +3783,7 @@ async def admin_override_provider_market(tutor_id: str, data: MarketSetRequest, 
     
     tutor = await db.tutors.find_one({"tutor_id": tutor_id})
     if not tutor:
-        raise HTTPException(status_code=404, detail="Tutor not found")
+        raise HTTPException(status_code=404, detail="Coach not found")
     
     if data.market_id not in MARKETS_CONFIG:
         raise HTTPException(status_code=400, detail="Invalid market ID")
@@ -4222,7 +4222,7 @@ async def create_invite(data: InviteCreate, request: Request):
     # Get tutor profile
     tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
     if not tutor:
-        raise HTTPException(status_code=404, detail="Tutor profile not found")
+        raise HTTPException(status_code=404, detail="Coach profile not found")
     
     # Check if invite already exists for this email from this tutor
     existing = await db.invites.find_one({
@@ -4276,7 +4276,7 @@ async def get_sent_invites(request: Request):
     
     tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
     if not tutor:
-        raise HTTPException(status_code=404, detail="Tutor profile not found")
+        raise HTTPException(status_code=404, detail="Coach profile not found")
     
     invites = await db.invites.find(
         {"tutor_id": tutor["tutor_id"]},
@@ -4397,7 +4397,7 @@ async def cancel_invite(invite_id: str, request: Request):
     
     tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
     if not tutor:
-        raise HTTPException(status_code=404, detail="Tutor profile not found")
+        raise HTTPException(status_code=404, detail="Coach profile not found")
     
     result = await db.invites.delete_one({
         "invite_id": invite_id,
