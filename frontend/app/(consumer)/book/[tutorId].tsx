@@ -831,85 +831,101 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   primaryButtonTextTablet: {
     fontSize: 18,
   },
-  // Payment Method Styles
-  paymentMethodsContainer: {
+  // Payment Provider Styles
+  paymentSummaryCard: {
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    marginBottom: 20,
+  },
+  paymentSummaryTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 12,
+  },
+  paymentSummaryRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  paymentSummaryLabel: {
+    fontSize: 14,
+    flex: 1,
+  },
+  paymentSummaryValue: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  paymentTotalRow: {
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    paddingTop: 12,
+    marginTop: 8,
+  },
+  paymentTotalLabel: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  paymentTotalValue: {
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  paymentProvidersContainer: {
     marginBottom: 16,
   },
-  paymentMethodCard: {
+  paymentProviderCard: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 16,
-    backgroundColor: colors.surface,
     borderRadius: 12,
     borderWidth: 1,
     marginBottom: 12,
   },
-  paymentMethodLeft: {
+  paymentProviderLeft: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
   },
-  paymentMethodInfo: {
-    flex: 1,
+  providerIconContainer: {
+    width: 44,
+    height: 44,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  paymentMethodTitle: {
+  paymentProviderName: {
     fontSize: 15,
     fontWeight: '600',
   },
-  paymentMethodExpiry: {
-    fontSize: 13,
-    marginTop: 2,
+  securityNote: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    padding: 12,
+    borderRadius: 10,
+    marginBottom: 20,
   },
-  addCardButton: {
+  securityNoteText: {
+    flex: 1,
+    fontSize: 13,
+  },
+  processingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  successBanner: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    padding: 16,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderStyle: 'dashed',
-    marginBottom: 20,
+    padding: 14,
+    borderRadius: 10,
+    marginBottom: 16,
   },
-  addCardText: {
+  successBannerText: {
     fontSize: 15,
-    fontWeight: '600',
-  },
-  addCardForm: {
-    padding: 16,
-    borderRadius: 12,
-    borderWidth: 1,
-    marginBottom: 20,
-  },
-  cardRow: {
-    flexDirection: 'row',
-  },
-  cardFormButtons: {
-    flexDirection: 'row',
-    gap: 12,
-    marginTop: 16,
-  },
-  cancelButton: {
-    flex: 1,
-    padding: 12,
-    borderRadius: 8,
-    borderWidth: 1,
-    alignItems: 'center',
-  },
-  cancelButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  saveCardButton: {
-    flex: 1,
-    padding: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  saveCardButtonText: {
-    color: '#fff',
-    fontSize: 14,
     fontWeight: '600',
   },
 });
