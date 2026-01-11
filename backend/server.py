@@ -2946,55 +2946,55 @@ async def get_provider_report_pdf(
 async def get_categories():
     return {
         "categories": [
-            # Coaching & Personal Growth
-            {"id": "coaching_personal", "name": "Coaching & Personal Growth", "subjects": [
-                "Life Coaching", "Executive Coaching", "Career Coaching", "Leadership Coaching", 
-                "Agile Coaching", "Personal Development", "Confidence Coaching", 
-                "Transformational Coaching", "Motivational Coaching", "Public Speaking"
-            ]},
-            # Health, Mindfulness & Wellbeing
-            {"id": "health_mindfulness", "name": "Health, Mindfulness & Wellbeing", "subjects": [
-                "Health Coaching", "Wellness Coaching", "Mindfulness", "Meditation", 
-                "Spiritual Coaching", "Stress Management", "Mindset Coaching"
-            ]},
-            # Fitness & Nutrition
-            {"id": "fitness_nutrition", "name": "Fitness & Nutrition", "subjects": [
-                "Fitness Training", "Nutrition Coaching", "Weight Loss", "Recovery Coaching"
-            ]},
-            # Relationships & Family
-            {"id": "relationships_family", "name": "Relationships & Family", "subjects": [
-                "Relationship Coaching", "Marriage Coaching", "Parenting Coaching", 
-                "Fertility Coaching", "Divorce Coaching", "Grief Coaching"
-            ]},
-            # Business, Communication & Growth (removed Writing)
-            {"id": "business_communication", "name": "Business, Communication & Growth", "subjects": [
-                "Sales Coaching", "Marketing Coaching", "Branding", "Communication Coaching", 
-                "Productivity Coaching", "Business Strategy", "Image Consulting", "Personal Style"
-            ]},
-            # Finance, Legal & Negotiation
-            {"id": "finance_legal", "name": "Finance, Legal & Negotiation", "subjects": [
-                "Financial Planning", "Investment Coaching", "Retirement Planning", 
-                "Real Estate Coaching", "Legal Coaching", "Negotiation Coaching"
-            ]},
-            # Culture, Inclusion & Experiences
-            {"id": "culture_inclusion", "name": "Culture, Inclusion & Experiences", "subjects": [
-                "Diversity & Inclusion", "Team-Building", "Travel Coaching"
-            ]},
-            # Performance & Creative Arts
-            {"id": "performance_arts", "name": "Performance & Creative Arts", "subjects": [
-                "Performance Coaching", "Sports", "Music", "Acting", "Voice", "Dance", 
-                "Stage Presence & Theatre", "Piano", "Guitar", "Violin", "Drums", "Music Theory"
-            ]},
-            # Academics
+            # 1. Academics
             {"id": "academics", "name": "Academics", "subjects": [
                 "Homework Support", "Mathematics", "Advanced Mathematics", "Science", 
                 "Coding/Programming", "Languages & Writing", "Social Studies & Humanities", 
                 "Test Prep", "Study & Academic Skills"
             ]},
-            # Activities & Hobbies
+            # 2. Performance & Creative Arts
+            {"id": "performance_arts", "name": "Performance & Creative Arts", "subjects": [
+                "Performance Coaching", "Sports", "Music", "Acting", "Voice", "Dance", 
+                "Stage Presence & Theatre", "Piano", "Guitar", "Violin", "Drums", "Music Theory"
+            ]},
+            # 3. Activities & Hobbies
             {"id": "activities_hobbies", "name": "Activities & Hobbies", "subjects": [
                 "Art & Design", "Yoga", "STEM & Interest Clubs", "Debates", "Photography", 
                 "Cooking & Baking", "Games", "Memory Training"
+            ]},
+            # 4. Fitness & Nutrition
+            {"id": "fitness_nutrition", "name": "Fitness & Nutrition", "subjects": [
+                "Fitness Training", "Nutrition Coaching", "Weight Loss", "Recovery Coaching"
+            ]},
+            # 5. Health, Mindfulness & Wellbeing
+            {"id": "health_mindfulness", "name": "Health, Mindfulness & Wellbeing", "subjects": [
+                "Health Coaching", "Wellness Coaching", "Mindfulness", "Meditation", 
+                "Spiritual Coaching", "Stress Management", "Mindset Coaching"
+            ]},
+            # 6. Business, Communication & Growth
+            {"id": "business_communication", "name": "Business, Communication & Growth", "subjects": [
+                "Sales Coaching", "Marketing Coaching", "Branding", "Communication Coaching", 
+                "Productivity Coaching", "Business Strategy", "Image Consulting", "Personal Style"
+            ]},
+            # 7. Finance, Legal & Negotiation
+            {"id": "finance_legal", "name": "Finance, Legal & Negotiation", "subjects": [
+                "Financial Planning", "Investment Coaching", "Retirement Planning", 
+                "Real Estate Coaching", "Legal Coaching", "Negotiation Coaching"
+            ]},
+            # 8. Coaching & Personal Growth
+            {"id": "coaching_personal", "name": "Coaching & Personal Growth", "subjects": [
+                "Life Coaching", "Executive Coaching", "Career Coaching", "Leadership Coaching", 
+                "Agile Coaching", "Personal Development", "Confidence Coaching", 
+                "Transformational Coaching", "Motivational Coaching", "Public Speaking"
+            ]},
+            # 9. Relationships & Family
+            {"id": "relationships_family", "name": "Relationships & Family", "subjects": [
+                "Relationship Coaching", "Marriage Coaching", "Parenting Coaching", 
+                "Fertility Coaching", "Divorce Coaching", "Grief Coaching"
+            ]},
+            # 10. Culture, Inclusion & Experiences
+            {"id": "culture_inclusion", "name": "Culture, Inclusion & Experiences", "subjects": [
+                "Diversity & Inclusion", "Team-Building", "Travel Coaching"
             ]}
         ],
         "levels": [
