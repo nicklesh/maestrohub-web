@@ -582,7 +582,7 @@ export default function BookingScreen() {
           <ActivityIndicator color="#fff" />
         ) : (
           <Text style={[styles.primaryButtonText, isTablet && styles.primaryButtonTextTablet]}>
-            Complete Booking
+            Done
           </Text>
         )}
       </TouchableOpacity>
