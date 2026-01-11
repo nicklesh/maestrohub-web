@@ -246,7 +246,8 @@ export default function KidDetailScreen() {
                     </Text>
                   </View>
                 </View>
-              ))
+                );
+              })
             )}
           </>
         )}
