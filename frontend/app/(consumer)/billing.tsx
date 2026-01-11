@@ -43,13 +43,20 @@ interface PaymentProviderInput {
   username?: string;
 }
 
-const PAYMENT_PROVIDERS = [
-  { id: 'apple_pay', name: 'Apple Pay', icon: 'logo-apple', color: '#000000', inputType: 'email', placeholder: 'Apple ID Email' },
-  { id: 'google_pay', name: 'Google Pay', icon: 'logo-google', color: '#4285F4', inputType: 'email', placeholder: 'Google Email' },
+// Payment providers by market
+const USD_PAYMENT_PROVIDERS = [
   { id: 'paypal', name: 'PayPal', icon: 'logo-paypal', color: '#003087', inputType: 'email', placeholder: 'PayPal Email' },
-  { id: 'amazon_pay', name: 'Amazon Pay', icon: 'cart', color: '#FF9900', inputType: 'email', placeholder: 'Amazon Email' },
-  { id: 'zelle', name: 'Zelle', icon: 'flash', color: '#6D1ED4', inputType: 'phone', placeholder: 'Phone or Email' },
+  { id: 'google_pay', name: 'Google Pay', icon: 'logo-google', color: '#4285F4', inputType: 'email', placeholder: 'Google Email' },
+  { id: 'apple_pay', name: 'Apple Pay', icon: 'logo-apple', color: '#000000', inputType: 'email', placeholder: 'Apple ID Email' },
   { id: 'venmo', name: 'Venmo', icon: 'phone-portrait', color: '#008CFF', inputType: 'username', placeholder: '@username' },
+  { id: 'zelle', name: 'Zelle', icon: 'flash', color: '#6D1ED4', inputType: 'phone', placeholder: 'Phone or Email' },
+];
+
+const INR_PAYMENT_PROVIDERS = [
+  { id: 'phonepe', name: 'PhonePe', icon: 'wallet', color: '#5F259F', inputType: 'phone', placeholder: 'Phone Number' },
+  { id: 'google_pay', name: 'Google Pay (GPay)', icon: 'logo-google', color: '#4285F4', inputType: 'phone', placeholder: 'Phone Number' },
+  { id: 'paytm', name: 'Paytm', icon: 'wallet', color: '#00BAF2', inputType: 'phone', placeholder: 'Phone Number' },
+  { id: 'amazon_pay', name: 'Amazon Pay', icon: 'cart', color: '#FF9900', inputType: 'email', placeholder: 'Amazon Email' },
 ];
 
 const DAY_OPTIONS = [1, 5, 10, 15, 20, 25, 28];
