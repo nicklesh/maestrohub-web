@@ -17,6 +17,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { api } from '@/src/services/api';
 import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
+import { useAuth } from '@/src/context/AuthContext';
 import AppHeader from '@/src/components/AppHeader';
 import { format, parseISO } from 'date-fns';
 
