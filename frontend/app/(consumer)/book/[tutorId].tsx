@@ -118,6 +118,8 @@ export default function BookingScreen() {
         tutor_id: tutorId,
         start_at: startAt,
         duration_minutes: tutor?.duration_minutes || 60,
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
       });
       setHoldId(response.data.hold_id);
       return response.data.hold_id;
@@ -126,6 +128,7 @@ export default function BookingScreen() {
         Alert.alert('Slot Unavailable', 'This time slot is no longer available. Please select another time.');
         router.back();
       } else {
+        console.error('Hold error:', error.response?.data || error.message);
         Alert.alert('Error', 'Failed to reserve slot');
       }
       return null;
