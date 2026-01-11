@@ -474,13 +474,13 @@ export default function BookingScreen() {
             {tutor?.duration_minutes || 60} min lesson with {tutor?.user_name}
           </Text>
           <Text style={[styles.paymentSummaryValue, { color: colors.text }]}>
-            ${tutor?.base_price?.toFixed(2)}
+            {tutor?.currency_symbol || '$'}{tutor?.base_price?.toFixed(2)}
           </Text>
         </View>
         <View style={[styles.paymentSummaryRow, styles.paymentTotalRow]}>
           <Text style={[styles.paymentTotalLabel, { color: colors.text }]}>Total</Text>
           <Text style={[styles.paymentTotalValue, { color: colors.primary }]}>
-            ${tutor?.base_price?.toFixed(2)}
+            {tutor?.currency_symbol || '$'}{tutor?.base_price?.toFixed(2)}
           </Text>
         </View>
       </View>
