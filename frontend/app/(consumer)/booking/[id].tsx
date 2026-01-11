@@ -155,6 +155,8 @@ export default function BookingDetailScreen() {
       await api.post(`/bookings/${id}/review`, {
         rating,
         comment: reviewComment.trim() || undefined,
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
       });
       if (Platform.OS === 'web') {
         window.alert('Thank you! Your review has been submitted.');
