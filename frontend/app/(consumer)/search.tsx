@@ -150,23 +150,26 @@ export default function SearchScreen() {
         {item.bio || 'No bio available'}
       </Text>
 
-      {/* Subject Pills - Wrap within container */}
-      <View style={styles.subjectPillsWrapper}>
-        <View style={styles.subjectPillsContainer}>
-          {(item.subjects || []).slice(0, 4).map((subject, index) => (
-            <View key={`${subject}-${index}`} style={[styles.subjectPill, { backgroundColor: colors.primaryLight }]}>
-              <Text style={[styles.subjectPillText, { color: colors.primary }]} numberOfLines={1}>{subject}</Text>
-            </View>
-          ))}
-          {(item.subjects || []).length > 4 && (
-            <View style={[styles.subjectPill, { backgroundColor: colors.gray200 }]}>
-              <Text style={[styles.subjectPillText, { color: colors.textMuted }]}>
-                +{item.subjects.length - 4}
-              </Text>
-            </View>
-          )}
-        </View>
-      </View>
+      {/* Subject Pills - Horizontal scroll to prevent overflow */}
+      <ScrollView 
+        horizontal 
+        showsHorizontalScrollIndicator={false}
+        style={styles.subjectPillsScroll}
+        contentContainerStyle={styles.subjectPillsContainer}
+      >
+        {(item.subjects || []).slice(0, 4).map((subject, index) => (
+          <View key={`${subject}-${index}`} style={[styles.subjectPill, { backgroundColor: colors.primaryLight }]}>
+            <Text style={[styles.subjectPillText, { color: colors.primary }]} numberOfLines={1}>{subject}</Text>
+          </View>
+        ))}
+        {(item.subjects || []).length > 4 && (
+          <View style={[styles.subjectPill, { backgroundColor: colors.gray200 }]}>
+            <Text style={[styles.subjectPillText, { color: colors.textMuted }]}>
+              +{item.subjects.length - 4}
+            </Text>
+          </View>
+        )}
+      </ScrollView>
 
       <View style={styles.modalityRow}>
         {(item.modality || []).map((m) => (
