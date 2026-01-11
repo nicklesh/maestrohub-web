@@ -168,6 +168,44 @@ export default function BillingScreen() {
               Stripe Connect integration coming soon. Payouts will be processed automatically.
             </Text>
           </View>
+
+          {/* Sponsorship Promo Banner */}
+          <TouchableOpacity 
+            style={[styles.sponsorPromo, isTablet && styles.sponsorPromoTablet]}
+            onPress={() => router.push('/(tutor)/sponsorship')}
+            activeOpacity={0.85}
+          >
+            <View style={styles.sponsorPromoInner}>
+              <View style={styles.sponsorPromoHeader}>
+                <View style={styles.sponsorPromoIconWrap}>
+                  <Ionicons name="star" size={24} color="#FFD700" />
+                </View>
+                <View style={styles.sponsorPromoTextWrap}>
+                  <Text style={[styles.sponsorPromoTitle, isTablet && styles.sponsorPromoTitleTablet]}>
+                    Want More Bookings?
+                  </Text>
+                  <Text style={styles.sponsorPromoSubtitle}>
+                    Get featured at the top of search results
+                  </Text>
+                </View>
+                <Ionicons name="chevron-forward" size={22} color="rgba(255,255,255,0.8)" />
+              </View>
+              <View style={styles.sponsorPromoBenefits}>
+                <View style={styles.sponsorBenefit}>
+                  <Ionicons name="trending-up" size={16} color="#FFD700" />
+                  <Text style={styles.sponsorBenefitText}>3x more visibility</Text>
+                </View>
+                <View style={styles.sponsorBenefit}>
+                  <Ionicons name="eye" size={16} color="#FFD700" />
+                  <Text style={styles.sponsorBenefitText}>Top search placement</Text>
+                </View>
+                <View style={styles.sponsorBenefit}>
+                  <Ionicons name="pricetag" size={16} color="#FFD700" />
+                  <Text style={styles.sponsorBenefitText}>Just $15/week</Text>
+                </View>
+              </View>
+            </View>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
