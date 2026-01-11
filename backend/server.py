@@ -2885,6 +2885,76 @@ async def get_consumer_report(
             by_student[sid]["sessions"] += 1
             by_student[sid]["spent_cents"] += b.get("amount_cents", 0) if b.get("payment_status") == "paid" else 0
     
+    # NEW: Group by Student with Category/Subject breakdown
+    by_student_category = {}
+    for b in bookings:
+        sid = b.get("student_id")
+        if not sid:
+            continue
+        
+        # Get student info
+        if sid not in by_student_category:
+            student = await db.students.find_one({"student_id": sid}, {"_id": 0})
+            by_student_category[sid] = {
+                "student_id": sid,
+                "student_name": student["name"] if student else "Unknown",
+                "total_sessions": 0,
+                "total_spent_cents": 0,
+                "categories": {}
+            }
+        
+        # Get tutor's category/subject info
+        tutor = await db.tutors.find_one({"tutor_id": b["tutor_id"]}, {"_id": 0})
+        if tutor:
+            categories = tutor.get("categories", ["Uncategorized"])
+            subjects = tutor.get("subjects", [])
+            
+            for cat in categories:
+                if cat not in by_student_category[sid]["categories"]:
+                    by_student_category[sid]["categories"][cat] = {
+                        "category_name": cat,
+                        "sessions": 0,
+                        "spent_cents": 0,
+                        "subjects": {}
+                    }
+                
+                by_student_category[sid]["categories"][cat]["sessions"] += 1
+                by_student_category[sid]["categories"][cat]["spent_cents"] += b.get("amount_cents", 0) if b.get("payment_status") == "paid" else 0
+                
+                # Add subjects
+                for subj in subjects:
+                    if subj not in by_student_category[sid]["categories"][cat]["subjects"]:
+                        by_student_category[sid]["categories"][cat]["subjects"][subj] = {
+                            "subject_name": subj,
+                            "sessions": 0,
+                            "spent_cents": 0
+                        }
+                    by_student_category[sid]["categories"][cat]["subjects"][subj]["sessions"] += 1
+                    by_student_category[sid]["categories"][cat]["subjects"][subj]["spent_cents"] += b.get("amount_cents", 0) if b.get("payment_status") == "paid" else 0
+        
+        by_student_category[sid]["total_sessions"] += 1
+        by_student_category[sid]["total_spent_cents"] += b.get("amount_cents", 0) if b.get("payment_status") == "paid" else 0
+    
+    # Convert nested dicts to lists
+    by_student_category_list = []
+    for sid, data in by_student_category.items():
+        cat_list = []
+        for cat_name, cat_data in data["categories"].items():
+            subj_list = list(cat_data["subjects"].values())
+            cat_list.append({
+                "category_name": cat_name,
+                "sessions": cat_data["sessions"],
+                "spent_cents": cat_data["spent_cents"],
+                "subjects": subj_list
+            })
+        by_student_category_list.append({
+            "student_id": data["student_id"],
+            "student_name": data["student_name"],
+            "total_sessions": data["total_sessions"],
+            "total_spent_cents": data["total_spent_cents"],
+            "categories": cat_list
+        })
+    
     # Group by month
     by_month = {}
     for b in bookings:
@@ -2910,6 +2980,7 @@ async def get_consumer_report(
         },
         "by_tutor": list(by_tutor.values()),
         "by_student": list(by_student.values()),
+        "by_student_category": by_student_category_list,
         "by_month": sorted(by_month.values(), key=lambda x: x["month"], reverse=True),
         "bookings": bookings[:50]  # Last 50 bookings
     }
