@@ -2161,22 +2161,28 @@ async def get_bookings(request: Request, role: str = "consumer"):
     else:
         tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
         if not tutor:
-            raise HTTPException(status_code=404, detail="Tutor profile not found")
+            raise HTTPException(status_code=404, detail="Coach profile not found")
         query = {"tutor_id": tutor["tutor_id"]}
     
     bookings = await db.bookings.find(query, {"_id": 0}).sort("start_at", -1).to_list(100)
     
-    # Enrich with tutor/student info
+    # Enrich with tutor/student info and currency
     results = []
     for b in bookings:
         tutor = await db.tutors.find_one({"tutor_id": b["tutor_id"]}, {"_id": 0})
         tutor_user = await db.users.find_one({"user_id": tutor["user_id"]}, {"_id": 0}) if tutor else None
         student = await db.students.find_one({"student_id": b["student_id"]}, {"_id": 0})
         
+        # Get market info for currency
+        market_id = b.get("market_id") or (tutor.get("market_id") if tutor else "US_USD") or "US_USD"
+        market_config = MARKETS_CONFIG.get(market_id, MARKETS_CONFIG["US_USD"])
+        
         results.append({
             **b,
             "tutor_name": tutor_user["name"] if tutor_user else "Unknown",
-            "student_name": student["name"] if student else "Unknown"
+            "student_name": student["name"] if student else "Unknown",
+            "currency": market_config["currency"],
+            "currency_symbol": market_config["currency_symbol"]
         })
     
     return results
