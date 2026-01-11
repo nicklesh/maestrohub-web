@@ -444,6 +444,78 @@ backend:
         agent: "testing"
         comment: "✅ PASS - Reminder configuration endpoints working correctly: GET /api/reminders/config retrieves user settings, PUT /api/reminders/config updates session reminder hours, payment reminder days, and weekly summary preferences."
 
+  - task: "Payment Providers API - Get Available Providers"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS - GET /api/payment-providers working correctly. Returns market-specific providers (USD: PayPal, Google Pay, Apple Pay, Venmo, Zelle), linked providers, and market_id. Proper response structure verified."
+
+  - task: "Payment Providers API - Link Provider"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS - POST /api/payment-providers working correctly. Successfully links payment providers with proper validation. First provider automatically becomes default. Handles duplicate linking with appropriate error messages."
+
+  - task: "Payment Providers API - Set Default Provider"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS - PUT /api/payment-providers/{provider_id}/default working correctly. Successfully sets provider as default and unsets others. Proper validation and state management verified."
+
+  - task: "Payment Providers API - Unlink Provider"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS - DELETE /api/payment-providers/{provider_id} working correctly. Successfully removes linked providers. When removing default provider, next provider automatically becomes default."
+
+  - task: "Booking Holds API - Create Hold"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS - POST /api/booking-holds working correctly. Successfully creates booking holds with proper datetime parsing (ISO format fix verified). Returns complete hold information with proper structure."
+
+  - task: "Payment Processing API - Auto-charge with Split"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS - POST /api/payments/process working correctly. Processes payments using default payment provider with auto-charge logic. Implements 90/10 split calculation (tutor/platform). Proper fallback logic and error handling verified."
+
 frontend:
   # No frontend testing performed as per instructions
 
