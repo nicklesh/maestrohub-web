@@ -2,33 +2,33 @@
   "jwt_validation": [
     {
       "test": "Invalid token format rejected",
-      "passed": false,
-      "details": "Expected 401, got 200",
-      "timestamp": "2026-01-11T20:25:08.475815"
+      "passed": true,
+      "details": "Expected 401, got 401",
+      "timestamp": "2026-01-11T20:26:48.008383"
     },
     {
       "test": "Empty token rejected",
-      "passed": false,
-      "details": "Expected 401, got 200",
-      "timestamp": "2026-01-11T20:25:08.487250"
+      "passed": true,
+      "details": "Expected 401, got 401",
+      "timestamp": "2026-01-11T20:26:48.047809"
     },
     {
       "test": "Malformed Bearer token rejected",
-      "passed": false,
-      "details": "Expected 401, got 200",
-      "timestamp": "2026-01-11T20:25:08.497468"
+      "passed": true,
+      "details": "Expected 401, got 401",
+      "timestamp": "2026-01-11T20:26:48.085882"
     },
     {
       "test": "Invalid signature JWT rejected",
-      "passed": false,
-      "details": "Expected 401, got 200",
-      "timestamp": "2026-01-11T20:25:08.508807"
+      "passed": true,
+      "details": "Expected 401, got 401",
+      "timestamp": "2026-01-11T20:26:48.125148"
     },
     {
       "test": "Valid token accepted",
       "passed": true,
       "details": "Expected 200, got 200",
-      "timestamp": "2026-01-11T20:25:08.518905"
+      "timestamp": "2026-01-11T20:26:48.135707"
     }
   ],
   "password_policy": [
@@ -36,51 +36,51 @@
       "test": "Empty password rejected",
       "passed": true,
       "details": "Expected 400, got 400 - Password is required",
-      "timestamp": "2026-01-11T20:25:08.569361"
+      "timestamp": "2026-01-11T20:26:48.174991"
     },
     {
       "test": "Short password rejected",
       "passed": true,
       "details": "Expected 400, got 400 - Password must be at least 8 characters long",
-      "timestamp": "2026-01-11T20:25:08.621238"
+      "timestamp": "2026-01-11T20:26:48.420946"
     },
     {
       "test": "Simple password rejected",
       "passed": true,
       "details": "Expected 400, got 400 - Password must be at least 8 characters long",
-      "timestamp": "2026-01-11T20:25:08.630997"
+      "timestamp": "2026-01-11T20:26:48.670169"
     },
     {
       "test": "No uppercase password rejected",
       "passed": true,
       "details": "Expected 400, got 400 - Password must contain at least one uppercase letter",
-      "timestamp": "2026-01-11T20:25:08.639765"
+      "timestamp": "2026-01-11T20:26:48.906857"
     },
     {
       "test": "No lowercase password rejected",
       "passed": true,
       "details": "Expected 400, got 400 - Password must contain at least one lowercase letter",
-      "timestamp": "2026-01-11T20:25:08.649225"
+      "timestamp": "2026-01-11T20:26:49.145782"
     },
     {
       "test": "No number password rejected",
       "passed": true,
       "details": "Expected 400, got 400 - Password must contain at least one number",
-      "timestamp": "2026-01-11T20:25:08.701126"
+      "timestamp": "2026-01-11T20:26:49.381901"
     },
     {
       "test": "Valid password accepted",
-      "passed": false,
-      "details": "Expected 200, got 429",
-      "timestamp": "2026-01-11T20:25:08.709124"
+      "passed": true,
+      "details": "Expected 200, got 200",
+      "timestamp": "2026-01-11T20:26:49.840058"
     }
   ],
   "rate_limiting": [
     {
       "test": "Rate limiting on login attempts",
-      "passed": false,
-      "details": "Made 7 failed attempts, rate limited: False",
-      "timestamp": "2026-01-11T20:25:09.476435"
+      "passed": true,
+      "details": "Made 4 failed attempts, rate limited: True",
+      "timestamp": "2026-01-11T20:26:50.494712"
     }
   ],
   "security_headers": [
@@ -88,19 +88,19 @@
       "test": "X-Content-Type-Options header present",
       "passed": true,
       "details": "Expected 'nosniff', got 'nosniff'",
-      "timestamp": "2026-01-11T20:25:09.488167"
+      "timestamp": "2026-01-11T20:26:50.544015"
     },
     {
       "test": "X-Frame-Options header present",
       "passed": true,
       "details": "Expected 'DENY', got 'DENY'",
-      "timestamp": "2026-01-11T20:25:09.488191"
+      "timestamp": "2026-01-11T20:26:50.544042"
     },
     {
       "test": "X-XSS-Protection header present",
       "passed": true,
       "details": "Expected '1; mode=block', got '1; mode=block'",
-      "timestamp": "2026-01-11T20:25:09.488197"
+      "timestamp": "2026-01-11T20:26:50.544046"
     }
   ],
   "input_sanitization": [
@@ -108,18 +108,18 @@
       "test": "XSS payload sanitization",
       "passed": true,
       "details": "XSS payload sanitized: &lt;script&gt;alert(&#x27;XSS&#x27;)&lt;/script&gt;",
-      "timestamp": "2026-01-11T20:25:09.498963"
+      "timestamp": "2026-01-11T20:26:50.554830"
     },
     {
       "test": "NoSQL injection prevention",
       "passed": true,
       "details": "NoSQL injection handled safely: 200",
-      "timestamp": "2026-01-11T20:25:09.513220"
+      "timestamp": "2026-01-11T20:26:50.569463"
     }
   ],
   "summary": {
-    "passed": 12,
-    "failed": 6,
+    "passed": 18,
+    "failed": 0,
     "total": 18
   }
 }
