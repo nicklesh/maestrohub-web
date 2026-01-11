@@ -27,6 +27,9 @@ interface Tutor {
   base_price: number;
   status: string;
   is_published: boolean;
+  currency?: string;
+  currency_symbol?: string;
+  market_id?: string;
 }
 
 const STATUS_FILTER = [
