@@ -217,9 +217,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       console.error('Logout API error:', error);
     }
     await clearAuth();
-    // NOTE: Navigation should be handled by the calling component
-    // Do NOT redirect here - let components handle it via router.replace
-    // This ensures proper state management with expo-router
+    
+    // On web, force a full page reload to clear any cached state
+    if (Platform.OS === 'web' && typeof window !== 'undefined') {
+      // Clear any cached data
+      sessionStorage.clear();
+      // Redirect to login with a clean state
+      window.location.href = '/';
+    }
   };
 
   const updateRole = async (role: string) => {
