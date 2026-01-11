@@ -121,12 +121,21 @@ export default function SearchScreen() {
     <TouchableOpacity
       style={[
         styles.card,
-        { backgroundColor: colors.surface, borderColor: colors.border },
+        { backgroundColor: colors.surface, borderColor: item.is_sponsored ? colors.warning : colors.border },
+        item.is_sponsored && { borderWidth: 2 },
         isTablet && styles.cardTablet,
         isDesktop && { flex: 0.32, marginHorizontal: 4 }
       ]}
       onPress={() => router.push(`/(consumer)/tutor/${item.tutor_id}`)}
     >
+      {/* Sponsored Badge */}
+      {item.is_sponsored && (
+        <View style={[styles.sponsoredBadge, { backgroundColor: colors.warning }]}>
+          <Ionicons name="star" size={10} color="#fff" />
+          <Text style={styles.sponsoredBadgeText}>Sponsored</Text>
+        </View>
+      )}
+      
       <View style={styles.cardHeader}>
         <View style={[styles.avatar, { backgroundColor: colors.primary }]}>
           <Text style={styles.avatarText}>{item.user_name?.charAt(0)?.toUpperCase() || 'T'}</Text>
