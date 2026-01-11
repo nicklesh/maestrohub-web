@@ -2345,8 +2345,35 @@ async def create_booking(data: BookingCreate, request: Request):
             {"$set": {"trial_start_at": datetime.now(timezone.utc)}}
         )
     
-    # TODO: Send confirmation emails via Resend
-    # TODO: Process payment via Stripe with market-specific currency
+    # Send confirmation email to consumer
+    try:
+        tutor_user = await db.users.find_one({"user_id": tutor["user_id"]}, {"_id": 0})
+        consumer_user = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+        
+        if consumer_user and tutor_user:
+            start_dt = hold["start_at"]
+            if start_dt.tzinfo is None:
+                start_dt = start_dt.replace(tzinfo=timezone.utc)
+            
+            email_data = booking_confirmation_email(
+                consumer_name=consumer_user["name"],
+                coach_name=tutor_user["name"],
+                session_date=start_dt.strftime("%B %d, %Y"),
+                session_time=start_dt.strftime("%I:%M %p"),
+                duration=tutor.get("duration_minutes", 60),
+                price=f"{market_config['currency_symbol']}{tutor['base_price']:.2f}",
+                meeting_link=tutor.get("meeting_link")  # If coach has set a meeting link
+            )
+            
+            await email_service.send_email(
+                to=consumer_user["email"],
+                subject=email_data["subject"],
+                html=email_data["html"],
+                text=email_data["text"]
+            )
+            logger.info(f"Booking confirmation email sent to {consumer_user['email']}")
+    except Exception as e:
+        logger.error(f"Failed to send booking confirmation email: {str(e)}")
     
     return booking_doc
 
