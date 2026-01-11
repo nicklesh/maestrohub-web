@@ -869,9 +869,10 @@ async def change_password(data: PasswordChange, request: Request):
     if not verify_password(data.current_password, user_doc["password_hash"]):
         raise HTTPException(status_code=400, detail="Current password is incorrect")
     
-    # Validate new password
-    if len(data.new_password) < 6:
-        raise HTTPException(status_code=400, detail="New password must be at least 6 characters")
+    # Validate new password with strong password policy
+    is_valid, error_msg = validate_password_strength(data.new_password)
+    if not is_valid:
+        raise HTTPException(status_code=400, detail=error_msg)
     
     # Update password
     new_hash = hash_password(data.new_password)
