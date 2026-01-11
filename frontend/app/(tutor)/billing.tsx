@@ -22,6 +22,8 @@ interface BillingSummary {
   total_earnings: number;
   completed_lessons: number;
   fee_events: FeeEvent[];
+  currency?: string;
+  currency_symbol?: string;
 }
 
 interface FeeEvent {
