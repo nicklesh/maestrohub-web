@@ -95,24 +95,34 @@ export default function HomeScreen() {
           });
           const reminders = remindersRes.data.reminders || [];
           
-          // Find the nearest upcoming reminder (within next 48 hours)
+          // Find the nearest upcoming session reminder
           const now = new Date();
-          const upcomingReminders = reminders.filter((r: any) => {
-            const startAt = new Date(r.start_at);
-            const hoursUntil = (startAt.getTime() - now.getTime()) / (1000 * 60 * 60);
-            return hoursUntil > 0 && hoursUntil <= 48;
-          }).sort((a: any, b: any) => new Date(a.start_at).getTime() - new Date(b.start_at).getTime());
+          const sessionReminders = reminders.filter((r: any) => r.type === 'upcoming_session');
           
-          if (upcomingReminders.length > 0) {
-            const nearest = upcomingReminders[0];
-            const startAt = new Date(nearest.start_at);
-            const hoursUntil = Math.round((startAt.getTime() - now.getTime()) / (1000 * 60 * 60));
-            setUpcomingReminder({
-              booking_id: nearest.booking_id,
-              tutor_name: nearest.tutor_name,
-              start_at: nearest.start_at,
-              hours_until: hoursUntil
-            });
+          if (sessionReminders.length > 0) {
+            // Sort by due_at to get the nearest one
+            sessionReminders.sort((a: any, b: any) => 
+              new Date(a.due_at).getTime() - new Date(b.due_at).getTime()
+            );
+            
+            const nearest = sessionReminders[0];
+            const dueAt = new Date(nearest.due_at);
+            const hoursUntil = Math.round((dueAt.getTime() - now.getTime()) / (1000 * 60 * 60));
+            
+            // Only show if within 48 hours
+            if (hoursUntil > 0 && hoursUntil <= 48) {
+              // Extract tutor name from message
+              const tutorName = nearest.message?.match(/Session with (.+) in/)?.[1] || 'Coach';
+              
+              setUpcomingReminder({
+                booking_id: nearest.data?.booking_id || '',
+                tutor_name: tutorName,
+                start_at: nearest.due_at,
+                hours_until: hoursUntil
+              });
+            } else {
+              setUpcomingReminder(null);
+            }
           } else {
             setUpcomingReminder(null);
           }
