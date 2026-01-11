@@ -5273,45 +5273,6 @@ async def get_pending_reviews(request: Request):
     
     return {"pending_reviews": pending}
 
-@api_router.get("/tutors/{tutor_id}/reviews")
-async def get_tutor_reviews(tutor_id: str, limit: int = 10):
-    """Get reviews for a coach"""
-    reviews = await db.detailed_reviews.find(
-        {"tutor_id": tutor_id},
-        {"_id": 0}
-    ).sort("created_at", -1).to_list(limit)
-    
-    # Get aggregate stats
-    if reviews:
-        avg_teaching = sum(r["teaching_quality"] for r in reviews) / len(reviews)
-        avg_communication = sum(r["communication"] for r in reviews) / len(reviews)
-        avg_punctuality = sum(r["punctuality"] for r in reviews) / len(reviews)
-        avg_knowledge = sum(r["knowledge"] for r in reviews) / len(reviews)
-        avg_value = sum(r["value_for_money"] for r in reviews) / len(reviews)
-        recommend_pct = sum(1 for r in reviews if r["would_recommend"]) / len(reviews) * 100
-        
-        stats = {
-            "total_reviews": len(reviews),
-            "avg_teaching_quality": round(avg_teaching, 1),
-            "avg_communication": round(avg_communication, 1),
-            "avg_punctuality": round(avg_punctuality, 1),
-            "avg_knowledge": round(avg_knowledge, 1),
-            "avg_value_for_money": round(avg_value, 1),
-            "recommend_percentage": round(recommend_pct, 0)
-        }
-    else:
-        stats = {
-            "total_reviews": 0,
-            "avg_teaching_quality": 0,
-            "avg_communication": 0,
-            "avg_punctuality": 0,
-            "avg_knowledge": 0,
-            "avg_value_for_money": 0,
-            "recommend_percentage": 0
-        }
-    
-    return {"reviews": reviews, "stats": stats}
-
 
 # ============== COACH RESPONSE TO REVIEWS ==============
 
