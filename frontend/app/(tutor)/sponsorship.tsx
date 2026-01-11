@@ -486,7 +486,8 @@ const styles = StyleSheet.create({
   bannerTitle: { fontSize: 16, fontWeight: '700', marginBottom: 4 },
   bannerText: { fontSize: 13, lineHeight: 18 },
   section: { marginBottom: 24 },
-  sectionTitle: { fontSize: 18, fontWeight: '600', marginBottom: 12 },
+  sectionTitle: { fontSize: 18, fontWeight: '600', marginBottom: 4 },
+  pricingInfo: { fontSize: 13, marginBottom: 12 },
   activeCard: {
     borderRadius: 12,
     padding: 16,
