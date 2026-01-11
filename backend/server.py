@@ -1715,7 +1715,7 @@ async def create_booking(data: BookingCreate, request: Request):
         "amount_cents": amount_cents,
         "policy_snapshot": tutor.get("policies", {}),
         "pricing_policy_snapshot": pricing_policy,
-        "intake_response": data.intake.dict(),
+        "intake_response": data.intake.model_dump(),
         "payment_id": f"pay_{uuid.uuid4().hex[:12]}",  # Placeholder
         "created_at": datetime.now(timezone.utc)
     }
