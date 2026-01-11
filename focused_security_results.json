@@ -1,0 +1,257 @@
+{
+  "summary": {
+    "passed": 34,
+    "failed": 1,
+    "critical": 0,
+    "high": 0,
+    "total": 35
+  },
+  "results": [
+    {
+      "test": "Login SQL Injection Protection - admin'--...",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:22.653155"
+    },
+    {
+      "test": "Login SQL Injection Protection - admin' OR '1'='1'--...",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:22.667607"
+    },
+    {
+      "test": "Login SQL Injection Protection - admin'; DROP TABLE u...",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:22.678090"
+    },
+    {
+      "test": "Login SQL Injection Protection - ' UNION SELECT * FRO...",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:22.726819"
+    },
+    {
+      "test": "Login Timing Protection",
+      "passed": true,
+      "details": "Consistent timing (diff: 0.23s)",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:22.981636"
+    },
+    {
+      "test": "Registration Duplicate Protection",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:23.237364"
+    },
+    {
+      "test": "Booking Hold Protection - '; DROP TABLE bookin...",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:23.249476"
+    },
+    {
+      "test": "Booking Hold Protection - ../../../etc/passwd...",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:23.300886"
+    },
+    {
+      "test": "Booking Hold Protection - tutor_<script>alert(...",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:23.309172"
+    },
+    {
+      "test": "Booking Hold Protection - tutor_${7*7}...",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:23.317659"
+    },
+    {
+      "test": "Booking Hold Protection - tutor_{{constructor....",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:23.325625"
+    },
+    {
+      "test": "Booking Hold Validation",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:23.335990"
+    },
+    {
+      "test": "Review Input Validation - <script>alert('XSS in review')...",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:23.346176"
+    },
+    {
+      "test": "Review Input Validation - <img src=x onerror=alert('XSS'...",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:23.395760"
+    },
+    {
+      "test": "Review Input Validation - javascript:alert('XSS')...",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:23.404368"
+    },
+    {
+      "test": "Review Input Validation - <svg onload=alert('XSS')></svg...",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:23.412942"
+    },
+    {
+      "test": "Review Rating Protection - -1",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:23.423440"
+    },
+    {
+      "test": "Review Rating Protection - 0",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:23.433211"
+    },
+    {
+      "test": "Review Rating Protection - 6",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:23.442127"
+    },
+    {
+      "test": "Review Rating Protection - 100",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:23.451823"
+    },
+    {
+      "test": "Review Rating Protection - five",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:23.501832"
+    },
+    {
+      "test": "Review Rating Protection - null",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:23.511282"
+    },
+    {
+      "test": "Review Rating Protection - None",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:23.520714"
+    },
+    {
+      "test": "Package Price Protection - -100",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:23.576652"
+    },
+    {
+      "test": "Package Price Protection - 0",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:23.585986"
+    },
+    {
+      "test": "Package Price Protection - 999999999",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:23.594777"
+    },
+    {
+      "test": "Package Price Protection - free",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:23.611402"
+    },
+    {
+      "test": "Package Price Protection - {'$ne': 0}",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:23.620899"
+    },
+    {
+      "test": "Search NoSQL Protection - {'query': '{\"$where\": \"functio...",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:23.657514"
+    },
+    {
+      "test": "Search NoSQL Protection - {'subjects': '{\"$regex\": \".*\"}...",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:23.675288"
+    },
+    {
+      "test": "Search NoSQL Protection - {'categories': '{\"$ne\": null}'...",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:23.691667"
+    },
+    {
+      "test": "Search NoSQL Protection - {'location': '\"; return db.use...",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:23.706730"
+    },
+    {
+      "test": "Search NoSQL Protection - {'price_min': '{\"$gt\": 0}'}...",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:23.722576"
+    },
+    {
+      "test": "Search NoSQL Protection - {'price_max': '{\"$lt\": 999999}...",
+      "passed": true,
+      "details": "",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:23.736008"
+    },
+    {
+      "test": "Login Rate Limiting",
+      "passed": false,
+      "details": "No rate limiting detected after 10 failed attempts",
+      "severity": "medium",
+      "timestamp": "2026-01-11T19:55:24.843380"
+    }
+  ],
+  "timestamp": "2026-01-11T19:55:24.843574"
+}
