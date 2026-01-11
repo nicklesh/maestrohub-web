@@ -170,6 +170,9 @@ export default function BookingScreen() {
   };
 
   const handleSelectStudent = async (student: Student) => {
+    // Prevent double-click
+    if (submitting) return;
+    
     setSelectedStudent(student);
     setSubmitting(true);
     const newHoldId = await createHold();
