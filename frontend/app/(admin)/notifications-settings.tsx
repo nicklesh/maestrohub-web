@@ -24,7 +24,7 @@ interface NotificationSetting {
 }
 
 const DEFAULT_SETTINGS: NotificationSetting[] = [
-  { id: '1', title: 'New Tutor Applications', description: 'Notify when new tutors apply', category: 'email', enabled: true },
+  { id: '1', title: 'New Coach Applications', description: 'Notify when new tutors apply', category: 'email', enabled: true },
   { id: '2', title: 'Booking Alerts', description: 'Alerts for new bookings', category: 'email', enabled: true },
   { id: '3', title: 'Payment Notifications', description: 'Payment confirmations and issues', category: 'email', enabled: true },
   { id: '4', title: 'User Reports', description: 'Reports from users about issues', category: 'email', enabled: true },

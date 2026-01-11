@@ -154,7 +154,7 @@ export default function AdminReportsScreen() {
         <View style={styles.statCard}>
           <Ionicons name="people" size={24} color={colors.primary} />
           <Text style={styles.statValue}>{stats.totalTutors}</Text>
-          <Text style={styles.statLabel}>Total Tutors</Text>
+          <Text style={styles.statLabel}>Total Coaches</Text>
           <Text style={[styles.statGrowth, { color: colors.success }]}>+16.7% WoW</Text>
         </View>
         <View style={styles.statCard}>
@@ -204,7 +204,7 @@ export default function AdminReportsScreen() {
         <View style={styles.recommendationCard}>
           <Ionicons name="trending-up" size={20} color={colors.success} />
           <View style={styles.recommendationContent}>
-            <Text style={styles.recommendationTitle}>Increase Tutor Conversion</Text>
+            <Text style={styles.recommendationTitle}>Increase Coach Conversion</Text>
             <Text style={styles.recommendationText}>
               27% of pending tutors haven't completed profiles. Send reminder emails to boost completion rate.
             </Text>
@@ -409,7 +409,7 @@ export default function AdminReportsScreen() {
               <Ionicons name="arrow-up" size={20} color={colors.accent} />
             </View>
             <View style={styles.revenueBreakdownInfo}>
-              <Text style={styles.revenueBreakdownLabel}>Tutor Payouts</Text>
+              <Text style={styles.revenueBreakdownLabel}>Coach Payouts</Text>
               <Text style={[styles.revenueBreakdownValue, { color: colors.accent }]}>$10,583</Text>
             </View>
           </View>
@@ -426,7 +426,7 @@ export default function AdminReportsScreen() {
       </View>
 
       <View style={[styles.section, isTablet && styles.sectionTablet]}>
-        <Text style={styles.sectionTitle}>Top Earning Tutors</Text>
+        <Text style={styles.sectionTitle}>Top Earning Coaches</Text>
         {[
           { name: 'Emily T.', earnings: 2450, sessions: 42 },
           { name: 'Michael S.', earnings: 1890, sessions: 35 },

@@ -100,7 +100,7 @@ export default function AdminDashboard() {
                 <Ionicons name="checkmark-circle" size={isTablet ? 28 : 24} color={colors.primary} />
               </View>
               <View style={styles.actionInfo}>
-                <Text style={[styles.actionTitle, isDesktop && styles.actionTitleDesktop]}>Review Tutors</Text>
+                <Text style={[styles.actionTitle, isDesktop && styles.actionTitleDesktop]}>Review Coaches</Text>
                 <Text style={[styles.actionSubtitle, isDesktop && styles.actionSubtitleDesktop]}>Approve or suspend tutor profiles</Text>
               </View>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />

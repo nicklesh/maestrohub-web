@@ -224,7 +224,7 @@ export default function AdminTutors() {
       <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
         {/* Header */}
         <View style={[styles.header, isTablet && styles.headerTablet]}>
-          <Text style={[styles.title, isDesktop && styles.titleDesktop]}>Manage Tutors</Text>
+          <Text style={[styles.title, isDesktop && styles.titleDesktop]}>Manage Coaches</Text>
         </View>
 
         {/* Filter Tabs */}

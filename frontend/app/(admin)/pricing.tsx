@@ -38,7 +38,7 @@ const DEFAULT_POLICIES: PricingPolicy[] = [
   },
   {
     id: '2',
-    name: 'Premium Tutors',
+    name: 'Premium Coaches',
     description: 'Reduced fee for top-rated tutors',
     platformFeePercent: 10,
     minPrice: 50,
