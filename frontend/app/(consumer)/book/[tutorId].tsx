@@ -207,7 +207,45 @@ export default function BookingScreen() {
       Alert.alert('Required', 'Please acknowledge the policies');
       return;
     }
-    setStep('payment');
+    // Check if user has payment methods before proceeding
+    checkPaymentMethodsAndProceed();
+  };
+
+  const checkPaymentMethodsAndProceed = async () => {
+    setSubmitting(true);
+    try {
+      const response = await api.get('/payment-providers', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const linkedProviders = response.data.linked_providers || [];
+      
+      if (linkedProviders.length === 0) {
+        // No payment methods - redirect to billing
+        Alert.alert(
+          'Payment Method Required',
+          'Please add a payment method before booking a session.',
+          [
+            { text: 'Cancel', style: 'cancel', onPress: () => setSubmitting(false) },
+            { 
+              text: 'Add Payment Method', 
+              onPress: () => {
+                setSubmitting(false);
+                router.push('/(consumer)/billing');
+              }
+            }
+          ]
+        );
+        return;
+      }
+      
+      // Has payment methods - proceed to payment step
+      setSubmitting(false);
+      setStep('payment');
+    } catch (error) {
+      console.error('Error checking payment methods:', error);
+      setSubmitting(false);
+      setStep('payment'); // Allow proceeding in case of error
+    }
   };
 
   const handlePaymentWithProvider = async () => {
@@ -215,41 +253,70 @@ export default function BookingScreen() {
     
     setSubmitting(true);
     try {
-      // Create payment session with selected provider
+      // Process payment using the new API with auto-charge and fallback
       const amount = tutor.base_price * 100; // cents
-      const response = await api.post('/payments/create-session', {
+      const response = await api.post('/payments/process', {
         booking_hold_id: holdId,
         amount_cents: amount,
-        provider: selectedProvider,
-        success_url: `${window.location.origin}/(consumer)/book/${tutorId}?payment=success&hold_id=${holdId}`,
-        cancel_url: `${window.location.origin}/(consumer)/book/${tutorId}?payment=cancelled`,
+        // provider_id is optional - backend will use default
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
       });
       
-      // For simulation, we'll mock the payment success
-      // In production, this would redirect to the payment provider
-      if (selectedProvider === 'stripe' && response.data.checkout_url) {
-        // Would redirect: window.location.href = response.data.checkout_url;
-        // For demo, simulate success
-        simulatePaymentSuccess(response.data.payment_intent_id || `sim_${Date.now()}`);
+      if (response.data.success) {
+        // Payment successful
+        setPaymentId(response.data.payment_id);
+        setPaymentSuccess(true);
+        
+        // If payment used fallback, notify user
+        if (response.data.fallback) {
+          Alert.alert(
+            'Payment Processed',
+            `Payment was processed using ${response.data.provider_used} as your primary method was unavailable.`
+          );
+        }
+        
+        setSubmitting(false);
+        setStep('confirm');
+      } else if (response.data.redirect_to_billing) {
+        // No payment method configured
+        Alert.alert(
+          'Payment Method Required',
+          response.data.message,
+          [
+            { text: 'Cancel', style: 'cancel', onPress: () => setSubmitting(false) },
+            { 
+              text: 'Add Payment Method', 
+              onPress: () => {
+                setSubmitting(false);
+                router.push('/(consumer)/billing');
+              }
+            }
+          ]
+        );
       } else {
-        // Simulate payment for other providers
-        simulatePaymentSuccess(`${selectedProvider}_${Date.now()}`);
+        // Payment failed
+        Alert.alert(
+          'Payment Failed',
+          response.data.message || 'Unable to process payment. Please try again.',
+          [
+            { text: 'Try Again', onPress: () => setSubmitting(false) },
+            { 
+              text: 'Update Payment Methods', 
+              onPress: () => {
+                setSubmitting(false);
+                router.push('/(consumer)/billing');
+              }
+            }
+          ]
+        );
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Payment error:', error);
-      Alert.alert('Error', 'Failed to initiate payment. Please try again.');
+      const errorMsg = error.response?.data?.detail || 'Failed to process payment. Please try again.';
+      Alert.alert('Error', errorMsg);
       setSubmitting(false);
     }
-  };
-
-  const simulatePaymentSuccess = (paymentIntentId: string) => {
-    // Simulate payment provider callback
-    setTimeout(() => {
-      setPaymentId(paymentIntentId);
-      setPaymentSuccess(true);
-      setSubmitting(false);
-      setStep('confirm');
-    }, 1500);
   };
 
   const handlePaymentSubmit = () => {
