@@ -1,20 +1,21 @@
 #!/usr/bin/env python3
 """
-Backend API Testing for Maestro Hub Parent/Consumer Features
-Tests the newly implemented backend APIs including profile management, 
-student management, billing, consumer invites, and reminders.
+Backend API Testing for Maestro Hub Payment Provider System
+Tests the newly implemented payment provider endpoints and booking holds
 """
 
 import requests
 import json
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 import uuid
 
 # Configuration
 BACKEND_URL = "https://tutorhub-fix.preview.emergentagent.com/api"
-TEST_EMAIL = "parent2@test.com"
-TEST_PASSWORD = "password123"
+TEST_CREDENTIALS = {
+    "consumer": {"email": "parent2@test.com", "password": "password123"},
+    "tutor": {"email": "tutor3@test.com", "password": "password123"}
+}
 
 class MaestroHubTester:
     def __init__(self):
