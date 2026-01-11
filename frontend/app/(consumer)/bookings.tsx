@@ -85,13 +85,27 @@ export default function BookingsScreen() {
   const filteredBookings = bookings.filter((booking) => {
     const bookingDate = parseISO(booking.start_at);
     const isBookingPast = isPast(bookingDate);
-    return filter === 'past' ? isBookingPast : !isBookingPast;
+    const isCanceled = booking.status.includes('canceled');
+    
+    // Show canceled in past section, upcoming shows only active bookings
+    if (filter === 'past') {
+      return isBookingPast || isCanceled;
+    }
+    return !isBookingPast && !isCanceled;
   });
+
+  const getStatusDisplay = (status: string) => {
+    if (status === 'canceled_by_consumer') return 'Canceled by you';
+    if (status === 'canceled_by_provider') return 'Canceled by coach';
+    return status.replace(/_/g, ' ');
+  };
 
   const renderBookingCard = ({ item }: { item: Booking }) => {
     const statusColors = getStatusColors(item.status);
     const startDate = parseISO(item.start_at);
     const endDate = parseISO(item.end_at);
+    const isCanceled = item.status.includes('canceled');
+    const currencySymbol = item.currency_symbol || '$';
 
     return (
       <TouchableOpacity
@@ -99,17 +113,20 @@ export default function BookingsScreen() {
           styles.card,
           { backgroundColor: colors.surface, borderColor: colors.border },
           isTablet && styles.cardTablet,
-          isDesktop && { flex: 0.48, marginHorizontal: 4 }
+          isDesktop && { flex: 0.48, marginHorizontal: 4 },
+          isCanceled && { opacity: 0.7 }
         ]}
         onPress={() => router.push(`/(consumer)/booking/${item.booking_id}`)}
       >
         <View style={styles.cardHeader}>
           <View style={[styles.statusBadge, { backgroundColor: statusColors.bg }]}>
             <Text style={[styles.statusText, { color: statusColors.text }]}>
-              {item.status.replace(/_/g, ' ')}
+              {getStatusDisplay(item.status)}
             </Text>
           </View>
-          <Text style={[styles.price, { color: colors.text }]}>${item.price_snapshot}</Text>
+          <Text style={[styles.price, { color: isCanceled ? colors.textMuted : colors.text }]}>
+            {currencySymbol}{item.price_snapshot}
+          </Text>
         </View>
 
         <Text style={[styles.tutorName, { color: colors.text }]}>{item.tutor_name}</Text>
