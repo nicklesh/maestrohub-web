@@ -737,7 +737,282 @@ async def update_auto_pay_settings(data: AutoPaySettings, request: Request):
     
     return {"success": True, "auto_pay": data.model_dump()}
 
-# Payment Methods Management
+# ============== PAYMENT PROVIDERS CONFIGURATION ==============
+# Market-specific payment providers (no PII stored - only provider preference)
+PAYMENT_PROVIDERS_USD = [
+    {"id": "paypal", "name": "PayPal", "icon": "logo-paypal"},
+    {"id": "google_pay", "name": "Google Pay", "icon": "logo-google"},
+    {"id": "apple_pay", "name": "Apple Pay", "icon": "logo-apple"},
+    {"id": "venmo", "name": "Venmo", "icon": "phone-portrait"},
+    {"id": "zelle", "name": "Zelle", "icon": "flash"},
+]
+
+PAYMENT_PROVIDERS_INR = [
+    {"id": "phonepe", "name": "PhonePe", "icon": "wallet"},
+    {"id": "google_pay", "name": "Google Pay (GPay)", "icon": "logo-google"},
+    {"id": "paytm", "name": "Paytm", "icon": "wallet"},
+    {"id": "amazon_pay", "name": "Amazon Pay", "icon": "cart"},
+]
+
+# Payment Provider Preference Model (no PII stored)
+class PaymentProviderPreference(BaseModel):
+    provider_id: str  # paypal, google_pay, venmo, zelle, phonepe, paytm, amazon_pay
+    display_name: str
+    is_default: bool = False
+    linked_at: Optional[datetime] = None
+
+class PaymentProviderAdd(BaseModel):
+    provider_id: str
+    is_default: bool = False
+
+@api_router.get("/payment-providers")
+async def get_payment_providers(request: Request):
+    """Get available payment providers based on user's market"""
+    user = await require_auth(request)
+    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    market_id = user_doc.get("market_id", "US_USD")
+    
+    # Return market-specific providers
+    if market_id == "IN_INR":
+        providers = PAYMENT_PROVIDERS_INR
+    else:
+        providers = PAYMENT_PROVIDERS_USD
+    
+    # Get user's linked providers
+    linked_providers = user_doc.get("payment_providers", [])
+    
+    return {
+        "available_providers": providers,
+        "linked_providers": linked_providers,
+        "market_id": market_id
+    }
+
+@api_router.post("/payment-providers")
+async def link_payment_provider(data: PaymentProviderAdd, request: Request):
+    """Link a payment provider (no PII stored - just preference)"""
+    user = await require_auth(request)
+    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    market_id = user_doc.get("market_id", "US_USD")
+    
+    # Validate provider is valid for market
+    valid_providers = PAYMENT_PROVIDERS_INR if market_id == "IN_INR" else PAYMENT_PROVIDERS_USD
+    provider_info = next((p for p in valid_providers if p["id"] == data.provider_id), None)
+    if not provider_info:
+        raise HTTPException(status_code=400, detail="Invalid payment provider for your market")
+    
+    existing_providers = user_doc.get("payment_providers", [])
+    
+    # Check if already linked
+    if any(p["provider_id"] == data.provider_id for p in existing_providers):
+        raise HTTPException(status_code=400, detail="Provider already linked")
+    
+    # Set default logic
+    is_default = data.is_default or len(existing_providers) == 0
+    if is_default:
+        for p in existing_providers:
+            p["is_default"] = False
+    
+    new_provider = {
+        "provider_id": data.provider_id,
+        "display_name": provider_info["name"],
+        "is_default": is_default,
+        "linked_at": datetime.now(timezone.utc).isoformat()
+    }
+    existing_providers.append(new_provider)
+    
+    await db.users.update_one(
+        {"user_id": user.user_id},
+        {"$set": {"payment_providers": existing_providers}}
+    )
+    
+    return {"success": True, "provider": new_provider, "message": f"{provider_info['name']} linked successfully"}
+
+@api_router.delete("/payment-providers/{provider_id}")
+async def unlink_payment_provider(provider_id: str, request: Request):
+    """Remove a linked payment provider"""
+    user = await require_auth(request)
+    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    
+    existing_providers = user_doc.get("payment_providers", [])
+    provider_to_remove = next((p for p in existing_providers if p["provider_id"] == provider_id), None)
+    
+    if not provider_to_remove:
+        raise HTTPException(status_code=404, detail="Provider not found")
+    
+    updated_providers = [p for p in existing_providers if p["provider_id"] != provider_id]
+    
+    # If removed provider was default, set first remaining as default
+    if provider_to_remove.get("is_default") and updated_providers:
+        updated_providers[0]["is_default"] = True
+    
+    await db.users.update_one(
+        {"user_id": user.user_id},
+        {"$set": {"payment_providers": updated_providers}}
+    )
+    
+    return {"success": True, "message": "Provider unlinked"}
+
+@api_router.put("/payment-providers/{provider_id}/default")
+async def set_default_provider(provider_id: str, request: Request):
+    """Set a provider as default"""
+    user = await require_auth(request)
+    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    
+    existing_providers = user_doc.get("payment_providers", [])
+    found = False
+    
+    for p in existing_providers:
+        if p["provider_id"] == provider_id:
+            p["is_default"] = True
+            found = True
+        else:
+            p["is_default"] = False
+    
+    if not found:
+        raise HTTPException(status_code=404, detail="Provider not found")
+    
+    await db.users.update_one(
+        {"user_id": user.user_id},
+        {"$set": {"payment_providers": existing_providers}}
+    )
+    
+    return {"success": True, "message": "Default provider updated"}
+
+# ============== PAYMENT PROCESSING ==============
+class ProcessPaymentRequest(BaseModel):
+    booking_hold_id: str
+    amount_cents: int
+    provider_id: Optional[str] = None  # If not provided, use default
+
+@api_router.post("/payments/process")
+async def process_payment(data: ProcessPaymentRequest, request: Request):
+    """Process payment using linked provider with auto-charge and fallback logic"""
+    user = await require_auth(request)
+    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    market_id = user_doc.get("market_id", "US_USD")
+    currency = "INR" if market_id == "IN_INR" else "USD"
+    
+    linked_providers = user_doc.get("payment_providers", [])
+    
+    if not linked_providers:
+        return {
+            "success": False,
+            "error": "no_payment_method",
+            "message": "No payment method configured. Please add a payment method first.",
+            "redirect_to_billing": True
+        }
+    
+    # Get provider to charge
+    provider_id = data.provider_id
+    if not provider_id:
+        # Use default provider
+        default_provider = next((p for p in linked_providers if p.get("is_default")), None)
+        if default_provider:
+            provider_id = default_provider["provider_id"]
+        else:
+            provider_id = linked_providers[0]["provider_id"]
+    
+    # Get tutor's payout info for split calculation
+    hold = await db.booking_holds.find_one({"hold_id": data.booking_hold_id}, {"_id": 0})
+    if not hold:
+        raise HTTPException(status_code=404, detail="Booking hold not found")
+    
+    tutor = await db.tutors.find_one({"tutor_id": hold["tutor_id"]}, {"_id": 0})
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Tutor not found")
+    
+    # Calculate split: 90% to tutor, 10% platform fee
+    platform_fee_percent = PLATFORM_FEE_PERCENT
+    tutor_amount = int(data.amount_cents * (100 - platform_fee_percent) / 100)
+    platform_fee = data.amount_cents - tutor_amount
+    
+    # Simulate payment processing with possible failure
+    import random
+    payment_success = random.random() > 0.1  # 90% success rate for simulation
+    
+    payment_id = f"pay_{uuid.uuid4().hex[:12]}"
+    
+    if payment_success:
+        # Record successful payment
+        payment_record = {
+            "payment_id": payment_id,
+            "booking_hold_id": data.booking_hold_id,
+            "tutor_id": hold["tutor_id"],
+            "consumer_id": user.user_id,
+            "amount_cents": data.amount_cents,
+            "currency": currency,
+            "provider_id": provider_id,
+            "platform_fee_cents": platform_fee,
+            "tutor_payout_cents": tutor_amount,
+            "status": "completed",
+            "processed_at": datetime.now(timezone.utc)
+        }
+        await db.payments.insert_one(payment_record)
+        
+        logger.info(f"Payment {payment_id} processed: ${data.amount_cents/100:.2f} via {provider_id} (Tutor: ${tutor_amount/100:.2f}, Platform: ${platform_fee/100:.2f})")
+        
+        return {
+            "success": True,
+            "payment_id": payment_id,
+            "provider_used": provider_id,
+            "amount_cents": data.amount_cents,
+            "currency": currency,
+            "split": {
+                "tutor_payout_cents": tutor_amount,
+                "platform_fee_cents": platform_fee,
+                "platform_fee_percent": platform_fee_percent
+            }
+        }
+    else:
+        # Payment failed - try fallback providers
+        remaining_providers = [p for p in linked_providers if p["provider_id"] != provider_id]
+        
+        for fallback in remaining_providers:
+            # Simulate fallback attempt (80% success rate)
+            if random.random() > 0.2:
+                payment_record = {
+                    "payment_id": payment_id,
+                    "booking_hold_id": data.booking_hold_id,
+                    "tutor_id": hold["tutor_id"],
+                    "consumer_id": user.user_id,
+                    "amount_cents": data.amount_cents,
+                    "currency": currency,
+                    "provider_id": fallback["provider_id"],
+                    "platform_fee_cents": platform_fee,
+                    "tutor_payout_cents": tutor_amount,
+                    "status": "completed",
+                    "fallback_from": provider_id,
+                    "processed_at": datetime.now(timezone.utc)
+                }
+                await db.payments.insert_one(payment_record)
+                
+                logger.info(f"Payment {payment_id} processed via fallback {fallback['provider_id']}")
+                
+                return {
+                    "success": True,
+                    "payment_id": payment_id,
+                    "provider_used": fallback["provider_id"],
+                    "fallback": True,
+                    "original_provider": provider_id,
+                    "amount_cents": data.amount_cents,
+                    "currency": currency,
+                    "split": {
+                        "tutor_payout_cents": tutor_amount,
+                        "platform_fee_cents": platform_fee,
+                        "platform_fee_percent": platform_fee_percent
+                    }
+                }
+        
+        # All providers failed
+        logger.warning(f"All payment providers failed for user {user.user_id}")
+        return {
+            "success": False,
+            "error": "payment_failed",
+            "message": "Payment could not be processed. All payment methods failed. Please try again or update your payment methods.",
+            "tried_providers": [provider_id] + [p["provider_id"] for p in remaining_providers]
+        }
+
+# Legacy payment methods (keeping for backward compatibility)
 class PaymentMethodCreate(BaseModel):
     card_type: str  # visa, mastercard, amex
     last_four: str
@@ -748,17 +1023,21 @@ class PaymentMethodCreate(BaseModel):
 
 @api_router.get("/payment-methods")
 async def get_payment_methods(request: Request):
-    """Get user's saved payment methods"""
+    """Get user's saved payment methods (legacy - use /payment-providers instead)"""
     user = await require_auth(request)
     
     user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
     payment_methods = user_doc.get("payment_methods", [])
+    payment_providers = user_doc.get("payment_providers", [])
     
-    return {"payment_methods": payment_methods}
+    return {
+        "payment_methods": payment_methods,
+        "payment_providers": payment_providers
+    }
 
 @api_router.post("/payment-methods")
 async def add_payment_method(data: PaymentMethodCreate, request: Request):
-    """Add a new payment method"""
+    """Add a new payment method (legacy)"""
     user = await require_auth(request)
     
     # Generate a mock payment method ID (in production, this comes from Stripe)
