@@ -128,18 +128,21 @@ export default function BookingDetailScreen() {
   const performCancel = async () => {
     setCanceling(true);
     try {
-      await api.post(`/bookings/${id}/cancel`);
+      await api.post(`/bookings/${id}/cancel`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       loadBooking();
       if (Platform.OS === 'web') {
         window.alert('Your booking has been canceled.');
       } else {
         Alert.alert('Canceled', 'Your booking has been canceled.');
       }
-    } catch (error) {
+    } catch (error: any) {
+      const errorMsg = error.response?.data?.detail || 'Failed to cancel booking';
       if (Platform.OS === 'web') {
-        window.alert('Failed to cancel booking');
+        window.alert(errorMsg);
       } else {
-        Alert.alert('Error', 'Failed to cancel booking');
+        Alert.alert('Error', errorMsg);
       }
     } finally {
       setCanceling(false);
