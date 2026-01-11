@@ -1779,13 +1779,26 @@ async def search_tutors(
     sort_order = -1 if sort_by == "rating" else 1
     
     skip = (page - 1) * limit
-    tutors = await db.tutors.find(db_query, {"_id": 0}).sort(sort_field, sort_order).skip(skip).limit(limit).to_list(limit)
+    
+    # Sort sponsored coaches first, then by selected criteria
+    tutors = await db.tutors.find(db_query, {"_id": 0}).sort([
+        ("is_sponsored", -1),  # Sponsored coaches first
+        (sort_field, sort_order)
+    ]).skip(skip).limit(limit).to_list(limit)
     
     # Get user info for each tutor and also search by name if query provided
     results = []
     for tutor in tutors:
         user = await db.users.find_one({"user_id": tutor["user_id"]}, {"_id": 0})
         if user:
+            # Check if sponsored for this specific category
+            is_sponsored_for_category = False
+            if tutor.get("is_sponsored") and category:
+                sponsored_cats = tutor.get("sponsored_categories", [])
+                is_sponsored_for_category = category in sponsored_cats
+            elif tutor.get("is_sponsored"):
+                is_sponsored_for_category = True
+            
             # Include market info in results
             market_info = MARKETS_CONFIG.get(tutor.get("market_id"), {})
             results.append({
@@ -1793,7 +1806,8 @@ async def search_tutors(
                 "user_name": user["name"],
                 "user_picture": user.get("picture"),
                 "currency": market_info.get("currency", "USD"),
-                "currency_symbol": market_info.get("currency_symbol", "$")
+                "currency_symbol": market_info.get("currency_symbol", "$"),
+                "is_sponsored": is_sponsored_for_category
             })
     
     # If query provided, also search for tutors by user name
