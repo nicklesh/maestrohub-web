@@ -1309,17 +1309,16 @@ async def get_student_schedule(student_id: str, request: Request):
     if not student:
         raise HTTPException(status_code=404, detail="Student not found")
     
-    # Get bookings for this student
+    # Get bookings for this student (include all statuses)
     bookings = await db.bookings.find({
-        "student_id": student_id,
-        "status": {"$in": ["confirmed", "pending", "completed"]}
+        "student_id": student_id
     }, {"_id": 0}).sort("start_at", -1).to_list(100)
     
     # Enrich with tutor info
     enriched = []
     for booking in bookings:
         tutor = await db.tutors.find_one({"tutor_id": booking.get("tutor_id")}, {"_id": 0})
-        tutor_user = await db.users.find_one({"user_id": booking.get("tutor_user_id")}, {"_id": 0})
+        tutor_user = await db.users.find_one({"user_id": tutor.get("user_id") if tutor else None}, {"_id": 0})
         enriched.append({
             **booking,
             "tutor_name": tutor_user.get("name") if tutor_user else "Unknown",
