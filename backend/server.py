@@ -5279,7 +5279,7 @@ async def get_sponsorship_plans(request: Request):
     return {
         "plans": plans,
         "currency_symbol": currency_symbol,
-        "platform_fee_percent": 5
+        "platform_fee_percent": 0  # Fee is built into the price
     }
 
 @api_router.get("/sponsorship/my-sponsorships")
