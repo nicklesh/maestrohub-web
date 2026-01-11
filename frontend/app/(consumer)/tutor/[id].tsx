@@ -94,6 +94,23 @@ export default function TutorDetailScreen() {
     try {
       const response = await api.get(`/tutors/${id}`);
       setTutor(response.data);
+      
+      // Load packages and reviews for this tutor
+      try {
+        const [pkgRes, reviewRes] = await Promise.all([
+          api.get(`/tutors/${id}/packages`),
+          api.get(`/tutors/${id}/reviews`)
+        ]);
+        setPackages(pkgRes.data.packages || []);
+        setReviews(reviewRes.data.reviews || []);
+        setReviewStats({
+          total: reviewRes.data.stats?.total_reviews || 0,
+          recommend_pct: reviewRes.data.stats?.recommend_percentage || 0,
+        });
+      } catch (e) {
+        // Silent fail for optional data
+        console.log('Optional data not loaded:', e);
+      }
     } catch (error) {
       console.error('Failed to load tutor:', error);
     } finally {
