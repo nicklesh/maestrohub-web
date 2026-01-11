@@ -222,6 +222,9 @@ export default function BookingScreen() {
           notes,
           policy_acknowledged: policyAcknowledged,
         },
+        payment_id: paymentId,
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
       });
       
       Alert.alert(
