@@ -1721,6 +1721,9 @@ async def create_booking(data: BookingCreate, request: Request):
     }
     await db.bookings.insert_one(booking_doc)
     
+    # Remove _id before returning (MongoDB adds it during insert)
+    booking_doc.pop("_id", None)
+    
     # Delete hold
     await db.booking_holds.delete_one({"hold_id": data.hold_id})
     
