@@ -126,8 +126,8 @@ export default function SponsorshipScreen() {
   const calculateTotal = () => {
     if (!selectedPlan) return { base: 0, fee: 0, total: 0 };
     const base = selectedPlan.price_cents;
-    const fee = Math.round(base * platformFee / 100);
-    return { base, fee, total: base + fee };
+    // Platform fee is built into the price - no extra charge shown
+    return { base, fee: 0, total: base };
   };
 
   const handlePurchase = async () => {
