@@ -303,6 +303,7 @@ export default function CalendarScreen() {
     const isPast = date < new Date(new Date().setHours(0, 0, 0, 0));
     const isVacationStart = vacationStartDate?.toDateString() === date.toDateString();
     const isVacationEnd = vacationEndDate?.toDateString() === date.toDateString();
+    const isSelected = selectedDate?.toDateString() === date.toDateString();
 
     return (
       <TouchableOpacity
@@ -313,6 +314,7 @@ export default function CalendarScreen() {
           isToday && { borderColor: colors.primary, borderWidth: 2 },
           isVacation && { backgroundColor: colors.errorLight },
           (isVacationStart || isVacationEnd) && { backgroundColor: colors.primaryLight },
+          isSelected && { backgroundColor: colors.primary },
           isPast && { opacity: 0.5 }
         ]}
         onPress={() => !isPast && handleDatePress(day)}
@@ -322,15 +324,19 @@ export default function CalendarScreen() {
           styles.dayNumber,
           { color: colors.text },
           isToday && { color: colors.primary, fontWeight: '700' },
-          isVacation && { color: colors.error }
+          isVacation && { color: colors.error },
+          isSelected && { color: '#FFFFFF', fontWeight: '700' }
         ]}>
           {day}
         </Text>
-        {hasAvailability && !isVacation && (
+        {hasAvailability && !isVacation && !isSelected && (
           <View style={[styles.availabilityDot, { backgroundColor: colors.success }]} />
         )}
         {isVacation && (
           <Ionicons name="airplane" size={10} color={colors.error} />
+        )}
+        {isSelected && hasAvailability && (
+          <View style={[styles.availabilityDot, { backgroundColor: '#FFFFFF' }]} />
         )}
       </TouchableOpacity>
     );
