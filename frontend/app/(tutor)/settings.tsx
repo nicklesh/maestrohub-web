@@ -209,6 +209,48 @@ export default function TutorSettings() {
             </View>
           )}
 
+          {/* Meeting Link Section (for online sessions) */}
+          {profile && profile.modality?.includes('online') && (
+            <View style={[styles.card, isTablet && styles.cardTablet]}>
+              <View style={styles.cardHeader}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                  <Ionicons name="videocam" size={20} color={colors.primary} />
+                  <Text style={[styles.cardTitle, isDesktop && styles.cardTitleDesktop]}>Meeting Link</Text>
+                </View>
+              </View>
+              <Text style={[styles.meetingHint, { color: colors.textMuted }]}>
+                Add your Zoom or Google Meet link for online sessions. This will be shared with students when they book.
+              </Text>
+              <View style={[styles.meetingInputRow, { backgroundColor: colors.background, borderColor: colors.border }]}>
+                <Ionicons name="link" size={18} color={colors.textMuted} />
+                <TextInput
+                  style={[styles.meetingInput, { color: colors.text }]}
+                  placeholder="https://zoom.us/j/... or https://meet.google.com/..."
+                  placeholderTextColor={colors.textMuted}
+                  value={profile.meeting_link || ''}
+                  onChangeText={(text) => setProfile({ ...profile, meeting_link: text })}
+                  autoCapitalize="none"
+                  keyboardType="url"
+                />
+              </View>
+              <TouchableOpacity
+                style={[styles.saveMeetingButton, { backgroundColor: colors.primary }]}
+                onPress={async () => {
+                  try {
+                    await api.put('/tutors/profile', { meeting_link: profile.meeting_link }, {
+                      headers: { Authorization: `Bearer ${token}` }
+                    });
+                    Alert.alert('Success', 'Meeting link saved!');
+                  } catch (error) {
+                    Alert.alert('Error', 'Failed to save meeting link');
+                  }
+                }}
+              >
+                <Text style={styles.saveMeetingButtonText}>Save Link</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
           {/* Publish Toggle */}
           {profile && profile.status === 'approved' && (
             <View style={[styles.card, isTablet && styles.cardTablet]}>
