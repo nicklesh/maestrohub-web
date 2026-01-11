@@ -10,21 +10,29 @@ import {
   RefreshControl,
   Switch,
   Modal,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
 import { useTheme } from '@/src/context/ThemeContext';
+import { useMarket } from '@/src/context/MarketContext';
 import AppHeader from '@/src/components/AppHeader';
 import { api } from '@/src/services/api';
 
+interface PaymentProvider {
+  id: string;
+  name: string;
+  icon: string;
+}
+
+interface LinkedProvider {
+  provider_id: string;
+  display_name: string;
+  is_default: boolean;
+  linked_at: string;
+}
 
 interface BillingInfo {
-  stripe_connected: boolean;
-  stripe_customer_id: string | null;
   pending_balance: number;
   pending_payments: any[];
   auto_pay: {
@@ -33,57 +41,48 @@ interface BillingInfo {
     next_auto_pay_date: string | null;
     next_auto_pay_amount: number;
   };
-  payment_methods: any[];
 }
 
-interface PaymentProviderInput {
-  providerId: string;
-  email?: string;
-  phone?: string;
-  username?: string;
-}
-
-// Payment providers by market
-const USD_PAYMENT_PROVIDERS = [
-  { id: 'paypal', name: 'PayPal', icon: 'logo-paypal', color: '#003087', inputType: 'email', placeholder: 'PayPal Email' },
-  { id: 'google_pay', name: 'Google Pay', icon: 'logo-google', color: '#4285F4', inputType: 'email', placeholder: 'Google Email' },
-  { id: 'apple_pay', name: 'Apple Pay', icon: 'logo-apple', color: '#000000', inputType: 'email', placeholder: 'Apple ID Email' },
-  { id: 'venmo', name: 'Venmo', icon: 'phone-portrait', color: '#008CFF', inputType: 'username', placeholder: '@username' },
-  { id: 'zelle', name: 'Zelle', icon: 'flash', color: '#6D1ED4', inputType: 'phone', placeholder: 'Phone or Email' },
-];
-
-const INR_PAYMENT_PROVIDERS = [
-  { id: 'phonepe', name: 'PhonePe', icon: 'wallet', color: '#5F259F', inputType: 'phone', placeholder: 'Phone Number' },
-  { id: 'google_pay', name: 'Google Pay (GPay)', icon: 'logo-google', color: '#4285F4', inputType: 'phone', placeholder: 'Phone Number' },
-  { id: 'paytm', name: 'Paytm', icon: 'wallet', color: '#00BAF2', inputType: 'phone', placeholder: 'Phone Number' },
-  { id: 'amazon_pay', name: 'Amazon Pay', icon: 'cart', color: '#FF9900', inputType: 'email', placeholder: 'Amazon Email' },
-];
+// Provider icons mapping
+const PROVIDER_ICONS: Record<string, { icon: string; color: string }> = {
+  paypal: { icon: 'logo-paypal', color: '#003087' },
+  google_pay: { icon: 'logo-google', color: '#4285F4' },
+  apple_pay: { icon: 'logo-apple', color: '#000000' },
+  venmo: { icon: 'phone-portrait', color: '#008CFF' },
+  zelle: { icon: 'flash', color: '#6D1ED4' },
+  phonepe: { icon: 'wallet', color: '#5F259F' },
+  paytm: { icon: 'wallet', color: '#00BAF2' },
+  amazon_pay: { icon: 'cart', color: '#FF9900' },
+};
 
 const DAY_OPTIONS = [1, 5, 10, 15, 20, 25, 28];
 
 export default function BillingScreen() {
-  const { user, token } = useAuth();
+  const { token } = useAuth();
   const { colors } = useTheme();
+  const { market } = useMarket();
   const [billing, setBilling] = useState<BillingInfo | null>(null);
+  const [availableProviders, setAvailableProviders] = useState<PaymentProvider[]>([]);
+  const [linkedProviders, setLinkedProviders] = useState<LinkedProvider[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [settingUp, setSettingUp] = useState(false);
   const [savingAutoPay, setSavingAutoPay] = useState(false);
-  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showProviderModal, setShowProviderModal] = useState(false);
   const [showDayPickerModal, setShowDayPickerModal] = useState(false);
   const [selectedDay, setSelectedDay] = useState(1);
-  const [selectedProvider, setSelectedProvider] = useState<any>(null);
-  const [showProviderInput, setShowProviderInput] = useState(false);
-  const [providerInputValue, setProviderInputValue] = useState('');
-  const [savingPaymentMethod, setSavingPaymentMethod] = useState(false);
+  const [linkingProvider, setLinkingProvider] = useState<string | null>(null);
 
-  const loadBilling = useCallback(async () => {
+  const loadData = useCallback(async () => {
     try {
-      const response = await api.get('/billing', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setBilling(response.data);
-      setSelectedDay(response.data.auto_pay?.day_of_month || 1);
+      const [billingRes, providersRes] = await Promise.all([
+        api.get('/billing', { headers: { Authorization: `Bearer ${token}` } }),
+        api.get('/payment-providers', { headers: { Authorization: `Bearer ${token}` } }),
+      ]);
+      
+      setBilling(billingRes.data);
+      setAvailableProviders(providersRes.data.available_providers || []);
+      setLinkedProviders(providersRes.data.linked_providers || []);
+      setSelectedDay(billingRes.data.auto_pay?.day_of_month || 1);
     } catch (error) {
       console.error('Failed to load billing:', error);
     } finally {
@@ -93,28 +92,8 @@ export default function BillingScreen() {
   }, [token]);
 
   useEffect(() => {
-    loadBilling();
-  }, [loadBilling]);
-
-  const handleSetupStripe = async () => {
-    setSettingUp(true);
-    try {
-      const response = await api.post('/billing/setup-stripe', {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      if (response.data.already_setup) {
-        Alert.alert('Info', 'Stripe account is already connected');
-      } else {
-        Alert.alert('Success', 'Stripe billing setup complete!');
-      }
-      loadBilling();
-    } catch (error: any) {
-      Alert.alert('Error', error.response?.data?.detail || 'Failed to setup Stripe');
-    } finally {
-      setSettingUp(false);
-    }
-  };
+    loadData();
+  }, [loadData]);
 
   const handleToggleAutoPay = async (enabled: boolean) => {
     setSavingAutoPay(true);
@@ -125,7 +104,7 @@ export default function BillingScreen() {
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      loadBilling();
+      loadData();
     } catch (error: any) {
       Alert.alert('Error', error.response?.data?.detail || 'Failed to update auto-pay');
     } finally {
@@ -144,7 +123,7 @@ export default function BillingScreen() {
         headers: { Authorization: `Bearer ${token}` }
       });
       setShowDayPickerModal(false);
-      loadBilling();
+      loadData();
     } catch (error: any) {
       Alert.alert('Error', error.response?.data?.detail || 'Failed to update auto-pay date');
     } finally {
@@ -152,33 +131,59 @@ export default function BillingScreen() {
     }
   };
 
-  const handleSelectProvider = (provider: any) => {
-    setSelectedProvider(provider);
-    setProviderInputValue('');
-    setShowPaymentModal(false);
-    setShowProviderInput(true);
+  const handleLinkProvider = async (providerId: string) => {
+    setLinkingProvider(providerId);
+    try {
+      const isFirst = linkedProviders.length === 0;
+      await api.post('/payment-providers', {
+        provider_id: providerId,
+        is_default: isFirst
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      Alert.alert('Success', 'Payment method linked successfully!');
+      setShowProviderModal(false);
+      loadData();
+    } catch (error: any) {
+      Alert.alert('Error', error.response?.data?.detail || 'Failed to link payment method');
+    } finally {
+      setLinkingProvider(null);
+    }
   };
 
-  const handleSavePaymentMethod = async () => {
-    if (!providerInputValue.trim()) {
-      Alert.alert('Error', 'Please enter the required information');
-      return;
-    }
+  const handleUnlinkProvider = async (providerId: string, displayName: string) => {
+    Alert.alert(
+      'Remove Payment Method',
+      `Are you sure you want to remove ${displayName}?`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Remove',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await api.delete(`/payment-providers/${providerId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+              });
+              loadData();
+            } catch (error: any) {
+              Alert.alert('Error', error.response?.data?.detail || 'Failed to remove payment method');
+            }
+          }
+        }
+      ]
+    );
+  };
 
-    setSavingPaymentMethod(true);
+  const handleSetDefault = async (providerId: string) => {
     try {
-      // Note: This app doesn't store payment info - just confirms the method
-      Alert.alert(
-        'Payment Method Added',
-        `${selectedProvider?.name} has been linked. You'll be redirected to ${selectedProvider?.name} when making payments.`,
-        [{ text: 'OK', onPress: () => {
-          setShowProviderInput(false);
-          setSelectedProvider(null);
-          setProviderInputValue('');
-        }}]
-      );
-    } finally {
-      setSavingPaymentMethod(false);
+      await api.put(`/payment-providers/${providerId}/default`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      loadData();
+    } catch (error: any) {
+      Alert.alert('Error', error.response?.data?.detail || 'Failed to set default');
     }
   };
 
@@ -202,10 +207,19 @@ export default function BillingScreen() {
     }
   };
 
+  const getProviderIcon = (providerId: string) => {
+    return PROVIDER_ICONS[providerId] || { icon: 'card', color: colors.primary };
+  };
+
+  // Get providers that are not yet linked
+  const unlinkedProviders = availableProviders.filter(
+    p => !linkedProviders.some(lp => lp.provider_id === p.id)
+  );
+
   if (loading) {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-        <AppHeader showBack showUserName title="Billing" />
+        <AppHeader showBack showUserName title="Billing & Payments" />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -215,45 +229,15 @@ export default function BillingScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <AppHeader showBack showUserName title="Billing" />
+      <AppHeader showBack showUserName title="Billing & Payments" />
 
       <ScrollView
         style={styles.content}
         contentContainerStyle={styles.scrollContent}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); loadBilling(); }} />
+          <RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); loadData(); }} />
         }
       >
-        {/* Stripe Connection Status */}
-        <View style={[styles.section, { backgroundColor: colors.surface }]}>
-          <View style={styles.sectionHeader}>
-            <Ionicons name="card" size={24} color={colors.primary} />
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>Payment Setup</Text>
-          </View>
-
-          {billing?.stripe_connected ? (
-            <View style={styles.connectedRow}>
-              <Ionicons name="checkmark-circle" size={20} color={colors.success} />
-              <Text style={[styles.connectedText, { color: colors.success }]}>Stripe Connected</Text>
-            </View>
-          ) : (
-            <TouchableOpacity
-              style={[styles.setupButton, { backgroundColor: colors.primary }, settingUp && styles.buttonDisabled]}
-              onPress={handleSetupStripe}
-              disabled={settingUp}
-            >
-              {settingUp ? (
-                <ActivityIndicator color="#FFFFFF" />
-              ) : (
-                <>
-                  <Ionicons name="link" size={20} color="#FFFFFF" />
-                  <Text style={styles.setupButtonText}>Connect Stripe Account</Text>
-                </>
-              )}
-            </TouchableOpacity>
-          )}
-        </View>
-
         {/* Pending Balance */}
         <View style={[styles.section, { backgroundColor: colors.surface }]}>
           <View style={styles.sectionHeader}>
@@ -263,12 +247,82 @@ export default function BillingScreen() {
 
           <View style={styles.balanceCard}>
             <Text style={[styles.balanceAmount, { color: billing?.pending_balance ? colors.warning : colors.success }]}>
-              ${(billing?.pending_balance || 0).toFixed(2)}
+              {market?.currency_symbol || '$'}{(billing?.pending_balance || 0).toFixed(2)}
             </Text>
             <Text style={[styles.balanceLabel, { color: colors.textMuted }]}>
               {billing?.pending_balance ? 'Due for upcoming sessions' : 'No pending payments'}
             </Text>
           </View>
+        </View>
+
+        {/* Linked Payment Methods */}
+        <View style={[styles.section, { backgroundColor: colors.surface }]}>
+          <View style={styles.sectionHeader}>
+            <Ionicons name="card" size={24} color={colors.primary} />
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>Payment Methods</Text>
+          </View>
+
+          {linkedProviders.length === 0 ? (
+            <View style={styles.emptyState}>
+              <Ionicons name="card-outline" size={48} color={colors.textMuted} />
+              <Text style={[styles.emptyText, { color: colors.textMuted }]}>
+                No payment methods linked yet
+              </Text>
+              <Text style={[styles.emptySubtext, { color: colors.textMuted }]}>
+                Add a payment method to book sessions
+              </Text>
+            </View>
+          ) : (
+            <View style={styles.providersList}>
+              {linkedProviders.map((provider) => {
+                const iconInfo = getProviderIcon(provider.provider_id);
+                return (
+                  <View 
+                    key={provider.provider_id} 
+                    style={[styles.linkedProviderCard, { borderColor: provider.is_default ? colors.primary : colors.border }]}
+                  >
+                    <View style={[styles.providerIconContainer, { backgroundColor: iconInfo.color + '15' }]}>
+                      <Ionicons name={iconInfo.icon as any} size={24} color={iconInfo.color} />
+                    </View>
+                    <View style={styles.providerInfo}>
+                      <Text style={[styles.providerName, { color: colors.text }]}>{provider.display_name}</Text>
+                      {provider.is_default && (
+                        <View style={[styles.defaultBadge, { backgroundColor: colors.primary + '20' }]}>
+                          <Text style={[styles.defaultBadgeText, { color: colors.primary }]}>Default</Text>
+                        </View>
+                      )}
+                    </View>
+                    <View style={styles.providerActions}>
+                      {!provider.is_default && (
+                        <TouchableOpacity 
+                          style={[styles.actionButton, { backgroundColor: colors.background }]}
+                          onPress={() => handleSetDefault(provider.provider_id)}
+                        >
+                          <Text style={[styles.actionButtonText, { color: colors.primary }]}>Set Default</Text>
+                        </TouchableOpacity>
+                      )}
+                      <TouchableOpacity 
+                        style={styles.removeButton}
+                        onPress={() => handleUnlinkProvider(provider.provider_id, provider.display_name)}
+                      >
+                        <Ionicons name="trash-outline" size={20} color={colors.error} />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                );
+              })}
+            </View>
+          )}
+
+          {unlinkedProviders.length > 0 && (
+            <TouchableOpacity 
+              style={[styles.addMethodButton, { borderColor: colors.primary }]}
+              onPress={() => setShowProviderModal(true)}
+            >
+              <Ionicons name="add" size={20} color={colors.primary} />
+              <Text style={[styles.addMethodText, { color: colors.primary }]}>Add Payment Method</Text>
+            </TouchableOpacity>
+          )}
         </View>
 
         {/* Auto-Pay Settings */}
@@ -290,13 +344,18 @@ export default function BillingScreen() {
               onValueChange={handleToggleAutoPay}
               trackColor={{ false: colors.gray300, true: colors.primary }}
               thumbColor={colors.white}
-              disabled={savingAutoPay}
+              disabled={savingAutoPay || linkedProviders.length === 0}
             />
           </View>
 
+          {linkedProviders.length === 0 && (
+            <Text style={[styles.warningText, { color: colors.warning }]}>
+              Add a payment method to enable auto-pay
+            </Text>
+          )}
+
           {billing?.auto_pay?.enabled && (
             <>
-              {/* Day Selector */}
               <TouchableOpacity 
                 style={[styles.daySelector, { backgroundColor: colors.background, borderColor: colors.border }]}
                 onPress={() => setShowDayPickerModal(true)}
@@ -316,131 +375,67 @@ export default function BillingScreen() {
                   {formatDate(billing.auto_pay.next_auto_pay_date)}
                 </Text>
                 <Text style={[styles.nextAutoPayAmount, { color: colors.primary }]}>
-                  ${billing.auto_pay.next_auto_pay_amount.toFixed(2)}
+                  {market?.currency_symbol || '$'}{billing.auto_pay.next_auto_pay_amount.toFixed(2)}
                 </Text>
               </View>
             </>
           )}
         </View>
 
-        {/* Payment Methods */}
-        <View style={[styles.section, { backgroundColor: colors.surface }]}>
-          <View style={styles.sectionHeader}>
-            <Ionicons name="card-outline" size={24} color={colors.primary} />
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>Payment Methods</Text>
-          </View>
-
-          {billing?.payment_methods && billing.payment_methods.length > 0 ? (
-            billing.payment_methods.map((method, index) => (
-              <View key={index} style={styles.paymentMethodItem}>
-                <Ionicons name="card" size={20} color={colors.text} />
-                <Text style={[styles.paymentMethodText, { color: colors.text }]}>
-                  •••• {method.last4}
-                </Text>
-              </View>
-            ))
-          ) : (
-            <Text style={[styles.noMethodsText, { color: colors.textMuted }]}>
-              No payment methods added yet
-            </Text>
-          )}
-
-          <TouchableOpacity 
-            style={[styles.addMethodButton, { borderColor: colors.primary }]}
-            onPress={() => setShowPaymentModal(true)}
-          >
-            <Ionicons name="add" size={20} color={colors.primary} />
-            <Text style={[styles.addMethodText, { color: colors.primary }]}>Add Payment Method</Text>
-          </TouchableOpacity>
+        {/* Payment Security Note */}
+        <View style={[styles.securityNote, { backgroundColor: colors.primaryLight }]}>
+          <Ionicons name="shield-checkmark" size={20} color={colors.primary} />
+          <Text style={[styles.securityNoteText, { color: colors.primary }]}>
+            Maestro Hub does not store your payment details. All payments are processed securely through your selected payment provider.
+          </Text>
         </View>
       </ScrollView>
 
-      {/* Payment Method Selection Modal */}
-      <Modal visible={showPaymentModal} animationType="slide" transparent>
+      {/* Add Payment Method Modal */}
+      <Modal visible={showProviderModal} animationType="slide" transparent>
         <View style={styles.modalOverlay}>
           <TouchableOpacity 
             style={styles.modalBackdrop} 
             activeOpacity={1} 
-            onPress={() => setShowPaymentModal(false)} 
+            onPress={() => setShowProviderModal(false)} 
           />
           <View style={[styles.bottomSheet, { backgroundColor: colors.surface }]}>
             <View style={[styles.sheetHandle, { backgroundColor: colors.gray300 }]} />
             <Text style={[styles.sheetTitle, { color: colors.text }]}>Add Payment Method</Text>
+            <Text style={[styles.sheetSubtitle, { color: colors.textMuted }]}>
+              Select a payment provider for {market?.currency === 'INR' ? 'India' : 'US'} market
+            </Text>
 
-            {PAYMENT_PROVIDERS.map((provider) => (
-              <TouchableOpacity
-                key={provider.id}
-                style={[styles.providerOption, { borderColor: colors.border }]}
-                onPress={() => handleSelectProvider(provider)}
-              >
-                <View style={[styles.providerIcon, { backgroundColor: provider.color + '15' }]}>
-                  <Ionicons name={provider.icon as any} size={24} color={provider.color} />
-                </View>
-                <Text style={[styles.providerName, { color: colors.text }]}>{provider.name}</Text>
-                <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
-      </Modal>
-
-      {/* Provider Input Modal */}
-      <Modal visible={showProviderInput} animationType="slide" transparent>
-        <KeyboardAvoidingView 
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={styles.modalOverlay}
-        >
-          <TouchableOpacity 
-            style={styles.modalBackdrop} 
-            activeOpacity={1} 
-            onPress={() => setShowProviderInput(false)} 
-          />
-          <View style={[styles.bottomSheet, { backgroundColor: colors.surface }]}>
-            <View style={[styles.sheetHandle, { backgroundColor: colors.gray300 }]} />
-            
-            {selectedProvider && (
-              <>
-                <View style={styles.providerHeader}>
-                  <View style={[styles.providerIconLarge, { backgroundColor: selectedProvider.color + '15' }]}>
-                    <Ionicons name={selectedProvider.icon as any} size={32} color={selectedProvider.color} />
-                  </View>
-                  <Text style={[styles.sheetTitle, { color: colors.text }]}>Link {selectedProvider.name}</Text>
-                </View>
-
-                <Text style={[styles.inputLabel, { color: colors.textMuted }]}>
-                  {selectedProvider.inputType === 'email' ? 'Email Address' : 
-                   selectedProvider.inputType === 'phone' ? 'Phone or Email' : 'Username'}
-                </Text>
-                <TextInput
-                  style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-                  placeholder={selectedProvider.placeholder}
-                  placeholderTextColor={colors.textMuted}
-                  value={providerInputValue}
-                  onChangeText={setProviderInputValue}
-                  keyboardType={selectedProvider.inputType === 'email' ? 'email-address' : 
-                               selectedProvider.inputType === 'phone' ? 'phone-pad' : 'default'}
-                  autoCapitalize="none"
-                />
-
-                <Text style={[styles.privacyNote, { color: colors.textMuted }]}>
-                  Note: Maestro Hub does not store your payment information. You will be redirected to {selectedProvider.name} to complete payments.
-                </Text>
-
+            {unlinkedProviders.map((provider) => {
+              const iconInfo = getProviderIcon(provider.id);
+              const isLinking = linkingProvider === provider.id;
+              return (
                 <TouchableOpacity
-                  style={[styles.linkButton, { backgroundColor: selectedProvider.color }, savingPaymentMethod && styles.buttonDisabled]}
-                  onPress={handleSavePaymentMethod}
-                  disabled={savingPaymentMethod}
+                  key={provider.id}
+                  style={[styles.providerOption, { borderColor: colors.border }]}
+                  onPress={() => handleLinkProvider(provider.id)}
+                  disabled={isLinking}
                 >
-                  {savingPaymentMethod ? (
-                    <ActivityIndicator color="#FFFFFF" />
+                  <View style={[styles.providerIconContainer, { backgroundColor: iconInfo.color + '15' }]}>
+                    <Ionicons name={iconInfo.icon as any} size={24} color={iconInfo.color} />
+                  </View>
+                  <Text style={[styles.providerOptionName, { color: colors.text }]}>{provider.name}</Text>
+                  {isLinking ? (
+                    <ActivityIndicator size="small" color={colors.primary} />
                   ) : (
-                    <Text style={styles.linkButtonText}>Link {selectedProvider.name}</Text>
+                    <Ionicons name="add-circle" size={24} color={colors.primary} />
                   )}
                 </TouchableOpacity>
-              </>
+              );
+            })}
+
+            {unlinkedProviders.length === 0 && (
+              <Text style={[styles.allLinkedText, { color: colors.textMuted }]}>
+                All available payment methods have been linked
+              </Text>
             )}
           </View>
-        </KeyboardAvoidingView>
+        </View>
       </Modal>
 
       {/* Day Picker Modal */}
@@ -490,7 +485,7 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   content: { flex: 1 },
-  scrollContent: { padding: 16 },
+  scrollContent: { padding: 16, paddingBottom: 32 },
   section: {
     borderRadius: 12,
     padding: 16,
@@ -503,25 +498,69 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   sectionTitle: { fontSize: 16, fontWeight: '600' },
-  connectedRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  connectedText: { fontSize: 14, fontWeight: '500' },
-  setupButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    padding: 14,
-    borderRadius: 8,
-  },
-  buttonDisabled: { opacity: 0.7 },
-  setupButtonText: { color: '#FFFFFF', fontSize: 15, fontWeight: '600' },
   balanceCard: { alignItems: 'center', paddingVertical: 16 },
   balanceAmount: { fontSize: 32, fontWeight: '700' },
   balanceLabel: { fontSize: 13, marginTop: 4 },
+  emptyState: {
+    alignItems: 'center',
+    paddingVertical: 24,
+  },
+  emptyText: { fontSize: 16, fontWeight: '500', marginTop: 12 },
+  emptySubtext: { fontSize: 13, marginTop: 4 },
+  providersList: { gap: 12 },
+  linkedProviderCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 14,
+    borderRadius: 12,
+    borderWidth: 2,
+  },
+  providerIconContainer: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  providerInfo: {
+    flex: 1,
+    marginLeft: 12,
+  },
+  providerName: { fontSize: 15, fontWeight: '600' },
+  defaultBadge: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
+    marginTop: 4,
+  },
+  defaultBadgeText: { fontSize: 11, fontWeight: '600' },
+  providerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  actionButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 6,
+  },
+  actionButtonText: { fontSize: 12, fontWeight: '600' },
+  removeButton: {
+    padding: 8,
+  },
+  addMethodButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    padding: 14,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderStyle: 'dashed',
+    marginTop: 12,
+  },
+  addMethodText: { fontSize: 15, fontWeight: '600' },
   autoPayRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -530,6 +569,7 @@ const styles = StyleSheet.create({
   autoPayInfo: { flex: 1, marginRight: 12 },
   autoPayLabel: { fontSize: 15, fontWeight: '500' },
   autoPayDesc: { fontSize: 12, marginTop: 2 },
+  warningText: { fontSize: 12, marginTop: 8 },
   daySelector: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -550,33 +590,22 @@ const styles = StyleSheet.create({
   nextAutoPayLabel: { fontSize: 12 },
   nextAutoPayDate: { fontSize: 16, fontWeight: '600', marginTop: 4 },
   nextAutoPayAmount: { fontSize: 20, fontWeight: '700', marginTop: 2 },
-  paymentMethodItem: {
+  securityNote: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     gap: 10,
-    paddingVertical: 10,
+    padding: 14,
+    borderRadius: 10,
+    marginBottom: 16,
   },
-  paymentMethodText: { fontSize: 14 },
-  noMethodsText: { fontSize: 14, textAlign: 'center', paddingVertical: 16 },
-  addMethodButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    padding: 12,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderStyle: 'dashed',
-    marginTop: 8,
-  },
-  addMethodText: { fontSize: 14, fontWeight: '500' },
+  securityNoteText: { flex: 1, fontSize: 13, lineHeight: 18 },
   modalOverlay: { flex: 1, justifyContent: 'flex-end' },
   modalBackdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)' },
   bottomSheet: {
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
-    overflow: 'hidden',
+    maxHeight: '70%',
   },
   sheetHandle: {
     width: 40,
@@ -585,28 +614,22 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 16,
   },
-  sheetTitle: { fontSize: 18, fontWeight: '600', marginBottom: 16 },
+  sheetTitle: { fontSize: 18, fontWeight: '600', marginBottom: 4 },
+  sheetSubtitle: { fontSize: 13, marginBottom: 16 },
   providerOption: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 14,
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: 12,
     marginBottom: 10,
   },
-  providerIcon: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  providerName: { flex: 1, marginLeft: 12, fontSize: 15, fontWeight: '500' },
+  providerOptionName: { flex: 1, marginLeft: 12, fontSize: 15, fontWeight: '500' },
+  allLinkedText: { textAlign: 'center', fontSize: 14, paddingVertical: 20 },
   dayPickerSheet: {
     margin: 20,
     borderRadius: 16,
     padding: 20,
-    overflow: 'hidden',
   },
   dayPickerHint: { fontSize: 13, marginBottom: 16 },
   dayGrid: {
@@ -624,42 +647,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   dayOptionText: { fontSize: 14, fontWeight: '500' },
-  providerHeader: {
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  providerIconLarge: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  inputLabel: {
-    fontSize: 13,
-    marginBottom: 6,
-  },
-  input: {
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 14,
-    fontSize: 15,
-    marginBottom: 12,
-  },
-  privacyNote: {
-    fontSize: 12,
-    lineHeight: 16,
-    marginBottom: 16,
-  },
-  linkButton: {
-    padding: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  linkButtonText: {
-    color: '#FFFFFF',
-    fontSize: 15,
-    fontWeight: '600',
-  },
 });
