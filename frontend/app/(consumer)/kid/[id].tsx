@@ -87,8 +87,20 @@ export default function KidDetailScreen() {
   const filteredBookings = bookings.filter((booking) => {
     const bookingDate = new Date(booking.start_at);
     const now = new Date();
-    return filter === 'upcoming' ? bookingDate >= now : bookingDate < now;
+    const isCanceled = booking.status.includes('canceled');
+    
+    // Show canceled in past section, upcoming shows only active bookings
+    if (filter === 'past') {
+      return bookingDate < now || isCanceled;
+    }
+    return bookingDate >= now && !isCanceled;
   });
+
+  const getStatusDisplay = (status: string) => {
+    if (status === 'canceled_by_consumer') return 'Canceled';
+    if (status === 'canceled_by_provider') return 'Canceled by coach';
+    return status;
+  };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
