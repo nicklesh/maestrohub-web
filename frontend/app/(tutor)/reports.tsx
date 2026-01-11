@@ -32,6 +32,18 @@ interface ReportSummary {
   currency_symbol: string;
 }
 
+interface SponsorshipSummary {
+  total_spent_cents: number;
+  active_count: number;
+  total_purchases: number;
+  current_active: {
+    plan_name: string;
+    weeks: number;
+    expires_at: string;
+    categories: string[];
+  } | null;
+}
+
 interface ByStudent {
   student_id: string;
   student_name: string;
@@ -56,6 +68,7 @@ export default function TutorReportsScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [summary, setSummary] = useState<ReportSummary | null>(null);
+  const [sponsorship, setSponsorship] = useState<SponsorshipSummary | null>(null);
   const [byStudent, setByStudent] = useState<ByStudent[]>([]);
   const [byMonth, setByMonth] = useState<ByMonth[]>([]);
 
@@ -69,6 +82,7 @@ export default function TutorReportsScreen() {
       });
       const data = response.data;
       setSummary(data.summary);
+      setSponsorship(data.sponsorship);
       setByStudent(data.by_student || []);
       setByMonth(data.by_month || []);
     } catch (error) {
