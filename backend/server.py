@@ -1588,6 +1588,9 @@ async def get_tutor_availability(tutor_id: str, date: str = None, from_date: str
                         slots.append({
                             "start_at": slot_current.isoformat(),
                             "end_at": slot_end_time.isoformat(),
+                            "start_time": slot_current.strftime("%H:%M"),
+                            "end_time": slot_end_time.strftime("%H:%M"),
+                            "is_available": True,
                             "available": True
                         })
                     
