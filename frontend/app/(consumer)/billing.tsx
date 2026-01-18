@@ -62,7 +62,7 @@ const DAY_OPTIONS = [1, 5, 10, 15, 20, 25, 28];
 export default function BillingScreen() {
   const { token } = useAuth();
   const { colors } = useTheme();
-  const { showSuccess, showError } = useToast();
+  const { showSuccess, showError, showInfo } = useToast();
   const { market } = useMarket();
   const [billing, setBilling] = useState<BillingInfo | null>(null);
   const [availableProviders, setAvailableProviders] = useState<PaymentProvider[]>([]);
