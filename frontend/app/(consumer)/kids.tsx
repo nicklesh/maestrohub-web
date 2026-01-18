@@ -225,7 +225,7 @@ export default function KidsScreen() {
 
       <View style={styles.viewSchedule}>
         <Ionicons name="calendar" size={16} color={colors.primary} />
-        <Text style={[styles.viewScheduleText, { color: colors.primary }]}>View Schedule & Payments</Text>
+        <Text style={[styles.viewScheduleText, { color: colors.primary }]}>{t('pages.kids.view_schedule_payments')}</Text>
         <Ionicons name="chevron-forward" size={16} color={colors.primary} />
       </View>
     </TouchableOpacity>
