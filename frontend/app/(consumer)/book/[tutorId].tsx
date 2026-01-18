@@ -237,11 +237,20 @@ export default function BookingScreen() {
   };
 
   const checkPaymentMethodsAndProceed = async () => {
+    console.log('checkPaymentMethodsAndProceed called, token:', token ? 'present' : 'missing');
+    
+    if (!token) {
+      showError('You must be logged in to proceed');
+      return;
+    }
+    
     setSubmitting(true);
     try {
+      console.log('Fetching payment providers...');
       const response = await api.get('/payment-providers', {
         headers: { Authorization: `Bearer ${token}` }
       });
+      console.log('Payment providers response:', response.data);
       const linkedProviders = response.data.linked_providers || [];
       
       if (linkedProviders.length === 0) {
@@ -264,13 +273,19 @@ export default function BookingScreen() {
       }
       
       // Has payment methods - proceed to payment step
+      console.log('User has payment methods, proceeding to payment step');
       setSubmitting(false);
       setStep('payment');
     } catch (error: any) {
       console.error('Error checking payment methods:', error);
+      console.error('Error details:', {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message
+      });
       setSubmitting(false);
       const errorMessage = error.response?.data?.detail || 'Failed to verify payment methods. Please try again.';
-      showAlert('Error', errorMessage);
+      showError(errorMessage);
     }
   };
 
