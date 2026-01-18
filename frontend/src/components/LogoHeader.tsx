@@ -58,7 +58,7 @@ export default function LogoHeader({
       />
       {showTagline && (
         <Text style={[styles.tagline, { fontSize: sizeStyles.taglineFontSize }]}>
-          Find your coach, master your skill
+          Find your coach, master your learning
         </Text>
       )}
     </View>
