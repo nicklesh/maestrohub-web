@@ -172,13 +172,13 @@ export default function SearchScreen() {
   };
 
   const getCategoryName = () => {
-    if (selectedCategory === 'all') return 'All Categories';
+    if (selectedCategory === 'all') return t('pages.search.all_categories');
     const cat = categories.find(c => c.id === selectedCategory);
-    return cat?.name || 'Category';
+    return cat?.name || t('pages.search.category');
   };
 
   const getSubjectName = () => {
-    if (selectedSubject === 'all') return 'All Subjects';
+    if (selectedSubject === 'all') return t('pages.search.all_subjects');
     return selectedSubject;
   };
 
@@ -197,7 +197,7 @@ export default function SearchScreen() {
       {item.is_sponsored && (
         <View style={[styles.sponsoredBadge, { backgroundColor: colors.warning }]}>
           <Ionicons name="star" size={10} color="#fff" />
-          <Text style={styles.sponsoredBadgeText}>Sponsored</Text>
+          <Text style={styles.sponsoredBadgeText}>{t('pages.search.sponsored')}</Text>
         </View>
       )}
       
