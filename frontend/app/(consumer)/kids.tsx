@@ -248,7 +248,7 @@ export default function KidsScreen() {
 
       <View style={styles.content}>
         <View style={styles.header}>
-          <Text style={[styles.title, { color: colors.text }]}>My Kids</Text>
+          <Text style={[styles.title, { color: colors.text }]}>{t('pages.kids.title')}</Text>
           <TouchableOpacity
             style={[styles.addButton, { backgroundColor: colors.primary }]}
             onPress={() => {
@@ -257,16 +257,16 @@ export default function KidsScreen() {
             }}
           >
             <Ionicons name="add" size={20} color="#FFFFFF" />
-            <Text style={styles.addButtonText}>Add Child</Text>
+            <Text style={styles.addButtonText}>{t('pages.kids.add_child')}</Text>
           </TouchableOpacity>
         </View>
 
         {kids.length === 0 ? (
           <View style={styles.emptyContainer}>
             <Ionicons name="people-outline" size={64} color={colors.textMuted} />
-            <Text style={[styles.emptyTitle, { color: colors.text }]}>No children added</Text>
+            <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('pages.kids.no_kids')}</Text>
             <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
-              Add your children to manage their schedules and payments
+              {t('pages.kids.no_kids_desc')}
             </Text>
           </View>
         ) : (
@@ -296,7 +296,7 @@ export default function KidsScreen() {
           <View style={[styles.bottomSheet, { backgroundColor: colors.surface }]}>
             <View style={[styles.sheetHandle, { backgroundColor: colors.gray300 }]} />
             <Text style={[styles.sheetTitle, { color: colors.text }]}>
-              {editingKid ? 'Edit Child' : 'Add Child'}
+              {editingKid ? t('pages.kids.edit_child') : t('pages.kids.add_child')}
             </Text>
 
             <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Name *</Text>
