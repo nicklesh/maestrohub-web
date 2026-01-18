@@ -117,10 +117,7 @@ class TaxReportService:
             "status": "completed"
         }, {"_id": 0}).to_list(10000)
         
-        if not transactions:
-            return {"success": False, "error": "No transactions found for this year"}
-        
-        # Calculate totals
+        # Calculate totals (will be 0 if no transactions)
         total_amount = sum(t.get("amount_cents", 0) for t in transactions)
         total_fees = sum(t.get("platform_fee_cents", 0) for t in transactions)
         total_payouts = sum(t.get("tutor_payout_cents", 0) for t in transactions) if user_type == "provider" else 0
@@ -135,7 +132,7 @@ class TaxReportService:
             monthly_breakdown[month]["amount"] += t.get("amount_cents", 0)
             monthly_breakdown[month]["fees"] += t.get("platform_fee_cents", 0)
         
-        # Generate PDF
+        # Generate PDF (even for empty transactions)
         pdf_data = self._generate_annual_pdf(
             user=user,
             user_type=user_type,
