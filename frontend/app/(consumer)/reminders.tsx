@@ -110,7 +110,7 @@ export default function RemindersScreen() {
   if (loading) {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-        <AppHeader showBack showUserName title=t("pages.reminders.title") />
+        <AppHeader showBack showUserName title={t("pages.reminders.title")} />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -120,7 +120,7 @@ export default function RemindersScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <AppHeader showBack showUserName title=t("pages.reminders.title") />
+      <AppHeader showBack showUserName title={t("pages.reminders.title")} />
 
       <ScrollView
         style={styles.content}

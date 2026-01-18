@@ -163,7 +163,7 @@ export default function ReviewsScreen() {
   if (loading) {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-        <AppHeader showBack title=t("pages.reviews.title") />
+        <AppHeader showBack title={t("pages.reviews.title")} />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -173,7 +173,7 @@ export default function ReviewsScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <AppHeader showBack title=t("pages.reviews.title") />
+      <AppHeader showBack title={t("pages.reviews.title")} />
 
       {/* Tabs */}
       <View style={[styles.tabs, { backgroundColor: colors.surface, borderColor: colors.border }]}>

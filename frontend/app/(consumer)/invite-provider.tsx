@@ -240,7 +240,7 @@ export default function InviteProviderScreen() {
   if (loading) {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-        <AppHeader showBack showUserName title=t("pages.invite_provider.title") />
+        <AppHeader showBack showUserName title={t("pages.invite_provider.title")} />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -250,7 +250,7 @@ export default function InviteProviderScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <AppHeader showBack showUserName title=t("pages.invite_provider.title") />
+      <AppHeader showBack showUserName title={t("pages.invite_provider.title")} />
 
       <View style={styles.content}>
         {/* Info Banner */}
