@@ -20,6 +20,50 @@ db = client[os.environ.get('DB_NAME', 'maestrohub')]
 def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
+# Hardcoded categories (same as in server.py)
+CATEGORIES = [
+    {"id": "academics", "name": "Academics", "subjects": [
+        "Homework Support", "Mathematics", "Advanced Mathematics", "Science", 
+        "Coding/Programming", "Languages & Writing", "Social Studies & Humanities", 
+        "Test Prep", "Study & Academic Skills"
+    ]},
+    {"id": "performance_arts", "name": "Performance & Creative Arts", "subjects": [
+        "Performance Coaching", "Sports", "Music", "Acting", "Voice", "Dance", 
+        "Stage Presence & Theatre", "Piano", "Guitar", "Violin", "Drums", "Music Theory"
+    ]},
+    {"id": "activities_hobbies", "name": "Activities & Hobbies", "subjects": [
+        "Art & Design", "Yoga", "STEM & Interest Clubs", "Debates", "Photography", 
+        "Cooking & Baking", "Games", "Memory Training"
+    ]},
+    {"id": "fitness_nutrition", "name": "Fitness & Nutrition", "subjects": [
+        "Fitness Training", "Nutrition Coaching", "Weight Loss", "Recovery Coaching"
+    ]},
+    {"id": "health_mindfulness", "name": "Health, Mindfulness & Wellbeing", "subjects": [
+        "Health Coaching", "Wellness Coaching", "Mindfulness", "Meditation", 
+        "Spiritual Coaching", "Stress Management", "Mindset Coaching"
+    ]},
+    {"id": "business_communication", "name": "Business, Communication & Growth", "subjects": [
+        "Sales Coaching", "Marketing Coaching", "Branding", "Communication Coaching", 
+        "Productivity Coaching", "Business Strategy", "Image Consulting", "Personal Style"
+    ]},
+    {"id": "finance_legal", "name": "Finance, Legal & Negotiation", "subjects": [
+        "Financial Planning", "Investment Coaching", "Retirement Planning", 
+        "Real Estate Coaching", "Legal Coaching", "Negotiation Coaching"
+    ]},
+    {"id": "coaching_personal", "name": "Coaching & Personal Growth", "subjects": [
+        "Life Coaching", "Executive Coaching", "Career Coaching", "Leadership Coaching", 
+        "Agile Coaching", "Personal Development", "Confidence Coaching", 
+        "Transformational Coaching", "Motivational Coaching", "Public Speaking"
+    ]},
+    {"id": "relationships_family", "name": "Relationships & Family", "subjects": [
+        "Relationship Coaching", "Marriage Coaching", "Parenting Coaching", 
+        "Fertility Coaching", "Divorce Coaching", "Grief Coaching"
+    ]},
+    {"id": "culture_inclusion", "name": "Culture, Inclusion & Experiences", "subjects": [
+        "Diversity & Inclusion", "Team-Building", "Travel Coaching"
+    ]}
+]
+
 # Sample coach data templates
 US_COACHES = [
     {"name": "Alex Thompson", "bio": "Experienced educator with 10+ years teaching {subject}. Passionate about making learning fun and accessible."},
