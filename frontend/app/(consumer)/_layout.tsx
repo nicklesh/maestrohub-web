@@ -96,6 +96,8 @@ export default function ConsumerLayout() {
       <Tabs.Screen name="reviews" options={{ href: null }} />
       <Tabs.Screen name="tax-reports" options={{ href: null }} />
       <Tabs.Screen name="referrals" options={{ href: null }} />
+      <Tabs.Screen name="language" options={{ href: null }} />
+      <Tabs.Screen name="settings" options={{ href: null }} />
     </Tabs>
   );
 }
