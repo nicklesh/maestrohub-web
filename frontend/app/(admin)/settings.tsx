@@ -21,7 +21,7 @@ import AppHeader from '@/src/components/AppHeader';
 export default function AdminSettings() {
   const { user, logout } = useAuth();
   const { colors, isDark, toggleTheme } = useTheme();
-  const { showSuccess, showError } = useToast();
+  const { showSuccess, showError, showInfo, showWarning } = useToast();
   const router = useRouter();
   const { width } = useWindowDimensions();
 
