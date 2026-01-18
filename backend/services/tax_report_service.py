@@ -150,6 +150,9 @@ class TaxReportService:
             transaction_count=len(transactions)
         )
         
+        # Convert monthly_breakdown keys to strings for MongoDB (BSON requires string keys)
+        monthly_breakdown_str = {str(k): v for k, v in monthly_breakdown.items()}
+        
         # Store report
         report_id = f"report_{uuid.uuid4().hex[:12]}"
         report_doc = {
@@ -164,7 +167,7 @@ class TaxReportService:
             "total_fees_cents": total_fees,
             "total_payouts_cents": total_payouts,
             "transaction_count": len(transactions),
-            "monthly_breakdown": monthly_breakdown,
+            "monthly_breakdown": monthly_breakdown_str,
             "generated_date": datetime.now(timezone.utc),
             "is_archived": self.is_year_archived(year),
             "created_at": datetime.now(timezone.utc)
