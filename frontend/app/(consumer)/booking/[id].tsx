@@ -783,4 +783,70 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
   },
+  // Kid Notification styles
+  notificationHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  notificationContent: {
+    marginTop: 4,
+  },
+  notificationBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 16,
+    alignSelf: 'flex-start',
+    gap: 6,
+    marginBottom: 12,
+  },
+  notificationBadgeText: {
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  contactMethods: {
+    marginBottom: 12,
+  },
+  contactRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 8,
+  },
+  contactText: {
+    fontSize: 14,
+  },
+  notificationHistory: {
+    marginTop: 8,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+  },
+  historyTitle: {
+    fontSize: 12,
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    marginBottom: 8,
+  },
+  historyItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 6,
+    flexWrap: 'wrap',
+  },
+  historyText: {
+    fontSize: 13,
+    flex: 1,
+  },
+  historyTime: {
+    fontSize: 11,
+  },
+  noNotifText: {
+    fontSize: 13,
+    fontStyle: 'italic',
+  },
 });
