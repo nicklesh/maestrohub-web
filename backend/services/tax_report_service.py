@@ -4,13 +4,14 @@ Handles generation and storage of tax reports (1099s) for providers and consumer
 """
 import uuid
 import io
+import os
 import logging
 from datetime import datetime, timezone, timedelta
 from typing import Optional, Dict, Any, List
 from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image
 from reportlab.lib.units import inch
 import base64
 
@@ -19,6 +20,7 @@ logger = logging.getLogger(__name__)
 # Constants
 CURRENT_YEAR = datetime.now(timezone.utc).year
 YEARS_AVAILABLE = 5  # Current year + 4 previous years
+LOGO_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets', 'logo.png')
 
 
 class TaxReportService:
