@@ -170,9 +170,9 @@ export default function ProfileScreen() {
 
   const getRoleDisplay = (role: string) => {
     switch (role) {
-      case 'consumer': return 'Parent / Guardian';
-      case 'tutor': return 'Tutor / Instructor';
-      case 'admin': return 'Administrator';
+      case 'consumer': return t('pages.profile.parent_guardian');
+      case 'tutor': return t('pages.profile.tutor_instructor');
+      case 'admin': return t('pages.profile.administrator');
       default: return role;
     }
   };
