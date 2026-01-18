@@ -201,6 +201,29 @@ export default function BookingScreen() {
     checkPaymentMethodsAndProceed();
   };
 
+  // Helper for web-compatible alerts
+  const showAlert = (title: string, message: string, buttons?: Array<{ text: string; onPress?: () => void; style?: string }>) => {
+    if (Platform.OS === 'web' && typeof window !== 'undefined') {
+      if (buttons && buttons.length > 1) {
+        // Multi-button: use confirm
+        const result = window.confirm(`${title}\n\n${message}`);
+        if (result && buttons[1]?.onPress) {
+          buttons[1].onPress();
+        } else if (!result && buttons[0]?.onPress) {
+          buttons[0].onPress();
+        }
+      } else {
+        // Single button: use alert
+        window.alert(`${title}\n\n${message}`);
+        if (buttons?.[0]?.onPress) {
+          buttons[0].onPress();
+        }
+      }
+    } else {
+      Alert.alert(title, message, buttons);
+    }
+  };
+
   const checkPaymentMethodsAndProceed = async () => {
     setSubmitting(true);
     try {
@@ -211,15 +234,15 @@ export default function BookingScreen() {
       
       if (linkedProviders.length === 0) {
         // No payment methods - redirect to billing
-        Alert.alert(
+        setSubmitting(false);
+        showAlert(
           'Payment Method Required',
           'Please add a payment method before booking a session.',
           [
-            { text: 'Cancel', style: 'cancel', onPress: () => setSubmitting(false) },
+            { text: 'Cancel', style: 'cancel' },
             { 
               text: 'Add Payment Method', 
               onPress: () => {
-                setSubmitting(false);
                 router.push('/(consumer)/billing');
               }
             }
@@ -233,10 +256,9 @@ export default function BookingScreen() {
       setStep('payment');
     } catch (error: any) {
       console.error('Error checking payment methods:', error);
+      setSubmitting(false);
       const errorMessage = error.response?.data?.detail || 'Failed to verify payment methods. Please try again.';
-      Alert.alert('Error', errorMessage, [
-        { text: 'OK', onPress: () => setSubmitting(false) }
-      ]);
+      showAlert('Error', errorMessage);
     }
   };
 
