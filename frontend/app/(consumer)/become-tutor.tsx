@@ -121,23 +121,23 @@ export default function BecomeTutorScreen() {
 
   const validateStep1 = () => {
     if (!tutorEmail.trim()) {
-      showAlert('Error', 'Please enter an email address for your tutor account');
+      showError('Please enter an email address for your tutor account');
       return false;
     }
     if (!tutorEmail.includes('@')) {
-      showAlert('Error', 'Please enter a valid email address');
+      showError('Please enter a valid email address');
       return false;
     }
     if (user?.email && tutorEmail.toLowerCase() === user.email.toLowerCase()) {
-      showAlert('Error', 'You must use a different email address for your tutor account. Your parent account uses this email.');
+      showError('You must use a different email address for your tutor account. Your parent account uses this email.');
       return false;
     }
     if (!tutorPassword || tutorPassword.length < 6) {
-      showAlert('Error', 'Password must be at least 6 characters');
+      showError('Password must be at least 6 characters');
       return false;
     }
     if (!tutorName.trim()) {
-      showAlert('Error', 'Please enter your professional name');
+      showError('Please enter your professional name');
       return false;
     }
     return true;
@@ -145,7 +145,7 @@ export default function BecomeTutorScreen() {
 
   const validateStep2 = () => {
     if (!bio.trim() || bio.length < 50) {
-      showAlert('Error', 'Please enter a bio (at least 50 characters)');
+      showError('Please enter a bio (at least 50 characters)');
       return false;
     }
     return true;
@@ -153,15 +153,15 @@ export default function BecomeTutorScreen() {
 
   const validateStep3 = () => {
     if (selectedCategories.length === 0) {
-      showAlert('Error', 'Please select at least one category');
+      showError('Please select at least one category');
       return false;
     }
     if (selectedSubjects.length === 0) {
-      showAlert('Error', 'Please select at least one subject/skill');
+      showError('Please select at least one subject/skill');
       return false;
     }
     if (selectedLevels.length === 0) {
-      showAlert('Error', 'Please select at least one level');
+      showError('Please select at least one level');
       return false;
     }
     return true;
@@ -221,12 +221,12 @@ export default function BecomeTutorScreen() {
       });
 
       // Success!
-      showAlert('Success', 'Your tutor account has been created! You can now log in with your new tutor email to access your tutor dashboard. Your parent account remains unchanged.');
+      showSuccess('Your tutor account has been created! You can now log in with your new tutor email to access your tutor dashboard. Your parent account remains unchanged.');
       router.replace('/(consumer)/profile');
     } catch (error: any) {
       console.error('Registration error:', error);
       const message = error.response?.data?.detail || 'Failed to create tutor account. Please try again.';
-      showAlert('Error', message);
+      showError(message);
     } finally {
       setLoading(false);
     }
