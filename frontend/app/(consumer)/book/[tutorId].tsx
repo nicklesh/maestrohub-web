@@ -398,7 +398,7 @@ export default function BookingScreen() {
               </View>
               <View style={styles.studentInfo}>
                 <Text style={[styles.studentName, isDesktop && styles.studentNameDesktop]}>{student.name}</Text>
-                {student.grade && <Text style={styles.studentGrade}>Grade {student.grade}</Text>}
+                {student.grade && <Text style={styles.studentGrade}>{t('pages.booking.grade')} {student.grade}</Text>}
               </View>
               {submitting && selectedStudent?.student_id === student.student_id && (
                 <ActivityIndicator size="small" color={colors.primary} />
