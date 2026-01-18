@@ -69,6 +69,7 @@ export default function TutorDetailScreen() {
   const { id } = useLocalSearchParams();
   const { width } = useWindowDimensions();
   const { colors } = useTheme();
+  const { t } = useTranslation();
   const [tutor, setTutor] = useState<Tutor | null>(null);
   const [packages, setPackages] = useState<SessionPackage[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
