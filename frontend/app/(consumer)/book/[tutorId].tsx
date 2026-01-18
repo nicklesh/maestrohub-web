@@ -216,18 +216,22 @@ export default function BookingScreen() {
   };
 
   const handleIntakeSubmit = () => {
+    console.log('handleIntakeSubmit called', { goals, currentLevel, policyAcknowledged });
+    
     if (!goals.trim()) {
-      showAlert('Required', 'Please enter learning goals');
+      showError('Please enter learning goals');
       return;
     }
     if (!currentLevel.trim()) {
-      showAlert('Required', 'Please enter current level');
+      showError('Please enter current level');
       return;
     }
     if (!policyAcknowledged) {
-      showAlert('Required', 'Please acknowledge the policies');
+      showError('Please acknowledge the cancellation policy');
       return;
     }
+    
+    console.log('Validation passed, calling checkPaymentMethodsAndProceed');
     // Check if user has payment methods before proceeding
     checkPaymentMethodsAndProceed();
   };
