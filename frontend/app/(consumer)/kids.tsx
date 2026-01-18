@@ -313,7 +313,7 @@ export default function KidsScreen() {
                 <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Age</Text>
                 <TextInput
                   style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-                  placeholder=t("pages.add_child.age")
+                  placeholder={t("pages.add_child.age")
                   placeholderTextColor={colors.textMuted}
                   value={formAge}
                   onChangeText={setFormAge}
@@ -324,7 +324,7 @@ export default function KidsScreen() {
                 <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Grade</Text>
                 <TextInput
                   style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-                  placeholder=t("pages.add_child.grade_placeholder")
+                  placeholder={t("pages.add_child.grade_placeholder")
                   placeholderTextColor={colors.textMuted}
                   value={formGrade}
                   onChangeText={setFormGrade}
