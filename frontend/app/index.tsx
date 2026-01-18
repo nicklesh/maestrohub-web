@@ -54,8 +54,8 @@ export default function Index() {
         style={{ width: logoWidth, height: logoHeight }}
         resizeMode="contain"
       />
-      <Text style={[styles.logo, isDesktop && styles.logoDesktop]}>Maestro Hub</Text>
-      <Text style={[styles.tagline, isDesktop && styles.taglineDesktop]}>Find your coach, master your skill</Text>
+      <Text style={[styles.logo, isDesktop && styles.logoDesktop]}>Maestro Habitat</Text>
+      <Text style={[styles.tagline, isDesktop && styles.taglineDesktop]}>Find your coach, master your learning</Text>
       <ActivityIndicator size="large" color={colors.primary} style={styles.loader} />
     </View>
   );
