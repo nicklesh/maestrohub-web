@@ -290,49 +290,31 @@ export default function BookingScreen() {
         
         // If payment used fallback, notify user
         if (response.data.fallback) {
-          showInfo(`Payment was processed using ${response.data.provider_used} as your primary method was unavailable.`
-          , 'Payment Processed');
+          showInfo(`Payment was processed using ${response.data.provider_used} as your primary method was unavailable.`, 'Payment Processed');
         }
         
         setSubmitting(false);
         setStep('confirm');
       } else if (response.data.redirect_to_billing) {
         // No payment method configured
-        Alert.alert(
-          'Payment Method Required',
-          response.data.message,
-          [
-            { text: 'Cancel', style: 'cancel', onPress: () => setSubmitting(false) },
-            { 
-              text: 'Add Payment Method', 
-              onPress: () => {
-                setSubmitting(false);
-                router.push('/(consumer)/billing');
-              }
-            }
-          ]
-        );
+        showError(response.data.message, 'Payment Method Required');
+        setSubmitting(false);
+        if (Platform.OS === 'web') {
+          if (window.confirm('Would you like to add a payment method now?')) {
+            router.push('/(consumer)/billing');
+          }
+        } else {
+          router.push('/(consumer)/billing');
+        }
       } else {
         // Payment failed
-        Alert.alert(
-          'Payment Failed',
-          response.data.message || 'Unable to process payment. Please try again.',
-          [
-            { text: 'Try Again', onPress: () => setSubmitting(false) },
-            { 
-              text: 'Update Payment Methods', 
-              onPress: () => {
-                setSubmitting(false);
-                router.push('/(consumer)/billing');
-              }
-            }
-          ]
-        );
+        showError(response.data.message || 'Unable to process payment. Please try again.', 'Payment Failed');
+        setSubmitting(false);
       }
     } catch (error: any) {
       console.error('Payment error:', error);
       const errorMsg = error.response?.data?.detail || 'Failed to process payment. Please try again.';
-      showInfo(errorMsg, 'Error');
+      showError(errorMsg);
       setSubmitting(false);
     }
   };
