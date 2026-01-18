@@ -265,7 +265,7 @@ export default function InvitesScreen() {
             <View style={[styles.sheetHandle, { backgroundColor: colors.gray300 }]} />
             <Text style={[styles.sheetTitle, { color: colors.text }]}>Send Invite</Text>
             <Text style={[styles.sheetSubtitle, { color: colors.textMuted }]}>
-              Invite a student to connect with you on Maestro Hub
+              Invite a student to connect with you on Maestro Habitat
             </Text>
 
             <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Email *</Text>

@@ -27,10 +27,10 @@ export async function getDeviceInfo(): Promise<DeviceInfo> {
   } else {
     // For web, generate a unique ID and store in localStorage
     if (typeof window !== 'undefined' && window.localStorage) {
-      deviceId = localStorage.getItem('maestrohub_device_id') || '';
+      deviceId = localStorage.getItem('maestrohabitat_device_id') || '';
       if (!deviceId) {
         deviceId = `web_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
-        localStorage.setItem('maestrohub_device_id', deviceId);
+        localStorage.setItem('maestrohabitat_device_id', deviceId);
       }
     } else {
       // Fallback for SSR or environments without localStorage

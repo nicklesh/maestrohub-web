@@ -119,7 +119,7 @@ export default function TutorReportsScreen() {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = `maestrohub_earnings_${new Date().toISOString().split('T')[0]}.pdf`;
+        link.download = `maestrohabitat_earnings_${new Date().toISOString().split('T')[0]}.pdf`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -132,7 +132,7 @@ export default function TutorReportsScreen() {
         }
       } else {
         // For iOS/Android, download to file system and share
-        const fileName = `maestrohub_earnings_${new Date().toISOString().split('T')[0]}.pdf`;
+        const fileName = `maestrohabitat_earnings_${new Date().toISOString().split('T')[0]}.pdf`;
         const fileUri = FileSystem.documentDirectory + fileName;
         
         // Get the base URL from API config

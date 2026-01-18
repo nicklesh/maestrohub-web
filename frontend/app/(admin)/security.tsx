@@ -45,10 +45,10 @@ export default function AdminSecurityScreen() {
   };
 
   const recentActivity = [
-    { id: '1', action: 'Admin login', user: 'admin@maestrohub.com', time: '2 mins ago', ip: '192.168.1.1' },
-    { id: '2', action: 'Tutor approved', user: 'admin@maestrohub.com', time: '15 mins ago', ip: '192.168.1.1' },
-    { id: '3', action: 'Settings changed', user: 'admin@maestrohub.com', time: '1 hour ago', ip: '192.168.1.1' },
-    { id: '4', action: 'Admin login', user: 'admin@maestrohub.com', time: '3 hours ago', ip: '192.168.1.2' },
+    { id: '1', action: 'Admin login', user: 'admin@maestrohabitat.com', time: '2 mins ago', ip: '192.168.1.1' },
+    { id: '2', action: 'Tutor approved', user: 'admin@maestrohabitat.com', time: '15 mins ago', ip: '192.168.1.1' },
+    { id: '3', action: 'Settings changed', user: 'admin@maestrohabitat.com', time: '1 hour ago', ip: '192.168.1.1' },
+    { id: '4', action: 'Admin login', user: 'admin@maestrohabitat.com', time: '3 hours ago', ip: '192.168.1.2' },
   ];
 
   return (

@@ -80,8 +80,8 @@ const faqData: FAQItem[] = [
   },
   {
     category: 'Payments & Earnings',
-    question: 'What fees does Maestro Hub charge?',
-    answer: 'Maestro Hub charges a 15% service fee on each completed session. This covers payment processing, platform maintenance, customer support, and marketing to bring you students.'
+    question: 'What fees does Maestro Habitat charge?',
+    answer: 'Maestro Habitat charges a 15% service fee on each completed session. This covers payment processing, platform maintenance, customer support, and marketing to bring you students.'
   },
   // Account & Support
   {
@@ -92,7 +92,7 @@ const faqData: FAQItem[] = [
   {
     category: 'Account & Support',
     question: 'How do I contact support?',
-    answer: 'Tap the Contact Us option in Settings or email us at support@maestrohub.com. We aim to respond within 24 hours. For urgent issues, please include "URGENT" in your message.'
+    answer: 'Tap the Contact Us option in Settings or email us at support@maestrohabitat.com. We aim to respond within 24 hours. For urgent issues, please include "URGENT" in your message.'
   },
   {
     category: 'Account & Support',
@@ -155,7 +155,7 @@ export default function TutorFAQScreen() {
           <View style={styles.header}>
             <Text style={[styles.title, { color: colors.text }]}>Tutor FAQ</Text>
             <Text style={[styles.subtitle, { color: colors.textMuted }]}>
-              Find answers to common questions about tutoring on Maestro Hub
+              Find answers to common questions about tutoring on Maestro Habitat
             </Text>
           </View>
 

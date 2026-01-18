@@ -70,7 +70,7 @@ const faqData: FAQItem[] = [
   // For Coaches
   {
     category: 'For Coaches',
-    question: 'How do I become a coach on Maestro Hub?',
+    question: 'How do I become a coach on Maestro Habitat?',
     answer: 'From your Parent account, go to Account > "Become a Coach" to start the onboarding process. You\'ll need to create a new account with a different email address, complete your profile, set your availability and pricing, and submit for review.'
   },
   {
@@ -155,7 +155,7 @@ export default function FAQScreen() {
           <View style={styles.header}>
             <Text style={[styles.title, { color: colors.text }]}>Frequently Asked Questions</Text>
             <Text style={[styles.subtitle, { color: colors.textMuted }]}>
-              Find answers to common questions about Maestro Hub
+              Find answers to common questions about Maestro Habitat
             </Text>
           </View>
 

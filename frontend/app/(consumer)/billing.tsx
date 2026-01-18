@@ -386,7 +386,7 @@ export default function BillingScreen() {
         <View style={[styles.securityNote, { backgroundColor: colors.primaryLight }]}>
           <Ionicons name="shield-checkmark" size={20} color={colors.primary} />
           <Text style={[styles.securityNoteText, { color: colors.primary }]}>
-            Maestro Hub does not store your payment details. All payments are processed securely through your selected payment provider.
+            Maestro Habitat does not store your payment details. All payments are processed securely through your selected payment provider.
           </Text>
         </View>
       </ScrollView>
