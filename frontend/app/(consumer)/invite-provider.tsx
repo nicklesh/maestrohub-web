@@ -152,10 +152,40 @@ export default function InviteProviderScreen() {
       setInviteMessage('');
       loadInvites();
     } catch (error: any) {
-      showInfo(error.response?.data?.detail || 'Failed to send invite', 'Error');
+      showError(error.response?.data?.detail || 'Failed to send invite');
     } finally {
       setSending(false);
     }
+  };
+
+  const handleShareVia = async (platform: SocialPlatform) => {
+    const url = platform.getShareUrl(shareMessage, shareUrl);
+    
+    // For platforms that need clipboard (Instagram, TikTok)
+    if (platform.id === 'instagram' || platform.id === 'tiktok') {
+      try {
+        await Clipboard.setStringAsync(shareMessage + '\n\n' + shareUrl);
+      } catch (e) {
+        console.error('Clipboard error:', e);
+      }
+      
+      showSuccess(`Link copied! Open ${platform.name} and paste the invite message.`);
+      if (Platform.OS === 'web') {
+        window.open(url, '_blank');
+      } else {
+        Linking.openURL(url);
+      }
+      setShowShareModal(false);
+      return;
+    }
+    
+    // For other platforms, open the share URL
+    if (Platform.OS === 'web') {
+      window.open(url, '_blank');
+    } else {
+      Linking.openURL(url);
+    }
+    setShowShareModal(false);
   };
 
   const getStatusColor = (status: string) => {
