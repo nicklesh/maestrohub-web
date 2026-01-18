@@ -104,17 +104,26 @@ export default function ReferralsScreen() {
   };
 
   const shareReferralCode = async () => {
-    try {
-      const message = isProvider
-        ? `Join me on Maestro Habitat! Use my referral code ${referralCode} when you sign up. Find amazing tutors and coaches for your kids! 🎓`
-        : `Join me on Maestro Habitat! Use my referral code ${referralCode} when you sign up. ${isProvider ? 'Start coaching and earn!' : 'Find amazing tutors and coaches for your kids!'} 🎓`;
-      
-      await Share.share({
-        message,
-        title: 'Join Maestro Habitat',
-      });
-    } catch (error) {
-      showError('Failed to share');
+    const message = isProvider
+      ? `Join me on Maestro Habitat! Use my referral code ${referralCode} when you sign up. Find amazing tutors and coaches for your kids! 🎓`
+      : `Join me on Maestro Habitat! Use my referral code ${referralCode} when you sign up. ${isProvider ? 'Start coaching and earn!' : 'Find amazing tutors and coaches for your kids!'} 🎓`;
+    
+    if (Platform.OS === 'web') {
+      // On web, copy to clipboard and show message
+      await Clipboard.setStringAsync(message);
+      showSuccess('Message copied to clipboard! Paste it in your preferred messaging app to share.');
+    } else {
+      try {
+        await Share.share({
+          message,
+          title: 'Join Maestro Habitat',
+        });
+      } catch (error: any) {
+        // User cancelled - not an error
+        if (error?.message !== 'User did not share') {
+          showError('Failed to share');
+        }
+      }
     }
   };
 
