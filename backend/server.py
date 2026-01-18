@@ -1508,7 +1508,7 @@ async def invite_parent(data: ParentInviteCreate, request: Request):
     # Send invitation email
     try:
         await email_service.send_email(
-            to_email=data.invitee_email,
+            to=data.invitee_email,
             subject=f"{user.name} invited you to Maestro Habitat!",
             html=f"""
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
