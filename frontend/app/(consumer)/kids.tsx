@@ -119,12 +119,12 @@ export default function KidsScreen() {
         await api.put(`/students/${editingKid.student_id}`, data, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        showSuccess('Child updated successfully');
+        showSuccess(t('messages.success.child_updated'));
       } else {
         await api.post('/students', data, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        showSuccess('Child added successfully');
+        showSuccess(t('messages.success.child_added'));
       }
 
       setShowAddModal(false);
