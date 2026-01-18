@@ -118,6 +118,7 @@ export default function BookingsScreen() {
     const endDate = parseISO(item.end_at);
     const isCanceled = item.status.includes('canceled');
     const currencySymbol = item.currency_symbol || '$';
+    const hasKidNotifications = item.kid_notifications && item.kid_notifications.length > 0;
 
     return (
       <TouchableOpacity
@@ -131,10 +132,20 @@ export default function BookingsScreen() {
         onPress={() => router.push(`/(consumer)/booking/${item.booking_id}`)}
       >
         <View style={styles.cardHeader}>
-          <View style={[styles.statusBadge, { backgroundColor: statusColors.bg }]}>
-            <Text style={[styles.statusText, { color: statusColors.text }]}>
-              {getStatusDisplay(item.status)}
-            </Text>
+          <View style={styles.statusRow}>
+            <View style={[styles.statusBadge, { backgroundColor: statusColors.bg }]}>
+              <Text style={[styles.statusText, { color: statusColors.text }]}>
+                {getStatusDisplay(item.status)}
+              </Text>
+            </View>
+            {hasKidNotifications && (
+              <View style={[styles.notifIndicator, { backgroundColor: colors.successLight }]}>
+                <Ionicons name="notifications" size={12} color={colors.success} />
+                <Text style={[styles.notifIndicatorText, { color: colors.success }]}>
+                  Kid notified
+                </Text>
+              </View>
+            )}
           </View>
           <Text style={[styles.price, { color: isCanceled ? colors.textMuted : colors.text }]}>
             {currencySymbol}{item.price_snapshot}
