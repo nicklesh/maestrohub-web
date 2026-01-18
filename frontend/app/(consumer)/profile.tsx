@@ -247,7 +247,7 @@ export default function ProfileScreen() {
               onPress={() => setShowReminders(true)}
             >
               <View style={styles.sectionHeader}>
-                <Text style={[styles.sectionTitle, { color: colors.text }]}>Reminders</Text>
+                <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('navigation.reminders')}</Text>
                 <View style={[styles.reminderBadge, { backgroundColor: colors.warning }]}>
                   <Text style={styles.reminderBadgeText}>{reminders.length}</Text>
                 </View>
