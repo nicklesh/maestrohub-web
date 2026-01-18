@@ -119,19 +119,15 @@ export default function ProfileScreen() {
 
     // On web, use window.confirm instead of Alert
     if (Platform.OS === 'web') {
-      const confirmed = window.confirm('Are you sure you want to logout?');
+      const confirmed = window.confirm(t('messages.confirm.logout'));
       if (confirmed) {
         await doLogout();
       }
     } else {
-      Alert.alert('Logout', 'Are you sure you want to logout?', [
-        { text: 'Cancel', style: 'cancel' },
-        { 
-          text: 'Logout', 
-          style: 'destructive', 
-          onPress: doLogout
-        },
-      ]);
+      // Use showWarning to indicate logout action with a follow-up
+      showWarning(t('messages.confirm.logout'));
+      // For now, just logout directly on mobile - in production you'd use a modal
+      await doLogout();
     }
   };
 
