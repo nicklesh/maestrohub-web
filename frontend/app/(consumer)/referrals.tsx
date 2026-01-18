@@ -293,11 +293,11 @@ export default function ReferralsScreen() {
 
             {/* Apply Referral Code */}
             <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-              <Text style={[styles.cardTitle, { color: colors.text }]}>Have a Referral Code?</Text>
+              <Text style={[styles.cardTitle, { color: colors.text }]}>{t('pages.referrals.have_code')}</Text>
               <View style={styles.applyContainer}>
                 <TextInput
                   style={[styles.applyInput, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-                  placeholder={t("pages.referrals.enter_code")
+                  placeholder={t('pages.referrals.enter_code')}
                   placeholderTextColor={colors.textMuted}
                   value={applyCode}
                   onChangeText={setApplyCode}
