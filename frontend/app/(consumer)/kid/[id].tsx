@@ -172,11 +172,11 @@ export default function KidDetailScreen() {
           </View>
           <View style={[styles.statCard, { backgroundColor: colors.surface }]}>
             <Text style={[styles.statValue, { color: colors.warning }]}>${pendingAmount.toFixed(2)}</Text>
-            <Text style={[styles.statLabel, { color: colors.textMuted }]}>Pending</Text>
+            <Text style={[styles.statLabel, { color: colors.textMuted }]}>{t('pages.kids.pending')}</Text>
           </View>
           <View style={[styles.statCard, { backgroundColor: colors.surface }]}>
             <Text style={[styles.statValue, { color: colors.success }]}>{bookings.length}</Text>
-            <Text style={[styles.statLabel, { color: colors.textMuted }]}>Sessions</Text>
+            <Text style={[styles.statLabel, { color: colors.textMuted }]}>{t('pages.kids.sessions')}</Text>
           </View>
         </View>
 
@@ -187,7 +187,7 @@ export default function KidDetailScreen() {
             onPress={() => setActiveTab('schedule')}
           >
             <Text style={[styles.tabText, { color: activeTab === 'schedule' ? colors.primary : colors.textMuted }]}>
-              Schedule
+              {t('pages.kids.schedule')}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -195,7 +195,7 @@ export default function KidDetailScreen() {
             onPress={() => setActiveTab('payments')}
           >
             <Text style={[styles.tabText, { color: activeTab === 'payments' ? colors.primary : colors.textMuted }]}>
-              Payments
+              {t('pages.kids.payments')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -209,7 +209,7 @@ export default function KidDetailScreen() {
                 onPress={() => setFilter('upcoming')}
               >
                 <Text style={[styles.filterText, { color: filter === 'upcoming' ? '#FFFFFF' : colors.text }]}>
-                  Upcoming
+                  {t('pages.kids.upcoming')}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -217,7 +217,7 @@ export default function KidDetailScreen() {
                 onPress={() => setFilter('past')}
               >
                 <Text style={[styles.filterText, { color: filter === 'past' ? '#FFFFFF' : colors.text }]}>
-                  Past
+                  {t('pages.kids.past')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -227,7 +227,7 @@ export default function KidDetailScreen() {
               <View style={styles.emptyState}>
                 <Ionicons name="calendar-outline" size={48} color={colors.textMuted} />
                 <Text style={[styles.emptyText, { color: colors.textMuted }]}>
-                  No {filter} sessions
+                  {filter === 'upcoming' ? t('pages.kids.no_upcoming_sessions') : t('pages.kids.no_past_sessions')}
                 </Text>
               </View>
             ) : (
