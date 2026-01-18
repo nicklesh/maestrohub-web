@@ -11,6 +11,7 @@ import {
   Platform,
   ActivityIndicator,
   Alert,
+  Linking,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -26,6 +27,9 @@ interface AppHeaderProps {
 
 // Gold color for dark mode envelope
 const GOLD_COLOR = '#D4AF37';
+
+// External website URL
+const EXTERNAL_HOME_URL = 'https://www.maestrohabitat.com';
 
 export default function AppHeader({ showBack = false, title, showUserName = false }: AppHeaderProps) {
   const { user, logout, token } = useAuth();
@@ -47,6 +51,13 @@ export default function AppHeader({ showBack = false, title, showUserName = fals
   };
 
   const handleLogoPress = () => {
+    // On web, navigate to external maestrohabitat.com
+    if (Platform.OS === 'web') {
+      Linking.openURL(EXTERNAL_HOME_URL);
+      return;
+    }
+    
+    // On mobile, navigate to in-app home based on role
     if (user?.role === 'tutor') {
       router.replace('/(tutor)/dashboard');
     } else if (user?.role === 'admin') {
