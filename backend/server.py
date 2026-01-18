@@ -4596,56 +4596,126 @@ async def admin_get_market_analytics(request: Request, market_id: Optional[str] 
 
 @api_router.get("/tax-reports/available-years")
 async def get_available_tax_years(request: Request):
-    """Get available years for tax reports"""
+    """Get available years for tax reports (last 5 years for direct download)"""
     global tax_report_service
     if not tax_report_service:
-        tax_report_service = TaxReportService(db)
+        tax_report_service = TaxReportService(db, email_service)
     
-    user = await require_auth(request)
-    years = await tax_report_service.get_available_years(user.user_id, user.role)
-    return {"years": years}
+    await require_auth(request)
+    years = tax_report_service.get_available_years()
+    return {"years": years, "current_year": datetime.now(timezone.utc).year}
 
 @api_router.get("/tax-reports")
-async def get_tax_reports(request: Request):
+async def get_tax_reports(request: Request, user_type: Optional[str] = Query(None)):
     """Get all tax reports for user"""
     global tax_report_service
     if not tax_report_service:
-        tax_report_service = TaxReportService(db)
+        tax_report_service = TaxReportService(db, email_service)
     
     user = await require_auth(request)
-    reports = await tax_report_service.get_user_reports(user.user_id)
+    reports = await tax_report_service.get_user_reports(user.user_id, user_type)
     return {"reports": reports}
 
-@api_router.post("/tax-reports/request")
-async def request_tax_report(request: Request, year: int = Query(...), market_id: Optional[str] = Query(None)):
-    """Request generation of a tax report"""
+@api_router.post("/tax-reports/generate")
+async def generate_tax_report(request: Request, year: int = Query(...), 
+                             month: Optional[int] = Query(None),
+                             report_type: str = Query("annual")):
+    """Generate a tax report on-demand"""
     global tax_report_service
     if not tax_report_service:
-        tax_report_service = TaxReportService(db)
+        tax_report_service = TaxReportService(db, email_service)
     
     user = await require_auth(request)
+    user_type = "provider" if user.role == "provider" else "consumer"
     
-    # Default to user's market
-    if not market_id:
-        market_id = user.market_id or "US_USD"
+    if report_type == "monthly" and month:
+        result = await tax_report_service.generate_monthly_report(
+            user.user_id, user_type, year, month
+        )
+    else:
+        result = await tax_report_service.generate_annual_report(
+            user.user_id, user_type, year
+        )
     
-    result = await tax_report_service.request_report_generation(
-        user.user_id, user.role, year, market_id
-    )
+    if not result.get("success"):
+        raise HTTPException(status_code=400, detail=result.get("error", "Failed to generate report"))
+    
     return result
 
-@api_router.get("/tax-reports/{report_id}/status")
-async def get_tax_report_status(report_id: str, request: Request):
-    """Get status of a tax report"""
+@api_router.get("/tax-reports/{report_id}")
+async def get_tax_report_detail(report_id: str, request: Request):
+    """Get a specific tax report details"""
     global tax_report_service
     if not tax_report_service:
-        tax_report_service = TaxReportService(db)
+        tax_report_service = TaxReportService(db, email_service)
     
-    await require_auth(request)
-    report = await tax_report_service.get_report_status(report_id)
+    user = await require_auth(request)
+    report = await tax_report_service.get_report_by_id(report_id, user.user_id)
     if not report:
         raise HTTPException(status_code=404, detail="Report not found")
-    return report
+    
+    # Don't include full PDF data in JSON response
+    report_summary = {k: v for k, v in report.items() if k != "report_data"}
+    return report_summary
+
+@api_router.get("/tax-reports/{report_id}/download")
+async def download_tax_report(report_id: str, request: Request):
+    """Download tax report PDF"""
+    global tax_report_service
+    if not tax_report_service:
+        tax_report_service = TaxReportService(db, email_service)
+    
+    user = await require_auth(request)
+    pdf_bytes = await tax_report_service.download_report(report_id, user.user_id)
+    
+    if not pdf_bytes:
+        raise HTTPException(status_code=404, detail="Report not found or archived")
+    
+    return StreamingResponse(
+        io.BytesIO(pdf_bytes),
+        media_type="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename=tax_report_{report_id}.pdf"}
+    )
+
+@api_router.post("/tax-reports/request-archived")
+async def request_archived_tax_report(request: Request, year: int = Query(...),
+                                      month: Optional[int] = Query(None)):
+    """Request an archived report (>5 years old) via inbox"""
+    global tax_report_service
+    if not tax_report_service:
+        tax_report_service = TaxReportService(db, email_service)
+    
+    user = await require_auth(request)
+    result = await tax_report_service.request_archived_report(user.user_id, year, month)
+    
+    if not result.get("success"):
+        raise HTTPException(status_code=400, detail=result.get("error", "Request failed"))
+    
+    return result
+
+# Admin endpoint for batch report generation
+@api_router.post("/admin/tax-reports/generate-monthly")
+async def admin_generate_monthly_reports(request: Request, year: int = Query(...),
+                                         month: int = Query(...)):
+    """Admin: Generate monthly reports for all users with transactions"""
+    global tax_report_service
+    if not tax_report_service:
+        tax_report_service = TaxReportService(db, email_service)
+    
+    await require_admin(request)
+    result = await tax_report_service.generate_monthly_reports_for_all_users(year, month)
+    return result
+
+@api_router.post("/admin/tax-reports/generate-annual")
+async def admin_generate_annual_reports(request: Request, year: int = Query(...)):
+    """Admin: Generate annual 1099 reports for all providers"""
+    global tax_report_service
+    if not tax_report_service:
+        tax_report_service = TaxReportService(db, email_service)
+    
+    await require_admin(request)
+    result = await tax_report_service.generate_annual_reports_for_all_providers(year)
+    return result
 
 # ============== REFERRALS ==============
 
