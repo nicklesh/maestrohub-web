@@ -1,4 +1,4 @@
-# Maestro Hub - Pending Tasks for Production Deployment
+# Maestro Habitat - Pending Tasks for Production Deployment
 
 **Document Created:** June 2025  
 **Last Updated:** June 2025  
@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-The Maestro Hub application is **feature-complete for MVP** and has had critical security issues resolved. 
+The Maestro Habitat application is **feature-complete for MVP** and has had critical security issues resolved. 
 
 ### Overall Readiness Score: 85%
 
@@ -69,7 +69,7 @@ The Maestro Hub application is **feature-complete for MVP** and has had critical
 
 **Configuration:**
 - API Key: Configured in `/app/backend/.env`
-- From Email: `Maestro Hub <onboarding@resend.dev>` (Resend's test domain)
+- From Email: `Maestro Habitat <onboarding@resend.dev>` (Resend's test domain)
 
 **Email Templates Available:**
 - ✅ Booking Confirmation
