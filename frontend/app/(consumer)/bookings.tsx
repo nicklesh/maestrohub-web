@@ -17,6 +17,14 @@ import { useTheme } from '@/src/context/ThemeContext';
 import AppHeader from '@/src/components/AppHeader';
 import { format, parseISO, isPast } from 'date-fns';
 
+interface KidNotification {
+  notification_id: string;
+  notification_type: string;
+  sent_to: string;
+  sent_at: string;
+  status: string;
+}
+
 interface Booking {
   booking_id: string;
   tutor_id: string;
@@ -28,12 +36,14 @@ interface Booking {
   price_snapshot: number;
   currency?: string;
   currency_symbol?: string;
+  kid_notifications?: KidNotification[];
 }
 
 export default function BookingsScreen() {
   const router = useRouter();
   const { width } = useWindowDimensions();
   const { colors } = useTheme();
+  const { token } = useAuth();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
