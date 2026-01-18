@@ -619,6 +619,11 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     padding: 12,
     fontSize: 16,
   },
+  helperText: {
+    fontSize: 12,
+    marginTop: 4,
+    lineHeight: 16,
+  },
   textArea: {
     borderWidth: 1,
     borderRadius: 8,
