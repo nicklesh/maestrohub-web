@@ -278,7 +278,7 @@ export default function InviteParentScreen() {
   if (loading) {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-        <AppHeader showBack showUserName title=t("pages.invite_parent.title") />
+        <AppHeader showBack showUserName title={t("pages.invite_parent.title")} />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -288,7 +288,7 @@ export default function InviteParentScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <AppHeader showBack showUserName title=t("pages.invite_parent.title") />
+      <AppHeader showBack showUserName title={t("pages.invite_parent.title")} />
       
       {/* Share Link Card */}
       <View style={[styles.shareCard, { backgroundColor: colors.primaryLight, borderColor: colors.primary }]}>
