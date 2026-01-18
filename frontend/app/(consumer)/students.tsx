@@ -139,8 +139,6 @@ export default function StudentsScreen() {
       }
     }
   };
-    );
-  };
 
   const renderStudentCard = ({ item, index }: { item: Student; index: number }) => (
     <View
