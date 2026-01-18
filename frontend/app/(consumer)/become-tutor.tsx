@@ -266,12 +266,15 @@ export default function BecomeTutorScreen() {
         <Text style={[styles.label, { color: colors.text }]}>Password *</Text>
         <TextInput
           style={[styles.input, { backgroundColor: colors.surface, borderColor: colors.border, color: colors.text }]}
-          placeholder="At least 6 characters"
+          placeholder="Min 8 chars, uppercase, lowercase, number"
           placeholderTextColor={colors.textMuted}
           value={tutorPassword}
           onChangeText={setTutorPassword}
           secureTextEntry
         />
+        <Text style={[styles.helperText, { color: colors.textMuted }]}>
+          Password must be at least 8 characters with uppercase, lowercase, and a number
+        </Text>
       </View>
 
       <View style={styles.inputGroup}>
