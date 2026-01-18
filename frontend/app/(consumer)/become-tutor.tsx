@@ -481,10 +481,11 @@ export default function BecomeTutorScreen() {
           <Text style={[styles.label, { color: colors.text }]}>Session Length</Text>
           <View style={[styles.inputWithPrefix, { backgroundColor: colors.surface, borderColor: colors.border }]}>
             <TextInput
-              style={[styles.priceTextInput, { color: colors.text }]}
+              style={[styles.priceTextInput, { color: colors.text, minWidth: 40 }]}
               value={duration}
               onChangeText={setDuration}
               keyboardType="numeric"
+              maxLength={3}
             />
             <Text style={[styles.suffix, { color: colors.textMuted }]}>min</Text>
           </View>
