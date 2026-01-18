@@ -55,6 +55,7 @@ export default function BecomeTutorScreen() {
   const router = useRouter();
   const { width } = useWindowDimensions();
   const { colors } = useTheme();
+  const { showSuccess, showError, showInfo } = useToast();
   const { user } = useAuth();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
