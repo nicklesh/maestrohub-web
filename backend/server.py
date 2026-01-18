@@ -2656,12 +2656,29 @@ async def get_booking(booking_id: str, request: Request):
     market_id = booking.get("market_id") or (booking_tutor.get("market_id") if booking_tutor else "US_USD") or "US_USD"
     market_config = MARKETS_CONFIG.get(market_id, MARKETS_CONFIG["US_USD"])
     
+    # Get kid notifications for this booking
+    kid_notifications = await db.kid_notifications.find(
+        {"booking_id": booking_id},
+        {"_id": 0}
+    ).sort("sent_at", -1).to_list(10)
+    
+    # Get student notification settings
+    student_notify_settings = None
+    if student:
+        student_notify_settings = {
+            "notify_enabled": student.get("notify_upcoming_sessions", False),
+            "email": student.get("email"),
+            "phone": student.get("phone")
+        }
+    
     return {
         **booking,
         "tutor_name": tutor_user["name"] if tutor_user else "Unknown",
         "student_name": student["name"] if student else "Unknown",
         "currency": market_config["currency"],
-        "currency_symbol": market_config["currency_symbol"]
+        "currency_symbol": market_config["currency_symbol"],
+        "kid_notifications": kid_notifications,
+        "student_notify_settings": student_notify_settings
     }
 
 @api_router.post("/bookings/{booking_id}/cancel")
