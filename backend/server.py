@@ -100,7 +100,7 @@ COUNTRY_TO_MARKET = {
 }
 
 # Create the main app
-app = FastAPI(title="Maestro Hub API", version="1.0.0")
+app = FastAPI(title="Maestro Habitat API", version="1.0.0")
 api_router = APIRouter(prefix="/api")
 security = HTTPBearer(auto_error=False)
 
