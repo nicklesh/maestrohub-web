@@ -158,10 +158,6 @@ async def seed_coaches():
     
     categories = CATEGORIES
     
-    if not categories:
-        print("❌ No categories found. Please ensure categories are seeded first.")
-        return
-    
     print(f"📚 Found {len(categories)} categories\n")
     
     total_created = 0
