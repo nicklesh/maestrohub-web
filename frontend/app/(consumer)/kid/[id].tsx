@@ -47,6 +47,7 @@ export default function KidDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { token } = useAuth();
   const { colors } = useTheme();
+  const { t } = useTranslation();
   const router = useRouter();
   const [kid, setKid] = useState<Kid | null>(null);
   const [bookings, setBookings] = useState<Booking[]>([]);
