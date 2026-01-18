@@ -47,7 +47,7 @@ load_dotenv(ROOT_DIR / '.env')
 # MongoDB connection
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ.get('DB_NAME', 'maestrohub')]
+db = client[os.environ.get('DB_NAME', 'maestrohabitat')]
 
 # Initialize services (after db is created)
 tax_report_service = None
@@ -55,7 +55,7 @@ referral_service = None
 kid_notification_service = None
 
 # JWT Config
-JWT_SECRET = os.environ.get('JWT_SECRET', 'maestrohub-secret-key-change-in-production')
+JWT_SECRET = os.environ.get('JWT_SECRET', 'maestrohabitat-secret-key-change-in-production')
 JWT_ALGORITHM = 'HS256'
 JWT_EXPIRATION_DAYS = 7
 
@@ -1425,7 +1425,7 @@ async def consumer_invite_provider(data: ConsumerInviteCreate, request: Request)
         "consumer_name": user.name,
         "tutor_email": data.tutor_email.lower(),
         "tutor_name": data.tutor_name,
-        "message": data.message or f"Hi! I'd like to invite you to join Maestro Hub as a tutor. You'll get one free session to try out the platform!",
+        "message": data.message or f"Hi! I'd like to invite you to join Maestro Habitat as a tutor. You'll get one free session to try out the platform!",
         "status": "pending",
         "free_session_credit": True,  # Auto credit for first session
         "credit_amount": 50.00,  # Default credit amount
@@ -3838,7 +3838,7 @@ async def get_consumer_report_pdf(
         logo.hAlign = 'CENTER'
         story.append(logo)
     
-    story.append(Paragraph("Maestro Hub", title_style))
+    story.append(Paragraph("Maestro Habitat", title_style))
     story.append(Paragraph("Find your coach, master your skill", tagline_style))
     story.append(Spacer(1, 10))
     
@@ -3965,7 +3965,7 @@ async def get_consumer_report_pdf(
     doc.build(story)
     buffer.seek(0)
     
-    filename = f"maestrohub_report_{datetime.now().strftime('%Y%m%d')}.pdf"
+    filename = f"maestrohabitat_report_{datetime.now().strftime('%Y%m%d')}.pdf"
     return StreamingResponse(
         buffer,
         media_type="application/pdf",
@@ -4014,7 +4014,7 @@ async def get_provider_report_pdf(
         logo.hAlign = 'CENTER'
         story.append(logo)
     
-    story.append(Paragraph("Maestro Hub", title_style))
+    story.append(Paragraph("Maestro Habitat", title_style))
     story.append(Paragraph("Find your coach, master your skill", tagline_style))
     story.append(Spacer(1, 10))
     
@@ -4123,7 +4123,7 @@ async def get_provider_report_pdf(
     doc.build(story)
     buffer.seek(0)
     
-    filename = f"maestrohub_earnings_{datetime.now().strftime('%Y%m%d')}.pdf"
+    filename = f"maestrohabitat_earnings_{datetime.now().strftime('%Y%m%d')}.pdf"
     return StreamingResponse(
         buffer,
         media_type="application/pdf",
@@ -5295,7 +5295,7 @@ async def create_invite(data: InviteCreate, request: Request):
         "tutor_name": user.name,
         "email": data.email.lower(),
         "name": data.name,
-        "message": data.message or f"Hi! I'd like to invite you to join Maestro Hub. I'm available for tutoring sessions.",
+        "message": data.message or f"Hi! I'd like to invite you to join Maestro Habitat. I'm available for tutoring sessions.",
         "status": "pending",
         "created_at": datetime.now(timezone.utc),
         "expires_at": datetime.now(timezone.utc) + timedelta(days=30)
@@ -5311,7 +5311,7 @@ async def create_invite(data: InviteCreate, request: Request):
             "user_id": existing_user["user_id"],
             "type": "invite_received",
             "title": "New Tutor Invitation",
-            "message": f"{user.name} has invited you to connect on Maestro Hub!",
+            "message": f"{user.name} has invited you to connect on Maestro Habitat!",
             "data": {"invite_id": invite_id, "tutor_id": tutor["tutor_id"]},
             "read": False,
             "created_at": datetime.now(timezone.utc)
