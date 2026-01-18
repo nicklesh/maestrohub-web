@@ -1,282 +1,420 @@
 """
 Referral Service for Maestro Habitat
-Handles referral rewards for parents (free session) and coaches (fee waiver)
+Handles referral tracking, rewards, and credit management
+
+Rewards System:
+- Consumers: Get 1 FREE session after referred user completes 2 paid sessions
+- Providers: Get 1-month platform fee waiver after referred user completes 2 paid sessions
 """
+import uuid
 import logging
 from datetime import datetime, timezone, timedelta
 from typing import Optional, Dict, Any, List
-import uuid
 
 logger = logging.getLogger(__name__)
 
-# Referral reward configuration
-REFERRAL_CONFIG = {
-    "sessions_required": 2,  # Number of paid sessions to qualify
-    "consumer_reward": {
-        "type": "free_session",
-        "description": "1 free session credit",
-        "value": 1  # Number of free sessions
-    },
-    "tutor_reward": {
-        "type": "fee_waiver",
-        "description": "1 month platform fee waiver",
-        "value": 30  # Days of fee waiver
-    }
-}
+# Constants
+REQUIRED_SESSIONS_FOR_REWARD = 2  # Referred user must complete 2 paid sessions
+PROVIDER_FEE_WAIVER_DAYS = 30  # 1 month fee waiver
+
 
 class ReferralService:
-    def __init__(self, db):
+    def __init__(self, db, notification_service=None, email_service=None):
         self.db = db
+        self.notification_service = notification_service
+        self.email_service = email_service
     
-    async def create_referral(self, referrer_id: str, referrer_role: str, 
-                              referred_id: str, referred_role: str) -> Dict:
-        """Create a new referral tracking record"""
-        referral_id = f"ref_{uuid.uuid4().hex[:12]}"
+    # ============== REFERRAL CODE MANAGEMENT ==============
+    async def get_or_create_referral_code(self, user_id: str) -> str:
+        """Get existing or create new referral code for user"""
+        user = await self.db.users.find_one({"user_id": user_id}, {"_id": 0})
+        if not user:
+            return None
         
-        # Check for duplicate
+        # Check if user already has a referral code
+        if user.get("referral_code"):
+            return user["referral_code"]
+        
+        # Generate new unique code
+        code = self._generate_unique_code(user.get("name", "USER"))
+        
+        # Update user with referral code
+        await self.db.users.update_one(
+            {"user_id": user_id},
+            {"$set": {"referral_code": code, "referral_code_created_at": datetime.now(timezone.utc)}}
+        )
+        
+        return code
+    
+    def _generate_unique_code(self, name: str) -> str:
+        """Generate unique referral code based on name"""
+        # Take first 3 letters of name (uppercase) + random suffix
+        prefix = ''.join(c for c in name.upper() if c.isalpha())[:3] or "REF"
+        suffix = uuid.uuid4().hex[:5].upper()
+        return f"{prefix}{suffix}"
+    
+    async def find_referrer_by_code(self, code: str) -> Optional[Dict]:
+        """Find user by referral code"""
+        user = await self.db.users.find_one(
+            {"referral_code": code.upper()},
+            {"_id": 0, "password_hash": 0}
+        )
+        return user
+    
+    # ============== REFERRAL CREATION ==============
+    async def create_referral(self, referrer_id: str, referred_id: str) -> Dict:
+        """Create a new referral relationship"""
+        # Validate users
+        referrer = await self.db.users.find_one({"user_id": referrer_id}, {"_id": 0})
+        referred = await self.db.users.find_one({"user_id": referred_id}, {"_id": 0})
+        
+        if not referrer or not referred:
+            return {"success": False, "error": "User not found"}
+        
+        if referrer_id == referred_id:
+            return {"success": False, "error": "Cannot refer yourself"}
+        
+        # Check if referral already exists
         existing = await self.db.referrals.find_one({
-            "referrer_id": referrer_id,
             "referred_id": referred_id
         })
         if existing:
-            return {"status": "exists", "referral_id": existing["referral_id"]}
+            return {"success": False, "error": "User was already referred"}
         
+        # Create referral record
+        referral_id = f"ref_{uuid.uuid4().hex[:12]}"
         referral_doc = {
             "referral_id": referral_id,
             "referrer_id": referrer_id,
-            "referrer_role": referrer_role,
+            "referrer_role": referrer.get("role", "consumer"),
             "referred_id": referred_id,
-            "referred_role": referred_role,
-            "status": "pending",
-            "sessions_completed": 0,
-            "reward_type": REFERRAL_CONFIG[f"{referrer_role}_reward"]["type"],
-            "reward_applied": False,
+            "referred_role": referred.get("role", "consumer"),
+            "status": "pending",  # pending -> qualified -> rewarded
+            "referred_sessions_count": 0,
+            "referrer_reward_type": self._get_reward_type(referrer.get("role")),
+            "referrer_reward_status": "pending",
             "created_at": datetime.now(timezone.utc),
             "qualified_at": None,
             "rewarded_at": None
         }
         
         await self.db.referrals.insert_one(referral_doc)
+        
+        # Update referred user
+        await self.db.users.update_one(
+            {"user_id": referred_id},
+            {"$set": {"referred_by": referrer_id, "referral_id": referral_id}}
+        )
+        
         logger.info(f"Created referral {referral_id}: {referrer_id} -> {referred_id}")
         
-        return {"status": "created", "referral_id": referral_id}
+        return {
+            "success": True,
+            "referral_id": referral_id,
+            "message": f"Referral recorded! You'll earn a reward after {REQUIRED_SESSIONS_FOR_REWARD} paid sessions."
+        }
     
-    async def record_session_completion(self, user_id: str, booking_id: str) -> Optional[Dict]:
-        """
-        Record a completed paid session and check if referral qualifies.
-        Called after a successful payment/booking completion.
-        """
-        # Find any pending referrals where this user was referred
-        referral = await self.db.referrals.find_one({
-            "referred_id": user_id,
-            "status": "pending"
-        })
+    def _get_reward_type(self, role: str) -> str:
+        """Determine reward type based on referrer role"""
+        if role == "provider" or role == "tutor":
+            return "fee_waiver"  # 1-month platform fee waiver
+        return "free_session"  # 1 free session credit
+    
+    # ============== SESSION TRACKING ==============
+    async def record_referred_session(self, user_id: str, booking_id: str) -> Dict:
+        """Record a completed paid session for a referred user"""
+        # Find the referral where this user was referred
+        referral = await self.db.referrals.find_one(
+            {"referred_id": user_id, "status": {"$in": ["pending", "qualified"]}},
+            {"_id": 0}
+        )
         
         if not referral:
-            return None
+            return {"success": True, "message": "No active referral found"}
         
-        # Increment sessions completed
-        new_count = referral["sessions_completed"] + 1
-        update_data = {"sessions_completed": new_count}
+        # Increment session count
+        new_count = referral.get("referred_sessions_count", 0) + 1
         
-        # Check if qualified (2 sessions completed)
-        if new_count >= REFERRAL_CONFIG["sessions_required"]:
+        update_data = {
+            "referred_sessions_count": new_count,
+            "last_session_at": datetime.now(timezone.utc)
+        }
+        
+        # Check if qualification threshold reached
+        if new_count >= REQUIRED_SESSIONS_FOR_REWARD and referral["status"] == "pending":
             update_data["status"] = "qualified"
             update_data["qualified_at"] = datetime.now(timezone.utc)
             
-            # Apply reward
-            await self._apply_reward(referral)
+            # Apply reward automatically
+            await self._apply_referrer_reward(referral)
             update_data["status"] = "rewarded"
-            update_data["reward_applied"] = True
             update_data["rewarded_at"] = datetime.now(timezone.utc)
+            update_data["referrer_reward_status"] = "applied"
+            
+            logger.info(f"Referral {referral['referral_id']} qualified and rewarded!")
         
         await self.db.referrals.update_one(
             {"referral_id": referral["referral_id"]},
             {"$set": update_data}
         )
         
-        if new_count >= REFERRAL_CONFIG["sessions_required"]:
-            logger.info(f"Referral {referral['referral_id']} qualified and rewarded!")
-            return {
-                "referral_id": referral["referral_id"],
-                "status": "rewarded",
-                "referrer_id": referral["referrer_id"],
-                "reward_type": referral["reward_type"]
-            }
-        
         return {
-            "referral_id": referral["referral_id"],
-            "status": "pending",
+            "success": True,
             "sessions_completed": new_count,
-            "sessions_required": REFERRAL_CONFIG["sessions_required"]
+            "sessions_required": REQUIRED_SESSIONS_FOR_REWARD,
+            "is_qualified": new_count >= REQUIRED_SESSIONS_FOR_REWARD
         }
     
-    async def _apply_reward(self, referral: Dict) -> bool:
-        """Apply the referral reward to the referrer"""
+    async def _apply_referrer_reward(self, referral: Dict) -> None:
+        """Apply the reward to the referrer"""
         referrer_id = referral["referrer_id"]
-        referrer_role = referral["referrer_role"]
-        reward_type = referral["reward_type"]
+        reward_type = referral.get("referrer_reward_type", "free_session")
         
-        try:
-            if reward_type == "free_session":
-                # Add free session credit to consumer
-                credit_id = f"credit_{uuid.uuid4().hex[:12]}"
-                await self.db.session_credits.insert_one({
-                    "credit_id": credit_id,
-                    "user_id": referrer_id,
-                    "type": "referral_reward",
-                    "sessions_remaining": REFERRAL_CONFIG["consumer_reward"]["value"],
-                    "referral_id": referral["referral_id"],
-                    "created_at": datetime.now(timezone.utc),
-                    "expires_at": datetime.now(timezone.utc) + timedelta(days=365)  # 1 year expiry
-                })
-                
-                # Send notification
-                await self._send_reward_notification(
-                    referrer_id,
-                    "🎉 Free Session Earned!",
-                    "Your referral completed 2 sessions! You've earned 1 free session credit."
-                )
-                
-                logger.info(f"Applied free session credit {credit_id} to user {referrer_id}")
-                
-            elif reward_type == "fee_waiver":
-                # Apply fee waiver to tutor
-                waiver_id = f"waiver_{uuid.uuid4().hex[:12]}"
-                waiver_days = REFERRAL_CONFIG["tutor_reward"]["value"]
-                
-                # Check if tutor already has an active waiver
-                existing_waiver = await self.db.fee_waivers.find_one({
-                    "tutor_id": referrer_id,
-                    "expires_at": {"$gt": datetime.now(timezone.utc)}
-                })
-                
-                if existing_waiver:
-                    # Extend existing waiver
-                    new_expiry = existing_waiver["expires_at"] + timedelta(days=waiver_days)
-                    await self.db.fee_waivers.update_one(
-                        {"waiver_id": existing_waiver["waiver_id"]},
-                        {"$set": {"expires_at": new_expiry}}
-                    )
-                else:
-                    # Create new waiver
-                    await self.db.fee_waivers.insert_one({
-                        "waiver_id": waiver_id,
-                        "tutor_id": referrer_id,
-                        "type": "referral_reward",
-                        "referral_id": referral["referral_id"],
-                        "starts_at": datetime.now(timezone.utc),
-                        "expires_at": datetime.now(timezone.utc) + timedelta(days=waiver_days),
-                        "created_at": datetime.now(timezone.utc)
-                    })
-                
-                # Send notification
-                await self._send_reward_notification(
-                    referrer_id,
-                    "🎉 Platform Fee Waived!",
-                    f"Your referral completed 2 sessions! You've earned {waiver_days} days of platform fee waiver."
-                )
-                
-                logger.info(f"Applied fee waiver to tutor {referrer_id}")
+        if reward_type == "fee_waiver":
+            # Provider: Apply 1-month fee waiver
+            waiver_until = datetime.now(timezone.utc) + timedelta(days=PROVIDER_FEE_WAIVER_DAYS)
             
-            return True
+            await self.db.users.update_one(
+                {"user_id": referrer_id},
+                {
+                    "$set": {
+                        "fee_waiver_until": waiver_until,
+                        "fee_waiver_reason": f"referral_{referral['referral_id']}"
+                    }
+                }
+            )
             
-        except Exception as e:
-            logger.error(f"Failed to apply reward for referral {referral['referral_id']}: {e}")
-            return False
+            # Record the fee waiver
+            waiver_doc = {
+                "waiver_id": f"waiver_{uuid.uuid4().hex[:12]}",
+                "user_id": referrer_id,
+                "type": "referral_reward",
+                "referral_id": referral["referral_id"],
+                "waiver_days": PROVIDER_FEE_WAIVER_DAYS,
+                "valid_until": waiver_until,
+                "created_at": datetime.now(timezone.utc)
+            }
+            await self.db.fee_waivers.insert_one(waiver_doc)
+            
+            logger.info(f"Applied {PROVIDER_FEE_WAIVER_DAYS}-day fee waiver to provider {referrer_id}")
+            
+            # Notify referrer
+            if self.notification_service:
+                await self.notification_service.create_notification(
+                    user_id=referrer_id,
+                    notification_type="referral_reward",
+                    title="Referral Reward Earned!",
+                    message=f"Congratulations! Your referral has completed {REQUIRED_SESSIONS_FOR_REWARD} sessions. You've earned a 1-month platform fee waiver!",
+                    data={"referral_id": referral["referral_id"], "reward_type": "fee_waiver"}
+                )
+        else:
+            # Consumer: Add free session credit
+            await self.db.users.update_one(
+                {"user_id": referrer_id},
+                {
+                    "$inc": {"free_session_credits": 1},
+                    "$push": {
+                        "credit_history": {
+                            "type": "referral_reward",
+                            "referral_id": referral["referral_id"],
+                            "credits": 1,
+                            "created_at": datetime.now(timezone.utc)
+                        }
+                    }
+                }
+            )
+            
+            logger.info(f"Added 1 free session credit to consumer {referrer_id}")
+            
+            # Notify referrer
+            if self.notification_service:
+                await self.notification_service.create_notification(
+                    user_id=referrer_id,
+                    notification_type="referral_reward",
+                    title="Free Session Earned!",
+                    message=f"Congratulations! Your referral has completed {REQUIRED_SESSIONS_FOR_REWARD} sessions. You've earned 1 FREE session!",
+                    data={"referral_id": referral["referral_id"], "reward_type": "free_session"}
+                )
     
-    async def _send_reward_notification(self, user_id: str, title: str, message: str):
-        """Send notification about reward"""
-        await self.db.notifications.insert_one({
-            "notification_id": f"notif_{uuid.uuid4().hex[:12]}",
-            "user_id": user_id,
-            "type": "referral_reward",
-            "title": title,
-            "message": message,
-            "is_read": False,
-            "created_at": datetime.now(timezone.utc)
-        })
-    
+    # ============== USER QUERIES ==============
     async def get_user_referrals(self, user_id: str) -> Dict:
-        """Get referral stats and list for a user"""
+        """Get all referrals made by a user"""
+        # Get user info
+        user = await self.db.users.find_one({"user_id": user_id}, {"_id": 0})
+        if not user:
+            return {"success": False, "error": "User not found"}
+        
+        # Get referrals where user is the referrer
         referrals = await self.db.referrals.find(
             {"referrer_id": user_id},
             {"_id": 0}
-        ).sort("created_at", -1).to_list(50)
+        ).sort("created_at", -1).to_list(100)
+        
+        # Enrich with referred user info
+        enriched_referrals = []
+        for ref in referrals:
+            referred_user = await self.db.users.find_one(
+                {"user_id": ref["referred_id"]},
+                {"_id": 0, "password_hash": 0, "referral_code": 0}
+            )
+            enriched_referrals.append({
+                **ref,
+                "referred_name": referred_user.get("name", "Unknown") if referred_user else "Unknown",
+                "referred_email": referred_user.get("email", "") if referred_user else "",
+                "sessions_progress": f"{ref.get('referred_sessions_count', 0)}/{REQUIRED_SESSIONS_FOR_REWARD}"
+            })
         
         # Calculate stats
-        total = len(referrals)
-        pending = len([r for r in referrals if r["status"] == "pending"])
-        qualified = len([r for r in referrals if r["status"] in ["qualified", "rewarded"]])
+        total_referrals = len(referrals)
+        pending_referrals = len([r for r in referrals if r["status"] == "pending"])
+        rewarded_referrals = len([r for r in referrals if r["status"] == "rewarded"])
+        
+        # Get user's referral code
+        referral_code = await self.get_or_create_referral_code(user_id)
         
         return {
-            "referrals": referrals,
+            "success": True,
+            "referral_code": referral_code,
             "stats": {
-                "total": total,
-                "pending": pending,
-                "qualified": qualified,
-                "sessions_required": REFERRAL_CONFIG["sessions_required"]
-            }
+                "total_referrals": total_referrals,
+                "pending_referrals": pending_referrals,
+                "rewarded_referrals": rewarded_referrals,
+                "required_sessions": REQUIRED_SESSIONS_FOR_REWARD
+            },
+            "referrals": enriched_referrals,
+            "reward_type": self._get_reward_type(user.get("role")),
+            "reward_description": self._get_reward_description(user.get("role"))
         }
     
-    async def get_referral_code(self, user_id: str) -> str:
-        """Generate or get referral code for user"""
-        # Simple referral code based on user_id
-        return user_id[-8:].upper()
+    def _get_reward_description(self, role: str) -> str:
+        """Get human-readable reward description"""
+        if role == "provider" or role == "tutor":
+            return f"Earn a 1-month platform fee waiver for each referral who completes {REQUIRED_SESSIONS_FOR_REWARD} paid sessions"
+        return f"Earn 1 FREE session for each referral who completes {REQUIRED_SESSIONS_FOR_REWARD} paid sessions"
     
-    async def find_referrer_by_code(self, code: str) -> Optional[Dict]:
-        """Find referrer by referral code"""
-        # Search for user whose ID ends with this code
-        users = await self.db.users.find({}, {"_id": 0, "user_id": 1, "role": 1, "name": 1}).to_list(None)
+    async def get_user_credits(self, user_id: str) -> Dict:
+        """Get user's available credits from referrals"""
+        user = await self.db.users.find_one({"user_id": user_id}, {"_id": 0})
+        if not user:
+            return {"success": False, "error": "User not found"}
         
-        for user in users:
-            if user["user_id"][-8:].upper() == code.upper():
-                return user
+        free_sessions = user.get("free_session_credits", 0)
+        fee_waiver_until = user.get("fee_waiver_until")
         
-        return None
-    
-    async def check_user_credits(self, user_id: str) -> Dict:
-        """Check user's available session credits"""
-        credits = await self.db.session_credits.find({
-            "user_id": user_id,
-            "sessions_remaining": {"$gt": 0},
-            "expires_at": {"$gt": datetime.now(timezone.utc)}
-        }).to_list(10)
-        
-        total_sessions = sum(c.get("sessions_remaining", 0) for c in credits)
+        has_active_waiver = False
+        waiver_days_remaining = 0
+        if fee_waiver_until:
+            if isinstance(fee_waiver_until, str):
+                fee_waiver_until = datetime.fromisoformat(fee_waiver_until.replace('Z', '+00:00'))
+            if fee_waiver_until.tzinfo is None:
+                fee_waiver_until = fee_waiver_until.replace(tzinfo=timezone.utc)
+            if fee_waiver_until > datetime.now(timezone.utc):
+                has_active_waiver = True
+                waiver_days_remaining = (fee_waiver_until - datetime.now(timezone.utc)).days
         
         return {
-            "total_free_sessions": total_sessions,
-            "credits": [{
-                "credit_id": c["credit_id"],
-                "sessions_remaining": c["sessions_remaining"],
-                "expires_at": c["expires_at"].isoformat() if c.get("expires_at") else None
-            } for c in credits]
+            "success": True,
+            "free_session_credits": free_sessions,
+            "has_active_fee_waiver": has_active_waiver,
+            "fee_waiver_days_remaining": waiver_days_remaining,
+            "credit_history": user.get("credit_history", [])[-10:]  # Last 10 entries
         }
     
-    async def use_session_credit(self, user_id: str) -> Optional[str]:
-        """Use one session credit if available. Returns credit_id if used."""
-        credit = await self.db.session_credits.find_one({
-            "user_id": user_id,
-            "sessions_remaining": {"$gt": 0},
-            "expires_at": {"$gt": datetime.now(timezone.utc)}
-        }, sort=[("expires_at", 1)])  # Use oldest first
+    async def use_free_session_credit(self, user_id: str, booking_id: str) -> Dict:
+        """Use a free session credit for a booking"""
+        user = await self.db.users.find_one({"user_id": user_id}, {"_id": 0})
+        if not user:
+            return {"success": False, "error": "User not found"}
         
-        if not credit:
-            return None
+        free_sessions = user.get("free_session_credits", 0)
+        if free_sessions < 1:
+            return {"success": False, "error": "No free session credits available"}
         
-        await self.db.session_credits.update_one(
-            {"credit_id": credit["credit_id"]},
-            {"$inc": {"sessions_remaining": -1}}
+        # Deduct credit
+        await self.db.users.update_one(
+            {"user_id": user_id},
+            {
+                "$inc": {"free_session_credits": -1},
+                "$push": {
+                    "credit_history": {
+                        "type": "credit_used",
+                        "booking_id": booking_id,
+                        "credits": -1,
+                        "created_at": datetime.now(timezone.utc)
+                    }
+                }
+            }
         )
         
-        return credit["credit_id"]
-    
-    async def check_tutor_fee_waiver(self, tutor_id: str) -> Optional[Dict]:
-        """Check if tutor has active fee waiver"""
-        waiver = await self.db.fee_waivers.find_one({
-            "tutor_id": tutor_id,
-            "expires_at": {"$gt": datetime.now(timezone.utc)}
-        }, {"_id": 0})
+        logger.info(f"Used 1 free session credit for user {user_id}, booking {booking_id}")
         
-        return waiver
+        return {
+            "success": True,
+            "credits_remaining": free_sessions - 1,
+            "message": "Free session credit applied!"
+        }
+    
+    async def check_provider_fee_waiver(self, user_id: str) -> Dict:
+        """Check if provider has active fee waiver"""
+        user = await self.db.users.find_one({"user_id": user_id}, {"_id": 0})
+        if not user:
+            return {"has_waiver": False}
+        
+        fee_waiver_until = user.get("fee_waiver_until")
+        if not fee_waiver_until:
+            return {"has_waiver": False}
+        
+        if isinstance(fee_waiver_until, str):
+            fee_waiver_until = datetime.fromisoformat(fee_waiver_until.replace('Z', '+00:00'))
+        if fee_waiver_until.tzinfo is None:
+            fee_waiver_until = fee_waiver_until.replace(tzinfo=timezone.utc)
+        
+        if fee_waiver_until > datetime.now(timezone.utc):
+            return {
+                "has_waiver": True,
+                "waiver_until": fee_waiver_until.isoformat(),
+                "days_remaining": (fee_waiver_until - datetime.now(timezone.utc)).days
+            }
+        
+        return {"has_waiver": False}
+    
+    # ============== ADMIN FUNCTIONS ==============
+    async def get_all_referrals(self, status: str = None, limit: int = 100) -> List[Dict]:
+        """Admin: Get all referrals in the system"""
+        query = {}
+        if status:
+            query["status"] = status
+        
+        referrals = await self.db.referrals.find(
+            query, {"_id": 0}
+        ).sort("created_at", -1).to_list(limit)
+        
+        return referrals
+    
+    async def get_referral_stats(self) -> Dict:
+        """Admin: Get referral system statistics"""
+        total = await self.db.referrals.count_documents({})
+        pending = await self.db.referrals.count_documents({"status": "pending"})
+        qualified = await self.db.referrals.count_documents({"status": "qualified"})
+        rewarded = await self.db.referrals.count_documents({"status": "rewarded"})
+        
+        # Count rewards by type
+        fee_waivers = await self.db.referrals.count_documents({
+            "status": "rewarded",
+            "referrer_reward_type": "fee_waiver"
+        })
+        free_sessions = await self.db.referrals.count_documents({
+            "status": "rewarded",
+            "referrer_reward_type": "free_session"
+        })
+        
+        return {
+            "total_referrals": total,
+            "pending": pending,
+            "qualified": qualified,
+            "rewarded": rewarded,
+            "rewards_given": {
+                "fee_waivers": fee_waivers,
+                "free_sessions": free_sessions
+            }
+        }
