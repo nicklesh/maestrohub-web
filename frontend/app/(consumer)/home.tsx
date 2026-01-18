@@ -186,7 +186,7 @@ export default function HomeScreen() {
         {category.name}
       </Text>
       <Text style={styles.categorySubjects}>
-        {category.subjects.length} subjects
+        {t('pages.home.subjects_count', { count: category.subjects.length })}
       </Text>
     </TouchableOpacity>
   );
