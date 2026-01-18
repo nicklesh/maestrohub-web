@@ -33,14 +33,6 @@ export default function AdminSecurityScreen() {
 
   const styles = getStyles(colors);
 
-  const showAlert = (title: string, message: string) => {
-    if (Platform.OS === 'web') {
-      window.alert(`${title}: ${message}`);
-    } else {
-      Alert.alert(title, message);
-    }
-  };
-
   const saveSettings = () => {
     showSuccess('Security settings saved!');
   };
