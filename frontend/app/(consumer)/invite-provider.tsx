@@ -366,6 +366,46 @@ export default function InviteProviderScreen() {
           </View>
         </KeyboardAvoidingView>
       </Modal>
+
+      {/* Social Share Modal */}
+      <Modal visible={showShareModal} animationType="slide" transparent>
+        <View style={styles.modalOverlay}>
+          <TouchableOpacity
+            style={styles.modalBackdrop}
+            activeOpacity={1}
+            onPress={() => setShowShareModal(false)}
+          />
+          <View style={[styles.bottomSheet, { backgroundColor: colors.surface }]}>
+            <View style={[styles.sheetHandle, { backgroundColor: colors.gray300 }]} />
+            <Text style={[styles.sheetTitle, { color: colors.text }]}>Share on Social Media</Text>
+            <Text style={[styles.sheetSubtitle, { color: colors.textMuted }]}>
+              Invite coaches to join Maestro Habitat
+            </Text>
+            
+            <View style={styles.socialGrid}>
+              {SOCIAL_PLATFORMS.map((platform) => (
+                <TouchableOpacity
+                  key={platform.id}
+                  style={styles.socialButton}
+                  onPress={() => handleShareVia(platform)}
+                >
+                  <View style={[styles.socialIconCircle, { backgroundColor: platform.color }]}>
+                    <Ionicons name={platform.icon as any} size={24} color="#FFFFFF" />
+                  </View>
+                  <Text style={[styles.socialName, { color: colors.text }]}>{platform.name}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            <TouchableOpacity
+              style={[styles.cancelButton, { borderColor: colors.border }]}
+              onPress={() => setShowShareModal(false)}
+            >
+              <Text style={[styles.cancelButtonText, { color: colors.text }]}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
