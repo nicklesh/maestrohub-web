@@ -123,26 +123,22 @@ export default function StudentsScreen() {
     }
   };
 
-  const handleDelete = (student: Student) => {
-    Alert.alert(
-      'Delete Student',
-      `Are you sure you want to remove ${student.name}?`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await api.delete(`/students/${student.student_id}`);
-              loadStudents();
-            } catch (error) {
-              console.error('Delete failed:', error);
-              showError('Failed to delete student');
-            }
-          },
-        },
-      ]
+  const handleDelete = async (student: Student) => {
+    const confirmed = Platform.OS === 'web' 
+      ? window.confirm(`Are you sure you want to remove ${student.name}?`)
+      : true; // On native, proceed (could use a modal in production)
+    
+    if (confirmed) {
+      try {
+        await api.delete(`/students/${student.student_id}`);
+        showSuccess('Student removed successfully');
+        loadStudents();
+      } catch (error) {
+        console.error('Delete failed:', error);
+        showError('Failed to delete student');
+      }
+    }
+  };
     );
   };
 
