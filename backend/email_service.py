@@ -1,5 +1,5 @@
 """
-Email Service for Maestro Hub
+Email Service for Maestro Habitat
 Uses Resend API for production, mocks for development
 """
 
@@ -21,7 +21,7 @@ RESEND_API_KEY = os.environ.get('RESEND_API_KEY', '')
 IS_MOCK_MODE = not RESEND_API_KEY or RESEND_API_KEY.startswith('re_placeholder') or RESEND_API_KEY == ''
 
 # Email sender - using Resend's test domain by default
-FROM_EMAIL = os.environ.get('FROM_EMAIL', 'Maestro Hub <onboarding@resend.dev>')
+FROM_EMAIL = os.environ.get('FROM_EMAIL', 'Maestro Habitat <onboarding@resend.dev>')
 
 
 class EmailService:
@@ -116,7 +116,7 @@ def booking_confirmation_email(
     <!-- Header -->
     <tr>
       <td style="background-color: #4F46E5; padding: 24px; text-align: center;">
-        <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Maestro Hub</h1>
+        <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Maestro Habitat</h1>
       </td>
     </tr>
     
@@ -177,7 +177,7 @@ def booking_confirmation_email(
     <tr>
       <td style="background-color: #f8f9fa; padding: 24px; text-align: center;">
         <p style="color: #999; font-size: 12px; margin: 0;">
-          © 2025 Maestro Hub. All rights reserved.<br>
+          © 2025 Maestro Habitat. All rights reserved.<br>
           <a href="#" style="color: #4F46E5;">Manage your bookings</a>
         </p>
       </td>
@@ -206,7 +206,7 @@ What's next?
 - Make sure to join on time
 - You can cancel up to 24 hours before for a full refund
 
-© 2025 Maestro Hub
+© 2025 Maestro Habitat
 """
     
     return {
@@ -248,7 +248,7 @@ def booking_cancellation_email(
   <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
     <tr>
       <td style="background-color: #4F46E5; padding: 24px; text-align: center;">
-        <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Maestro Hub</h1>
+        <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Maestro Habitat</h1>
       </td>
     </tr>
     <tr>
@@ -286,7 +286,7 @@ def booking_cancellation_email(
     </tr>
     <tr>
       <td style="background-color: #f8f9fa; padding: 24px; text-align: center;">
-        <p style="color: #999; font-size: 12px; margin: 0;">© 2025 Maestro Hub</p>
+        <p style="color: #999; font-size: 12px; margin: 0;">© 2025 Maestro Habitat</p>
       </td>
     </tr>
   </table>
@@ -329,7 +329,7 @@ def session_reminder_email(
   <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
     <tr>
       <td style="background-color: #4F46E5; padding: 24px; text-align: center;">
-        <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Maestro Hub</h1>
+        <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Maestro Habitat</h1>
       </td>
     </tr>
     <tr>
@@ -362,7 +362,7 @@ def session_reminder_email(
     </tr>
     <tr>
       <td style="background-color: #f8f9fa; padding: 24px; text-align: center;">
-        <p style="color: #999; font-size: 12px; margin: 0;">© 2025 Maestro Hub</p>
+        <p style="color: #999; font-size: 12px; margin: 0;">© 2025 Maestro Habitat</p>
       </td>
     </tr>
   </table>
@@ -404,7 +404,7 @@ def new_review_notification_email(
   <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
     <tr>
       <td style="background-color: #4F46E5; padding: 24px; text-align: center;">
-        <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Maestro Hub</h1>
+        <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Maestro Habitat</h1>
       </td>
     </tr>
     <tr>
@@ -433,7 +433,7 @@ def new_review_notification_email(
     </tr>
     <tr>
       <td style="background-color: #f8f9fa; padding: 24px; text-align: center;">
-        <p style="color: #999; font-size: 12px; margin: 0;">© 2025 Maestro Hub</p>
+        <p style="color: #999; font-size: 12px; margin: 0;">© 2025 Maestro Habitat</p>
       </td>
     </tr>
   </table>
@@ -477,7 +477,7 @@ def no_show_notification_email(
   <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
     <tr>
       <td style="background-color: #DC2626; padding: 24px; text-align: center;">
-        <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Maestro Hub</h1>
+        <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Maestro Habitat</h1>
       </td>
     </tr>
     <tr>
@@ -502,7 +502,7 @@ def no_show_notification_email(
     </tr>
     <tr>
       <td style="background-color: #f8f9fa; padding: 24px; text-align: center;">
-        <p style="color: #999; font-size: 12px; margin: 0;">© 2025 Maestro Hub</p>
+        <p style="color: #999; font-size: 12px; margin: 0;">© 2025 Maestro Habitat</p>
       </td>
     </tr>
   </table>
