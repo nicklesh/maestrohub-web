@@ -156,7 +156,7 @@ async def seed_coaches():
     """Main function to seed coaches for each subcategory"""
     print("\n🌱 Starting seed data generation...\n")
     
-    categories = await get_existing_categories()
+    categories = CATEGORIES
     
     if not categories:
         print("❌ No categories found. Please ensure categories are seeded first.")
