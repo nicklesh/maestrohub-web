@@ -134,8 +134,20 @@ export default function BecomeTutorScreen() {
       showError('You must use a different email address for your tutor account. Your parent account uses this email.');
       return false;
     }
-    if (!tutorPassword || tutorPassword.length < 6) {
-      showError('Password must be at least 6 characters');
+    if (!tutorPassword || tutorPassword.length < 8) {
+      showError('Password must be at least 8 characters');
+      return false;
+    }
+    if (!/[A-Z]/.test(tutorPassword)) {
+      showError('Password must contain at least one uppercase letter');
+      return false;
+    }
+    if (!/[a-z]/.test(tutorPassword)) {
+      showError('Password must contain at least one lowercase letter');
+      return false;
+    }
+    if (!/[0-9]/.test(tutorPassword)) {
+      showError('Password must contain at least one number');
       return false;
     }
     if (!tutorName.trim()) {
