@@ -2625,12 +2625,21 @@ async def get_bookings(request: Request, role: str = "consumer"):
         market_id = b.get("market_id") or (tutor.get("market_id") if tutor else "US_USD") or "US_USD"
         market_config = MARKETS_CONFIG.get(market_id, MARKETS_CONFIG["US_USD"])
         
+        # Get kid notifications for this booking (for consumer view)
+        kid_notifications = []
+        if role == "consumer":
+            kid_notifications = await db.kid_notifications.find(
+                {"booking_id": b["booking_id"]},
+                {"_id": 0}
+            ).sort("sent_at", -1).to_list(5)
+        
         results.append({
             **b,
             "tutor_name": tutor_user["name"] if tutor_user else "Unknown",
             "student_name": student["name"] if student else "Unknown",
             "currency": market_config["currency"],
-            "currency_symbol": market_config["currency_symbol"]
+            "currency_symbol": market_config["currency_symbol"],
+            "kid_notifications": kid_notifications
         })
     
     return results
