@@ -338,6 +338,14 @@ export default function ProfileScreen() {
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
 
+            <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(consumer)/invite-parent')}>
+              <View style={styles.menuItemLeft}>
+                <Ionicons name="people-outline" size={22} color={colors.primary} />
+                <Text style={[styles.menuItemText, { color: colors.text }]}>Invite Parents</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
+
             <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(consumer)/invite-provider')}>
               <View style={styles.menuItemLeft}>
                 <Ionicons name="person-add-outline" size={22} color={colors.primary} />
