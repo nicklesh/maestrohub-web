@@ -200,27 +200,27 @@ export default function TutorDetailScreen() {
               <View key={m} style={[styles.tag, { backgroundColor: colors.primaryLight }]}>
                 <Ionicons name={m === 'online' ? 'videocam' : 'location'} size={14} color={colors.primary} />
                 <Text style={[styles.tagText, { color: colors.primary }]}>
-                  {m === 'online' ? 'Online' : 'In-Person'}
+                  {m === 'online' ? t('modality.online') : t('modality.in_person')}
                 </Text>
               </View>
             ))}
           </View>
 
           <Text style={[styles.priceText, { color: colors.primary }]}>
-            {tutor.currency_symbol || '$'}{tutor.base_price}/hr
+            {tutor.currency_symbol || '$'}{tutor.base_price}{t('pages.tutor_detail.per_hour')}
           </Text>
         </View>
 
         {/* Bio Section */}
         <View style={[styles.section, { backgroundColor: colors.surface }]}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>About</Text>
-          <Text style={[styles.bioText, { color: colors.textMuted }]}>{tutor.bio || 'No bio available'}</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.tutor_detail.about')}</Text>
+          <Text style={[styles.bioText, { color: colors.textMuted }]}>{tutor.bio || t('pages.tutor_detail.no_reviews')}</Text>
         </View>
 
         {/* Subjects Section */}
         {(tutor.subjects || []).length > 0 && (
           <View style={[styles.section, { backgroundColor: colors.surface }]}>
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>Subjects</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.tutor_detail.subjects')}</Text>
             <View style={styles.chipsList}>
               {tutor.subjects.map((s) => (
                 <View key={s} style={[styles.chip, { backgroundColor: colors.background, borderColor: colors.border }]}>
@@ -234,11 +234,11 @@ export default function TutorDetailScreen() {
         {/* Levels Section */}
         {(tutor.levels || []).length > 0 && (
           <View style={[styles.section, { backgroundColor: colors.surface }]}>
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>Levels</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.tutor_detail.levels')}</Text>
             <View style={styles.chipsList}>
               {tutor.levels.map((l) => (
                 <View key={l} style={[styles.chip, { backgroundColor: colors.background, borderColor: colors.border }]}>
-                  <Text style={[styles.chipText, { color: colors.text }]}>{l.replace('_', ' ')}</Text>
+                  <Text style={[styles.chipText, { color: colors.text }]}>{l === 'beginner' ? t('levels.beginner') : l === 'intermediate' ? t('levels.intermediate') : l === 'advanced' ? t('levels.advanced') : l.replace('_', ' ')}</Text>
                 </View>
               ))}
             </View>
@@ -248,12 +248,12 @@ export default function TutorDetailScreen() {
         {/* Policies Section */}
         {tutor.policies && (
           <View style={[styles.section, { backgroundColor: colors.surface }]}>
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>Policies</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.tutor_detail.policies')}</Text>
             {tutor.policies.cancel_window_hours && (
               <View style={styles.policyRow}>
                 <Ionicons name="time-outline" size={16} color={colors.textMuted} />
                 <Text style={[styles.policyText, { color: colors.textMuted }]}>
-                  Cancel {tutor.policies.cancel_window_hours}h before for full refund
+                  {t('pages.tutor_detail.hours_notice', { hours: tutor.policies.cancel_window_hours })}
                 </Text>
               </View>
             )}
