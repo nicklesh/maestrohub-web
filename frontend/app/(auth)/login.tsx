@@ -29,6 +29,7 @@ export default function LoginScreen() {
   
   const { login, loginWithGoogle } = useAuth();
   const { colors, isDark } = useTheme();
+  const { showError } = useToast();
   const router = useRouter();
   const { width } = useWindowDimensions();
   
