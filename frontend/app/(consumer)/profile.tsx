@@ -223,12 +223,12 @@ export default function ProfileScreen() {
 
           {/* Theme Toggle */}
           <View style={[styles.section, { backgroundColor: colors.surface }]}>
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>Appearance</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.settings.appearance')}</Text>
             <TouchableOpacity style={styles.menuItem} onPress={toggleTheme}>
               <View style={styles.menuItemLeft}>
                 <Ionicons name={isDark ? "moon" : "sunny"} size={22} color={colors.primary} />
                 <Text style={[styles.menuItemText, { color: colors.text }]}>
-                  {isDark ? 'Dark Mode' : 'Light Mode'}
+                  {isDark ? t('pages.profile.dark_mode') : t('pages.profile.light_mode')}
                 </Text>
               </View>
               <Switch
