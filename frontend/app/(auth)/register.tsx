@@ -17,6 +17,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
 import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 import { useToast } from '@/src/context/ToastContext';
+import { useTranslation } from '@/src/i18n';
 import LogoHeader from '@/src/components/LogoHeader';
 
 export default function RegisterScreen() {
@@ -32,6 +33,7 @@ export default function RegisterScreen() {
   const { register, loginWithGoogle } = useAuth();
   const { colors } = useTheme();
   const { showSuccess, showError } = useToast();
+  const { t } = useTranslation();
   const router = useRouter();
   const { width } = useWindowDimensions();
   
@@ -44,17 +46,17 @@ export default function RegisterScreen() {
 
   const handleRegister = async () => {
     if (!name || !email || !password || !confirmPassword) {
-      Alert.alert('Error', 'Please fill in all fields');
+      showError(t('forms.validation.fill_all_fields'));
       return;
     }
     
     if (password !== confirmPassword) {
-      Alert.alert('Error', 'Passwords do not match');
+      showError(t('forms.validation.passwords_dont_match'));
       return;
     }
     
     if (password.length < 6) {
-      Alert.alert('Error', 'Password must be at least 6 characters');
+      showError(t('forms.validation.password_min_6'));
       return;
     }
     
@@ -63,7 +65,10 @@ export default function RegisterScreen() {
       await register(email, password, name, role);
       router.replace('/');
     } catch (error: any) {
-      Alert.alert('Registration Failed', error.response?.data?.detail || 'Could not create account');
+      showError(
+        error.response?.data?.detail || t('messages.errors.could_not_create_account'),
+        t('messages.errors.registration_failed')
+      );
     } finally {
       setLoading(false);
     }
@@ -75,7 +80,7 @@ export default function RegisterScreen() {
       await loginWithGoogle();
       router.replace('/');
     } catch (error) {
-      Alert.alert('Error', 'Google login failed');
+      showError(t('messages.errors.google_login_failed'));
     } finally {
       setGoogleLoading(false);
     }
@@ -100,9 +105,11 @@ export default function RegisterScreen() {
             </View>
 
             <View style={[styles.form, isTablet && styles.formTablet]}>
-              <Text style={[styles.title, isDesktop && styles.titleDesktop]}>Create Account</Text>
+              <Text style={[styles.title, isDesktop && styles.titleDesktop]}>
+                {t('pages.register.title')}
+              </Text>
               <Text style={[styles.subtitle, isDesktop && styles.subtitleDesktop]}>
-                Join our tutoring community
+                {t('pages.register.subtitle')}
               </Text>
 
               {/* Role Selection */}
@@ -125,7 +132,7 @@ export default function RegisterScreen() {
                       role === 'consumer' && styles.roleTextActive,
                     ]}
                   >
-                    I'm a Parent
+                    {t('pages.register.role_parent')}
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -146,7 +153,7 @@ export default function RegisterScreen() {
                       role === 'tutor' && styles.roleTextActive,
                     ]}
                   >
-                    I'm a Tutor
+                    {t('pages.register.role_tutor')}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -155,7 +162,7 @@ export default function RegisterScreen() {
                 <Ionicons name="person-outline" size={20} color={colors.textMuted} style={styles.inputIcon} />
                 <TextInput
                   style={[styles.input, isTablet && styles.inputTablet]}
-                  placeholder="Full name"
+                  placeholder={t('forms.labels.full_name')}
                   placeholderTextColor={colors.textMuted}
                   value={name}
                   onChangeText={setName}
@@ -167,7 +174,7 @@ export default function RegisterScreen() {
                 <Ionicons name="mail-outline" size={20} color={colors.textMuted} style={styles.inputIcon} />
                 <TextInput
                   style={[styles.input, isTablet && styles.inputTablet]}
-                  placeholder="Email address"
+                  placeholder={t('forms.labels.email_address')}
                   placeholderTextColor={colors.textMuted}
                   value={email}
                   onChangeText={setEmail}
@@ -181,7 +188,7 @@ export default function RegisterScreen() {
                 <Ionicons name="lock-closed-outline" size={20} color={colors.textMuted} style={styles.inputIcon} />
                 <TextInput
                   style={[styles.input, isTablet && styles.inputTablet]}
-                  placeholder="Password"
+                  placeholder={t('forms.labels.password')}
                   placeholderTextColor={colors.textMuted}
                   value={password}
                   onChangeText={setPassword}
@@ -203,7 +210,7 @@ export default function RegisterScreen() {
                 <Ionicons name="lock-closed-outline" size={20} color={colors.textMuted} style={styles.inputIcon} />
                 <TextInput
                   style={[styles.input, isTablet && styles.inputTablet]}
-                  placeholder="Confirm password"
+                  placeholder={t('forms.labels.confirm_password')}
                   placeholderTextColor={colors.textMuted}
                   value={confirmPassword}
                   onChangeText={setConfirmPassword}
@@ -220,14 +227,14 @@ export default function RegisterScreen() {
                   <ActivityIndicator color="#fff" />
                 ) : (
                   <Text style={[styles.primaryButtonText, isTablet && styles.primaryButtonTextTablet]}>
-                    Create Account
+                    {t('pages.register.title')}
                   </Text>
                 )}
               </TouchableOpacity>
 
               <View style={styles.divider}>
                 <View style={styles.dividerLine} />
-                <Text style={styles.dividerText}>or</Text>
+                <Text style={styles.dividerText}>{t('pages.login.or_continue_with')}</Text>
                 <View style={styles.dividerLine} />
               </View>
 
@@ -242,17 +249,17 @@ export default function RegisterScreen() {
                   <>
                     <Ionicons name="logo-google" size={20} color={colors.text} />
                     <Text style={[styles.googleButtonText, isTablet && styles.googleButtonTextTablet]}>
-                      Continue with Google
+                      {t('pages.login.continue_with_google')}
                     </Text>
                   </>
                 )}
               </TouchableOpacity>
 
               <View style={styles.footer}>
-                <Text style={styles.footerText}>Already have an account? </Text>
+                <Text style={styles.footerText}>{t('pages.register.have_account')} </Text>
                 <Link href="/(auth)/login" asChild>
                   <TouchableOpacity>
-                    <Text style={styles.footerLink}>Sign In</Text>
+                    <Text style={styles.footerLink}>{t('pages.register.sign_in_link')}</Text>
                   </TouchableOpacity>
                 </Link>
               </View>
