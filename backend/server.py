@@ -262,7 +262,9 @@ class StudentCreate(BaseModel):
     grade: Optional[str] = None
     notes: Optional[str] = None
     email: Optional[EmailStr] = None  # Kid's email for sending schedules
+    phone: Optional[str] = None  # Kid's phone for SMS notifications
     auto_send_schedule: bool = False  # Auto-send quarterly schedules
+    notify_upcoming_sessions: bool = False  # Send session reminders to kid
 
 class Student(StudentCreate):
     student_id: str
@@ -275,7 +277,9 @@ class StudentUpdate(BaseModel):
     grade: Optional[str] = None
     notes: Optional[str] = None
     email: Optional[EmailStr] = None
+    phone: Optional[str] = None
     auto_send_schedule: Optional[bool] = None
+    notify_upcoming_sessions: Optional[bool] = None
 
 class TutorPolicies(BaseModel):
     cancel_window_hours: int = 24
