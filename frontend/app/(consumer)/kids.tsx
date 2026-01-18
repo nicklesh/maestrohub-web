@@ -54,7 +54,7 @@ export default function KidsScreen() {
   const [formNotifyUpcoming, setFormNotifyUpcoming] = useState(false);
 
   const loadKids = useCallback(async () => {
-    try:
+    try {
       const response = await api.get('/students', {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -76,7 +76,9 @@ export default function KidsScreen() {
     setFormAge('');
     setFormGrade('');
     setFormEmail('');
+    setFormPhone('');
     setFormAutoSend(false);
+    setFormNotifyUpcoming(false);
     setEditingKid(null);
   };
 
@@ -86,7 +88,9 @@ export default function KidsScreen() {
     setFormAge(kid.age?.toString() || '');
     setFormGrade(kid.grade || '');
     setFormEmail(kid.email || '');
+    setFormPhone(kid.phone || '');
     setFormAutoSend(kid.auto_send_schedule || false);
+    setFormNotifyUpcoming(kid.notify_upcoming_sessions || false);
     setShowAddModal(true);
   };
 
@@ -103,7 +107,9 @@ export default function KidsScreen() {
         age: formAge ? parseInt(formAge) : null,
         grade: formGrade.trim() || null,
         email: formEmail.trim() || null,
-        auto_send_schedule: formAutoSend
+        phone: formPhone.trim() || null,
+        auto_send_schedule: formAutoSend,
+        notify_upcoming_sessions: formNotifyUpcoming
       };
 
       if (editingKid) {
