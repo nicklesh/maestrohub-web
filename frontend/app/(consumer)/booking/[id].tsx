@@ -211,19 +211,12 @@ export default function BookingDetailScreen() {
       }
     };
 
-    if (Platform.OS === 'web') {
-      if (window.confirm(confirmMsg)) {
-        await doReport();
-      }
-    } else {
-      Alert.alert(
-        'Report No-Show',
-        confirmMsg,
-        [
-          { text: 'Cancel', style: 'cancel' },
-          { text: 'Report', style: 'destructive', onPress: doReport }
-        ]
-      );
+    const confirmed = Platform.OS === 'web' 
+      ? window.confirm(confirmMsg)
+      : true; // On native, proceed with the action
+    
+    if (confirmed) {
+      await doReport();
     }
   };
 
