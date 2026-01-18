@@ -323,7 +323,7 @@ export default function TutorDetailScreen() {
         {reviews.length > 0 && (
           <View style={[styles.section, { backgroundColor: colors.surface }]}>
             <View style={styles.sectionHeader}>
-              <Text style={[styles.sectionTitle, { color: colors.text }]}>Reviews</Text>
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.tutor_detail.reviews')}</Text>
               <View style={styles.reviewStats}>
                 <Ionicons name="star" size={14} color="#FFB800" />
                 <Text style={[styles.reviewStatText, { color: colors.text }]}>
