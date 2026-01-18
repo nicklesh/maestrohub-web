@@ -2069,13 +2069,32 @@ async def search_tutors(
     
     # Get non-sponsored tutors
     non_sponsored_query = {**db_query}
-    non_sponsored_query["$or"] = [
+    
+    # Add non-sponsored filter using $and to preserve existing $or from text search
+    sponsored_filter = {"$or": [
         {"is_sponsored": {"$ne": True}},
         {"is_sponsored": {"$exists": False}}
-    ]
+    ]}
+    
+    # Combine with existing query using $and if there's already an $or clause
+    if "$or" in db_query:
+        # There's a text search $or, wrap everything in $and
+        non_sponsored_query = {
+            "$and": [
+                {k: v for k, v in db_query.items() if k != "$or"},
+                {"$or": db_query["$or"]},
+                sponsored_filter
+            ]
+        }
+    else:
+        non_sponsored_query["$or"] = sponsored_filter["$or"]
+    
     # Also exclude selected sponsors from regular results to avoid duplicates
     if selected_sponsor_ids:
-        non_sponsored_query["tutor_id"] = {"$nin": list(selected_sponsor_ids)}
+        if "$and" in non_sponsored_query:
+            non_sponsored_query["$and"].append({"tutor_id": {"$nin": list(selected_sponsor_ids)}})
+        else:
+            non_sponsored_query["tutor_id"] = {"$nin": list(selected_sponsor_ids)}
     
     skip = (page - 1) * limit
     # Adjust skip/limit for non-sponsored based on page
