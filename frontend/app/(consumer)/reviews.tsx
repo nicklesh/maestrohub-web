@@ -50,6 +50,7 @@ const RATING_CATEGORIES = [
 export default function ReviewsScreen() {
   const { token } = useAuth();
   const { colors } = useTheme();
+  const { showSuccess, showError } = useToast();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [pendingReviews, setPendingReviews] = useState<PendingReview[]>([]);

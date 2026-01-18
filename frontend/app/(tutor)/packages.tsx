@@ -46,6 +46,7 @@ const VALIDITY_OPTIONS = [
 export default function PackagesScreen() {
   const { token } = useAuth();
   const { colors } = useTheme();
+  const { showSuccess, showError } = useToast();
   const { market } = useMarket();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);

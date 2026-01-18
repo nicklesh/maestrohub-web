@@ -36,6 +36,7 @@ const DEFAULT_SETTINGS: NotificationSetting[] = [
 
 export default function AdminNotificationsSettingsScreen() {
   const { colors } = useTheme();
+  const { showSuccess, showError } = useToast();
   const { width } = useWindowDimensions();
   const [settings, setSettings] = useState<NotificationSetting[]>(DEFAULT_SETTINGS);
 
@@ -60,7 +61,7 @@ export default function AdminNotificationsSettingsScreen() {
   };
 
   const saveSettings = () => {
-    showAlert('Success', 'Notification settings saved!');
+    showSuccess('Notification settings saved!');
   };
 
   const emailSettings = settings.filter(s => s.category === 'email');

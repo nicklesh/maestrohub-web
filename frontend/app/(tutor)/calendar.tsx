@@ -43,6 +43,7 @@ const TIME_SLOTS = Array.from({ length: 14 }, (_, i) => {
 export default function CalendarScreen() {
   const { token } = useAuth();
   const { colors } = useTheme();
+  const { showSuccess, showError } = useToast();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -229,11 +230,11 @@ export default function CalendarScreen() {
         headers: { Authorization: `Bearer ${token}` }
       });
       
-      showAlert('Success', 'Availability saved successfully!');
+      showSuccess('Availability saved successfully!');
       setShowTimeModal(false);
       loadData();
     } catch (error: any) {
-      showAlert('Error', error.response?.data?.detail || 'Failed to save availability');
+      showError(error.response?.data?.detail || 'Failed to save availability');
     } finally {
       setSaving(false);
     }
@@ -252,14 +253,14 @@ export default function CalendarScreen() {
         headers: { Authorization: `Bearer ${token}` }
       });
       
-      showAlert('Success', 'Vacation period saved!');
+      showSuccess('Vacation period saved!');
       setShowVacationModal(false);
       setVacationStartDate(null);
       setVacationEndDate(null);
       setIsSelectingVacation(false);
       loadData();
     } catch (error: any) {
-      showAlert('Error', error.response?.data?.detail || 'Failed to save vacation');
+      showError(error.response?.data?.detail || 'Failed to save vacation');
     } finally {
       setSaving(false);
     }
@@ -273,7 +274,7 @@ export default function CalendarScreen() {
         });
         loadData();
       } catch (error) {
-        showAlert('Error', 'Failed to delete vacation');
+        showError('Failed to delete vacation');
       }
     };
 

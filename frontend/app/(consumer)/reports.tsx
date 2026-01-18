@@ -53,6 +53,7 @@ interface ByMonth {
 export default function ConsumerReportsScreen() {
   const { token } = useAuth();
   const { colors } = useTheme();
+  const { showSuccess, showError } = useToast();
   const { width } = useWindowDimensions();
   const isTablet = width >= 768;
   const isDesktop = width >= 1024;
@@ -117,7 +118,7 @@ export default function ConsumerReportsScreen() {
         window.URL.revokeObjectURL(url);
         
         if (Platform.OS === 'web') {
-          window.alert('Report downloaded successfully');
+          showError('Report downloaded successfully');
         } else {
           Alert.alert('Success', 'Report downloaded successfully');
         }
@@ -160,7 +161,7 @@ export default function ConsumerReportsScreen() {
     } catch (error) {
       console.error('PDF download error:', error);
       if (Platform.OS === 'web') {
-        window.alert('Failed to download report. Please try again.');
+        showError('Failed to download report. Please try again.');
       } else {
         Alert.alert('Error', 'Failed to download report. Please try again.');
       }

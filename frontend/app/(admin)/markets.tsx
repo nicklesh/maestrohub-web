@@ -74,6 +74,7 @@ const COUNTRY_NAMES: Record<string, string> = {
 export default function AdminMarketsScreen() {
   const { width } = useWindowDimensions();
   const { colors } = useTheme();
+  const { showSuccess, showError } = useToast();
   const { token } = useAuth();
   const [markets, setMarkets] = useState<Market[]>([]);
   const [analytics, setAnalytics] = useState<Record<string, MarketAnalytics>>({});
@@ -116,14 +117,14 @@ export default function AdminMarketsScreen() {
     try {
       await api.post(`/admin/markets/${marketId}/toggle`, {}, { headers: { Authorization: `Bearer ${token}` } });
       if (Platform.OS === 'web') {
-        window.alert('Market toggle logged. Server restart required to apply changes.');
+        showError('Market toggle logged. Server restart required to apply changes.');
       } else {
         Alert.alert('Market Toggle', 'Market toggle logged. Server restart required to apply changes.');
       }
       loadData();
     } catch (error) {
       if (Platform.OS === 'web') {
-        window.alert('Failed to toggle market');
+        showError('Failed to toggle market');
       } else {
         Alert.alert('Error', 'Failed to toggle market');
       }

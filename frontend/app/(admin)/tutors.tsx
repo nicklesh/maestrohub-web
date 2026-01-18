@@ -42,6 +42,7 @@ const STATUS_FILTER = [
 export default function AdminTutors() {
   const { width } = useWindowDimensions();
   const { colors } = useTheme();
+  const { showSuccess, showError } = useToast();
   const { token } = useAuth();
   const [tutors, setTutors] = useState<Tutor[]>([]);
   const [loading, setLoading] = useState(true);
@@ -94,10 +95,10 @@ export default function AdminTutors() {
       await api.post(`/admin/tutors/${tutorId}/approve`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      showAlert('Success', 'Tutor approved!');
+      showSuccess('Tutor approved!');
       loadTutors();
     } catch (error) {
-      showAlert('Error', 'Failed to approve tutor');
+      showError('Failed to approve tutor');
     } finally {
       setActionLoading(null);
     }
@@ -109,10 +110,10 @@ export default function AdminTutors() {
       await api.post(`/admin/tutors/${tutorId}/suspend`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      showAlert('Success', 'Tutor suspended');
+      showSuccess('Tutor suspended');
       loadTutors();
     } catch (error) {
-      showAlert('Error', 'Failed to suspend tutor');
+      showError('Failed to suspend tutor');
     } finally {
       setActionLoading(null);
     }

@@ -56,6 +56,7 @@ const DEFAULT_SCHEDULE: WeeklySchedule[] = DAYS_OF_WEEK.map((_, i) => ({
 export default function ScheduleBuilderScreen() {
   const { token } = useAuth();
   const { colors } = useTheme();
+  const { showSuccess, showError } = useToast();
   const { width } = useWindowDimensions();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -140,10 +141,10 @@ export default function ScheduleBuilderScreen() {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      showAlert('Success', 'Your schedule has been saved!');
+      showSuccess('Your schedule has been saved!');
       setExistingSchedule(scheduleData);
     } catch (error: any) {
-      showAlert('Error', error.response?.data?.detail || 'Failed to save schedule');
+      showError(error.response?.data?.detail || 'Failed to save schedule');
     } finally {
       setSaving(false);
     }

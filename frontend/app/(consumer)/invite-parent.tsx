@@ -102,6 +102,7 @@ const SOCIAL_PLATFORMS: SocialPlatform[] = [
 export default function InviteParentScreen() {
   const { token, user } = useAuth();
   const { colors } = useTheme();
+  const { showSuccess, showError } = useToast();
   const [invites, setInvites] = useState<ParentInvite[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);

@@ -36,6 +36,7 @@ interface ContactMessage {
 export default function AdminInboxScreen() {
   const { token } = useAuth();
   const { colors } = useTheme();
+  const { showSuccess, showError } = useToast();
   const { width } = useWindowDimensions();
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [loading, setLoading] = useState(true);
@@ -91,7 +92,7 @@ export default function AdminInboxScreen() {
       setSelectedMessage(null);
     } catch (error) {
       if (Platform.OS === 'web') {
-        window.alert('Failed to update status');
+        showError('Failed to update status');
       } else {
         Alert.alert('Error', 'Failed to update status');
       }

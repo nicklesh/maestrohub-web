@@ -70,6 +70,7 @@ export default function TutorOnboarding() {
   const router = useRouter();
   const { width } = useWindowDimensions();
   const { colors } = useTheme();
+  const { showSuccess, showError } = useToast();
   const { token } = useAuth();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -159,19 +160,19 @@ export default function TutorOnboarding() {
 
   const handleSubmit = async () => {
     if (!bio.trim()) {
-      showAlert('Error', 'Please enter a bio');
+      showError('Please enter a bio');
       return;
     }
     if (selectedCategories.length === 0) {
-      showAlert('Error', 'Please select at least one category');
+      showError('Please select at least one category');
       return;
     }
     if (selectedSubjects.length === 0) {
-      showAlert('Error', 'Please select at least one subject');
+      showError('Please select at least one subject');
       return;
     }
     if (selectedLevels.length === 0) {
-      showAlert('Error', 'Please select at least one level');
+      showError('Please select at least one level');
       return;
     }
 
@@ -198,19 +199,19 @@ export default function TutorOnboarding() {
         await api.put('/tutors/profile', profileData, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        showAlert('Success', 'Your profile has been updated!');
+        showSuccess('Your profile has been updated!');
       } else {
         // Create new profile
         await api.post('/tutors/profile', profileData, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        showAlert('Success', 'Your profile has been created and is pending review.');
+        showSuccess('Your profile has been created and is pending review.');
       }
 
       router.replace('/(tutor)/dashboard');
     } catch (error: any) {
       const errorMsg = error.response?.data?.detail || 'Failed to save profile';
-      showAlert('Error', errorMsg);
+      showError(errorMsg);
     } finally {
       setLoading(false);
     }

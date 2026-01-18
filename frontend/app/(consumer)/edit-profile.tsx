@@ -22,6 +22,7 @@ import { api } from '@/src/services/api';
 export default function EditProfileScreen() {
   const { user, token, refreshUser } = useAuth();
   const { colors } = useTheme();
+  const { showSuccess, showError } = useToast();
   const router = useRouter();
 
   const [name, setName] = useState(user?.name || '');

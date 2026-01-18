@@ -44,6 +44,7 @@ interface Reminder {
 export default function ProfileScreen() {
   const { user, logout, token } = useAuth();
   const { colors, isDark, toggleTheme } = useTheme();
+  const { showSuccess, showError } = useToast();
   const router = useRouter();
   const { width } = useWindowDimensions();
   const isTablet = width >= 768;
@@ -137,7 +138,7 @@ export default function ProfileScreen() {
   const handleContactSubmit = async () => {
     if (!contactSubject.trim() || !contactMessage.trim()) {
       if (Platform.OS === 'web') {
-        window.alert('Please fill in all fields');
+        showError('Please fill in all fields');
       } else {
         Alert.alert('Error', 'Please fill in all fields');
       }
@@ -168,7 +169,7 @@ export default function ProfileScreen() {
       
     } catch (error) {
       if (Platform.OS === 'web') {
-        window.alert('Failed to send message. Please try again.');
+        showError('Failed to send message. Please try again.');
       } else {
         Alert.alert('Error', 'Failed to send message. Please try again.');
       }

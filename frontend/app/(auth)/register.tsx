@@ -31,6 +31,7 @@ export default function RegisterScreen() {
   
   const { register, loginWithGoogle } = useAuth();
   const { colors } = useTheme();
+  const { showSuccess, showError } = useToast();
   const router = useRouter();
   const { width } = useWindowDimensions();
   

@@ -18,6 +18,7 @@ import AppHeader from '@/src/components/AppHeader';
 
 export default function AdminSecurityScreen() {
   const { colors } = useTheme();
+  const { showSuccess, showError } = useToast();
   const { width } = useWindowDimensions();
   
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(true);
@@ -41,7 +42,7 @@ export default function AdminSecurityScreen() {
   };
 
   const saveSettings = () => {
-    showAlert('Success', 'Security settings saved!');
+    showSuccess('Security settings saved!');
   };
 
   const recentActivity = [
