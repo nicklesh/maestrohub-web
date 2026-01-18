@@ -57,6 +57,7 @@ export default function BecomeTutorScreen() {
   const { colors } = useTheme();
   const { showSuccess, showError, showInfo } = useToast();
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
