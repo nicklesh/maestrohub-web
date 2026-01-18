@@ -200,6 +200,16 @@ class TaxReportService:
         
         elements = []
         
+        # Logo Header
+        if os.path.exists(LOGO_PATH):
+            try:
+                logo = Image(LOGO_PATH, width=1.5*inch, height=0.5*inch)
+                logo.hAlign = 'LEFT'
+                elements.append(logo)
+                elements.append(Spacer(1, 8))
+            except Exception as e:
+                logger.warning(f"Failed to add logo to PDF: {e}")
+        
         # Header
         elements.append(Paragraph("Maestro Habitat", title_style))
         elements.append(Spacer(1, 12))
