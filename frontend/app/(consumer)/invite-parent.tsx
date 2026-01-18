@@ -186,15 +186,11 @@ export default function InviteParentScreen() {
         }
       }
       
+      showSuccess(`Link copied! Open ${platform.name} and paste the invite message.`, 'Link Copied!');
       if (Platform.OS === 'web') {
-        showInfo(`Link copied to clipboard!\n\nOpen ${platform.name} and paste the invite message in a post or direct message.`);
         window.open(url, '_blank');
       } else {
-        Alert.alert(
-          'Link Copied!',
-          `Open ${platform.name} and paste the invite message in a post or direct message.`,
-          [{ text: 'Open ' + platform.name, onPress: () => Linking.openURL(url) }]
-        );
+        Linking.openURL(url);
       }
       setShowShareModal(false);
       return;
