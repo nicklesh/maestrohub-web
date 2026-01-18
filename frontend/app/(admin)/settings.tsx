@@ -56,19 +56,14 @@ export default function AdminSettings() {
         await doLogout();
       }
     } else {
-      Alert.alert('Logout', 'Are you sure?', [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Logout', style: 'destructive', onPress: doLogout },
-      ]);
+      // For native, use toast and proceed
+      showWarning('Logging out...');
+      await doLogout();
     }
   };
 
   const showComingSoon = (feature: string) => {
-    if (Platform.OS === 'web') {
-      window.alert(`${feature} settings coming soon!`);
-    } else {
-      Alert.alert('Coming Soon', `${feature} settings will be available in a future update.`);
-    }
+    showInfo(`${feature} settings coming soon!`);
   };
 
   return (
