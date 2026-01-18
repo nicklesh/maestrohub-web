@@ -24,6 +24,7 @@ export default function EditProfileScreen() {
   const { user, token, refreshUser } = useAuth();
   const { colors } = useTheme();
   const { showSuccess, showError } = useToast();
+  const { t } = useTranslation();
   const router = useRouter();
 
   const [name, setName] = useState(user?.name || '');
