@@ -269,12 +269,12 @@ export default function ProfileScreen() {
 
           {/* Account Section */}
           <View style={[styles.section, { backgroundColor: colors.surface }]}>
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>Account</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.profile.account_title')}</Text>
             
             <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(consumer)/edit-profile')}>
               <View style={styles.menuItemLeft}>
                 <Ionicons name="person-outline" size={22} color={colors.primary} />
-                <Text style={[styles.menuItemText, { color: colors.text }]}>Edit Profile</Text>
+                <Text style={[styles.menuItemText, { color: colors.text }]}>{t('pages.profile.edit_profile')}</Text>
               </View>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
@@ -282,7 +282,7 @@ export default function ProfileScreen() {
             <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(consumer)/notifications')}>
               <View style={styles.menuItemLeft}>
                 <Ionicons name="notifications-outline" size={22} color={colors.primary} />
-                <Text style={[styles.menuItemText, { color: colors.text }]}>Notifications</Text>
+                <Text style={[styles.menuItemText, { color: colors.text }]}>{t('pages.profile.notifications')}</Text>
               </View>
               {unreadCount > 0 && (
                 <View style={[styles.menuBadge, { backgroundColor: colors.error }]}>
@@ -295,7 +295,7 @@ export default function ProfileScreen() {
             <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(consumer)/reminders')}>
               <View style={styles.menuItemLeft}>
                 <Ionicons name="alarm-outline" size={22} color={colors.primary} />
-                <Text style={[styles.menuItemText, { color: colors.text }]}>Reminders</Text>
+                <Text style={[styles.menuItemText, { color: colors.text }]}>{t('navigation.reminders')}</Text>
               </View>
               {reminders.length > 0 && (
                 <View style={[styles.menuBadge, { backgroundColor: colors.warning }]}>
@@ -308,7 +308,7 @@ export default function ProfileScreen() {
             <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(consumer)/reviews')}>
               <View style={styles.menuItemLeft}>
                 <Ionicons name="star-outline" size={22} color={colors.primary} />
-                <Text style={[styles.menuItemText, { color: colors.text }]}>Reviews</Text>
+                <Text style={[styles.menuItemText, { color: colors.text }]}>{t('navigation.reviews')}</Text>
               </View>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
@@ -316,7 +316,7 @@ export default function ProfileScreen() {
             <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(consumer)/billing')}>
               <View style={styles.menuItemLeft}>
                 <Ionicons name="card-outline" size={22} color={colors.primary} />
-                <Text style={[styles.menuItemText, { color: colors.text }]}>Billing</Text>
+                <Text style={[styles.menuItemText, { color: colors.text }]}>{t('navigation.billing')}</Text>
               </View>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
@@ -324,7 +324,7 @@ export default function ProfileScreen() {
             <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(consumer)/reports')}>
               <View style={styles.menuItemLeft}>
                 <Ionicons name="bar-chart-outline" size={22} color={colors.primary} />
-                <Text style={[styles.menuItemText, { color: colors.text }]}>Reports</Text>
+                <Text style={[styles.menuItemText, { color: colors.text }]}>{t('navigation.reports')}</Text>
               </View>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
@@ -332,7 +332,7 @@ export default function ProfileScreen() {
             <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(consumer)/tax-reports')}>
               <View style={styles.menuItemLeft}>
                 <Ionicons name="document-text-outline" size={22} color={colors.primary} />
-                <Text style={[styles.menuItemText, { color: colors.text }]}>Tax Reports</Text>
+                <Text style={[styles.menuItemText, { color: colors.text }]}>{t('navigation.tax_reports')}</Text>
               </View>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
@@ -340,7 +340,7 @@ export default function ProfileScreen() {
             <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(consumer)/referrals')}>
               <View style={styles.menuItemLeft}>
                 <Ionicons name="gift-outline" size={22} color={colors.primary} />
-                <Text style={[styles.menuItemText, { color: colors.text }]}>Referrals</Text>
+                <Text style={[styles.menuItemText, { color: colors.text }]}>{t('navigation.referrals')}</Text>
               </View>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
@@ -348,7 +348,7 @@ export default function ProfileScreen() {
             <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(consumer)/invite-parent')}>
               <View style={styles.menuItemLeft}>
                 <Ionicons name="people-outline" size={22} color={colors.primary} />
-                <Text style={[styles.menuItemText, { color: colors.text }]}>Invite Parents</Text>
+                <Text style={[styles.menuItemText, { color: colors.text }]}>{t('navigation.invite_parents')}</Text>
               </View>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
@@ -356,7 +356,7 @@ export default function ProfileScreen() {
             <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(consumer)/invite-provider')}>
               <View style={styles.menuItemLeft}>
                 <Ionicons name="person-add-outline" size={22} color={colors.primary} />
-                <Text style={[styles.menuItemText, { color: colors.text }]}>Invite Providers</Text>
+                <Text style={[styles.menuItemText, { color: colors.text }]}>{t('navigation.invite_providers')}</Text>
               </View>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
@@ -365,7 +365,7 @@ export default function ProfileScreen() {
               <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(consumer)/become-tutor')}>
                 <View style={styles.menuItemLeft}>
                   <Ionicons name="school-outline" size={22} color={colors.primary} />
-                  <Text style={[styles.menuItemText, { color: colors.text }]}>Become a Coach</Text>
+                  <Text style={[styles.menuItemText, { color: colors.text }]}>{t('navigation.become_coach')}</Text>
                 </View>
                 <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
               </TouchableOpacity>
