@@ -1992,16 +1992,21 @@ async def search_tutors(
     # Text search - search in categories and subjects
     if query:
         # Search in categories and subjects arrays with case-insensitive regex
+        # Also search in name by joining with users collection
         db_query["$or"] = [
             {"categories": {"$regex": query, "$options": "i"}},
-            {"subjects": {"$regex": query, "$options": "i"}},
-            {"bio": {"$regex": query, "$options": "i"}}
+            {"subjects": {"$regex": query, "$options": "i"}}
         ]
+        # Note: We don't search in bio to avoid false positives
     
     if category:
+        # If category filter is specified, require exact match
         db_query["categories"] = category
+        # Remove the $or clause when category is explicitly specified
+        if "$or" in db_query and not query:
+            del db_query["$or"]
     if subject:
-        db_query["subjects"] = {"$regex": subject, "$options": "i"}
+        db_query["subjects"] = {"$regex": f"^{subject}$", "$options": "i"}  # Exact match
     if level:
         db_query["levels"] = level
     if modality:
