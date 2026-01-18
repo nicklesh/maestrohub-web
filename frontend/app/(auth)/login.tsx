@@ -58,10 +58,7 @@ export default function LoginScreen() {
     } catch (error: any) {
       const message = error.response?.data?.detail || 'Invalid email or password';
       setErrorMessage(message);
-      // Also show alert for native platforms
-      if (Platform.OS !== 'web') {
-        Alert.alert('Login Failed', message);
-      }
+      showError(message, 'Login Failed');
     } finally {
       setLoading(false);
     }
@@ -76,9 +73,7 @@ export default function LoginScreen() {
     } catch (error: any) {
       const message = 'Google login failed. Please try again.';
       setErrorMessage(message);
-      if (Platform.OS !== 'web') {
-        Alert.alert('Error', message);
-      }
+      showError(message);
     } finally {
       setGoogleLoading(false);
     }
