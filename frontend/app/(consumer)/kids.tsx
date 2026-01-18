@@ -299,10 +299,10 @@ export default function KidsScreen() {
               {editingKid ? t('pages.kids.edit_child') : t('pages.kids.add_child')}
             </Text>
 
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Name *</Text>
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.add_child.name')} *</Text>
             <TextInput
               style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-              placeholder="Child's name"
+              placeholder={t('pages.add_child.name_placeholder')}
               placeholderTextColor={colors.textMuted}
               value={formName}
               onChangeText={setFormName}
@@ -334,18 +334,18 @@ export default function KidsScreen() {
 
             {/* Contact Information Section */}
             <View style={[styles.sectionDivider, { backgroundColor: colors.border }]} />
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>Notification Contact (Optional)</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.add_child.notification_contact')}</Text>
             <View style={[styles.privacyNotice, { backgroundColor: colors.backgroundSecondary, borderColor: colors.primary }]}>
               <Ionicons name="shield-checkmark-outline" size={18} color={colors.primary} />
               <Text style={[styles.privacyText, { color: colors.textSecondary }]}>
-                This contact info will strictly be used for upcoming session reminders only. We will never share this information.
+                {t('pages.add_child.notification_info')}
               </Text>
             </View>
 
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Email</Text>
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.add_child.email')}</Text>
             <TextInput
               style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-              placeholder="child@example.com"
+              placeholder={t('pages.add_child.email_placeholder')}
               placeholderTextColor={colors.textMuted}
               value={formEmail}
               onChangeText={setFormEmail}
@@ -353,10 +353,10 @@ export default function KidsScreen() {
               autoCapitalize="none"
             />
 
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Phone Number</Text>
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.add_child.phone')}</Text>
             <TextInput
               style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-              placeholder="+1 (555) 123-4567"
+              placeholder={t('pages.add_child.phone_placeholder')}
               placeholderTextColor={colors.textMuted}
               value={formPhone}
               onChangeText={setFormPhone}
@@ -373,7 +373,7 @@ export default function KidsScreen() {
                 color={formNotifyUpcoming ? colors.primary : colors.textMuted}
               />
               <Text style={[styles.autoSendText, { color: colors.text }]}>
-                Send session reminders to this contact
+                {t('pages.add_child.send_reminders')}
               </Text>
             </TouchableOpacity>
 
