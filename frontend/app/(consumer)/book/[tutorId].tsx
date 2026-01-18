@@ -186,15 +186,15 @@ export default function BookingScreen() {
 
   const handleIntakeSubmit = () => {
     if (!goals.trim()) {
-      Alert.alert('Required', 'Please enter learning goals');
+      showAlert('Required', 'Please enter learning goals');
       return;
     }
     if (!currentLevel.trim()) {
-      Alert.alert('Required', 'Please enter current level');
+      showAlert('Required', 'Please enter current level');
       return;
     }
     if (!policyAcknowledged) {
-      Alert.alert('Required', 'Please acknowledge the policies');
+      showAlert('Required', 'Please acknowledge the policies');
       return;
     }
     // Check if user has payment methods before proceeding
