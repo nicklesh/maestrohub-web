@@ -18,6 +18,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
 import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 import { useToast } from '@/src/context/ToastContext';
+import { useTranslation } from '@/src/i18n';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -30,6 +31,7 @@ export default function LoginScreen() {
   const { login, loginWithGoogle } = useAuth();
   const { colors, isDark } = useTheme();
   const { showError } = useToast();
+  const { t } = useTranslation();
   const router = useRouter();
   const { width } = useWindowDimensions();
   
@@ -47,7 +49,7 @@ export default function LoginScreen() {
   const handleLogin = async () => {
     setErrorMessage('');
     if (!email || !password) {
-      setErrorMessage('Please fill in all fields');
+      setErrorMessage(t('forms.validation.fill_all_fields'));
       return;
     }
     
@@ -56,9 +58,9 @@ export default function LoginScreen() {
       await login(email, password);
       router.replace('/');
     } catch (error: any) {
-      const message = error.response?.data?.detail || 'Invalid email or password';
+      const message = error.response?.data?.detail || t('messages.errors.invalid_credentials');
       setErrorMessage(message);
-      showError(message, 'Login Failed');
+      showError(message, t('messages.errors.login_failed'));
     } finally {
       setLoading(false);
     }
@@ -71,7 +73,7 @@ export default function LoginScreen() {
       await loginWithGoogle();
       router.replace('/');
     } catch (error: any) {
-      const message = 'Google login failed. Please try again.';
+      const message = t('messages.errors.google_login_failed');
       setErrorMessage(message);
       showError(message);
     } finally {
@@ -102,16 +104,20 @@ export default function LoginScreen() {
                 style={{ width: logoWidth, height: logoHeight }}
                 resizeMode="contain"
               />
-              <Text style={[styles.appTitle, isDesktop && styles.appTitleDesktop]}>Maestro Habitat</Text>
+              <Text style={[styles.appTitle, isDesktop && styles.appTitleDesktop]}>
+                {t('branding.app_name')}
+              </Text>
               <Text style={[styles.tagline, isDesktop && styles.taglineDesktop]}>
-                Find your coach, master your learning
+                {t('branding.tagline')}
               </Text>
             </View>
 
             <View style={[styles.form, isTablet && styles.formTablet]}>
-              <Text style={[styles.title, isDesktop && styles.titleDesktop]}>Welcome Back</Text>
+              <Text style={[styles.title, isDesktop && styles.titleDesktop]}>
+                {t('pages.login.title')}
+              </Text>
               <Text style={[styles.subtitle, isDesktop && styles.subtitleDesktop]}>
-                Sign in to your account
+                {t('pages.login.subtitle')}
               </Text>
 
               {/* Error Message */}
@@ -126,7 +132,7 @@ export default function LoginScreen() {
                 <Ionicons name="mail-outline" size={20} color={colors.textMuted} style={styles.inputIcon} />
                 <TextInput
                   style={[styles.input, isTablet && styles.inputTablet]}
-                  placeholder="Email address"
+                  placeholder={t('forms.labels.email_address')}
                   placeholderTextColor={colors.textMuted}
                   value={email}
                   onChangeText={setEmail}
@@ -140,7 +146,7 @@ export default function LoginScreen() {
                 <Ionicons name="lock-closed-outline" size={20} color={colors.textMuted} style={styles.inputIcon} />
                 <TextInput
                   style={[styles.input, isTablet && styles.inputTablet]}
-                  placeholder="Password"
+                  placeholder={t('forms.labels.password')}
                   placeholderTextColor={colors.textMuted}
                   value={password}
                   onChangeText={setPassword}
@@ -167,14 +173,14 @@ export default function LoginScreen() {
                   <ActivityIndicator color="#fff" />
                 ) : (
                   <Text style={[styles.primaryButtonText, isTablet && styles.primaryButtonTextTablet]}>
-                    Sign In
+                    {t('buttons.sign_in')}
                   </Text>
                 )}
               </TouchableOpacity>
 
               <View style={styles.divider}>
                 <View style={styles.dividerLine} />
-                <Text style={styles.dividerText}>or</Text>
+                <Text style={styles.dividerText}>{t('pages.login.or_continue_with')}</Text>
                 <View style={styles.dividerLine} />
               </View>
 
@@ -189,17 +195,17 @@ export default function LoginScreen() {
                   <>
                     <Ionicons name="logo-google" size={20} color={colors.text} />
                     <Text style={[styles.googleButtonText, isTablet && styles.googleButtonTextTablet]}>
-                      Continue with Google
+                      {t('pages.login.continue_with_google')}
                     </Text>
                   </>
                 )}
               </TouchableOpacity>
 
               <View style={styles.footer}>
-                <Text style={styles.footerText}>Don't have an account? </Text>
+                <Text style={styles.footerText}>{t('pages.login.no_account')} </Text>
                 <Link href="/(auth)/register" asChild>
                   <TouchableOpacity>
-                    <Text style={styles.footerLink}>Sign Up</Text>
+                    <Text style={styles.footerLink}>{t('pages.login.sign_up_link')}</Text>
                   </TouchableOpacity>
                 </Link>
               </View>
@@ -290,6 +296,20 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   },
   subtitleDesktop: {
     fontSize: 18,
+  },
+  errorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.error + '15',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 16,
+    gap: 8,
+  },
+  errorText: {
+    color: colors.error,
+    fontSize: 14,
+    flex: 1,
   },
   inputContainer: {
     flexDirection: 'row',
