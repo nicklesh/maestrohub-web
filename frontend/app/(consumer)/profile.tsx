@@ -45,7 +45,8 @@ interface Reminder {
 export default function ProfileScreen() {
   const { user, logout, token } = useAuth();
   const { colors, isDark, toggleTheme } = useTheme();
-  const { showSuccess, showError } = useToast();
+  const { showSuccess, showError, showWarning } = useToast();
+  const { t } = useTranslation();
   const router = useRouter();
   const { width } = useWindowDimensions();
   const isTablet = width >= 768;
