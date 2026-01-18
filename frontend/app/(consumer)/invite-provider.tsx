@@ -88,17 +88,21 @@ const SOCIAL_PLATFORMS: SocialPlatform[] = [
 ];
 
 export default function InviteProviderScreen() {
-  const { token } = useAuth();
+  const { token, user } = useAuth();
   const { colors } = useTheme();
   const { showSuccess, showError, showInfo } = useToast();
   const [invites, setInvites] = useState<Invite[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteName, setInviteName] = useState('');
   const [inviteMessage, setInviteMessage] = useState('');
   const [sending, setSending] = useState(false);
+
+  const shareUrl = 'https://www.maestrohabitat.com';
+  const shareMessage = `Join Maestro Habitat as a coach! Share your expertise and help students learn. Great opportunity to earn by teaching what you love! 🎓`;
 
   const loadInvites = useCallback(async () => {
     try {
