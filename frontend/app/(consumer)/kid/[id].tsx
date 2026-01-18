@@ -101,8 +101,11 @@ export default function KidDetailScreen() {
   });
 
   const getStatusDisplay = (status: string) => {
-    if (status === 'canceled_by_consumer') return 'Canceled';
-    if (status === 'canceled_by_provider') return 'Canceled by coach';
+    if (status === 'canceled_by_consumer') return t('pages.bookings.cancelled');
+    if (status === 'canceled_by_provider') return t('pages.bookings.cancelled');
+    if (status === 'booked') return t('pages.bookings.booked');
+    if (status === 'completed') return t('pages.bookings.completed');
+    if (status === 'pending') return t('pages.bookings.pending');
     return status;
   };
 
