@@ -155,7 +155,7 @@ export default function BookingsScreen() {
 
         <Text style={[styles.tutorName, { color: colors.text }]}>{item.tutor_name}</Text>
         <Text style={[styles.studentName, { color: colors.textMuted }]}>
-          Student: {item.student_name}
+          {t('pages.bookings.student_label')} {item.student_name}
         </Text>
 
         <View style={[styles.timeRow, { borderTopColor: colors.border }]}>
