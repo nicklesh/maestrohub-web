@@ -338,6 +338,84 @@ export default function BookingDetailScreen() {
             </View>
           </View>
 
+          {/* Kid Notification Status */}
+          {booking.student_notify_settings && (
+            <View style={[styles.card, isTablet && styles.cardTablet]}>
+              <View style={styles.notificationHeader}>
+                <Ionicons name="notifications-outline" size={20} color={colors.primary} />
+                <Text style={[styles.cardTitle, { marginBottom: 0, marginLeft: 8 }]}>Kid Notifications</Text>
+              </View>
+              
+              {booking.student_notify_settings.notify_enabled ? (
+                <View style={styles.notificationContent}>
+                  <View style={[styles.notificationBadge, { backgroundColor: colors.successLight }]}>
+                    <Ionicons name="checkmark-circle" size={16} color={colors.success} />
+                    <Text style={[styles.notificationBadgeText, { color: colors.success }]}>Enabled</Text>
+                  </View>
+                  
+                  {/* Contact methods */}
+                  <View style={styles.contactMethods}>
+                    {booking.student_notify_settings.email && (
+                      <View style={styles.contactRow}>
+                        <Ionicons name="mail-outline" size={16} color={colors.textMuted} />
+                        <Text style={[styles.contactText, { color: colors.text }]}>
+                          {booking.student_notify_settings.email}
+                        </Text>
+                      </View>
+                    )}
+                    {booking.student_notify_settings.phone && (
+                      <View style={styles.contactRow}>
+                        <Ionicons name="phone-portrait-outline" size={16} color={colors.textMuted} />
+                        <Text style={[styles.contactText, { color: colors.text }]}>
+                          {booking.student_notify_settings.phone}
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+                  
+                  {/* Notification history */}
+                  {booking.kid_notifications && booking.kid_notifications.length > 0 && (
+                    <View style={styles.notificationHistory}>
+                      <Text style={[styles.historyTitle, { color: colors.textMuted }]}>Sent Notifications</Text>
+                      {booking.kid_notifications.map((notif, index) => (
+                        <View key={notif.notification_id || index} style={styles.historyItem}>
+                          <Ionicons 
+                            name={notif.notification_type === 'email' ? 'mail' : 'chatbubble'} 
+                            size={14} 
+                            color={colors.success} 
+                          />
+                          <Text style={[styles.historyText, { color: colors.text }]}>
+                            {notif.notification_type === 'email' ? 'Email' : 'SMS'} sent to {notif.sent_to}
+                          </Text>
+                          <Text style={[styles.historyTime, { color: colors.textMuted }]}>
+                            {format(parseISO(notif.sent_at), 'MMM d, h:mm a')}
+                          </Text>
+                        </View>
+                      ))}
+                    </View>
+                  )}
+                  
+                  {/* No notifications sent yet */}
+                  {(!booking.kid_notifications || booking.kid_notifications.length === 0) && (
+                    <Text style={[styles.noNotifText, { color: colors.textMuted }]}>
+                      Reminders will be sent before the session
+                    </Text>
+                  )}
+                </View>
+              ) : (
+                <View style={styles.notificationContent}>
+                  <View style={[styles.notificationBadge, { backgroundColor: colors.gray200 }]}>
+                    <Ionicons name="notifications-off-outline" size={16} color={colors.textMuted} />
+                    <Text style={[styles.notificationBadgeText, { color: colors.textMuted }]}>Not enabled</Text>
+                  </View>
+                  <Text style={[styles.noNotifText, { color: colors.textMuted }]}>
+                    Enable notifications in your kid's profile to send them session reminders
+                  </Text>
+                </View>
+              )}
+            </View>
+          )}
+
           {/* Intake Info */}
           {booking.intake_response && (
             <View style={[styles.card, isTablet && styles.cardTablet]}>
