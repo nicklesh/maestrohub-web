@@ -15,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
 import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 import { useToast } from '@/src/context/ToastContext';
+import { useTranslation } from '@/src/i18n';
 import { api } from '@/src/services/api';
 import AppHeader from '@/src/components/AppHeader';
 import { format, parseISO, isToday, isTomorrow } from 'date-fns';

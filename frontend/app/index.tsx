@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, ActivityIndicator, Image, useWindowDimensions }
 import { useRouter } from 'expo-router';
 import { useAuth } from '@/src/context/AuthContext';
 import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
+import { useToast } from '@/src/context/ToastContext';
+import { useTranslation } from '@/src/i18n';
 
 export default function Index() {
   const { user, loading } = useAuth();

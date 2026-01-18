@@ -10,6 +10,8 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
+import { useToast } from '@/src/context/ToastContext';
+import { useTranslation } from '@/src/i18n';
 import AppHeader from '@/src/components/AppHeader';
 
 interface FAQItem {

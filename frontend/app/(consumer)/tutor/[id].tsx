@@ -14,6 +14,8 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { api } from '@/src/services/api';
 import { useTheme } from '@/src/context/ThemeContext';
+import { useToast } from '@/src/context/ToastContext';
+import { useTranslation } from '@/src/i18n';
 import AppHeader from '@/src/components/AppHeader';
 import { format, parseISO, addDays, startOfDay } from 'date-fns';
 
