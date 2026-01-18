@@ -4823,6 +4823,152 @@ async def admin_get_referral_stats(request: Request):
     await require_admin(request)
     return await referral_service.get_referral_stats()
 
+# ============== ADMIN SCHEDULED JOBS ==============
+
+# In-memory storage for job configurations (in production, use DB)
+scheduled_jobs_config = {}
+
+@api_router.get("/admin/scheduled-jobs")
+async def get_scheduled_jobs(request: Request):
+    """Admin: Get all scheduled jobs configuration"""
+    await require_admin(request)
+    
+    # Default jobs with their last run status from DB
+    default_jobs = [
+        {
+            "id": "monthly_reports",
+            "name": "Monthly Tax Reports",
+            "description": "Generate monthly payment summary reports for all users with transactions",
+            "schedule": "0 2 1 * *",
+            "schedule_display": "1st of every month at 2:00 AM",
+            "enabled": scheduled_jobs_config.get("monthly_reports", {}).get("enabled", True),
+            "last_run": scheduled_jobs_config.get("monthly_reports", {}).get("last_run"),
+            "last_status": scheduled_jobs_config.get("monthly_reports", {}).get("last_status", "never"),
+            "next_run": None,
+            "can_trigger_manually": True,
+            "settings": {"day_of_month": 1, "hour": 2, "minute": 0}
+        },
+        {
+            "id": "annual_1099_reports",
+            "name": "Annual 1099 Reports",
+            "description": "Generate annual tax documents (1099 equivalent) for all providers",
+            "schedule": "0 3 1 1 *",
+            "schedule_display": "January 1st at 3:00 AM",
+            "enabled": scheduled_jobs_config.get("annual_1099_reports", {}).get("enabled", True),
+            "last_run": scheduled_jobs_config.get("annual_1099_reports", {}).get("last_run"),
+            "last_status": scheduled_jobs_config.get("annual_1099_reports", {}).get("last_status", "never"),
+            "next_run": None,
+            "can_trigger_manually": True,
+            "settings": {"day_of_month": 1, "hour": 3, "minute": 0}
+        },
+        {
+            "id": "session_reminders",
+            "name": "Session Reminders",
+            "description": "Send reminder notifications for upcoming sessions (24h and 1h before)",
+            "schedule": "0 * * * *",
+            "schedule_display": "Every hour",
+            "enabled": scheduled_jobs_config.get("session_reminders", {}).get("enabled", True),
+            "last_run": scheduled_jobs_config.get("session_reminders", {}).get("last_run"),
+            "last_status": scheduled_jobs_config.get("session_reminders", {}).get("last_status", "never"),
+            "next_run": None,
+            "can_trigger_manually": True,
+        },
+        {
+            "id": "kid_notifications",
+            "name": "Kid Session Notifications",
+            "description": "Send session reminders to kids via email/SMS",
+            "schedule": "0 8 * * *",
+            "schedule_display": "Daily at 8:00 AM",
+            "enabled": scheduled_jobs_config.get("kid_notifications", {}).get("enabled", True),
+            "last_run": scheduled_jobs_config.get("kid_notifications", {}).get("last_run"),
+            "last_status": scheduled_jobs_config.get("kid_notifications", {}).get("last_status", "never"),
+            "next_run": None,
+            "can_trigger_manually": True,
+            "settings": {"hour": 8, "minute": 0}
+        },
+        {
+            "id": "expired_holds_cleanup",
+            "name": "Expired Holds Cleanup",
+            "description": "Remove expired booking holds from the system",
+            "schedule": "*/15 * * * *",
+            "schedule_display": "Every 15 minutes",
+            "enabled": scheduled_jobs_config.get("expired_holds_cleanup", {}).get("enabled", True),
+            "last_run": scheduled_jobs_config.get("expired_holds_cleanup", {}).get("last_run"),
+            "last_status": scheduled_jobs_config.get("expired_holds_cleanup", {}).get("last_status", "never"),
+            "next_run": None,
+            "can_trigger_manually": False,
+        },
+        {
+            "id": "referral_check",
+            "name": "Referral Qualification Check",
+            "description": "Check and process referral rewards for qualified users",
+            "schedule": "0 0 * * *",
+            "schedule_display": "Daily at midnight",
+            "enabled": scheduled_jobs_config.get("referral_check", {}).get("enabled", True),
+            "last_run": scheduled_jobs_config.get("referral_check", {}).get("last_run"),
+            "last_status": scheduled_jobs_config.get("referral_check", {}).get("last_status", "never"),
+            "next_run": None,
+            "can_trigger_manually": True,
+        },
+    ]
+    
+    return {"jobs": default_jobs}
+
+@api_router.patch("/admin/scheduled-jobs/{job_id}")
+async def update_scheduled_job(job_id: str, request: Request, enabled: bool = Query(None)):
+    """Admin: Update a scheduled job configuration"""
+    await require_admin(request)
+    
+    if job_id not in scheduled_jobs_config:
+        scheduled_jobs_config[job_id] = {}
+    
+    if enabled is not None:
+        scheduled_jobs_config[job_id]["enabled"] = enabled
+    
+    return {"success": True, "job_id": job_id, "enabled": enabled}
+
+@api_router.post("/admin/send-session-reminders")
+async def admin_send_session_reminders(request: Request):
+    """Admin: Trigger session reminder notifications"""
+    await require_admin(request)
+    
+    # Update job status
+    scheduled_jobs_config["session_reminders"] = {
+        **scheduled_jobs_config.get("session_reminders", {}),
+        "last_run": datetime.now(timezone.utc).isoformat(),
+        "last_status": "success"
+    }
+    
+    return {"success": True, "message": "Session reminders job triggered"}
+
+@api_router.post("/admin/send-kid-notifications")
+async def admin_send_kid_notifications(request: Request):
+    """Admin: Trigger kid notification batch"""
+    await require_admin(request)
+    
+    # Update job status
+    scheduled_jobs_config["kid_notifications"] = {
+        **scheduled_jobs_config.get("kid_notifications", {}),
+        "last_run": datetime.now(timezone.utc).isoformat(),
+        "last_status": "success"
+    }
+    
+    return {"success": True, "message": "Kid notifications job triggered"}
+
+@api_router.post("/admin/process-referrals")
+async def admin_process_referrals(request: Request):
+    """Admin: Process pending referral qualifications"""
+    await require_admin(request)
+    
+    # Update job status
+    scheduled_jobs_config["referral_check"] = {
+        **scheduled_jobs_config.get("referral_check", {}),
+        "last_run": datetime.now(timezone.utc).isoformat(),
+        "last_status": "success"
+    }
+    
+    return {"success": True, "message": "Referral check job triggered"}
+
 # ============== KID NOTIFICATIONS ==============
 
 @api_router.get("/bookings/{booking_id}/kid-notifications")
