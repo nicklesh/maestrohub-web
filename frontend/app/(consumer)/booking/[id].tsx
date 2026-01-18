@@ -344,7 +344,7 @@ export default function BookingDetailScreen() {
                 <View style={styles.notificationContent}>
                   <View style={[styles.notificationBadge, { backgroundColor: colors.successLight }]}>
                     <Ionicons name="checkmark-circle" size={16} color={colors.success} />
-                    <Text style={[styles.notificationBadgeText, { color: colors.success }]}>Enabled</Text>
+                    <Text style={[styles.notificationBadgeText, { color: colors.success }]}>{t('pages.booking_detail.enabled')}</Text>
                   </View>
                   
                   {/* Contact methods */}
@@ -370,7 +370,7 @@ export default function BookingDetailScreen() {
                   {/* Notification history */}
                   {booking.kid_notifications && booking.kid_notifications.length > 0 && (
                     <View style={styles.notificationHistory}>
-                      <Text style={[styles.historyTitle, { color: colors.textMuted }]}>Sent Notifications</Text>
+                      <Text style={[styles.historyTitle, { color: colors.textMuted }]}>{t('pages.booking_detail.sent_notifications')}</Text>
                       {booking.kid_notifications.map((notif, index) => (
                         <View key={notif.notification_id || index} style={styles.historyItem}>
                           <Ionicons 
@@ -379,7 +379,7 @@ export default function BookingDetailScreen() {
                             color={colors.success} 
                           />
                           <Text style={[styles.historyText, { color: colors.text }]}>
-                            {notif.notification_type === 'email' ? 'Email' : 'SMS'} sent to {notif.sent_to}
+                            {notif.notification_type === 'email' ? t('pages.add_child.email') : 'SMS'} {t('pages.booking_detail.sent_to')} {notif.sent_to}
                           </Text>
                           <Text style={[styles.historyTime, { color: colors.textMuted }]}>
                             {format(parseISO(notif.sent_at), 'MMM d, h:mm a')}
@@ -392,12 +392,12 @@ export default function BookingDetailScreen() {
                   {/* No notifications sent yet */}
                   {(!booking.kid_notifications || booking.kid_notifications.length === 0) && (
                     <Text style={[styles.noNotifText, { color: colors.textMuted }]}>
-                      Reminders will be sent before the session
+                      {t('pages.booking_detail.reminders_will_be_sent')}
                     </Text>
                   )}
                 </View>
               ) : (
-                <View style={styles.notificationContent}>
+                <View style={styles.notificationContent}>>
                   <View style={[styles.notificationBadge, { backgroundColor: colors.gray200 }]}>
                     <Ionicons name="notifications-off-outline" size={16} color={colors.textMuted} />
                     <Text style={[styles.notificationBadgeText, { color: colors.textMuted }]}>Not enabled</Text>
