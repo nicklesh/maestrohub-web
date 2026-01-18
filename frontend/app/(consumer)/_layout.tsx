@@ -3,9 +3,11 @@ import { Platform, useWindowDimensions } from 'react-native';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '@/src/context/ThemeContext';
+import { useTranslation } from '@/src/i18n';
 
 export default function ConsumerLayout() {
   const { colors } = useTheme();
+  const { t } = useTranslation();
   const { width } = useWindowDimensions();
   const isTablet = width >= 768;
 
@@ -36,7 +38,7 @@ export default function ConsumerLayout() {
       <Tabs.Screen
         name="home"
         options={{
-          title: 'Home',
+          title: t('navigation.home'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home-outline" size={size} color={color} />
           ),
@@ -45,7 +47,7 @@ export default function ConsumerLayout() {
       <Tabs.Screen
         name="search"
         options={{
-          title: 'Search',
+          title: t('navigation.search'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="search-outline" size={size} color={color} />
           ),
@@ -54,7 +56,7 @@ export default function ConsumerLayout() {
       <Tabs.Screen
         name="bookings"
         options={{
-          title: 'Bookings',
+          title: t('navigation.bookings'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="calendar-outline" size={size} color={color} />
           ),
@@ -63,7 +65,7 @@ export default function ConsumerLayout() {
       <Tabs.Screen
         name="kids"
         options={{
-          title: 'Kids',
+          title: t('navigation.kids'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="people-outline" size={size} color={color} />
           ),
@@ -72,7 +74,7 @@ export default function ConsumerLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Account',
+          title: t('navigation.account'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person-circle-outline" size={size} color={color} />
           ),
