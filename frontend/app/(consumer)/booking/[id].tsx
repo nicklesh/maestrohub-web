@@ -20,6 +20,20 @@ import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 import AppHeader from '@/src/components/AppHeader';
 import { format, parseISO, isPast } from 'date-fns';
 
+interface KidNotification {
+  notification_id: string;
+  notification_type: string;
+  sent_to: string;
+  sent_at: string;
+  status: string;
+}
+
+interface StudentNotifySettings {
+  notify_enabled: boolean;
+  email?: string;
+  phone?: string;
+}
+
 interface Booking {
   booking_id: string;
   tutor_id: string;
@@ -41,6 +55,8 @@ interface Booking {
     current_level: string;
     notes?: string;
   };
+  kid_notifications?: KidNotification[];
+  student_notify_settings?: StudentNotifySettings;
 }
 
 export default function BookingDetailScreen() {
