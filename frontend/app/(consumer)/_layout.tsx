@@ -90,6 +90,7 @@ export default function ConsumerLayout() {
       <Tabs.Screen name="notifications" options={{ href: null }} />
       <Tabs.Screen name="reminders" options={{ href: null }} />
       <Tabs.Screen name="invite-provider" options={{ href: null }} />
+      <Tabs.Screen name="invite-parent" options={{ href: null }} />
       <Tabs.Screen name="faq" options={{ href: null }} />
       <Tabs.Screen name="become-tutor" options={{ href: null }} />
       <Tabs.Screen name="reviews" options={{ href: null }} />
