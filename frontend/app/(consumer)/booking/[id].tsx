@@ -282,7 +282,7 @@ export default function BookingDetailScreen() {
               <View style={styles.dateContainer}>
                 <Ionicons name="calendar-outline" size={24} color={colors.primary} />
                 <View style={styles.dateInfo}>
-                  <Text style={styles.dateLabel}>Date</Text>
+                  <Text style={styles.dateLabel}>{t('pages.booking_detail.date')}</Text>
                   <Text style={[styles.dateValue, isDesktop && styles.dateValueDesktop]}>
                     {format(parseISO(booking.start_at), 'EEEE, MMMM d, yyyy')}
                   </Text>
@@ -293,7 +293,7 @@ export default function BookingDetailScreen() {
               <View style={styles.dateContainer}>
                 <Ionicons name="time-outline" size={24} color={colors.primary} />
                 <View style={styles.dateInfo}>
-                  <Text style={styles.dateLabel}>Time</Text>
+                  <Text style={styles.dateLabel}>{t('pages.booking_detail.time')}</Text>
                   <Text style={[styles.dateValue, isDesktop && styles.dateValueDesktop]}>
                     {format(parseISO(booking.start_at), 'h:mm a')} - {format(parseISO(booking.end_at), 'h:mm a')}
                   </Text>
@@ -304,7 +304,7 @@ export default function BookingDetailScreen() {
 
           {/* Tutor Info */}
           <View style={[styles.card, isTablet && styles.cardTablet]}>
-            <Text style={styles.cardTitle}>Tutor</Text>
+            <Text style={styles.cardTitle}>{t('pages.booking_detail.tutor')}</Text>
             <TouchableOpacity
               style={styles.personRow}
               onPress={() => router.push(`/(consumer)/tutor/${booking.tutor_id}`)}
@@ -321,7 +321,7 @@ export default function BookingDetailScreen() {
 
           {/* Student Info */}
           <View style={[styles.card, isTablet && styles.cardTablet]}>
-            <Text style={styles.cardTitle}>Student</Text>
+            <Text style={styles.cardTitle}>{t('pages.booking_detail.student')}</Text>
             <View style={styles.personRow}>
               <View style={[styles.personAvatar, styles.studentAvatar]}>
                 <Text style={styles.studentInitial}>
@@ -337,7 +337,7 @@ export default function BookingDetailScreen() {
             <View style={[styles.card, isTablet && styles.cardTablet]}>
               <View style={styles.notificationHeader}>
                 <Ionicons name="notifications-outline" size={20} color={colors.primary} />
-                <Text style={[styles.cardTitle, { marginBottom: 0, marginLeft: 8 }]}>Kid Notifications</Text>
+                <Text style={[styles.cardTitle, { marginBottom: 0, marginLeft: 8 }]}>{t('pages.booking_detail.kid_notifications')}</Text>
               </View>
               
               {booking.student_notify_settings.notify_enabled ? (
