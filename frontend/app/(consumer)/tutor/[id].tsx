@@ -441,7 +441,7 @@ export default function TutorDetailScreen() {
             style={[styles.bookButton, { backgroundColor: colors.primary }]}
             onPress={handleBook}
           >
-            <Text style={styles.bookButtonText}>Book Now</Text>
+            <Text style={styles.bookButtonText}>{t('pages.tutor_detail.book_session')}</Text>
           </TouchableOpacity>
         </View>
       )}
