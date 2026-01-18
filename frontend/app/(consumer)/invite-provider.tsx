@@ -11,9 +11,11 @@ import {
   Platform,
   ActivityIndicator,
   RefreshControl,
+  Linking,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import * as Clipboard from 'expo-clipboard';
 import { useAuth } from '@/src/context/AuthContext';
 import { useTheme } from '@/src/context/ThemeContext';
 import { useToast } from '@/src/context/ToastContext';
@@ -31,6 +33,59 @@ interface Invite {
   credit_amount: number;
   created_at: string;
 }
+
+interface SocialPlatform {
+  id: string;
+  name: string;
+  icon: string;
+  color: string;
+  getShareUrl: (message: string, url: string) => string;
+}
+
+const SOCIAL_PLATFORMS: SocialPlatform[] = [
+  {
+    id: 'whatsapp',
+    name: 'WhatsApp',
+    icon: 'logo-whatsapp',
+    color: '#25D366',
+    getShareUrl: (message, url) => `https://wa.me/?text=${encodeURIComponent(message + '\n\n' + url)}`,
+  },
+  {
+    id: 'facebook',
+    name: 'Facebook',
+    icon: 'logo-facebook',
+    color: '#1877F2',
+    getShareUrl: (message, url) => `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(message)}`,
+  },
+  {
+    id: 'twitter',
+    name: 'X (Twitter)',
+    icon: 'logo-twitter',
+    color: '#000000',
+    getShareUrl: (message, url) => `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}&url=${encodeURIComponent(url)}`,
+  },
+  {
+    id: 'linkedin',
+    name: 'LinkedIn',
+    icon: 'logo-linkedin',
+    color: '#0A66C2',
+    getShareUrl: (message, url) => `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
+  },
+  {
+    id: 'instagram',
+    name: 'Instagram',
+    icon: 'logo-instagram',
+    color: '#E4405F',
+    getShareUrl: (message, url) => `https://www.instagram.com/`,
+  },
+  {
+    id: 'tiktok',
+    name: 'TikTok',
+    icon: 'musical-notes',
+    color: '#000000',
+    getShareUrl: (message, url) => `https://www.tiktok.com/`,
+  },
+];
 
 export default function InviteProviderScreen() {
   const { token } = useAuth();
