@@ -186,13 +186,17 @@ export default function BookingScreen() {
         }
       } else {
         // Single button: use alert
-        showInfo(`${title}\n\n${message}`);
+        showInfo(message, title);
         if (buttons?.[0]?.onPress) {
           buttons[0].onPress();
         }
       }
     } else {
-      Alert.alert(title, message, buttons);
+      // On native, simplified approach - show info and execute first button action
+      showInfo(message, title);
+      if (buttons?.[0]?.onPress) {
+        buttons[0].onPress();
+      }
     }
   };
 
