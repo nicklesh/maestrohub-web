@@ -106,9 +106,9 @@ export default function LoginScreen() {
                 style={{ width: logoWidth, height: logoHeight }}
                 resizeMode="contain"
               />
-              <Text style={[styles.appTitle, isDesktop && styles.appTitleDesktop]}>Maestro Hub</Text>
+              <Text style={[styles.appTitle, isDesktop && styles.appTitleDesktop]}>Maestro Habitat</Text>
               <Text style={[styles.tagline, isDesktop && styles.taglineDesktop]}>
-                Find your coach, master your skill
+                Find your coach, master your learning
               </Text>
             </View>
 
