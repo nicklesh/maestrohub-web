@@ -578,7 +578,7 @@ export default function CalendarScreen() {
                   setVacationEndDate(null);
                 }}
               >
-                <Text style={[styles.vacationModalBtnText, { color: colors.text }]}>Cancel</Text>
+                <Text style={[styles.vacationModalBtnText, { color: colors.text }]}>{t('buttons.cancel')}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.vacationModalBtn, { backgroundColor: colors.primary }]}
@@ -588,7 +588,7 @@ export default function CalendarScreen() {
                 {saving ? (
                   <ActivityIndicator color="#FFFFFF" size="small" />
                 ) : (
-                  <Text style={[styles.vacationModalBtnText, { color: '#FFFFFF' }]}>Confirm</Text>
+                  <Text style={[styles.vacationModalBtnText, { color: '#FFFFFF' }]}>{t('buttons.confirm')}</Text>
                 )}
               </TouchableOpacity>
             </View>

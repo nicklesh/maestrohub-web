@@ -529,7 +529,7 @@ export default function BecomeTutorScreen() {
               style={[styles.nextButton, { backgroundColor: colors.primary }]}
               onPress={handleNext}
             >
-              <Text style={styles.nextButtonText}>Continue</Text>
+              <Text style={styles.nextButtonText}>{t('buttons.continue')}</Text>
               <Ionicons name="arrow-forward" size={20} color="#FFFFFF" />
             </TouchableOpacity>
           ) : (

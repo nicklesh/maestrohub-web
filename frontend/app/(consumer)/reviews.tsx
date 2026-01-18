@@ -355,7 +355,7 @@ export default function ReviewsScreen() {
                 style={[styles.cancelButton, { borderColor: colors.border }]}
                 onPress={() => setShowReviewModal(false)}
               >
-                <Text style={[styles.cancelButtonText, { color: colors.text }]}>Cancel</Text>
+                <Text style={[styles.cancelButtonText, { color: colors.text }]}>{t('buttons.cancel')}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.submitButton, { backgroundColor: colors.primary }]}

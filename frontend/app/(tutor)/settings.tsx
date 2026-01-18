@@ -182,7 +182,7 @@ export default function TutorSettings() {
               <View style={styles.cardHeader}>
                 <Text style={[styles.cardTitle, isDesktop && styles.cardTitleDesktop]}>Profile Summary</Text>
                 <TouchableOpacity onPress={() => router.push('/(tutor)/onboarding')}>
-                  <Text style={styles.editLink}>Edit</Text>
+                  <Text style={styles.editLink}>{t('buttons.edit')}</Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.infoRow}>

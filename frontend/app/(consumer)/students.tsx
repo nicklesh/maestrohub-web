@@ -238,7 +238,7 @@ export default function StudentsScreen() {
             <View style={[styles.modalInner, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
               <View style={styles.modalHeader}>
                 <TouchableOpacity onPress={() => setModalVisible(false)}>
-                  <Text style={styles.modalCancel}>Cancel</Text>
+                  <Text style={styles.modalCancel}>{t('buttons.cancel')}</Text>
                 </TouchableOpacity>
                 <Text style={[styles.modalTitle, isDesktop && styles.modalTitleDesktop]}>
                   {editingStudent ? 'Edit Student' : 'Add Student'}
@@ -247,7 +247,7 @@ export default function StudentsScreen() {
                   {saving ? (
                     <ActivityIndicator size="small" color={colors.primary} />
                   ) : (
-                    <Text style={styles.modalSave}>Save</Text>
+                    <Text style={styles.modalSave}>{t('buttons.save')}</Text>
                   )}
                 </TouchableOpacity>
               </View>

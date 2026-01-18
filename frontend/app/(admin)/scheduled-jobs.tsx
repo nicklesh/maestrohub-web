@@ -438,7 +438,7 @@ export default function ScheduledJobsScreen() {
           <View style={styles.legendItems}>
             <View style={styles.legendItem}>
               <View style={[styles.legendDot, { backgroundColor: colors.success }]} />
-              <Text style={[styles.legendText, { color: colors.textSecondary }]}>Success</Text>
+              <Text style={[styles.legendText, { color: colors.textSecondary }]}>{t('common.success')}</Text>
             </View>
             <View style={styles.legendItem}>
               <View style={[styles.legendDot, { backgroundColor: colors.error }]} />

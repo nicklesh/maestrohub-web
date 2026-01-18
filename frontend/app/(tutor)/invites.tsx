@@ -170,7 +170,7 @@ export default function InvitesScreen() {
             onPress={() => handleCancelInvite(item.invite_id)}
             style={[styles.cancelButton, { borderColor: colors.error }]}
           >
-            <Text style={[styles.cancelButtonText, { color: colors.error }]}>Cancel</Text>
+            <Text style={[styles.cancelButtonText, { color: colors.error }]}>{t('buttons.cancel')}</Text>
           </TouchableOpacity>
         )}
         {item.status === 'accepted' && item.accepted_at && (

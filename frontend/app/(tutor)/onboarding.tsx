@@ -458,7 +458,7 @@ export default function TutorOnboarding() {
                 onPress={() => setStep(step - 1)}
               >
                 <Ionicons name="arrow-back" size={20} color={colors.text} />
-                <Text style={[styles.backButtonText, { color: colors.text }]}>Back</Text>
+                <Text style={[styles.backButtonText, { color: colors.text }]}>{t('buttons.back')}</Text>
               </TouchableOpacity>
             )}
             {step < 4 ? (
@@ -466,7 +466,7 @@ export default function TutorOnboarding() {
                 style={[styles.nextButton, { backgroundColor: colors.primary }, step === 1 && { flex: 1 }]}
                 onPress={() => setStep(step + 1)}
               >
-                <Text style={styles.nextButtonText}>Continue</Text>
+                <Text style={styles.nextButtonText}>{t('buttons.continue')}</Text>
                 <Ionicons name="arrow-forward" size={20} color="#FFFFFF" />
               </TouchableOpacity>
             ) : (

@@ -401,7 +401,7 @@ export default function InviteProviderScreen() {
               style={[styles.cancelButton, { borderColor: colors.border }]}
               onPress={() => setShowShareModal(false)}
             >
-              <Text style={[styles.cancelButtonText, { color: colors.text }]}>Cancel</Text>
+              <Text style={[styles.cancelButtonText, { color: colors.text }]}>{t('buttons.cancel')}</Text>
             </TouchableOpacity>
           </View>
         </View>

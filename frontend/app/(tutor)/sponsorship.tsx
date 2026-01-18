@@ -285,7 +285,7 @@ export default function SponsorshipScreen() {
                       style={[styles.cancelButton, { borderColor: colors.error }]}
                       onPress={() => handleCancel(sponsorship)}
                     >
-                      <Text style={[styles.cancelButtonText, { color: colors.error }]}>Cancel</Text>
+                      <Text style={[styles.cancelButtonText, { color: colors.error }]}>{t('buttons.cancel')}</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
