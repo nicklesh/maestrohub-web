@@ -374,12 +374,12 @@ export default function ProfileScreen() {
 
           {/* Support Section */}
           <View style={[styles.section, { backgroundColor: colors.surface }]}>
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>Support</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.profile.support')}</Text>
             
             <TouchableOpacity style={styles.menuItem} onPress={() => setShowContactSheet(true)}>
               <View style={styles.menuItemLeft}>
                 <Ionicons name="chatbubble-outline" size={22} color={colors.primary} />
-                <Text style={[styles.menuItemText, { color: colors.text }]}>Contact Us</Text>
+                <Text style={[styles.menuItemText, { color: colors.text }]}>{t('buttons.contact_us')}</Text>
               </View>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
@@ -387,7 +387,15 @@ export default function ProfileScreen() {
             <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(consumer)/faq')}>
               <View style={styles.menuItemLeft}>
                 <Ionicons name="help-circle-outline" size={22} color={colors.primary} />
-                <Text style={[styles.menuItemText, { color: colors.text }]}>Help Center</Text>
+                <Text style={[styles.menuItemText, { color: colors.text }]}>{t('navigation.help_center')}</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(consumer)/language')}>
+              <View style={styles.menuItemLeft}>
+                <Ionicons name="language-outline" size={22} color={colors.primary} />
+                <Text style={[styles.menuItemText, { color: colors.text }]}>{t('pages.settings.language')}</Text>
               </View>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
@@ -399,7 +407,7 @@ export default function ProfileScreen() {
             onPress={handleLogout}
           >
             <Ionicons name="log-out-outline" size={22} color={colors.error} />
-            <Text style={[styles.logoutText, { color: colors.error }]}>Logout</Text>
+            <Text style={[styles.logoutText, { color: colors.error }]}>{t('navigation.logout')}</Text>
           </TouchableOpacity>
 
           <Text style={[styles.version, { color: colors.textMuted }]}>Version 1.0.0</Text>
