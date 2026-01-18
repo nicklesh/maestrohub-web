@@ -316,12 +316,13 @@ export default function BecomeTutorScreen() {
           placeholder="Share your background, experience, teaching style, and what makes you a great tutor..."
           placeholderTextColor={colors.textMuted}
           value={bio}
-          onChangeText={setBio}
+          onChangeText={(text) => setBio(text.slice(0, 500))}
           multiline
           numberOfLines={6}
           textAlignVertical="top"
+          maxLength={500}
         />
-        <Text style={[styles.charCount, { color: colors.textMuted }]}>{bio.length}/500</Text>
+        <Text style={[styles.charCount, { color: bio.length >= 500 ? colors.error : colors.textMuted }]}>{bio.length}/500</Text>
       </View>
     </View>
   );
