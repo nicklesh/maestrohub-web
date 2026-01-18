@@ -63,6 +63,7 @@ export default function TaxReportsScreen() {
       }
     } catch (error) {
       console.error('Failed to load tax reports:', error);
+      showError('Failed to load tax reports');
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -72,14 +73,6 @@ export default function TaxReportsScreen() {
   useEffect(() => {
     loadData();
   }, [loadData]);
-
-  const showAlert = (title: string, message: string) => {
-    if (Platform.OS === 'web') {
-      window.alert(`${title}\n\n${message}`);
-    } else {
-      Alert.alert(title, message);
-    }
-  };
 
   const handleGenerateReport = async (year: number, reportType: string = 'annual') => {
     setGenerating(`${year}-${reportType}`);
@@ -91,14 +84,14 @@ export default function TaxReportsScreen() {
       );
       
       if (response.data.success) {
-        showAlert('Success', `Tax report for ${year} has been generated successfully!`);
+        showSuccess(`Tax report for ${year} has been generated successfully!`);
         loadData();
       } else {
-        showAlert('Error', response.data.error || 'Failed to generate report');
+        showError(response.data.error || 'Failed to generate report');
       }
     } catch (error: any) {
       const errorMessage = error.response?.data?.detail || 'Failed to generate report. Please try again.';
-      showAlert('Error', errorMessage);
+      showError(errorMessage);
     } finally {
       setGenerating(null);
     }
@@ -133,12 +126,13 @@ export default function TaxReportsScreen() {
         link.click();
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
+        showSuccess('Report downloaded successfully!');
       } else {
         // For native, open in browser with auth
         await Linking.openURL(downloadUrl);
       }
     } catch (error: any) {
-      showAlert('Error', 'Failed to download report. Please try again.');
+      showError('Failed to download report. Please try again.');
     } finally {
       setDownloading(null);
     }
@@ -151,12 +145,9 @@ export default function TaxReportsScreen() {
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      showAlert(
-        'Request Submitted',
-        `Your request for the ${year} archived report has been submitted. You'll be notified when it's ready in your inbox.`
-      );
+      showInfo(`Your request for the ${year} archived report has been submitted. You'll be notified when it's ready in your inbox.`);
     } catch (error: any) {
-      showAlert('Error', error.response?.data?.detail || 'Failed to request archived report');
+      showError(error.response?.data?.detail || 'Failed to request archived report');
     }
   };
 
