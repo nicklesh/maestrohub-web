@@ -387,7 +387,7 @@ export default function KidsScreen() {
                 color={formAutoSend ? colors.primary : colors.textMuted}
               />
               <Text style={[styles.autoSendText, { color: colors.text }]}>
-                Auto-send quarterly schedules
+                {t('pages.add_child.auto_send_schedules')}
               </Text>
             </TouchableOpacity>
 
@@ -399,7 +399,7 @@ export default function KidsScreen() {
               {saving ? (
                 <ActivityIndicator color="#FFFFFF" />
               ) : (
-                <Text style={styles.saveButtonText}>{editingKid ? 'Update' : 'Add Child'}</Text>
+                <Text style={styles.saveButtonText}>{editingKid ? t('common.save') : t('pages.kids.add_child')}</Text>
               )}
             </TouchableOpacity>
           </View>
