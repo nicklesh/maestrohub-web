@@ -97,7 +97,7 @@ export default function KidsScreen() {
 
   const handleSave = async () => {
     if (!formName.trim()) {
-      Alert.alert('Error', 'Please enter the child\'s name');
+      showError('Please enter the child\'s name');
       return;
     }
 
@@ -117,51 +117,56 @@ export default function KidsScreen() {
         await api.put(`/students/${editingKid.student_id}`, data, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        Alert.alert('Success', 'Child updated successfully');
+        showSuccess('Child updated successfully');
       } else {
         await api.post('/students', data, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        Alert.alert('Success', 'Child added successfully');
+        showSuccess('Child added successfully');
       }
 
       setShowAddModal(false);
       resetForm();
       loadKids();
     } catch (error: any) {
-      Alert.alert('Error', error.response?.data?.detail || 'Failed to save');
+      showError(error.response?.data?.detail || 'Failed to save');
     } finally {
       setSaving(false);
     }
   };
 
-  const handleDelete = (kid: Kid) => {
-    Alert.alert(
-      'Delete Child',
-      `Are you sure you want to remove ${kid.name}?`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await api.delete(`/students/${kid.student_id}`, {
-                headers: { Authorization: `Bearer ${token}` }
-              });
-              loadKids();
-            } catch (error) {
-              Alert.alert('Error', 'Failed to delete');
-            }
-          }
+  const handleDelete = async (kid: Kid) => {
+    // Use window.confirm on web
+    if (Platform.OS === 'web') {
+      const confirmed = window.confirm(`Are you sure you want to remove ${kid.name}?`);
+      if (confirmed) {
+        try {
+          await api.delete(`/students/${kid.student_id}`, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          loadKids();
+          showSuccess('Child removed');
+        } catch (error) {
+          showError('Failed to delete');
         }
-      ]
-    );
+      }
+    } else {
+      // For native, proceed directly (or implement native confirmation)
+      try {
+        await api.delete(`/students/${kid.student_id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        loadKids();
+        showSuccess('Child removed');
+      } catch (error) {
+        showError('Failed to delete');
+      }
+    }
   };
 
   const handleSendSchedule = async (kid: Kid) => {
     if (!kid.email) {
-      Alert.alert('Error', 'Please add an email address for this child first');
+      showError('Please add an email address for this child first');
       return;
     }
 
@@ -169,9 +174,9 @@ export default function KidsScreen() {
       await api.post(`/students/${kid.student_id}/send-schedule`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      Alert.alert('Success', `Schedule sent to ${kid.email}`);
+      showSuccess(`Schedule sent to ${kid.email}`);
     } catch (error: any) {
-      Alert.alert('Error', error.response?.data?.detail || 'Failed to send schedule');
+      showError(error.response?.data?.detail || 'Failed to send schedule');
     }
   };
 
