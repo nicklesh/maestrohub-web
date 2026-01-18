@@ -54,6 +54,7 @@ export default function HomeScreen() {
   const { user, token } = useAuth();
   const { currentMarket, needsSelection } = useMarket();
   const { colors } = useTheme();
+  const { t } = useTranslation();
   const router = useRouter();
   const { width } = useWindowDimensions();
   const [categories, setCategories] = useState<Category[]>([]);
