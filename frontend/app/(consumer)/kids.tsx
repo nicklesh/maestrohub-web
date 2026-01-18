@@ -324,7 +324,17 @@ export default function KidsScreen() {
               </View>
             </View>
 
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Email (for schedule notifications)</Text>
+            {/* Contact Information Section */}
+            <View style={[styles.sectionDivider, { backgroundColor: colors.border }]} />
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>Notification Contact (Optional)</Text>
+            <View style={[styles.privacyNotice, { backgroundColor: colors.backgroundSecondary, borderColor: colors.primary }]}>
+              <Ionicons name="shield-checkmark-outline" size={18} color={colors.primary} />
+              <Text style={[styles.privacyText, { color: colors.textSecondary }]}>
+                This contact info will strictly be used for upcoming session reminders only. We will never share this information.
+              </Text>
+            </View>
+
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Email</Text>
             <TextInput
               style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
               placeholder="child@example.com"
@@ -334,6 +344,30 @@ export default function KidsScreen() {
               keyboardType="email-address"
               autoCapitalize="none"
             />
+
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Phone Number</Text>
+            <TextInput
+              style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
+              placeholder="+1 (555) 123-4567"
+              placeholderTextColor={colors.textMuted}
+              value={formPhone}
+              onChangeText={setFormPhone}
+              keyboardType="phone-pad"
+            />
+
+            <TouchableOpacity
+              style={styles.autoSendRow}
+              onPress={() => setFormNotifyUpcoming(!formNotifyUpcoming)}
+            >
+              <Ionicons
+                name={formNotifyUpcoming ? 'checkbox' : 'square-outline'}
+                size={24}
+                color={formNotifyUpcoming ? colors.primary : colors.textMuted}
+              />
+              <Text style={[styles.autoSendText, { color: colors.text }]}>
+                Send session reminders to this contact
+              </Text>
+            </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.autoSendRow}
