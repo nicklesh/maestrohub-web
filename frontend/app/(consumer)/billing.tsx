@@ -148,34 +148,28 @@ export default function BillingScreen() {
       setShowProviderModal(false);
       loadData();
     } catch (error: any) {
-      showInfo(error.response?.data?.detail || 'Failed to link payment method', 'Error');
+      showError(error.response?.data?.detail || 'Failed to link payment method');
     } finally {
       setLinkingProvider(null);
     }
   };
 
   const handleUnlinkProvider = async (providerId: string, displayName: string) => {
-    Alert.alert(
-      'Remove Payment Method',
-      `Are you sure you want to remove ${displayName}?`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Remove',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await api.delete(`/payment-providers/${providerId}`, {
-                headers: { Authorization: `Bearer ${token}` }
-              });
-              loadData();
-            } catch (error: any) {
-              showInfo(error.response?.data?.detail || 'Failed to remove payment method', 'Error');
-            }
-          }
-        }
-      ]
-    );
+    const confirmed = Platform.OS === 'web'
+      ? window.confirm(`Are you sure you want to remove ${displayName}?`)
+      : true;
+    
+    if (confirmed) {
+      try {
+        await api.delete(`/payment-providers/${providerId}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        showSuccess('Payment method removed');
+        loadData();
+      } catch (error: any) {
+        showError(error.response?.data?.detail || 'Failed to remove payment method');
+      }
+    }
   };
 
   const handleSetDefault = async (providerId: string) => {
