@@ -282,13 +282,13 @@ export default function HomeScreen() {
             onPress={() => router.push('/(consumer)/search')}
           >
             <Ionicons name="search" size={20} color={colors.textMuted} />
-            <Text style={styles.searchPlaceholder}>Search for tutors...</Text>
+            <Text style={styles.searchPlaceholder}>{t('forms.placeholders.search_subjects')}</Text>
           </TouchableOpacity>
 
           {/* Categories */}
           <View style={styles.section}>
             <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>
-              Browse Categories
+              {t('pages.home.browse_categories')}
             </Text>
             <View style={[styles.categoriesGrid, isTablet && styles.categoriesGridTablet]}>
               {categories.map((cat, index) => renderCategoryCard(cat, index))}
@@ -299,10 +299,10 @@ export default function HomeScreen() {
           <View style={styles.section}>
             <View style={[styles.sectionHeader, isTablet && styles.sectionHeaderTablet]}>
               <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>
-                Featured Coaches
+                {t('pages.home.featured_coaches')}
               </Text>
               <TouchableOpacity onPress={() => router.push('/(consumer)/search')}>
-                <Text style={styles.seeAll}>See All</Text>
+                <Text style={styles.seeAll}>{t('buttons.see_all')}</Text>
               </TouchableOpacity>
             </View>
             {featuredTutors.length > 0 ? (
