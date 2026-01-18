@@ -1471,6 +1471,74 @@ async def get_consumer_sent_invites(request: Request):
     
     return {"invites": invites}
 
+# ============== PARENT INVITE ROUTES ==============
+
+class ParentInviteCreate(BaseModel):
+    invitee_email: EmailStr
+    invitee_name: Optional[str] = None
+    message: Optional[str] = None
+
+@api_router.post("/consumer/invite-parent")
+async def invite_parent(data: ParentInviteCreate, request: Request):
+    """Send an invitation to another parent"""
+    user = await require_auth(request)
+    
+    # Check if already invited
+    existing = await db.parent_invites.find_one({
+        "inviter_id": user.user_id,
+        "invitee_email": data.invitee_email.lower()
+    })
+    if existing:
+        raise HTTPException(status_code=400, detail="You have already invited this parent")
+    
+    invite_id = f"pinv_{uuid.uuid4().hex[:12]}"
+    invite_doc = {
+        "invite_id": invite_id,
+        "inviter_id": user.user_id,
+        "inviter_name": user.name,
+        "invitee_email": data.invitee_email.lower(),
+        "invitee_name": data.invitee_name,
+        "message": data.message,
+        "status": "pending",
+        "created_at": datetime.now(timezone.utc)
+    }
+    
+    await db.parent_invites.insert_one(invite_doc)
+    
+    # Send invitation email
+    try:
+        await email_service.send_email(
+            to_email=data.invitee_email,
+            subject=f"{user.name} invited you to Maestro Habitat!",
+            html=f"""
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <h2 style="color: #2563EB;">You're Invited to Maestro Habitat!</h2>
+                <p>{user.name} thinks you'd love Maestro Habitat - the best platform to find quality coaches for your kids.</p>
+                {f'<p style="font-style: italic; color: #666;">"{data.message}"</p>' if data.message else ''}
+                <p>Join thousands of parents who have found amazing tutors for their children.</p>
+                <a href="https://www.maestrohabitat.com" style="display: inline-block; background: #2563EB; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; margin-top: 16px;">
+                    Join Maestro Habitat
+                </a>
+            </div>
+            """
+        )
+    except Exception as e:
+        logger.error(f"Failed to send parent invite email: {e}")
+    
+    return {"success": True, "invite_id": invite_id}
+
+@api_router.get("/consumer/parent-invites")
+async def get_parent_invites(request: Request):
+    """Get parent invitations sent by the user"""
+    user = await require_auth(request)
+    
+    invites = await db.parent_invites.find(
+        {"inviter_id": user.user_id},
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(50)
+    
+    return {"invites": invites}
+
 # ============== REMINDER CONFIGURATION ==============
 
 class ReminderConfig(BaseModel):
