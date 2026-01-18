@@ -1,208 +1,205 @@
 <analysis>
 
 **original_problem_statement:**
-The user initially requested to finalize the MVP by addressing security vulnerabilities, integrating a real email service, and then preparing for production.
+The user's initial request was to finalize an MVP by rebranding, fixing security issues, and adding several features. The core requirements for this session evolved to:
 
-This evolved into a major rebranding and feature expansion effort. The new requests are:
-1.  **Rebranding:** Change all instances of MaestroHub to MaestroHabitat and update the tagline.
-2.  **Kid Notifications:** Allow parents to add a phone/email for their children to receive session notifications. This status should be visible in the booking lists.
-3.  **Accessibility:** Ensure all primary UI text and CTA states meet WCAG AA contrast standards.
-4.  **Search UI Rework:** Replace category pills on search results with global category/subcategory dropdowns next to the search bar.
-5.  **Web Navigation:** The logo click on the web should navigate to an external marketing site, but native should navigate to the in-app home. This was later reverted to always navigate to the in-app home.
-6.  **Invite Parents Feature:** Add a new feature to allow consumers to invite other parents to the platform.
-7.  **Social Sharing:** Enhance the Share Link functionality for invites (both parent and provider) to show a modal with social media sharing options (Email, WhatsApp, etc.).
-8.  **Tax Reporting:** For coaches, generate tax-reportable documents (1099 equivalent) for the current and last 4 years. This should be an on-demand system where the report is emailed to an admin and available for download.
-9.  **Referral System Upgrade:** Implement a new referral system.
-    *   **For Consumers:** Get one free session after a referred user successfully pays for two sessions.
-    *   **For Providers:** Get a one-month platform fee waiver after a referred user successfully completes two paid sessions.
-10. **Seed Data & DB Migration:**
-    *   Move all hardcoded data (categories, subcategories, levels, modalities) from the backend code into the database.
-    *   Seed the database with 2 providers for each subcategory across 2 different markets.
-11. **Code Refactoring:** Refactor large files, specifically , into a more modular and scalable structure.
-12. **Documentation:** Test all changes and update all relevant documents (PRD, test documents).
+1.  **Feature - Internationalization (i18n):** Make the entire application translatable. This includes:
+    *   Setting up an i18n framework.
+    *   Moving all user-facing strings (labels, buttons, messages, titles, etc.) into external JSON files.
+    *   Adding support for multiple languages, including English, Spanish, French, German, Japanese, Korean, Chinese, Arabic, Hebrew, and several Indian languages (Hindi, Telugu, Tamil, etc.).
+    *   Creating a settings page for users to switch languages.
+    *   Ensuring the selected language is applied across the entire app, for all user roles.
+2.  **Technical Debt - UI/UX:** Replace all native JavaScript alerts (, ) with the existing non-blocking, global toast notification system ().
+3.  **Bug Fixes:** Address a series of bugs reported by the user with screenshots, including:
+    *   Crashes on form submission due to missing hooks ().
+    *   UI layout issues (text overflowing, incorrect validation messages).
+    *   Incorrect toast message types (e.g., success messages showing as errors).
+    *   Broken social sharing functionality.
+4.  **Feature Enhancement:** Add social media sharing options to the Invite a Provider page, similar to the Invite Parents page.
+5.  **Technical Debt - Backend Refactoring:** Continue refactoring the monolithic  into a modular, service-based architecture.
 
 **User's preferred language**: English
 
 **what currently exists?**
-The application has undergone significant changes.
--   **Security & Email:** All initial security vulnerabilities have been addressed, and the email service is now integrated with the user's Resend API key, operating in live mode.
--   **Rebranding:** The application has been rebranded from MaestroHub to MaestroHabitat across the frontend and backend.
--   **Database Migration:** Hardcoded categories, levels, and modalities have been moved to the database. The  endpoint now fetches from the DB.
--   **Seed Data:** The database has been seeded with new categories and ~292 new coach accounts across various subcategories and markets.
--   **New Features (Scaffolded):** New pages for Invite Parents, Tax Reports, and Referrals have been created on the frontend. Corresponding backend services (, ) and API endpoints have been created but contain only placeholder logic.
--   **UI/UX Updates:** The search page has been redesigned with dropdowns instead of pills. Invite pages now feature a social sharing modal.
--   **Backend Refactoring (Started):** A new modular structure (, ) has been created to break up the monolithic  file. However, most of the business logic still resides within .
+The application is largely functional with a newly implemented and comprehensive internationalization (i18n) framework.
+-   **Internationalization (i18n):**
+    -   An i18n framework using  and  is fully configured.
+    -   A dedicated language settings screen  has been created.
+    -   The profile page now links to the language settings screen.
+    -   **18 locale JSON files** have been created in  (e.g., , , , etc.). These files have been populated with machine-translated content for thousands of keys.
+    -   Key application screens (, , , , , tab bar layouts) have been partially or fully migrated to use the  translation function.
+-   **Alert to Toast Migration:**
+    -   The migration from native  to the custom  is approximately 99% complete. The agent used a series of Python scripts and manual edits to replace most instances, including complex patterns and confirmation dialogs.
+-   **Bug Fixes:**
+    -   A significant number of bugs reported by the user have been fixed, including crashes in the booking flow, billing page, and become tutor process. UI layout issues and incorrect validation messages have also been addressed.
+-   **Feature Enhancements:**
+    -   Social media sharing functionality has been successfully added to the Invite a Provider page.
+-   **Backend:**
+    -   The service-based architecture is in place. A new  was created. However, the main  file remains large and contains significant inline business logic that still needs to be refactored.
 
 **Last working item**:
--   Last item agent was working: Implementing the UI to display the kid's notification status on the consumer's booking list page. The agent had just modified the  interface and the JSX in the  file to render this information.
-    -   **File:** 
+-   Last item agent was working: Comprehensively populating all 18+ locale JSON files with machine-translated content. The agent first created a master  with over 2000 keys and then used a script to translate and create all other locale files (e.g., , , etc.) to address the user's complaint that language changes were not being reflected.
 -   Status: **IN PROGRESS**
 -   Agent Testing Done: N
--   Which testing method agent to use? **Frontend testing agent** or **screenshot tool** to verify the UI changes on the  page.
--   User Testing Done: N
+-   Which testing method agent to use? **Manual testing**. The next agent needs to log in, navigate to the language settings page, switch to various languages (e.g., Hindi, Spanish), and verify that the UI (tab bars, page content, buttons) is now displayed in the selected language.
+-   User Testing Done: N (User reported the issue that translations are not working, which prompted this last action).
 
 **All Pending/In progress Issue list**:
--   **P0 - Issue 1**: Auth state persists incorrectly between user sessions on web.
+-   **P0 - Issue 1**: The Web Auth state persists incorrectly between user sessions on web. This is a recurring, high-priority bug from the previous session that has not been addressed. It causes  errors after login on the web preview, hindering testing.
+-   **P1 - Issue 2**: Confirmation dialogs were replaced with  or simplified, which is not an ideal UX for a native app. These should be replaced with a custom, non-blocking modal component for confirmation actions (e.g., deleting a payment method).
 
 **Issues Detail:**
 -   **Issue 1: Auth state persists incorrectly between user sessions on web**
-    -   **Description:** This is a high-priority, recurring bug from a previous fork. When testing on the web preview, users (and the agent) frequently encounter  errors or pages that fail to load data after logging in, requiring a manual page refresh to fix. This severely hinders testing and provides a poor user experience.
-    -   **Attempted fixes:** A  workaround was previously attempted and proved insufficient. The root cause in the frontend's  or navigation state management has not been addressed.
+    -   **Attempted fixes:** None in this session.
     -   **Next debug checklist:**
-        1.  Examine  to analyze how the token is stored (e.g., ) and hydrated into the app's state.
-        2.  Investigate the interaction between Expo Router's web navigation state and the  provider. Ensure the API client (axios instance) receives the auth token correctly on the initial load after login.
-        3.  Consider a more robust state management solution for authentication that guarantees the token is available before authenticated routes are rendered.
-    -   **Why fix this issue and what will be achieved with the fix?** Fixing this is critical for usability and reliable testing on the web platform. It will remove the need for disruptive workarounds and ensure a smooth user experience.
+        1.  Examine .
+        2.  Investigate how the auth token is stored (e.g., AsyncStorage) and rehydrated on web.
+        3.  Check the timing of API client initialization versus token availability after login/page refresh.
+    -   **Why fix this issue and what will be achieved with the fix?** Critical for reliable testing and a usable web experience.
     -   **Status:** NOT STARTED
     -   **Is recurring issue?** Y
     -   **Should Test frontend/backend/both after fix?** Frontend
     -   **Blocked on other issue:** None
+-   **Issue 2: Sub-optimal confirmation dialogs**
+    -   **Attempted fixes:** The agent replaced native  with two buttons with  for web and simplified the logic for native.
+    -   **Next debug checklist:**
+        1.  Create a reusable  component using React Native's .
+        2.  Identify all locations where  was used (e.g., ).
+        3.  Replace  calls with the new  component, passing callbacks for  and .
+    -   **Why fix this issue and what will be achieved with the fix?** Provides a consistent and native-feeling user experience for critical confirmation actions.
+    -   **Status:** NOT STARTED
+    -   **Is recurring issue?** N
+    -   **Should Test frontend/backend/both after fix?** Frontend
+    -   **Blocked on other issue:** None
 
 **In progress Task List**:
--   **Task 1: Complete Kid Notification UI Implementation (P0)**
-    -   **Where to resume:** The agent has updated the booking list page (). The next step is to add the same notification status display to the booking **detail** page ().
-    -   **What will be achieved with this?** This will complete the user's request to show parents if and how their child was notified for a session.
+-   **P0 - Task 1: Complete and Verify Comprehensive i18n Migration**
+    -   **Where to resume:** The JSON locale files are now fully populated with translations. The primary task is to go through all remaining frontend files () and replace every hardcoded user-facing string with the  function from the  hook. The user explicitly requested this for *all pages, all roles, and all content*, including dynamic content like category names, coach bios, and status labels.
+    -   **What will be achieved with this?** Fulfills the main user request of this session, making the entire application fully translatable and ready for a global audience.
     -   **Status:** IN PROGRESS
     -   **Should Test frontend/backend/both after fix?** Frontend
     -   **Blocked on something:** None
+-   **P1 - Task 2: Complete Backend Refactoring**
+    -   **Where to resume:** The service file structure exists, and some services are well-implemented (, ). However,  is still over 6000 lines long and contains significant business logic directly within API route handlers (e.g., for profile management, billing, etc.). The next step is to identify a logical domain (e.g., user profiles), move the related business logic from  into , and have the route handler call the service method.
+    -   **What will be achieved with this?** A more maintainable, scalable, and organized backend codebase.
+    -   **Status:** IN PROGRESS
+    -   **Should Test frontend/backend/both after fix?** Backend
+    -   **Blocked on something:** None
 
 **Upcoming and Future Tasks**
--   **P0 - Complete Backend Refactoring:** The  file remains over 6,000 lines long. The logic for authentication, bookings, profiles, payments, etc., needs to be moved from  into the respective service files created in the  directory.
--   **P0 - Implement Tax Report Logic:** The backend service () and frontend page () are just placeholders. The core logic for generating PDF reports, handling requests for specific years, and delivering them needs to be built.
--   **P0 - Implement Referral System Logic:** The backend service () and frontend page () are placeholders. The logic for tracking referral links, checking for the 2 paid sessions condition, and applying the correct reward (free session vs. fee waiver) must be implemented.
--   **P1 - Test All New Features:** A comprehensive testing cycle is required for the Tax Reports, Referral System, and all updated invite flows (Parent and Provider).
--   **P1 - Update All Documentation:** As per the user's request, update the PRD and test documents to reflect all the new features and changes.
--   **P2 - Real Payment Integration:** This is a major pending task from the project's inception. The current payment system is entirely mocked and needs to be integrated with a real payment provider like Stripe.
+-   **P1 - Admin Scheduled Jobs UI:** While the backend is ready, the frontend page  needs to be reviewed to ensure it correctly fetches and displays job data.
+-   **P1 - Comprehensive Testing:** A full end-to-end testing cycle for all new features and languages.
+-   **P1 - Update Documentation:** Update  and any other relevant documents.
+-   **P2 - Real Payment Integration:** The payment system is still mocked.
 
 **Completed work in this session**
--   **Security Hardening (DONE):**
-    -   Implemented rate limiting, security headers, strong password policies, and improved JWT validation in .
--   **Live Email Integration (DONE):**
-    -   Configured the backend to use the user's Resend API key, transitioning the email service from mock to live.
--   **Full Rebranding (DONE):**
-    -   Renamed MaestroHub to MaestroHabitat and updated the tagline across the entire application.
--   **Database Migration (DONE):**
-    -   Moved hardcoded categories, levels, and modalities into MongoDB collections.
-    -   Updated  to fetch this data from the database.
--   **Database Seeding (DONE):**
-    -   Created and ran scripts (, ) to populate the database with categories and ~292 new coach profiles.
--   **Search UI Rework (DONE):**
-    -   Redesigned  to use category/subject dropdowns instead of result pills.
--   **Invite System Enhancements (DONE):**
-    -   Created a new Invite Parents feature, including a frontend page () and backend endpoints.
-    -   Added a social sharing modal to both Invite Parents and Invite Providers pages.
+-   **Feature - i18n Framework (DONE):**
+    -   Fully scaffolded i18n system with .
+    -   Created 18+ locale JSON files and populated them with thousands of translated strings.
+    -   Created a language selection screen .
+    -   Migrated several key screens (, , , , ) and layouts to use the  function.
+-   **Technical Debt - Alert to Toast Migration (DONE):** Migrated ~99% of  and  calls to the global  system across ~27 files.
 -   **Bug Fixes (DONE):**
-    -   Fixed a bug preventing the Continue to Payment button from working on the web by implementing a platform-aware alert system.
-    -   Fixed a bug where the  route was incorrectly appearing in the main tab navigation.
-    -   Corrected the logo's link behavior to always navigate to the in-app home page.
--   **Backend Refactoring (STARTED):**
-    -   Created a new modular directory structure  and .
+    -   Fixed multiple crashes related to missing  hooks in , , and .
+    -   Corrected UI layout issues (password validation message, session length input, bio character limit) on the  screen.
+    -   Fixed social sharing on the referrals page to correctly handle web vs. native.
+    -   Verified that a Report downloaded success message was correctly using , indicating a possible user-side cache issue.
+-   **Feature - Social Sharing (DONE):** Added social media sharing functionality to the  screen.
+-   **Backend - Service Scaffolding (DONE):** Created  and updated the  to include it.
 
 **Earlier issues found/mentioned but not fixed**
--   **Issue 1: Web Auth State Bug.** This remains the most critical unresolved technical debt.
+-   The critical **Web Auth State Bug** remains unfixed from the start of the session.
 
 **Known issue recurrence from previous fork**
--   **Issue recurrence in previous fork:** The web authentication state issue ( on web after login).
--   **Recurrence count:** 3+
+-   **Issue recurrence in previous fork:** Web authentication state ( on web).
+-   **Recurrence count:** 5+
 -   **Status:** NOT STARTED
 
 **Code Architecture**
 
 
 **Key Technical Concepts**
--   **Backend Modularization:** Initiated refactoring of a monolithic FastAPI server into a service-oriented architecture.
--   **Database Seeding:** Use of Python scripts to programmatically populate the MongoDB database with initial data (categories, users).
--   **Live API Integration:** Transitioning a mocked service (email) to a live third-party API (Resend) using user-provided credentials.
--   **Full-Stack Feature Scaffolding:** Creating placeholder files and routes on both the frontend (Expo) and backend (FastAPI) to lay the groundwork for new features like Tax Reports and Referrals.
--   **Platform-Specific UI/API:** Using  to create different behaviors for web vs. native, particularly for alerts ( vs ) and external linking ().
--   **Accessibility (WCAG):** Auditing and adjusting theme colors to meet contrast ratio requirements.
+-   **Internationalization (i18n):** Using  and  to manage application content for localization.
+-   **Bulk Refactoring with Python:** Using custom Python scripts to perform large-scale, automated code modifications for migrating from  to  and for applying  translations.
+-   **Machine Translation for Scaffolding:** Using translation services via script to quickly populate locale files for a large number of languages.
 
 **key DB schema**
--   **students**: now includes  (str, optional),  (boolean, optional).
--   **categories**: (NEW) 
--   **levels**: (NEW) 
--   **modalities**: (NEW) 
--   **parent_invites**: (NEW) 
+-   No changes to DB schema in this session.
+
+**changes in tech stack**
+-   No changes in the core tech stack.
 
 **All files of reference**
--   : Critical file, currently being refactored. Still contains most business logic.
--   : Last file being worked on.
--   : Needs to be updated next for the kid notification feature.
--   : Directory for new, modular backend logic (currently placeholders).
--   , : Scripts used to populate the database.
--   : The likely source of the recurring web authentication bug.
+-   : The master file containing over 2000 translation keys.
+-   : Directory containing all 18+ new language files.
+-   : The updated i18n configuration that dynamically loads all supported locales.
+-   : The new UI for language selection.
+-   : The monolithic file that is the main target for backend refactoring.
+-   : The newly created service file for profile logic.
 
 **Areas that need refactoring**:
--   : This is the highest priority. It needs to be aggressively broken down, with its logic moved into the new service files in .
--   : Needs to be investigated and likely refactored to fix the persistent web authentication bug.
+-   **:** Highest priority for backend refactoring. Business logic from routes needs to be moved into service files.
+-   **All frontend components with hardcoded text:** The main pending task is to refactor all remaining hardcoded strings to use the  hook.
+-   **Components using :** These should be refactored to use a proper, non-blocking modal for a better native experience.
 
 **key api endpoints**
--   : (NEW) Sends an invitation to a parent.
--   : (NEW) Retrieves sent parent invitations.
--   : (NEW, placeholder) Endpoint to request a tax report.
--   : (NEW, placeholder) Endpoint to check referral status.
--   : (UPDATED) Now fetches categories, subcategories, levels, and modalities from the database.
+-   No new API endpoints were created. The focus was on frontend and backend refactoring.
 
 **Critical Info for New Agent**
--   **Backend Refactor is INCOMPLETE:** The agent has created the new service-based architecture () but has not moved the existing logic out of . The next major backend task is to continue this refactoring by populating the service files with the relevant code from .
--   **New Features are Placeholders:** The Tax Reports and Referrals features exist as files and endpoints, but contain no actual implementation logic. These need to be built from scratch.
--   **The Web Auth Bug is a MAJOR Blocker:** Be prepared to encounter  errors when testing the web preview. Fixing this () is a top priority to enable smooth development and testing. You may need to test APIs directly with  as a workaround.
+-   **Your immediate and highest priority is to complete the i18n migration.** The user has been very specific about this. The translation data now exists in the JSON files; you must now apply it to the UI by replacing all hardcoded text in every  file with  calls.
+-   After applying translations, **thoroughly test the language switching functionality**. Log in, change the language to Hindi, Spanish, etc., and verify that *everything* (tab bars, page titles, button labels, content) translates correctly. The user has reported partial translations, so be diligent.
+-   The **web authentication bug** is a known, persistent issue that makes web testing difficult. Be prepared for  errors and the need to refresh the page.
+-   The backend  refactoring is an important but secondary task. Focus on the user-facing i18n work first.
 
 **documents created in this job**
 -   
+-   18+ locale files in 
 -   
--   
--   
--   
--   
--   
--   
--   
--   
+-   Several temporary Python scripts in  for bulk file editing.
 
 **Last 10 User Messages and any pending HUMAN messages**
-1.  **User (Msg 399):** Requested completion of frontend work, moving all hardcoded values to DB, adding social options to Invite Providers, and testing/updating all docs. (Partially Done)
-2.  **User (Msg 344):** Confirmed the agent's plan for new features and stressed the need to refactor large files. (In Progress)
-3.  **User (Msg 341):** Clarified the logic for Tax Reports (1099s) and the Referral system rewards. (Acknowledged)
-4.  **User (Msg 338):** Requested 4 major new features: Kid notification display, Tax reports, Referral upgrade, and more Seed data. (In Progress)
-5.  **User (Msg 323):** Reported 3 bugs: invite-parents in footer, logo link behavior, and requested social sharing options for invites. (DONE)
-6.  **User (Msg 300):** Reported invite-parents in footer and that the Share Link button was broken. (DONE)
-7.  **User (Msg 275):** Requested Invite Parents feature. (DONE)
-8.  **User (Msg 214):** Reported bugs with saving kid's info, the Continue to Payment button, and incorrect native home navigation. (DONE)
-9.  **User (Msg 103):** Added a requirement for the webapp home to point to an external URL. (DONE, then reverted per later request)
-10. **User (Msg 100):** Kicked off the major rebranding/feature request with 4 items: rebranding, kid notifications, WCAG, and search UI rework. (DONE)
+1.  **User (Msg 430):** Requested comprehensive testing of translations for all pages, roles, and all supported languages, noting that many parts are still incomplete. (IN PROGRESS)
+2.  **User (Msg 413):** Reported that the footer was not updated and that Home, Bookings, Profile, and other screens were still not applying language changes, providing screenshots. (Partially Addressed)
+3.  **User (Msg 367):** Confirmed to go ahead with the complete translation fix and pointed out that a footer language toggle was not removed. (Agent couldn't find toggle, proceeded with translations)
+4.  **User (Msg 366):** Agent provided a summary of fixes for UI bugs and i18n progress. (Acknowledged)
+5.  **User (Msg 297):** Reported multiple UI bugs with screenshots, including issues with the become tutor form and language translations not working. (Partially Addressed)
+6.  **User (Msg 296):** Agent provided a summary of i18n work, including the creation of multiple locale files. (Acknowledged)
+7.  **User (Msg 262):** Requested completion of all remaining work: i18n migration, fixing complex alerts, backend refactoring, and migrating all messages to property files. (Acknowledged)
+8.  **User (Msg 261):** Agent provided a summary of bug fixes and next steps. (Acknowledged)
+9.  **User (Msg 179):** Reported a batch of 5 bugs with screenshots, related to form submissions and UI errors. (Addressed)
+10. **User (Msg 112):** Requested completion of i18n migration, fixing alert patterns, backend refactoring, and moving all messages to property files. (Acknowledged)
 
 **Project Health Check:**
 -   **Broken:**
-    -   Frontend web authentication state is unreliable.
+    -   Frontend web authentication state remains unreliable.
 -   **Mocked:**
-    -   **Payment System:** The entire payment flow is simulated.
+    -   Payment System.
 -   **In-Progress:**
-    -   **Backend Refactoring:**  is still monolithic.
-    -   **Kid Notification UI:** Only completed on the list page, not the detail page.
-    -   **Tax Report Feature:** Backend and frontend are placeholders.
-    -   **Referral System Feature:** Backend and frontend are placeholders.
+    -   **i18n Content Migration:** This is the most critical and active task. The data is ready, but the UI components need to be fully updated.
+    -   **Backend Refactoring:**  is still largely monolithic.
 
 **3rd Party Integrations**
--   **Resend (Email):** **LIVE**. Integrated with user's API key.
--   **Stripe (Payments):** **Simulated**. Requires User API Key for real integration.
--   **ip-api.com (IP Geolocation):** Integrated, no key required.
--   **reportlab (PDF Generation):** Integrated on the backend (but not yet used for Tax Reports).
+-   **Resend (Email):** LIVE.
+-   **Stripe (Payments):** Simulated.
+-   **ip-api.com (IP Geolocation):** Integrated.
+-   **reportlab (PDF Generation):** Integrated.
+-   **i18next / react-i18next (Internationalization):** Integrated.
 
 **Testing status**
--   Testing agent used after significant changes: YES, for the initial security fixes.
+-   Testing agent used after significant changes: NO
 -   Troubleshoot agent used after agent stuck in loop: NO
 -   Test files created: None.
--   Known regressions: The web authentication state issue remains a persistent regression.
+-   Known regressions: The web authentication state issue.
 
 **Credentials to test flow:**
--   **Consumer (USD):**  (password: )
--   **Consumer (INR):**  (password: )
--   **Coach:**  (password: )
--   **Admin:**  (password: ) (Note: email updated due to rebranding)
+-   **Consumer:**  / 
+-   **Coach:**  / 
+-   **Admin:**  / 
+-   **Sample Referral Code:** 
 
 **What agent forgot to execute**
--   The agent did not fully complete the backend refactoring; it created the file structure but did not move the bulk of the code from  into the new service modules.
--   The agent did not update the PRD and test documents as requested in the user's last message.
+-   The agent has not updated the project documentation () as requested in the initial problem statement.
+-   The agent searched for a footer language toggle as requested by the user but could not find it. It's possible the user was mistaken, but this was left unresolved.
+-   The agent did not address the root web authentication bug.
 
 </analysis>
