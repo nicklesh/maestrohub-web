@@ -63,6 +63,7 @@ export default function BillingScreen() {
   const { token } = useAuth();
   const { colors } = useTheme();
   const { showSuccess, showError, showInfo } = useToast();
+  const { t } = useTranslation();
   const { market } = useMarket();
   const [billing, setBilling] = useState<BillingInfo | null>(null);
   const [availableProviders, setAvailableProviders] = useState<PaymentProvider[]>([]);
