@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { AuthProvider } from '@/src/context/AuthContext';
 import { MarketProvider } from '@/src/context/MarketContext';
 import { ThemeProvider, useTheme } from '@/src/context/ThemeContext';
+import { ToastProvider } from '@/src/context/ToastContext';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StyleSheet } from 'react-native';
@@ -35,11 +36,13 @@ export default function RootLayout() {
     <GestureHandlerRootView style={styles.container}>
       <SafeAreaProvider>
         <ThemeProvider>
-          <AuthProvider>
-            <MarketProvider>
-              <AppContent />
-            </MarketProvider>
-          </AuthProvider>
+          <ToastProvider>
+            <AuthProvider>
+              <MarketProvider>
+                <AppContent />
+              </MarketProvider>
+            </AuthProvider>
+          </ToastProvider>
         </ThemeProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
