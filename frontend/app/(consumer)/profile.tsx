@@ -410,7 +410,7 @@ export default function ProfileScreen() {
             <Text style={[styles.logoutText, { color: colors.error }]}>{t('navigation.logout')}</Text>
           </TouchableOpacity>
 
-          <Text style={[styles.version, { color: colors.textMuted }]}>Version 1.0.0</Text>
+          <Text style={[styles.version, { color: colors.textMuted }]}>{t('pages.profile.version')} 1.0.0</Text>
         </View>
       </ScrollView>
 
@@ -419,14 +419,14 @@ export default function ProfileScreen() {
         <View style={[styles.modalOverlay, { backgroundColor: 'rgba(0,0,0,0.5)' }]}>
           <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
             <View style={styles.modalHeader}>
-              <Text style={[styles.modalTitle, { color: colors.text }]}>Notifications</Text>
+              <Text style={[styles.modalTitle, { color: colors.text }]}>{t('pages.profile.notifications')}</Text>
               <TouchableOpacity onPress={() => setShowNotifications(false)}>
                 <Ionicons name="close" size={24} color={colors.text} />
               </TouchableOpacity>
             </View>
             <ScrollView style={styles.modalScroll}>
               {notifications.length === 0 ? (
-                <Text style={[styles.emptyText, { color: colors.textMuted }]}>No notifications</Text>
+                <Text style={[styles.emptyText, { color: colors.textMuted }]}>{t('empty_states.no_notifications')}</Text>
               ) : (
                 notifications.map((notif, index) => (
                   <View key={index} style={[styles.notifItem, !notif.read && { backgroundColor: colors.primaryLight }]}>
@@ -448,14 +448,14 @@ export default function ProfileScreen() {
         <View style={[styles.modalOverlay, { backgroundColor: 'rgba(0,0,0,0.5)' }]}>
           <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
             <View style={styles.modalHeader}>
-              <Text style={[styles.modalTitle, { color: colors.text }]}>Reminders</Text>
+              <Text style={[styles.modalTitle, { color: colors.text }]}>{t('navigation.reminders')}</Text>
               <TouchableOpacity onPress={() => setShowReminders(false)}>
                 <Ionicons name="close" size={24} color={colors.text} />
               </TouchableOpacity>
             </View>
             <ScrollView style={styles.modalScroll}>
               {reminders.length === 0 ? (
-                <Text style={[styles.emptyText, { color: colors.textMuted }]}>No upcoming reminders</Text>
+                <Text style={[styles.emptyText, { color: colors.textMuted }]}>{t('empty_states.no_reminders')}</Text>
               ) : (
                 reminders.map((reminder, index) => (
                   <View key={index} style={[styles.notifItem, { borderLeftColor: reminder.priority === 'high' ? colors.error : colors.warning, borderLeftWidth: 3 }]}>
@@ -489,31 +489,31 @@ export default function ProfileScreen() {
             {contactSuccess ? (
               <View style={styles.successContainer}>
                 <Ionicons name="checkmark-circle" size={64} color={colors.success} />
-                <Text style={[styles.successTitle, { color: colors.text }]}>Message Sent!</Text>
+                <Text style={[styles.successTitle, { color: colors.text }]}>{t('pages.contact.success_title')}</Text>
                 <Text style={[styles.successText, { color: colors.textMuted }]}>
-                  We'll respond within 24-48 hours.
+                  {t('pages.contact.success_message')}
                 </Text>
               </View>
             ) : (
               <>
                 <View style={styles.sheetHeader}>
                   <Ionicons name="mail" size={24} color={isDark ? '#FFD700' : colors.primary} />
-                  <Text style={[styles.sheetTitle, { color: colors.text }]}>Contact Us</Text>
+                  <Text style={[styles.sheetTitle, { color: colors.text }]}>{t('pages.contact.title')}</Text>
                 </View>
             
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Subject</Text>
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.contact.subject')}</Text>
             <TextInput
               style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-              placeholder="What can we help you with?"
+              placeholder={t('pages.contact.subject_placeholder')}
               placeholderTextColor={colors.textMuted}
               value={contactSubject}
               onChangeText={setContactSubject}
             />
             
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Message</Text>
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.contact.message')}</Text>
             <TextInput
               style={[styles.input, styles.textArea, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-              placeholder="Describe your issue or question..."
+              placeholder={t('pages.contact.message_placeholder')}
               placeholderTextColor={colors.textMuted}
               value={contactMessage}
               onChangeText={setContactMessage}
@@ -529,7 +529,7 @@ export default function ProfileScreen() {
               {submittingContact ? (
                 <ActivityIndicator color={colors.white} />
               ) : (
-                <Text style={styles.submitButtonText}>Send Message</Text>
+                <Text style={styles.submitButtonText}>{t('pages.contact.send_message')}</Text>
               )}
             </TouchableOpacity>
               </>
