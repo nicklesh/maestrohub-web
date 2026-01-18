@@ -135,11 +135,7 @@ export default function ProfileScreen() {
   
   const handleContactSubmit = async () => {
     if (!contactSubject.trim() || !contactMessage.trim()) {
-      if (Platform.OS === 'web') {
-        showError('Please fill in all fields');
-      } else {
-        Alert.alert('Error', 'Please fill in all fields');
-      }
+      showError(t('forms.validation.fill_all_fields'));
       return;
     }
 
@@ -166,11 +162,7 @@ export default function ProfileScreen() {
       }, 2000);
       
     } catch (error) {
-      if (Platform.OS === 'web') {
-        showError('Failed to send message. Please try again.');
-      } else {
-        Alert.alert('Error', 'Failed to send message. Please try again.');
-      }
+      showError(t('messages.errors.failed_to_send'));
     } finally {
       setSubmittingContact(false);
     }
