@@ -272,6 +272,15 @@ export default function InviteProviderScreen() {
           <Text style={styles.inviteButtonText}>Invite a Provider</Text>
         </TouchableOpacity>
 
+        {/* Social Share Button */}
+        <TouchableOpacity
+          style={[styles.shareButton, { backgroundColor: colors.surface, borderColor: colors.border }]}
+          onPress={() => setShowShareModal(true)}
+        >
+          <Ionicons name="share-social" size={20} color={colors.primary} />
+          <Text style={[styles.shareButtonText, { color: colors.primary }]}>Share on Social Media</Text>
+        </TouchableOpacity>
+
         {/* Invites List */}
         {invites.length === 0 ? (
           <View style={styles.emptyContainer}>
