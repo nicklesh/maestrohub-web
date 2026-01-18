@@ -316,8 +316,14 @@ const styles = StyleSheet.create({
   cardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     marginBottom: 12,
+  },
+  statusRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    flexWrap: 'wrap',
   },
   statusBadge: {
     paddingVertical: 4,
@@ -328,6 +334,18 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
     textTransform: 'capitalize',
+  },
+  notifIndicator: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 3,
+    paddingHorizontal: 8,
+    borderRadius: 10,
+    gap: 4,
+  },
+  notifIndicatorText: {
+    fontSize: 10,
+    fontWeight: '600',
   },
   price: {
     fontSize: 18,
