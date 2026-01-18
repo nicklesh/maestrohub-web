@@ -17,6 +17,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
 import { useTheme } from '@/src/context/ThemeContext';
 import { useToast } from '@/src/context/ToastContext';
+import { useTranslation } from '@/src/i18n';
 import AppHeader from '@/src/components/AppHeader';
 import { api } from '@/src/services/api';
 
@@ -69,14 +70,14 @@ export default function InvitesScreen() {
 
   const handleSendInvite = async () => {
     if (!newInviteEmail.trim()) {
-      Alert.alert('Error', 'Please enter an email address');
+      showError('Please enter an email address');
       return;
     }
 
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(newInviteEmail.trim())) {
-      Alert.alert('Error', 'Please enter a valid email address');
+      showError('Please enter a valid email address');
       return;
     }
 
@@ -90,7 +91,7 @@ export default function InvitesScreen() {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      Alert.alert('Success', 'Invite sent successfully!');
+      showSuccess('Invite sent successfully!');
       setShowNewInviteModal(false);
       setNewInviteEmail('');
       setNewInviteName('');
@@ -119,7 +120,7 @@ export default function InvitesScreen() {
               });
               loadInvites();
             } catch (error) {
-              Alert.alert('Error', 'Failed to cancel invite');
+              showError('Failed to cancel invite');
             }
           }
         }

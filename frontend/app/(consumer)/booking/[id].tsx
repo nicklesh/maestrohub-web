@@ -18,6 +18,7 @@ import { api } from '@/src/services/api';
 import { useAuth } from '@/src/context/AuthContext';
 import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 import { useToast } from '@/src/context/ToastContext';
+import { useTranslation } from '@/src/i18n';
 import AppHeader from '@/src/components/AppHeader';
 import { format, parseISO, isPast } from 'date-fns';
 
@@ -112,9 +113,9 @@ export default function BookingDetailScreen() {
     } catch (error) {
       console.error('Failed to load booking:', error);
       if (Platform.OS === 'web') {
-        window.alert('Failed to load booking details');
+        showError('Failed to load booking details');
       } else {
-        Alert.alert('Error', 'Failed to load booking details');
+        showError('Failed to load booking details');
       }
     } finally {
       setLoading(false);
@@ -151,7 +152,7 @@ export default function BookingDetailScreen() {
       });
       loadBooking();
       if (Platform.OS === 'web') {
-        window.alert('Your booking has been canceled.');
+        showError('Your booking has been canceled.');
       } else {
         Alert.alert('Canceled', 'Your booking has been canceled.');
       }
@@ -177,7 +178,7 @@ export default function BookingDetailScreen() {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (Platform.OS === 'web') {
-        window.alert('Thank you! Your review has been submitted.');
+        showError('Thank you! Your review has been submitted.');
       } else {
         Alert.alert('Thank you!', 'Your review has been submitted.');
       }

@@ -15,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
 import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 import { useToast } from '@/src/context/ToastContext';
+import { useTranslation } from '@/src/i18n';
 import AppHeader from '@/src/components/AppHeader';
 import { api } from '@/src/services/api';
 import * as FileSystem from 'expo-file-system/legacy';
@@ -120,7 +121,7 @@ export default function ConsumerReportsScreen() {
         if (Platform.OS === 'web') {
           showError('Report downloaded successfully');
         } else {
-          Alert.alert('Success', 'Report downloaded successfully');
+          showSuccess('Report downloaded successfully');
         }
       } else {
         // For iOS/Android, download to file system and share
@@ -163,7 +164,7 @@ export default function ConsumerReportsScreen() {
       if (Platform.OS === 'web') {
         showError('Failed to download report. Please try again.');
       } else {
-        Alert.alert('Error', 'Failed to download report. Please try again.');
+        showError('Failed to download report. Please try again.');
       }
     } finally {
       setDownloading(false);

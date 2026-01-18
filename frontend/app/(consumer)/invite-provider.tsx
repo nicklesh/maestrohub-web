@@ -17,6 +17,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
 import { useTheme } from '@/src/context/ThemeContext';
 import { useToast } from '@/src/context/ToastContext';
+import { useTranslation } from '@/src/i18n';
 import AppHeader from '@/src/components/AppHeader';
 import { api } from '@/src/services/api';
 
@@ -64,13 +65,13 @@ export default function InviteProviderScreen() {
 
   const handleSendInvite = async () => {
     if (!inviteEmail.trim()) {
-      Alert.alert('Error', 'Please enter an email address');
+      showError('Please enter an email address');
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(inviteEmail.trim())) {
-      Alert.alert('Error', 'Please enter a valid email address');
+      showError('Please enter a valid email address');
       return;
     }
 

@@ -16,6 +16,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
 import { useTheme } from '@/src/context/ThemeContext';
 import { useToast } from '@/src/context/ToastContext';
+import { useTranslation } from '@/src/i18n';
 import AppHeader from '@/src/components/AppHeader';
 import { api } from '@/src/services/api';
 
@@ -35,7 +36,7 @@ export default function EditProfileScreen() {
 
   const handleUpdateProfile = async () => {
     if (!name.trim()) {
-      Alert.alert('Error', 'Name cannot be empty');
+      showError('Name cannot be empty');
       return;
     }
 
@@ -49,7 +50,7 @@ export default function EditProfileScreen() {
       });
 
       await refreshUser();
-      Alert.alert('Success', 'Profile updated successfully');
+      showSuccess('Profile updated successfully');
     } catch (error: any) {
       Alert.alert('Error', error.response?.data?.detail || 'Failed to update profile');
     } finally {
@@ -59,17 +60,17 @@ export default function EditProfileScreen() {
 
   const handleChangePassword = async () => {
     if (!currentPassword || !newPassword) {
-      Alert.alert('Error', 'Please fill in all password fields');
+      showError('Please fill in all password fields');
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      Alert.alert('Error', 'New passwords do not match');
+      showError('New passwords do not match');
       return;
     }
 
     if (newPassword.length < 6) {
-      Alert.alert('Error', 'New password must be at least 6 characters');
+      showError('New password must be at least 6 characters');
       return;
     }
 
@@ -82,7 +83,7 @@ export default function EditProfileScreen() {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      Alert.alert('Success', 'Password changed successfully');
+      showSuccess('Password changed successfully');
       setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');

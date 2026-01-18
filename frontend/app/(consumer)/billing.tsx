@@ -15,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
 import { useTheme } from '@/src/context/ThemeContext';
 import { useToast } from '@/src/context/ToastContext';
+import { useTranslation } from '@/src/i18n';
 import { useMarket } from '@/src/context/MarketContext';
 import AppHeader from '@/src/components/AppHeader';
 import { api } from '@/src/services/api';
@@ -143,7 +144,7 @@ export default function BillingScreen() {
         headers: { Authorization: `Bearer ${token}` }
       });
       
-      Alert.alert('Success', 'Payment method linked successfully!');
+      showSuccess('Payment method linked successfully!');
       setShowProviderModal(false);
       loadData();
     } catch (error: any) {

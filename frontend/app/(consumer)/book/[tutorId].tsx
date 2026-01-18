@@ -17,6 +17,8 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { api } from '@/src/services/api';
 import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
+import { useToast } from '@/src/context/ToastContext';
+import { useTranslation } from '@/src/i18n';
 import { useAuth } from '@/src/context/AuthContext';
 import AppHeader from '@/src/components/AppHeader';
 import { format, parseISO } from 'date-fns';
@@ -99,7 +101,7 @@ export default function BookingScreen() {
       setStudents(studentsRes.data);
     } catch (error) {
       console.error('Failed to load data:', error);
-      Alert.alert('Error', 'Failed to load booking data');
+      showError('Failed to load booking data');
     } finally {
       setLoading(false);
     }
@@ -109,7 +111,7 @@ export default function BookingScreen() {
     // Validate required params
     if (!startAt || !tutorId) {
       console.error('Missing required params:', { startAt, tutorId, endAt });
-      Alert.alert('Error', 'Missing booking parameters. Please go back and try again.');
+      showError('Missing booking parameters. Please go back and try again.');
       return null;
     }
     
@@ -127,7 +129,7 @@ export default function BookingScreen() {
       const dateTest = new Date(cleanStartAt);
       if (isNaN(dateTest.getTime())) {
         console.error('Invalid datetime format:', cleanStartAt);
-        Alert.alert('Error', 'Invalid booking time. Please go back and select a time slot again.');
+        showError('Invalid booking time. Please go back and select a time slot again.');
         return null;
       }
       
@@ -360,7 +362,7 @@ export default function BookingScreen() {
       router.replace('/(consumer)/bookings');
     } catch (error) {
       console.error('Booking failed:', error);
-      Alert.alert('Error', 'Failed to confirm booking. Please try again.');
+      showError('Failed to confirm booking. Please try again.');
       setSubmitting(false);
     }
   };

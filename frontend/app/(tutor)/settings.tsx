@@ -17,6 +17,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
 import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 import { useToast } from '@/src/context/ToastContext';
+import { useTranslation } from '@/src/i18n';
 import { api } from '@/src/services/api';
 import AppHeader from '@/src/components/AppHeader';
 
@@ -243,9 +244,9 @@ export default function TutorSettings() {
                     await api.put('/tutors/profile', { meeting_link: profile.meeting_link }, {
                       headers: { Authorization: `Bearer ${token}` }
                     });
-                    Alert.alert('Success', 'Meeting link saved!');
+                    showSuccess('Meeting link saved!');
                   } catch (error) {
-                    Alert.alert('Error', 'Failed to save meeting link');
+                    showError('Failed to save meeting link');
                   }
                 }}
               >

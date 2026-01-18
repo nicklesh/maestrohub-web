@@ -15,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { api } from '@/src/services/api';
 import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 import { useToast } from '@/src/context/ToastContext';
+import { useTranslation } from '@/src/i18n';
 import { useAuth } from '@/src/context/AuthContext';
 import AppHeader from '@/src/components/AppHeader';
 
@@ -126,7 +127,7 @@ export default function AdminMarketsScreen() {
       if (Platform.OS === 'web') {
         showError('Failed to toggle market');
       } else {
-        Alert.alert('Error', 'Failed to toggle market');
+        showError('Failed to toggle market');
       }
     }
   };

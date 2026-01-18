@@ -14,6 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
 import { useTheme } from '@/src/context/ThemeContext';
 import { useToast } from '@/src/context/ToastContext';
+import { useTranslation } from '@/src/i18n';
 import AppHeader from '@/src/components/AppHeader';
 import { api } from '@/src/services/api';
 
@@ -73,9 +74,9 @@ export default function RemindersScreen() {
         headers: { Authorization: `Bearer ${token}` }
       });
       setConfig(newConfig);
-      Alert.alert('Success', 'Reminder settings saved');
+      showSuccess('Reminder settings saved');
     } catch (error) {
-      Alert.alert('Error', 'Failed to save settings');
+      showError('Failed to save settings');
     } finally {
       setSaving(false);
     }

@@ -18,6 +18,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { api } from '@/src/services/api';
 import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 import { useToast } from '@/src/context/ToastContext';
+import { useTranslation } from '@/src/i18n';
 import AppHeader from '@/src/components/AppHeader';
 
 interface Student {
@@ -92,7 +93,7 @@ export default function StudentsScreen() {
 
   const handleSave = async () => {
     if (!name.trim()) {
-      Alert.alert('Error', 'Please enter student name');
+      showError('Please enter student name');
       return;
     }
 
@@ -116,7 +117,7 @@ export default function StudentsScreen() {
       loadStudents();
     } catch (error) {
       console.error('Save failed:', error);
-      Alert.alert('Error', 'Failed to save student');
+      showError('Failed to save student');
     } finally {
       setSaving(false);
     }
@@ -137,7 +138,7 @@ export default function StudentsScreen() {
               loadStudents();
             } catch (error) {
               console.error('Delete failed:', error);
-              Alert.alert('Error', 'Failed to delete student');
+              showError('Failed to delete student');
             }
           },
         },

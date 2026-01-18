@@ -15,6 +15,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 import { useToast } from '@/src/context/ToastContext';
+import { useTranslation } from '@/src/i18n';
 import { useAuth } from '@/src/context/AuthContext';
 import AppHeader from '@/src/components/AppHeader';
 import { api } from '@/src/services/api';
@@ -94,7 +95,7 @@ export default function AdminInboxScreen() {
       if (Platform.OS === 'web') {
         showError('Failed to update status');
       } else {
-        Alert.alert('Error', 'Failed to update status');
+        showError('Failed to update status');
       }
     }
   };
