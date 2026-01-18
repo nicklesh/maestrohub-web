@@ -1,18 +1,29 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// Environment-driven theme colors (with fallbacks)
+const ENV_PRIMARY = process.env.EXPO_PUBLIC_THEME_PRIMARY || '#2563EB';
+const ENV_PRIMARY_LIGHT = process.env.EXPO_PUBLIC_THEME_PRIMARY_LIGHT || '#DBEAFE';
+const ENV_SUCCESS = process.env.EXPO_PUBLIC_THEME_SUCCESS || '#10B981';
+const ENV_SUCCESS_LIGHT = process.env.EXPO_PUBLIC_THEME_SUCCESS_LIGHT || '#D1FAE5';
+const ENV_ERROR = process.env.EXPO_PUBLIC_THEME_ERROR || '#EF4444';
+const ENV_ERROR_LIGHT = process.env.EXPO_PUBLIC_THEME_ERROR_LIGHT || '#FEE2E2';
+const ENV_WARNING = process.env.EXPO_PUBLIC_THEME_WARNING || '#F59E0B';
+const ENV_WARNING_LIGHT = process.env.EXPO_PUBLIC_THEME_WARNING_LIGHT || '#FEF3C7';
+
 // Light Theme (Current - Default)
 // WCAG AA Compliant: All text colors meet 4.5:1 contrast ratio on their backgrounds
 export const lightTheme = {
-  primary: '#2563EB',        // 4.5:1 on white for large text, use for buttons
+  primary: ENV_PRIMARY,
   primaryDark: '#1E3A8A',
-  primaryLight: '#DBEAFE',
+  primaryLight: ENV_PRIMARY_LIGHT,
   accent: '#D97706',         // Darkened from #F59E0B for WCAG AA compliance (4.5:1)
-  success: '#15803D',        // Darkened from #16A34A for WCAG AA (4.5:1)
-  successLight: '#DCFCE7',
-  error: '#DC2626',
-  errorLight: '#FEE2E2',
+  success: '#15803D',        // Darkened for WCAG AA (4.5:1)
+  successLight: ENV_SUCCESS_LIGHT,
+  error: ENV_ERROR,
+  errorLight: ENV_ERROR_LIGHT,
   warning: '#B45309',        // Darkened from #F59E0B for WCAG AA (4.5:1)
+  warningLight: ENV_WARNING_LIGHT,
   background: '#F8FAFC',
   backgroundSecondary: '#F1F5F9',  // For cards/sections
   surface: '#FFFFFF',
@@ -32,9 +43,9 @@ export const lightTheme = {
   gray800: '#1E293B',
   gray900: '#0F172A',
   // Card colors
-  cardPrimary: '#2563EB',
-  cardSuccess: '#10b981',
-  cardWarning: '#f59e0b',
+  cardPrimary: ENV_PRIMARY,
+  cardSuccess: ENV_SUCCESS,
+  cardWarning: ENV_WARNING,
   cardInfo: '#6366f1',
   white: '#FFFFFF',
 };
@@ -51,6 +62,7 @@ export const darkTheme = {
   error: '#EF4444',          // Brightened for WCAG AA on dark background
   errorLight: '#3D1F1F',
   warning: '#FBBF24',        // Brightened for WCAG AA on dark background
+  warningLight: '#3D2F1F',
   background: '#0B1F3B',     // Navy
   backgroundSecondary: '#142E54',  // For cards/sections
   surface: '#142E54',        // Lighter navy
