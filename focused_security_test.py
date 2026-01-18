@@ -10,7 +10,7 @@ import uuid
 from datetime import datetime, timezone, timedelta
 
 # Configuration
-BASE_URL = "https://multilingual-tutors.preview.emergentagent.com/api"
+BASE_URL = "https://langbridge-142.preview.emergentagent.com/api"
 TIMEOUT = 30
 
 # Test credentials
