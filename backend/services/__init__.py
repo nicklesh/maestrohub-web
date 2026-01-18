@@ -11,6 +11,7 @@ from .notification_service import NotificationService
 from .tax_report_service import TaxReportService
 from .referral_service import ReferralService
 from .kid_notification_service import KidNotificationService
+from .profile_service import ProfileService
 
 __all__ = [
     'AuthService',
@@ -20,5 +21,6 @@ __all__ = [
     'NotificationService',
     'TaxReportService',
     'ReferralService',
-    'KidNotificationService'
+    'KidNotificationService',
+    'ProfileService'
 ]
