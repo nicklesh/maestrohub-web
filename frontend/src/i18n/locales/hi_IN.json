@@ -52,14 +52,14 @@
     "view_schedule_payments": "शेड्यूल और भुगतान देखें"
   },
   "categories": {
-    "academics": "शिक्षाविद",
+    "academics": "शैक्षणिक",
     "music": "संगीत",
     "sports": "खेल",
     "arts": "कला",
     "technology": "प्रौद्योगिकी",
     "languages": "भाषाएं",
-    "test_prep": "Test Prep",
-    "special_needs": "Special Needs",
+    "test_prep": "परीक्षा की तैयारी",
+    "special_needs": "विशेष आवश्यकताएं",
     "math": "गणित",
     "science": "विज्ञान",
     "english": "अंग्रेज़ी",
@@ -95,7 +95,12 @@
     "gre": "GRE",
     "gmat": "GMAT",
     "ielts": "IELTS",
-    "toefl": "TOEFL"
+    "toefl": "TOEFL",
+    "performance_arts": "प्रदर्शन और रचनात्मक कला",
+    "activities_hobbies": "गतिविधियां और शौक",
+    "fitness_nutrition": "फिटनेस और पोषण",
+    "health_mindfulness": "स्वास्थ्य, सचेतनता और कल्याण",
+    "business_communication": "व्यवसाय, संचार और नेतृत्व"
   },
   "buttons": {
     "submit": "जमा करें",
@@ -362,7 +367,8 @@
       "password_weak": "पासवर्ड में कम से कम 8 वर्ण होने चाहिए जिसमें अपरकेस, लोअरकेस और संख्याएं हों",
       "booking_failed": "बुकिंग बनाने में विफल। कृपया पुन: प्रयास करें।",
       "payment_failed": "भुगतान विफल। कृपया पुन: प्रयास करें।",
-      "upload_failed": "फ़ाइल अपलोड विफल। कृपया पुन: प्रयास करें।"
+      "upload_failed": "फ़ाइल अपलोड विफल। कृपया पुन: प्रयास करें।",
+      "loading_failed": "डेटा लोड करने में विफल। कृपया पुन: प्रयास करें।"
     }
   },
   "empty_states": {
@@ -425,7 +431,8 @@
       "popular_categories": "लोकप्रिय श्रेणियां",
       "how_it_works": "यह कैसे काम करता है",
       "reminders": "रिमाइंडर",
-      "subjects_count": "{count} विषय"
+      "subjects_count": "{count} विषय",
+      "search_placeholder": "ट्यूटर, विषय खोजें..."
     },
     "search": {
       "title": "Find a Coach",
@@ -447,10 +454,15 @@
       "rating": "Rating",
       "category": "श्रेणी",
       "subject": "विषय",
-      "search_placeholder": "कोच खोजें...",
+      "search_placeholder": "ट्यूटर, विषय खोजें...",
       "per_session": "प्रति सत्र",
       "view_profile": "प्रोफाइल देखें",
-      "book_now": "अभी बुक करें"
+      "book_now": "अभी बुक करें",
+      "sponsored": "प्रायोजित",
+      "new": "नया",
+      "subjects_count": "{count} विषय",
+      "per_hour": "/घंटा",
+      "reviews_count": "({count})"
     },
     "login": {
       "title": "वापसी पर स्वागत",
@@ -501,9 +513,9 @@
       "title": "मेरी बुकिंग",
       "upcoming": "आगामी",
       "past": "पिछली",
-      "cancelled": "Cancelled",
-      "pending": "Pending",
-      "completed": "Completed",
+      "cancelled": "रद्द",
+      "pending": "लंबित",
+      "completed": "पूर्ण",
       "session_with": "{name} के साथ सत्र",
       "booking_details": "Booking Details",
       "cancel_booking": "Cancel Booking",
@@ -527,7 +539,10 @@
       "no_past_desc": "आपके पूर्ण सत्र यहां दिखाई देंगे",
       "find_coach": "कोच खोजें",
       "view_details": "विवरण देखें",
-      "leave_review": "समीक्षा दें"
+      "leave_review": "समीक्षा दें",
+      "booked": "बुक किया गया",
+      "confirmed": "पुष्टि",
+      "student_label": "छात्र:"
     },
     "kids": {
       "title": "मेरे बच्चे",
@@ -558,7 +573,17 @@
       "past_sessions": "पिछले सत्र",
       "total_spent": "कुल खर्च",
       "view_schedule": "शेड्यूल देखें",
-      "view_payments": "भुगतान देखें"
+      "view_payments": "भुगतान देखें",
+      "view_schedule_payments": "शेड्यूल और भुगतान देखें",
+      "total_paid": "कुल भुगतान",
+      "pending": "लंबित",
+      "schedule": "शेड्यूल",
+      "payments": "भुगतान",
+      "upcoming": "आगामी",
+      "past": "पिछले",
+      "no_upcoming_sessions": "कोई आगामी सत्र नहीं",
+      "no_past_sessions": "कोई पिछले सत्र नहीं",
+      "with": "के साथ"
     },
     "tax_reports": {
       "title": "कर रिपोर्ट",
@@ -566,7 +591,7 @@
       "consumer_title": "Payment Records",
       "description_provider": "Generate 1099 equivalent forms for your coaching earnings.",
       "description_consumer": "Generate payment summaries for your educational expenses.",
-      "generate_report": "Generate Report",
+      "generate_report": "वार्षिक रिपोर्ट बनाएं",
       "download_pdf": "PDF डाउनलोड करें",
       "annual_report": "Annual Report",
       "year": "वर्ष",
@@ -574,10 +599,12 @@
       "ready": "Ready",
       "pending": "Pending",
       "available_years": "Available Years",
-      "no_reports": "कोई कर रिपोर्ट उपलब्ध नहीं",
-      "download": "डाउनलोड करें",
+      "no_reports": "इस वर्ष के लिए कोई रिपोर्ट नहीं बनाई गई",
+      "download": "डाउनलोड",
       "total_payments": "कुल भुगतान",
-      "available_reports": "उपलब्ध रिपोर्ट्स"
+      "available_reports": "उपलब्ध रिपोर्ट्स",
+      "payment_records": "भुगतान रिकॉर्ड",
+      "description": "कर उद्देश्यों के लिए अपने भुगतान रिकॉर्ड डाउनलोड करें"
     },
     "referrals": {
       "title": "रेफरल",
@@ -600,7 +627,18 @@
       "you_get": "आपको {amount} क्रेडिट मिलता है",
       "total_earned": "कुल कमाई",
       "pending_rewards": "लंबित पुरस्कार",
-      "no_referrals": "अभी तक कोई रेफरल नहीं"
+      "no_referrals": "अभी तक कोई रेफरल नहीं",
+      "your_rewards": "आपके पुरस्कार",
+      "rewards_description": "प्रत्येक मित्र के लिए ${amount} कमाएं जो आपके कोड का उपयोग करके साइन अप करता है और बुकिंग पूरी करता है",
+      "your_referral_code": "आपका रेफरल कोड",
+      "copy": "कॉपी",
+      "have_code": "रेफरल कोड है?",
+      "enter_code": "कोड दर्ज करें",
+      "apply": "लागू करें",
+      "your_stats": "आपके आंकड़े",
+      "total": "कुल",
+      "pending": "लंबित",
+      "rewarded": "पुरस्कृत"
     },
     "settings": {
       "title": "सेटिंग्स",
@@ -631,31 +669,35 @@
       "message_placeholder": "अपनी समस्या या प्रश्न का वर्णन करें...",
       "send_message": "संदेश भेजें",
       "success_title": "संदेश भेज दिया गया!",
-      "success_message": "संपर्क करने के लिए धन्यवाद। हम 24-48 घंटों में जवाब देंगे।"
+      "success_message": "हम 24-48 घंटों में जवाब देंगे।"
     },
     "faq": {
       "title": "अक्सर पूछे जाने वाले प्रश्न",
       "search_faq": "Search FAQs...",
-      "contact_support": "हमारी सहायता टीम से संपर्क करें",
+      "contact_support": "सहायता के लिए हमारी सहायता टीम से संपर्क करें",
       "for_parents": "अभिभावकों के लिए",
       "for_tutors": "ट्यूटर्स के लिए",
       "search_placeholder": "प्रश्न खोजें...",
       "still_have_questions": "अभी भी प्रश्न हैं?",
-      "contact_us": "संपर्क करें"
+      "contact_us": "संपर्क करें",
+      "subtitle": "मास्ट्रो हैबिटेट के बारे में सामान्य प्रश्नों के उत्तर पाएं",
+      "getting_started": "शुरुआत करना",
+      "booking_sessions": "बुकिंग और सत्र",
+      "payments_billing": "भुगतान और बिलिंग"
     },
     "tutor_detail": {
-      "about": "के बारे में",
+      "about": "परिचय",
       "subjects": "विषय",
       "availability": "उपलब्धता",
       "reviews": "समीक्षाएं",
-      "policies": "Policies",
+      "policies": "नीतियां",
       "cancellation_policy": "रद्दीकरण नीति",
       "book_session": "सत्र बुक करें",
       "message": "Message",
       "sessions_completed": "sessions completed",
       "years_experience": "years experience",
       "per_session": "प्रति सत्र",
-      "per_hour": "per hour",
+      "per_hour": "/घंटा",
       "rating": "Rating",
       "verified": "Verified",
       "top_rated": "Top Rated",
@@ -669,7 +711,11 @@
       "select_date": "तारीख चुनें",
       "select_time": "समय चुनें",
       "available_slots": "उपलब्ध स्लॉट",
-      "no_slots": "इस दिन कोई उपलब्ध स्लॉट नहीं"
+      "no_slots": "इस दिन कोई उपलब्ध स्लॉट नहीं",
+      "levels": "स्तर",
+      "reviews_count": "({count} समीक्षाएं)",
+      "cancellation_notice": "रद्दीकरण सूचना",
+      "hours_notice": "{hours} घंटे पहले सूचना आवश्यक"
     },
     "book_session": {
       "title": "Book Session",
@@ -711,7 +757,9 @@
       "no_transactions": "अभी तक कोई लेनदेन नहीं",
       "amount": "राशि",
       "date": "तारीख",
-      "description": "विवरण"
+      "description": "विवरण",
+      "add_payment": "भुगतान विधि जोड़ें",
+      "set_default": "डिफ़ॉल्ट के रूप में सेट करें"
     },
     "notifications": {
       "title": "सूचनाएं",
@@ -720,7 +768,11 @@
       "mark_all_read": "सभी को पढ़ा हुआ चिह्नित करें",
       "clear_all": "Clear All",
       "no_notifications": "कोई सूचना नहीं",
-      "settings": "सूचना सेटिंग्स"
+      "settings": "सूचना सेटिंग्स",
+      "system_update": "सिस्टम अपडेट",
+      "payment_completed": "भुगतान पूर्ण",
+      "booking_confirmed": "बुकिंग की पुष्टि",
+      "session_reminder": "सत्र रिमाइंडर"
     },
     "reviews": {
       "title": "समीक्षाएं",
@@ -740,7 +792,9 @@
       "comment": "टिप्पणी",
       "comment_placeholder": "अपना अनुभव साझा करें...",
       "no_pending": "कोई लंबित समीक्षा नहीं",
-      "no_submitted": "कोई जमा की गई समीक्षा नहीं"
+      "no_submitted": "अभी तक कोई समीक्षा जमा नहीं की गई",
+      "pending_reviews": "लंबित समीक्षाएं",
+      "submitted_reviews": "जमा की गई समीक्षाएं"
     },
     "tutor_dashboard": {
       "title": "Dashboard",
@@ -772,7 +826,7 @@
       "session_length": "Session Length",
       "create_account": "Create Coach Account",
       "submit_application": "Submit Application",
-      "step1_title": "खाता जानकारी",
+      "step1_title": "अपना कोच खाता बनाएं",
       "step2_title": "विशेषज्ञता और विषय",
       "step3_title": "उपलब्धता और मूल्य निर्धारण",
       "step4_title": "समीक्षा और जमा करें",
@@ -788,7 +842,11 @@
       "next": "अगला",
       "back": "वापस",
       "submit": "आवेदन जमा करें",
-      "submitting": "जमा हो रहा है..."
+      "submitting": "जमा हो रहा है...",
+      "step_of": "चरण {current} में से {total}",
+      "step1_info": "यह एक अलग कोच खाता बनाएगा। आप अपने अभिभावक और कोच खातों के बीच स्विच कर सकते हैं।",
+      "coach_email": "कोच ईमेल",
+      "password_requirements": "पासवर्ड में कम से कम 8 वर्ण होने चाहिए, जिसमें अपरकेस, लोअरकेस और संख्याएं शामिल हों"
     },
     "admin": {
       "dashboard": "Admin Dashboard",
@@ -809,10 +867,18 @@
       "save_changes": "परिवर्तन सहेजें",
       "name": "नाम",
       "email": "ईमेल",
-      "phone": "फोन",
+      "phone": "फोन नंबर",
       "bio": "परिचय",
       "change_photo": "फोटो बदलें",
-      "saving": "सहेज रहे हैं..."
+      "saving": "सहेज रहे हैं...",
+      "profile_info": "प्रोफाइल जानकारी",
+      "email_cannot_change": "ईमेल बदला नहीं जा सकता",
+      "change_password": "पासवर्ड बदलें",
+      "current_password": "वर्तमान पासवर्ड",
+      "current_password_placeholder": "वर्तमान पासवर्ड दर्ज करें",
+      "new_password": "नया पासवर्ड",
+      "new_password_placeholder": "नया पासवर्ड दर्ज करें",
+      "update_password": "पासवर्ड अपडेट करें"
     },
     "scheduled_jobs": {
       "title": "Scheduled Jobs",
@@ -878,12 +944,18 @@
       "upcoming_reminders": "आगामी रिमाइंडर",
       "reminder_settings": "रिमाइंडर सेटिंग्स",
       "session_reminder": "सत्र रिमाइंडर",
-      "hours_before": "सत्र से घंटे पहले",
+      "hours_before": "{hours} घंटे पहले",
       "payment_reminder": "भुगतान रिमाइंडर",
-      "days_before": "नियत तारीख से दिन पहले",
+      "days_before": "{days} दिन पहले",
       "weekly_summary": "साप्ताहिक सारांश",
       "save_settings": "सेटिंग्स सहेजें",
-      "no_reminders": "कोई आगामी रिमाइंडर नहीं"
+      "no_reminders": "कोई सक्रिय रिमाइंडर नहीं",
+      "active_reminders": "सक्रिय रिमाइंडर",
+      "session_reminders": "सत्र रिमाइंडर",
+      "session_reminder_desc": "प्रत्येक सत्र से पहले सूचित हों",
+      "payment_reminders": "भुगतान रिमाइंडर",
+      "payment_reminder_desc": "भुगतान देय होने से पहले सूचित हों",
+      "weekly_summary_desc": "आगामी सत्रों का साप्ताहिक डाइजेस्ट प्राप्त करें"
     },
     "reports": {
       "title": "रिपोर्ट्स",
@@ -906,23 +978,67 @@
       "invite_message": "मास्ट्रो हैबिटेट पर मेरे साथ जुड़ें! अपने बच्चों के लिए अद्भुत कोच खोजें।",
       "send_invite": "आमंत्रण भेजें",
       "email": "ईमेल",
-      "email_placeholder": "ईमेल पता दर्ज करें",
+      "email_placeholder": "माता-पिता का ईमेल दर्ज करें",
       "sent_invites": "भेजे गए आमंत्रण",
       "pending": "लंबित",
-      "accepted": "स्वीकृत"
+      "accepted": "स्वीकृत",
+      "share_friends": "दोस्तों के साथ साझा करें",
+      "share_description": "अन्य माता-पिता को मास्ट्रो हैबिटेट में शामिल होने के लिए आमंत्रित करें",
+      "share_link": "लिंक शेयर करें",
+      "your_invitations": "आपके आमंत्रण",
+      "invite_by_email": "ईमेल द्वारा आमंत्रित करें",
+      "sent": "भेजा गया"
     },
     "invite_provider": {
       "title": "प्रदाताओं को आमंत्रित करें",
       "subtitle": "कोई बढ़िया कोच जानते हैं? उन्हें आमंत्रित करें!",
       "invite_message": "मास्ट्रो हैबिटेट पर कोच के रूप में जुड़ें और पढ़ाना शुरू करें!",
       "send_invite": "आमंत्रण भेजें",
-      "name": "नाम",
-      "email": "ईमेल",
-      "specialty": "विशेषता",
+      "name": "प्रदाता का नाम",
+      "email": "प्रदाता का ईमेल",
+      "specialty": "विशेषता (वैकल्पिक)",
       "sent_invites": "भेजे गए आमंत्रण",
       "pending": "लंबित",
       "accepted": "स्वीकृत",
-      "share_on": "पर शेयर करें"
+      "share_on": "पर शेयर करें",
+      "refer_earn": "रेफर करें और कमाएं",
+      "earn_description": "प्रत्येक कोच के लिए ${amount} क्रेडिट कमाएं जो जुड़ता है और अपना पहला सत्र पूरा करता है",
+      "invite_provider": "एक प्रदाता को आमंत्रित करें",
+      "share_social": "सोशल मीडिया पर शेयर करें",
+      "your_invites": "आपके आमंत्रण",
+      "no_invites": "अभी तक कोई आमंत्रण नहीं भेजा गया"
+    },
+    "booking_detail": {
+      "date": "तारीख",
+      "time": "समय",
+      "tutor": "ट्यूटर",
+      "student": "छात्र",
+      "kid_notifications": "बच्चे की सूचनाएं",
+      "not_enabled": "सक्षम नहीं",
+      "enable_notifications": "माता-पिता या अभिभावक को सत्र रिमाइंडर भेजने के लिए सूचनाएं सक्षम करें",
+      "session_issue": "सत्र समस्या?",
+      "report_no_show": "कोच नो-शो रिपोर्ट करें",
+      "cancel_booking": "बुकिंग रद्द करें",
+      "reschedule": "पुनर्निर्धारित करें"
+    },
+    "add_child": {
+      "title": "बच्चा जोड़ें",
+      "name": "नाम",
+      "name_placeholder": "बच्चे का नाम",
+      "age": "उम्र",
+      "age_placeholder": "उम्र",
+      "grade": "कक्षा",
+      "grade_placeholder": "उदा., 5वीं कक्षा",
+      "notification_contact": "सूचना संपर्क (वैकल्पिक)",
+      "notification_info": "यह संपर्क जानकारी केवल आगामी सत्र रिमाइंडर के लिए उपयोग की जाएगी। हम यह जानकारी कभी साझा नहीं करेंगे।",
+      "email": "ईमेल",
+      "email_placeholder": "child@example.com",
+      "phone": "फोन नंबर",
+      "phone_placeholder": "+91 12345 67890",
+      "send_reminders": "इस संपर्क को सत्र रिमाइंडर भेजें",
+      "auto_send_schedules": "तिमाही शेड्यूल ऑटो-भेजें",
+      "save": "सहेजें",
+      "cancel": "रद्द करें"
     }
   },
   "coach": {
@@ -981,19 +1097,19 @@
     "success": "सफलता",
     "warning": "Warning",
     "info": "Information",
-    "yes": "Yes",
-    "no": "No",
-    "ok": "OK",
-    "cancel": "Cancel",
-    "close": "Close",
-    "save": "Save",
-    "delete": "Delete",
-    "edit": "Edit",
+    "yes": "हां",
+    "no": "नहीं",
+    "ok": "ठीक है",
+    "cancel": "रद्द करें",
+    "close": "बंद करें",
+    "save": "सहेजें",
+    "delete": "हटाएं",
+    "edit": "संपादित करें",
     "add": "Add",
     "remove": "Remove",
-    "search": "Search",
-    "filter": "Filter",
-    "sort": "Sort",
+    "search": "खोजें",
+    "filter": "फ़िल्टर",
+    "sort": "क्रमबद्ध करें",
     "all": "All",
     "none": "None",
     "select": "Select",
@@ -1027,7 +1143,16 @@
     "show_more": "Show more",
     "show_less": "Show less",
     "view_more": "View more",
-    "view_less": "View less"
+    "view_less": "View less",
+    "confirm": "पुष्टि करें",
+    "back": "वापस",
+    "next": "अगला",
+    "submit": "जमा करें",
+    "view_all": "सभी देखें",
+    "see_more": "और देखें",
+    "see_less": "कम देखें",
+    "copied": "कॉपी किया गया!",
+    "share": "शेयर करें"
   },
   "faq": {
     "consumer": [
@@ -1071,5 +1196,48 @@
     "reviews_count": "{count} समीक्षाएं",
     "sessions_count": "{count} सत्र",
     "rating": "रेटिंग"
+  },
+  "subjects": {
+    "mathematics": "गणित",
+    "music": "संगीत",
+    "homework_support": "होमवर्क सहायता",
+    "coding_programming": "कोडिंग/प्रोग्रामिंग",
+    "english": "अंग्रेजी",
+    "science": "विज्ञान",
+    "physics": "भौतिकी",
+    "chemistry": "रसायन विज्ञान",
+    "biology": "जीव विज्ञान",
+    "history": "इतिहास",
+    "geography": "भूगोल",
+    "piano": "पियानो",
+    "guitar": "गिटार",
+    "violin": "वायलिन",
+    "drums": "ड्रम",
+    "voice": "गायन",
+    "painting": "चित्रकला",
+    "drawing": "रेखाचित्र",
+    "photography": "फोटोग्राफी",
+    "soccer": "फुटबॉल",
+    "basketball": "बास्केटबॉल",
+    "tennis": "टेनिस",
+    "swimming": "तैराकी",
+    "yoga": "योग",
+    "martial_arts": "मार्शल आर्ट्स",
+    "spanish": "स्पेनिश",
+    "french": "फ्रेंच",
+    "german": "जर्मन",
+    "mandarin": "मंदारिन",
+    "japanese": "जापानी"
+  },
+  "levels": {
+    "beginner": "शुरुआती",
+    "intermediate": "मध्यवर्ती",
+    "advanced": "उन्नत",
+    "all_levels": "सभी स्तर"
+  },
+  "modality": {
+    "online": "ऑनलाइन",
+    "in_person": "व्यक्तिगत",
+    "hybrid": "हाइब्रिड"
   }
 }

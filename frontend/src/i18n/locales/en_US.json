@@ -95,7 +95,12 @@
     "gre": "GRE",
     "gmat": "GMAT",
     "ielts": "IELTS",
-    "toefl": "TOEFL"
+    "toefl": "TOEFL",
+    "performance_arts": "Performance & Creative Arts",
+    "activities_hobbies": "Activities & Hobbies",
+    "fitness_nutrition": "Fitness & Nutrition",
+    "health_mindfulness": "Health, Mindfulness & Wellbeing",
+    "business_communication": "Business, Communication & Leadership"
   },
   "buttons": {
     "submit": "Submit",
@@ -309,7 +314,7 @@
       "child_updated": "Child updated successfully",
       "link_copied": "Link copied to clipboard!",
       "code_copied": "Code copied to clipboard",
-      "child_deleted": "Child deleted successfully"
+      "child_deleted": "Child removed successfully"
     },
     "errors": {
       "generic": "Something went wrong. Please try again.",
@@ -362,7 +367,8 @@
       "password_weak": "Password must be at least 8 characters with uppercase, lowercase, and numbers",
       "booking_failed": "Failed to create booking. Please try again.",
       "payment_failed": "Payment failed. Please try again.",
-      "upload_failed": "File upload failed. Please try again."
+      "upload_failed": "File upload failed. Please try again.",
+      "loading_failed": "Failed to load data. Please try again."
     }
   },
   "empty_states": {
@@ -425,7 +431,8 @@
       "popular_categories": "Popular Categories",
       "how_it_works": "How It Works",
       "reminders": "Reminders",
-      "subjects_count": "{count} subjects"
+      "subjects_count": "{count} subjects",
+      "search_placeholder": "Search tutors, subjects..."
     },
     "search": {
       "title": "Find a Coach",
@@ -445,12 +452,17 @@
       "price_range": "Price Range",
       "availability": "Availability",
       "rating": "Rating",
-      "category": "Category",
-      "subject": "Subject",
-      "search_placeholder": "Search coaches...",
+      "category": "CATEGORY",
+      "subject": "SUBJECT",
+      "search_placeholder": "Search tutors, subjects...",
       "per_session": "per session",
       "view_profile": "View Profile",
-      "book_now": "Book Now"
+      "book_now": "Book Now",
+      "sponsored": "SPONSORED",
+      "new": "New",
+      "subjects_count": "{count} subjects",
+      "per_hour": "/hr",
+      "reviews_count": "({count})"
     },
     "login": {
       "title": "Welcome Back",
@@ -527,7 +539,10 @@
       "no_past_desc": "Your completed sessions will appear here",
       "find_coach": "Find a Coach",
       "view_details": "View Details",
-      "leave_review": "Leave Review"
+      "leave_review": "Leave Review",
+      "booked": "Booked",
+      "confirmed": "Confirmed",
+      "student_label": "Student:"
     },
     "kids": {
       "title": "My Kids",
@@ -558,7 +573,17 @@
       "past_sessions": "Past Sessions",
       "total_spent": "Total Spent",
       "view_schedule": "View Schedule",
-      "view_payments": "View Payments"
+      "view_payments": "View Payments",
+      "view_schedule_payments": "View Schedule & Payments",
+      "total_paid": "Total Paid",
+      "pending": "Pending",
+      "schedule": "Schedule",
+      "payments": "Payments",
+      "upcoming": "Upcoming",
+      "past": "Past",
+      "no_upcoming_sessions": "No upcoming sessions",
+      "no_past_sessions": "No past sessions",
+      "with": "with"
     },
     "tax_reports": {
       "title": "Tax Reports",
@@ -566,7 +591,7 @@
       "consumer_title": "Payment Records",
       "description_provider": "Generate 1099 equivalent forms for your coaching earnings.",
       "description_consumer": "Generate payment summaries for your educational expenses.",
-      "generate_report": "Generate Report",
+      "generate_report": "Generate Annual Report",
       "download_pdf": "Download PDF",
       "annual_report": "Annual Report",
       "year": "Year",
@@ -574,10 +599,12 @@
       "ready": "Ready",
       "pending": "Pending",
       "available_years": "Available Years",
-      "no_reports": "No tax reports available",
+      "no_reports": "No reports generated for this year",
       "download": "Download",
       "total_payments": "Total Payments",
-      "available_reports": "Available Reports"
+      "available_reports": "Available Reports",
+      "payment_records": "Payment Records",
+      "description": "Download your payment records for tax purposes"
     },
     "referrals": {
       "title": "Referrals",
@@ -600,7 +627,18 @@
       "you_get": "You get {amount} credit",
       "total_earned": "Total Earned",
       "pending_rewards": "Pending Rewards",
-      "no_referrals": "No referrals yet"
+      "no_referrals": "No referrals yet",
+      "your_rewards": "Your Rewards",
+      "rewards_description": "Earn ${amount} for every friend who signs up using your code and completes a booking",
+      "your_referral_code": "Your Referral Code",
+      "copy": "Copy",
+      "have_code": "Have a Referral Code?",
+      "enter_code": "Enter code",
+      "apply": "Apply",
+      "your_stats": "Your Stats",
+      "total": "Total",
+      "pending": "Pending",
+      "rewarded": "Rewarded"
     },
     "settings": {
       "title": "Settings",
@@ -631,17 +669,21 @@
       "message_placeholder": "Describe your issue or question...",
       "send_message": "Send Message",
       "success_title": "Message Sent!",
-      "success_message": "Thank you for contacting us. We'll respond within 24-48 hours."
+      "success_message": "We'll respond within 24-48 hours."
     },
     "faq": {
       "title": "Frequently Asked Questions",
       "search_faq": "Search FAQs...",
-      "contact_support": "Contact our support team",
+      "contact_support": "Contact our support team for help",
       "for_parents": "For Parents",
       "for_tutors": "For Tutors",
       "search_placeholder": "Search questions...",
       "still_have_questions": "Still have questions?",
-      "contact_us": "Contact Us"
+      "contact_us": "Contact Us",
+      "subtitle": "Find answers to common questions about Maestro Habitat",
+      "getting_started": "Getting Started",
+      "booking_sessions": "Booking & Sessions",
+      "payments_billing": "Payments & Billing"
     },
     "tutor_detail": {
       "about": "About",
@@ -655,7 +697,7 @@
       "sessions_completed": "sessions completed",
       "years_experience": "years experience",
       "per_session": "per session",
-      "per_hour": "per hour",
+      "per_hour": "/hr",
       "rating": "Rating",
       "verified": "Verified",
       "top_rated": "Top Rated",
@@ -669,7 +711,11 @@
       "select_date": "Select Date",
       "select_time": "Select Time",
       "available_slots": "Available Slots",
-      "no_slots": "No available slots on this day"
+      "no_slots": "No available slots on this day",
+      "levels": "Levels",
+      "reviews_count": "({count} reviews)",
+      "cancellation_notice": "Cancellation Notice",
+      "hours_notice": "{hours}h notice required"
     },
     "book_session": {
       "title": "Book Session",
@@ -707,11 +753,13 @@
       "auto_pay": "Auto-Pay",
       "auto_pay_enabled": "Auto-pay is enabled",
       "auto_pay_disabled": "Auto-pay is disabled",
-      "auto_pay_day": "Auto-pay day",
+      "auto_pay_day": "Auto-pay on day",
       "no_transactions": "No transactions yet",
       "amount": "Amount",
       "date": "Date",
-      "description": "Description"
+      "description": "Description",
+      "add_payment": "Add Payment Method",
+      "set_default": "Set as Default"
     },
     "notifications": {
       "title": "Notifications",
@@ -720,7 +768,11 @@
       "mark_all_read": "Mark All Read",
       "clear_all": "Clear All",
       "no_notifications": "No notifications",
-      "settings": "Notification Settings"
+      "settings": "Notification Settings",
+      "system_update": "System Update",
+      "payment_completed": "Payment Completed",
+      "booking_confirmed": "Booking Confirmed",
+      "session_reminder": "Session Reminder"
     },
     "reviews": {
       "title": "Reviews",
@@ -740,7 +792,9 @@
       "comment": "Comment",
       "comment_placeholder": "Share your experience...",
       "no_pending": "No pending reviews",
-      "no_submitted": "No submitted reviews"
+      "no_submitted": "No reviews submitted yet",
+      "pending_reviews": "Pending Reviews",
+      "submitted_reviews": "Submitted Reviews"
     },
     "tutor_dashboard": {
       "title": "Dashboard",
@@ -772,7 +826,7 @@
       "session_length": "Session Length",
       "create_account": "Create Coach Account",
       "submit_application": "Submit Application",
-      "step1_title": "Account Information",
+      "step1_title": "Create Your Coach Account",
       "step2_title": "Expertise & Subjects",
       "step3_title": "Availability & Pricing",
       "step4_title": "Review & Submit",
@@ -788,7 +842,11 @@
       "next": "Next",
       "back": "Back",
       "submit": "Submit Application",
-      "submitting": "Submitting..."
+      "submitting": "Submitting...",
+      "step_of": "Step {current} of {total}",
+      "step1_info": "This will create a separate coach account. You can switch between your parent and coach accounts.",
+      "coach_email": "Coach Email",
+      "password_requirements": "Password must contain at least 8 characters, including uppercase, lowercase, and numbers"
     },
     "admin": {
       "dashboard": "Admin Dashboard",
@@ -809,10 +867,18 @@
       "save_changes": "Save Changes",
       "name": "Name",
       "email": "Email",
-      "phone": "Phone",
+      "phone": "Phone Number",
       "bio": "Bio",
       "change_photo": "Change Photo",
-      "saving": "Saving..."
+      "saving": "Saving...",
+      "profile_info": "Profile Information",
+      "email_cannot_change": "Email cannot be changed",
+      "change_password": "Change Password",
+      "current_password": "Current Password",
+      "current_password_placeholder": "Enter current password",
+      "new_password": "New Password",
+      "new_password_placeholder": "Enter new password",
+      "update_password": "Update Password"
     },
     "scheduled_jobs": {
       "title": "Scheduled Jobs",
@@ -878,12 +944,18 @@
       "upcoming_reminders": "Upcoming Reminders",
       "reminder_settings": "Reminder Settings",
       "session_reminder": "Session Reminder",
-      "hours_before": "hours before session",
+      "hours_before": "{hours} hours before",
       "payment_reminder": "Payment Reminder",
-      "days_before": "days before due date",
+      "days_before": "{days} days before",
       "weekly_summary": "Weekly Summary",
       "save_settings": "Save Settings",
-      "no_reminders": "No upcoming reminders"
+      "no_reminders": "No active reminders",
+      "active_reminders": "Active Reminders",
+      "session_reminders": "Session Reminders",
+      "session_reminder_desc": "Get notified before each session",
+      "payment_reminders": "Payment Reminders",
+      "payment_reminder_desc": "Get notified before payment is due",
+      "weekly_summary_desc": "Receive a weekly digest of upcoming sessions"
     },
     "reports": {
       "title": "Reports",
@@ -906,23 +978,67 @@
       "invite_message": "Join me on Maestro Habitat! Find amazing coaches for your kids.",
       "send_invite": "Send Invite",
       "email": "Email",
-      "email_placeholder": "Enter email address",
+      "email_placeholder": "Enter parent's email",
       "sent_invites": "Sent Invites",
       "pending": "Pending",
-      "accepted": "Accepted"
+      "accepted": "Accepted",
+      "share_friends": "Share with Friends",
+      "share_description": "Invite other parents to join Maestro Habitat",
+      "share_link": "Share Link",
+      "your_invitations": "Your Invitations",
+      "invite_by_email": "Invite by Email",
+      "sent": "Sent"
     },
     "invite_provider": {
       "title": "Invite Providers",
       "subtitle": "Know a great coach? Invite them!",
       "invite_message": "Join Maestro Habitat as a coach and start teaching!",
       "send_invite": "Send Invite",
-      "name": "Name",
-      "email": "Email",
-      "specialty": "Specialty",
+      "name": "Provider's Name",
+      "email": "Provider's Email",
+      "specialty": "Specialty (Optional)",
       "sent_invites": "Sent Invites",
       "pending": "Pending",
       "accepted": "Accepted",
-      "share_on": "Share on"
+      "share_on": "Share on",
+      "refer_earn": "Refer & Earn",
+      "earn_description": "Earn ${amount} credit for each coach who joins and completes their first session",
+      "invite_provider": "Invite a Provider",
+      "share_social": "Share on Social Media",
+      "your_invites": "Your Invites",
+      "no_invites": "No invites sent yet"
+    },
+    "booking_detail": {
+      "date": "Date",
+      "time": "Time",
+      "tutor": "TUTOR",
+      "student": "STUDENT",
+      "kid_notifications": "KID NOTIFICATIONS",
+      "not_enabled": "Not enabled",
+      "enable_notifications": "Enable notifications to send session reminders to a parent or guardian",
+      "session_issue": "SESSION ISSUE?",
+      "report_no_show": "Report Coach No-Show",
+      "cancel_booking": "Cancel Booking",
+      "reschedule": "Reschedule"
+    },
+    "add_child": {
+      "title": "Add Child",
+      "name": "Name",
+      "name_placeholder": "Child's name",
+      "age": "Age",
+      "age_placeholder": "Age",
+      "grade": "Grade",
+      "grade_placeholder": "e.g., 5th Grade",
+      "notification_contact": "Notification Contact (Optional)",
+      "notification_info": "This contact info will strictly be used for upcoming session reminders only. We will never share this information.",
+      "email": "Email",
+      "email_placeholder": "child@example.com",
+      "phone": "Phone Number",
+      "phone_placeholder": "+1 (555) 123-4567",
+      "send_reminders": "Send session reminders to this contact",
+      "auto_send_schedules": "Auto-send quarterly schedules",
+      "save": "Save",
+      "cancel": "Cancel"
     }
   },
   "coach": {
@@ -1027,7 +1143,16 @@
     "show_more": "Show more",
     "show_less": "Show less",
     "view_more": "View more",
-    "view_less": "View less"
+    "view_less": "View less",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "view_all": "View All",
+    "see_more": "See More",
+    "see_less": "See Less",
+    "copied": "Copied!",
+    "share": "Share"
   },
   "faq": {
     "consumer": [
@@ -1071,5 +1196,48 @@
     "reviews_count": "{count} reviews",
     "sessions_count": "{count} sessions",
     "rating": "rating"
+  },
+  "subjects": {
+    "mathematics": "Mathematics",
+    "music": "Music",
+    "homework_support": "Homework Support",
+    "coding_programming": "Coding/Programming",
+    "english": "English",
+    "science": "Science",
+    "physics": "Physics",
+    "chemistry": "Chemistry",
+    "biology": "Biology",
+    "history": "History",
+    "geography": "Geography",
+    "piano": "Piano",
+    "guitar": "Guitar",
+    "violin": "Violin",
+    "drums": "Drums",
+    "voice": "Voice",
+    "painting": "Painting",
+    "drawing": "Drawing",
+    "photography": "Photography",
+    "soccer": "Soccer",
+    "basketball": "Basketball",
+    "tennis": "Tennis",
+    "swimming": "Swimming",
+    "yoga": "Yoga",
+    "martial_arts": "Martial Arts",
+    "spanish": "Spanish",
+    "french": "French",
+    "german": "German",
+    "mandarin": "Mandarin",
+    "japanese": "Japanese"
+  },
+  "levels": {
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced",
+    "all_levels": "All Levels"
+  },
+  "modality": {
+    "online": "Online",
+    "in_person": "In-Person",
+    "hybrid": "Hybrid"
   }
 }
