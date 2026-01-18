@@ -92,31 +92,20 @@ export default function AppHeader({ showBack = false, title, showUserName = fals
         window.location.href = '/login';
       }
     } else {
-      Alert.alert('Logout', 'Are you sure you want to logout?', [
-        { text: 'Cancel', style: 'cancel' },
-        { 
-          text: 'Logout', 
-          style: 'destructive', 
-          onPress: async () => {
-            try {
-              await logout();
-            } catch (error) {
-              console.error('Logout error:', error);
-            }
-            router.replace('/(auth)/login');
-          }
-        },
-      ]);
+      // For native, we'll proceed with logout directly
+      try {
+        await logout();
+        router.replace('/(auth)/login');
+      } catch (error) {
+        console.error('Logout error:', error);
+        showError('Failed to logout');
+      }
     }
   };
 
   const handleContactSubmit = async () => {
     if (!contactSubject.trim() || !contactMessage.trim()) {
-      if (Platform.OS === 'web') {
-        window.alert('Please fill in all fields');
-      } else {
-        Alert.alert('Error', 'Please fill in all fields');
-      }
+      showError('Please fill in all fields');
       return;
     }
 
@@ -130,20 +119,12 @@ export default function AppHeader({ showBack = false, title, showUserName = fals
         headers: { Authorization: `Bearer ${token}` }
       });
       
-      if (Platform.OS === 'web') {
-        window.alert('Your message has been sent!');
-      } else {
-        Alert.alert('Success', 'Your message has been sent!');
-      }
+      showSuccess('Your message has been sent!');
       setShowContactSheet(false);
       setContactSubject('');
       setContactMessage('');
     } catch (error) {
-      if (Platform.OS === 'web') {
-        window.alert('Failed to send message');
-      } else {
-        Alert.alert('Error', 'Failed to send message');
-      }
+      showError('Failed to send message');
     } finally {
       setSubmittingContact(false);
     }
