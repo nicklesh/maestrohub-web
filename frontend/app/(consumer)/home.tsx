@@ -260,7 +260,7 @@ export default function HomeScreen() {
               activeOpacity={0.7}
             >
               <View style={styles.remindersHeader}>
-                <Text style={[styles.remindersTitle, { color: colors.text }]}>Reminders</Text>
+                <Text style={[styles.remindersTitle, { color: colors.text }]}>{t('pages.home.reminders')}</Text>
                 <View style={styles.reminderBadge}>
                   <Text style={styles.reminderBadgeText}>1</Text>
                 </View>
@@ -270,7 +270,7 @@ export default function HomeScreen() {
                   <Ionicons name="calendar" size={18} color="#DC2626" />
                 </View>
                 <Text style={[styles.reminderItemText, { color: colors.text }]}>
-                  Session with {upcomingReminder.tutor_name} in {upcomingReminder.hours_until} hours
+                  {t('pages.bookings.session_with', { name: upcomingReminder.tutor_name })} {t('time.in')} {upcomingReminder.hours_until} {t('time.hours')}
                 </Text>
               </View>
             </TouchableOpacity>
