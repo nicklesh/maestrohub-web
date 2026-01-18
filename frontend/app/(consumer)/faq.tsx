@@ -105,6 +105,7 @@ const faqData: FAQItem[] = [
 
 export default function FAQScreen() {
   const { colors } = useTheme();
+  const { t } = useTranslation();
   const { width } = useWindowDimensions();
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   
