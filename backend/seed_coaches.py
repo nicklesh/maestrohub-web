@@ -75,11 +75,6 @@ IN_COACHES = [
     {"name": "Rahul Patel", "bio": "Professional {subject} educator focused on building strong foundations. Fluent in English and Hindi."},
 ]
 
-async def get_existing_categories():
-    """Get all existing categories and their subjects"""
-    categories = await db.categories.find({}, {"_id": 0}).to_list(100)
-    return categories
-
 async def create_coach(name: str, email: str, bio: str, subjects: list, categories: list, 
                        market_id: str, payout_country: str, base_price: float):
     """Create a coach with user and tutor profile"""
