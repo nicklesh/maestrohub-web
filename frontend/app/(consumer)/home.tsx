@@ -330,7 +330,7 @@ export default function HomeScreen() {
             ) : (
               <View style={styles.emptyState}>
                 <Ionicons name="people-outline" size={48} color={colors.textMuted} />
-                <Text style={styles.emptyText}>No tutors available yet</Text>
+                <Text style={styles.emptyText}>{t('empty_states.no_tutors')}</Text>
               </View>
             )}
           </View>
