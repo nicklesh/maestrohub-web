@@ -186,7 +186,7 @@ export default function CalendarScreen() {
     if (Platform.OS === 'web') {
       showInfo(`${title}: ${message}`);
     } else {
-      Alert.alert(title, message);
+      showInfo(message, title);
     }
   };
 

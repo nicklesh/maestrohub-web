@@ -86,7 +86,7 @@ export default function AdminTutors() {
     if (Platform.OS === 'web') {
       showInfo(`${title}: ${message}`);
     } else {
-      Alert.alert(title, message);
+      showInfo(message, title);
     }
   };
 
