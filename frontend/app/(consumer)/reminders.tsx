@@ -37,6 +37,7 @@ export default function RemindersScreen() {
   const { token } = useAuth();
   const { colors } = useTheme();
   const { showSuccess, showError } = useToast();
+  const { t } = useTranslation();
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [config, setConfig] = useState<ReminderConfig>({
     session_reminder_hours: 1,
