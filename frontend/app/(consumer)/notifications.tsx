@@ -132,7 +132,7 @@ export default function NotificationsScreen() {
   if (loading) {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-        <AppHeader showBack showUserName title="Notifications" />
+        <AppHeader showBack showUserName title={t('pages.notifications.title')} />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -142,7 +142,7 @@ export default function NotificationsScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <AppHeader showBack showUserName title="Notifications" />
+      <AppHeader showBack showUserName title={t('pages.notifications.title')} />
 
       {notifications.length === 0 ? (
         <View style={styles.emptyContainer}>

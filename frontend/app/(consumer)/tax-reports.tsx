@@ -333,7 +333,7 @@ export default function TaxReportsScreen() {
   if (loading) {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-        <AppHeader showBack title="Tax Reports" />
+        <AppHeader showBack title={t('pages.tax_reports.title')} />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -343,7 +343,7 @@ export default function TaxReportsScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <AppHeader showBack title="Tax Reports" />
+      <AppHeader showBack title={t('pages.tax_reports.title')} />
       
       <View style={[styles.infoCard, { backgroundColor: colors.primaryLight, borderColor: colors.primary }]}>
         <Ionicons name="information-circle" size={24} color={colors.primary} />

@@ -217,7 +217,7 @@ export default function ReferralsScreen() {
   if (loading) {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-        <AppHeader showBack title="Referrals" />
+        <AppHeader showBack title={t('pages.referrals.title')} />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -227,7 +227,7 @@ export default function ReferralsScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <AppHeader showBack title="Referrals" />
+      <AppHeader showBack title={t('pages.referrals.title')} />
       
       <FlatList
         data={referrals}
