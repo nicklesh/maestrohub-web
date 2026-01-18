@@ -206,7 +206,7 @@ async def seed_coaches():
                 )
                 total_created += 1
     
-    print(f"\n\n✨ Seed data generation complete!")
+    print("\n\n✨ Seed data generation complete!")
     print(f"📊 Total coaches created: {total_created}")
     print(f"   - US coaches: {total_created // 2}")
     print(f"   - IN coaches: {total_created // 2}")
