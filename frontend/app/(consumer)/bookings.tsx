@@ -147,7 +147,7 @@ export default function BookingsScreen() {
               <View style={[styles.notifIndicator, { backgroundColor: colors.successLight }]}>
                 <Ionicons name="notifications" size={12} color={colors.success} />
                 <Text style={[styles.notifIndicatorText, { color: colors.success }]}>
-                  Kid notified
+                  {t('pages.booking_detail.kid_notified')}
                 </Text>
               </View>
             )}
