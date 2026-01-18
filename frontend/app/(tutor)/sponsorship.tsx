@@ -150,45 +150,37 @@ export default function SponsorshipScreen() {
       });
       
       if (response.data.success) {
-        Alert.alert(
-          'Success!', 
-          `Your sponsorship is now active! Total charged: ${response.data.total_charged}`,
-          [{ text: 'OK', onPress: () => { setShowPurchaseModal(false); loadData(); } }]
-        );
+        showSuccess(`Your sponsorship is now active! Total charged: ${response.data.total_charged}`);
+        setShowPurchaseModal(false);
+        loadData();
       } else if (response.data.redirect_to_billing) {
-        showInfo(response.data.message, 'Payment Method Required');
+        showError(response.data.message, 'Payment Method Required');
       }
     } catch (error: any) {
-      showInfo(error.response?.data?.detail || 'Failed to purchase sponsorship', 'Error');
+      showError(error.response?.data?.detail || 'Failed to purchase sponsorship');
     } finally {
       setPurchasing(false);
     }
   };
 
   const handleRenew = async (sponsorship: ActiveSponsorship) => {
-    Alert.alert(
-      'Renew Sponsorship',
-      `Renew "${sponsorship.plan_name}" for another period?`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Renew',
-          onPress: async () => {
-            try {
-              const response = await api.post(`/sponsorship/${sponsorship.sponsorship_id}/renew`, {}, {
-                headers: { Authorization: `Bearer ${token}` }
-              });
-              if (response.data.success) {
-                showInfo(`Total charged: ${response.data.total_charged}`, 'Renewed!');
-                loadData();
-              }
-            } catch (error: any) {
-              showInfo(error.response?.data?.detail || 'Failed to renew', 'Error');
-            }
-          }
+    const confirmed = Platform.OS === 'web'
+      ? window.confirm(`Renew "${sponsorship.plan_name}" for another period?`)
+      : true;
+    
+    if (confirmed) {
+      try {
+        const response = await api.post(`/sponsorship/${sponsorship.sponsorship_id}/renew`, {}, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (response.data.success) {
+          showSuccess(`Renewed! Total charged: ${response.data.total_charged}`);
+          loadData();
         }
-      ]
-    );
+      } catch (error: any) {
+        showError(error.response?.data?.detail || 'Failed to renew');
+      }
+    }
   };
 
   const handleToggleAutoRenew = async (sponsorship: ActiveSponsorship) => {
