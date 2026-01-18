@@ -104,6 +104,12 @@ export default function AdminLayout() {
           href: null,
         }}
       />
+      <Tabs.Screen
+        name="scheduled-jobs"
+        options={{
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }
