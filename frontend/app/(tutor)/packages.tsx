@@ -133,32 +133,26 @@ export default function PackagesScreen() {
       });
       loadData();
     } catch (error: any) {
-      showInfo(error.response?.data?.detail || 'Failed to update package', 'Error');
+      showError(error.response?.data?.detail || 'Failed to update package');
     }
   };
 
-  const handleDelete = (pkg: SessionPackage) => {
-    Alert.alert(
-      'Delete Package',
-      `Are you sure you want to delete "${pkg.name}"?`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await api.delete(`/tutor/packages/${pkg.package_id}`, {
-                headers: { Authorization: `Bearer ${token}` }
-              });
-              loadData();
-            } catch (error: any) {
-              showInfo(error.response?.data?.detail || 'Failed to delete package', 'Error');
-            }
-          }
-        }
-      ]
-    );
+  const handleDelete = async (pkg: SessionPackage) => {
+    const confirmed = Platform.OS === 'web'
+      ? window.confirm(`Are you sure you want to delete "${pkg.name}"?`)
+      : true;
+    
+    if (confirmed) {
+      try {
+        await api.delete(`/tutor/packages/${pkg.package_id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        showSuccess('Package deleted');
+        loadData();
+      } catch (error: any) {
+        showError(error.response?.data?.detail || 'Failed to delete package');
+      }
+    }
   };
 
   const pricing = calculatePricing();
