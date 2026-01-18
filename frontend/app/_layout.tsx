@@ -5,6 +5,7 @@ import { AuthProvider } from '@/src/context/AuthContext';
 import { MarketProvider } from '@/src/context/MarketContext';
 import { ThemeProvider, useTheme } from '@/src/context/ThemeContext';
 import { ToastProvider } from '@/src/context/ToastContext';
+import { I18nProvider } from '@/src/i18n';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StyleSheet } from 'react-native';
