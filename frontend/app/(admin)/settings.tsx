@@ -130,6 +130,14 @@ export default function AdminSettings() {
             </TouchableOpacity>
             <TouchableOpacity 
               style={[styles.menuItem, isTablet && styles.menuItemTablet]}
+              onPress={() => router.push('/(admin)/scheduled-jobs')}
+            >
+              <Ionicons name="time-outline" size={isTablet ? 24 : 22} color={colors.primary} />
+              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Scheduled Jobs</Text>
+              <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={[styles.menuItem, isTablet && styles.menuItemTablet]}
               onPress={() => router.push('/(admin)/notifications-settings')}
             >
               <Ionicons name="notifications-outline" size={isTablet ? 24 : 22} color={colors.primary} />
