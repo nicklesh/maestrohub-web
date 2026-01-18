@@ -3,8 +3,10 @@ import { Platform } from 'react-native';
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL || '';
 
+export const getBaseUrl = () => `${BACKEND_URL}/api`;
+
 export const api = axios.create({
-  baseURL: `${BACKEND_URL}/api`,
+  baseURL: getBaseUrl(),
   headers: {
     'Content-Type': 'application/json',
   },
