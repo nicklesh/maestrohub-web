@@ -396,14 +396,14 @@
   },
   "pages": {
     "home": {
-      "hero_title": "Find Your Perfect Coach",
-      "hero_subtitle": "Connect with expert tutors and coaches for personalized learning experiences",
+      "hero_title": "अपना परफेक्ट कोच खोजें",
+      "hero_subtitle": "व्यक्तिगत सीखने के अनुभवों के लिए विशेषज्ञ ट्यूटर और कोच से जुड़ें",
       "featured_coaches": "विशेष कोच",
       "browse_categories": "श्रेणियां ब्राउज़ करें",
-      "popular_categories": "Popular Categories",
-      "how_it_works": "How It Works",
+      "popular_categories": "लोकप्रिय श्रेणियां",
+      "how_it_works": "यह कैसे काम करता है",
       "reminders": "रिमाइंडर",
-      "subjects_count": "{count} subjects"
+      "subjects_count": "{count} विषय"
     },
     "search": {
       "title": "Find a Coach",
