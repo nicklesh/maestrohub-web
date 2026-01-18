@@ -36,15 +36,17 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={styles.container}>
       <SafeAreaProvider>
-        <ThemeProvider>
-          <ToastProvider>
-            <AuthProvider>
-              <MarketProvider>
-                <AppContent />
-              </MarketProvider>
-            </AuthProvider>
-          </ToastProvider>
-        </ThemeProvider>
+        <I18nProvider>
+          <ThemeProvider>
+            <ToastProvider>
+              <AuthProvider>
+                <MarketProvider>
+                  <AppContent />
+                </MarketProvider>
+              </AuthProvider>
+            </ToastProvider>
+          </ThemeProvider>
+        </I18nProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
