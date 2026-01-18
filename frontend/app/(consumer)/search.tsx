@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   useWindowDimensions,
-  ScrollView,
+  Modal,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
@@ -44,12 +45,17 @@ export default function SearchScreen() {
   const { width } = useWindowDimensions();
   const { colors } = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
-  const [category, setCategory] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedSubject, setSelectedSubject] = useState<string>('all');
   const [tutors, setTutors] = useState<Tutor[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  
+  // Dropdown modal states
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+  const [showSubjectDropdown, setShowSubjectDropdown] = useState(false);
 
   // Responsive breakpoints
   const isTablet = width >= 768;
@@ -57,10 +63,52 @@ export default function SearchScreen() {
   const containerMaxWidth = isDesktop ? 1200 : isTablet ? 900 : undefined;
   const numColumns = isDesktop ? 3 : isTablet ? 2 : 1;
 
+  // Get subjects for selected category
+  const availableSubjects = useMemo(() => {
+    if (selectedCategory === 'all') {
+      // Combine all subjects from all categories
+      const allSubjects = categories.flatMap(cat => cat.subjects || []);
+      return [...new Set(allSubjects)].sort();
+    }
+    const cat = categories.find(c => c.id === selectedCategory);
+    return cat?.subjects || [];
+  }, [selectedCategory, categories]);
+
+  // Auto-match search query to category/subject
+  useEffect(() => {
+    if (searchQuery.trim() && categories.length > 0) {
+      const query = searchQuery.toLowerCase().trim();
+      
+      // Check if query matches a category
+      const matchedCategory = categories.find(
+        cat => cat.name.toLowerCase().includes(query) || cat.id.toLowerCase().includes(query)
+      );
+      
+      if (matchedCategory) {
+        setSelectedCategory(matchedCategory.id);
+        setSelectedSubject('all');
+        return;
+      }
+      
+      // Check if query matches a subject
+      for (const cat of categories) {
+        const matchedSubject = (cat.subjects || []).find(
+          subj => subj.toLowerCase().includes(query)
+        );
+        if (matchedSubject) {
+          setSelectedCategory(cat.id);
+          setSelectedSubject(matchedSubject);
+          return;
+        }
+      }
+    }
+  }, [searchQuery, categories]);
+
   // Update category when params change (from home page navigation)
   useEffect(() => {
     if (params.category && typeof params.category === 'string') {
-      setCategory(params.category);
+      setSelectedCategory(params.category);
+      setSelectedSubject('all');
     }
   }, [params.category]);
 
@@ -68,12 +116,12 @@ export default function SearchScreen() {
     loadCategories();
   }, []);
 
-  // Search tutors when category changes
+  // Search tutors when filters change
   useEffect(() => {
     if (!loading || tutors.length === 0) {
       searchTutors(true);
     }
-  }, [category]);
+  }, [selectedCategory, selectedSubject]);
 
   const loadCategories = async () => {
     try {
@@ -97,8 +145,11 @@ export default function SearchScreen() {
         limit: '20',
       });
       
-      if (category !== 'all') {
-        queryParams.append('category', category);
+      if (selectedCategory !== 'all') {
+        queryParams.append('category', selectedCategory);
+      }
+      if (selectedSubject !== 'all') {
+        queryParams.append('subject', selectedSubject);
       }
       if (searchQuery) {
         queryParams.append('query', searchQuery);
@@ -115,6 +166,17 @@ export default function SearchScreen() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const getCategoryName = () => {
+    if (selectedCategory === 'all') return 'All Categories';
+    const cat = categories.find(c => c.id === selectedCategory);
+    return cat?.name || 'Category';
+  };
+
+  const getSubjectName = () => {
+    if (selectedSubject === 'all') return 'All Subjects';
+    return selectedSubject;
   };
 
   const renderTutorCard = ({ item }: { item: Tutor }) => (
@@ -161,26 +223,21 @@ export default function SearchScreen() {
         {item.bio || 'No bio available'}
       </Text>
 
-      {/* Subject Pills - Horizontal scroll to prevent overflow */}
-      <ScrollView 
-        horizontal 
-        showsHorizontalScrollIndicator={false}
-        style={styles.subjectPillsScroll}
-        contentContainerStyle={styles.subjectPillsContainer}
-      >
-        {(item.subjects || []).slice(0, 4).map((subject, index) => (
-          <View key={`${subject}-${index}`} style={[styles.subjectPill, { backgroundColor: colors.primaryLight }]}>
-            <Text style={[styles.subjectPillText, { color: colors.primary }]} numberOfLines={1}>{subject}</Text>
-          </View>
-        ))}
-        {(item.subjects || []).length > 4 && (
-          <View style={[styles.subjectPill, { backgroundColor: colors.gray200 }]}>
-            <Text style={[styles.subjectPillText, { color: colors.textMuted }]}>
-              +{item.subjects.length - 4}
-            </Text>
-          </View>
-        )}
-      </ScrollView>
+      {/* Category & Subject Info - Clean text instead of pills */}
+      <View style={styles.categoryInfo}>
+        <View style={styles.categoryItem}>
+          <Ionicons name="folder-outline" size={14} color={colors.textMuted} />
+          <Text style={[styles.categoryText, { color: colors.textSecondary }]} numberOfLines={1}>
+            {(item.categories || []).slice(0, 2).join(', ') || 'General'}
+          </Text>
+        </View>
+        <View style={styles.categoryItem}>
+          <Ionicons name="book-outline" size={14} color={colors.textMuted} />
+          <Text style={[styles.categoryText, { color: colors.textSecondary }]} numberOfLines={1}>
+            {(item.subjects || []).length} subject{(item.subjects || []).length !== 1 ? 's' : ''}
+          </Text>
+        </View>
+      </View>
 
       <View style={styles.modalityRow}>
         {(item.modality || []).map((m) => (
@@ -199,23 +256,122 @@ export default function SearchScreen() {
     </TouchableOpacity>
   );
 
-  // Prepare category filter list with "All" at the start
-  const categoryFilters = [
-    { id: 'all', name: 'All', subjects: [] },
-    ...categories
+  // Dropdown selector component
+  const DropdownSelector = ({ 
+    label, 
+    value, 
+    onPress, 
+    icon 
+  }: { 
+    label: string; 
+    value: string; 
+    onPress: () => void;
+    icon: string;
+  }) => (
+    <TouchableOpacity 
+      style={[styles.dropdown, { backgroundColor: colors.surface, borderColor: colors.border }]}
+      onPress={onPress}
+    >
+      <Ionicons name={icon as any} size={16} color={colors.primary} />
+      <View style={styles.dropdownTextContainer}>
+        <Text style={[styles.dropdownLabel, { color: colors.textMuted }]}>{label}</Text>
+        <Text style={[styles.dropdownValue, { color: colors.text }]} numberOfLines={1}>{value}</Text>
+      </View>
+      <Ionicons name="chevron-down" size={18} color={colors.textMuted} />
+    </TouchableOpacity>
+  );
+
+  // Dropdown modal
+  const DropdownModal = ({ 
+    visible, 
+    onClose, 
+    title, 
+    options, 
+    selected, 
+    onSelect 
+  }: { 
+    visible: boolean;
+    onClose: () => void;
+    title: string;
+    options: { id: string; name: string }[];
+    selected: string;
+    onSelect: (id: string) => void;
+  }) => (
+    <Modal
+      visible={visible}
+      transparent
+      animationType="fade"
+      onRequestClose={onClose}
+    >
+      <TouchableOpacity 
+        style={styles.modalOverlay} 
+        activeOpacity={1} 
+        onPress={onClose}
+      >
+        <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
+          <View style={styles.modalHeader}>
+            <Text style={[styles.modalTitle, { color: colors.text }]}>{title}</Text>
+            <TouchableOpacity onPress={onClose}>
+              <Ionicons name="close" size={24} color={colors.textMuted} />
+            </TouchableOpacity>
+          </View>
+          <FlatList
+            data={options}
+            keyExtractor={(item) => item.id}
+            style={styles.modalList}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={[
+                  styles.modalOption,
+                  selected === item.id && { backgroundColor: colors.primaryLight }
+                ]}
+                onPress={() => {
+                  onSelect(item.id);
+                  onClose();
+                }}
+              >
+                <Text style={[
+                  styles.modalOptionText, 
+                  { color: colors.text },
+                  selected === item.id && { color: colors.primary, fontWeight: '600' }
+                ]}>
+                  {item.name}
+                </Text>
+                {selected === item.id && (
+                  <Ionicons name="checkmark" size={20} color={colors.primary} />
+                )}
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+      </TouchableOpacity>
+    </Modal>
+  );
+
+  // Category options for dropdown
+  const categoryOptions = [
+    { id: 'all', name: 'All Categories' },
+    ...categories.map(c => ({ id: c.id, name: c.name }))
+  ];
+
+  // Subject options for dropdown
+  const subjectOptions = [
+    { id: 'all', name: 'All Subjects' },
+    ...availableSubjects.map(s => ({ id: s, name: s }))
   ];
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <AppHeader />
       <View style={[styles.contentWrapper, containerMaxWidth ? { maxWidth: containerMaxWidth } : undefined]}>
-        {/* Search Bar */}
+        {/* Search Bar and Dropdowns */}
         <View style={[styles.header, isTablet && styles.headerTablet]}>
+          {/* Search Input */}
           <View style={[styles.searchBar, { backgroundColor: colors.surface, borderColor: colors.border }, isTablet && styles.searchBarTablet]}>
             <Ionicons name="search" size={20} color={colors.textMuted} />
             <TextInput
               style={[styles.searchInput, { color: colors.text }, isTablet && styles.searchInputTablet]}
-              placeholder="Search tutors..."
+              placeholder="Search tutors, subjects..."
               placeholderTextColor={colors.textMuted}
               value={searchQuery}
               onChangeText={setSearchQuery}
@@ -228,37 +384,52 @@ export default function SearchScreen() {
               </TouchableOpacity>
             )}
           </View>
-        </View>
 
-        {/* Category Filters */}
-        <View style={[styles.filtersContainer, isTablet && styles.filtersContainerTablet]}>
-          <FlatList
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            data={categoryFilters}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.filterList}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                style={[
-                  styles.filterChip,
-                  { backgroundColor: colors.surface, borderColor: colors.border },
-                  category === item.id && { backgroundColor: colors.primary, borderColor: colors.primary }
-                ]}
-                onPress={() => setCategory(item.id)}
-              >
-                <Text
-                  style={[
-                    styles.filterChipText,
-                    { color: colors.text },
-                    category === item.id && { color: '#FFFFFF' }
-                  ]}
+          {/* Filter Dropdowns */}
+          <View style={[styles.filtersRow, isTablet && styles.filtersRowTablet]}>
+            <DropdownSelector
+              label="Category"
+              value={getCategoryName()}
+              onPress={() => setShowCategoryDropdown(true)}
+              icon="grid-outline"
+            />
+            <DropdownSelector
+              label="Subject"
+              value={getSubjectName()}
+              onPress={() => setShowSubjectDropdown(true)}
+              icon="book-outline"
+            />
+          </View>
+
+          {/* Active Filters Chips */}
+          {(selectedCategory !== 'all' || selectedSubject !== 'all') && (
+            <View style={styles.activeFilters}>
+              {selectedCategory !== 'all' && (
+                <TouchableOpacity 
+                  style={[styles.activeChip, { backgroundColor: colors.primaryLight }]}
+                  onPress={() => { setSelectedCategory('all'); setSelectedSubject('all'); }}
                 >
-                  {item.name}
-                </Text>
+                  <Text style={[styles.activeChipText, { color: colors.primary }]}>{getCategoryName()}</Text>
+                  <Ionicons name="close-circle" size={16} color={colors.primary} />
+                </TouchableOpacity>
+              )}
+              {selectedSubject !== 'all' && (
+                <TouchableOpacity 
+                  style={[styles.activeChip, { backgroundColor: colors.primaryLight }]}
+                  onPress={() => setSelectedSubject('all')}
+                >
+                  <Text style={[styles.activeChipText, { color: colors.primary }]}>{selectedSubject}</Text>
+                  <Ionicons name="close-circle" size={16} color={colors.primary} />
+                </TouchableOpacity>
+              )}
+              <TouchableOpacity 
+                style={styles.clearAllBtn}
+                onPress={() => { setSelectedCategory('all'); setSelectedSubject('all'); setSearchQuery(''); }}
+              >
+                <Text style={[styles.clearAllText, { color: colors.textMuted }]}>Clear all</Text>
               </TouchableOpacity>
-            )}
-          />
+            </View>
+          )}
         </View>
 
         {/* Results */}
@@ -271,6 +442,9 @@ export default function SearchScreen() {
             <Ionicons name="search" size={64} color={colors.textMuted} />
             <Text style={[styles.emptyText, { color: colors.textMuted }]}>
               No tutors found
+            </Text>
+            <Text style={[styles.emptySubtext, { color: colors.textMuted }]}>
+              Try adjusting your filters
             </Text>
           </View>
         ) : (
@@ -289,6 +463,29 @@ export default function SearchScreen() {
           />
         )}
       </View>
+
+      {/* Category Dropdown Modal */}
+      <DropdownModal
+        visible={showCategoryDropdown}
+        onClose={() => setShowCategoryDropdown(false)}
+        title="Select Category"
+        options={categoryOptions}
+        selected={selectedCategory}
+        onSelect={(id) => {
+          setSelectedCategory(id);
+          setSelectedSubject('all'); // Reset subject when category changes
+        }}
+      />
+
+      {/* Subject Dropdown Modal */}
+      <DropdownModal
+        visible={showSubjectDropdown}
+        onClose={() => setShowSubjectDropdown(false)}
+        title="Select Subject"
+        options={subjectOptions}
+        selected={selectedSubject}
+        onSelect={setSelectedSubject}
+      />
     </SafeAreaView>
   );
 }
@@ -304,9 +501,11 @@ const styles = StyleSheet.create({
   },
   header: {
     padding: 16,
+    gap: 12,
   },
   headerTablet: {
     padding: 24,
+    gap: 16,
   },
   searchBar: {
     flexDirection: 'row',
@@ -329,30 +528,61 @@ const styles = StyleSheet.create({
     height: 56,
     fontSize: 18,
   },
-  filtersContainer: {
-    marginBottom: 8,
+  filtersRow: {
+    flexDirection: 'row',
+    gap: 12,
   },
-  filtersContainerTablet: {
-    paddingHorizontal: 8,
-    marginBottom: 16,
+  filtersRowTablet: {
+    gap: 16,
   },
-  filterList: {
-    paddingHorizontal: 16,
+  dropdown: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 10,
+    borderWidth: 1,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
     gap: 8,
   },
-  filterChip: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    borderWidth: 1,
-    marginRight: 8,
+  dropdownTextContainer: {
+    flex: 1,
   },
-  filterChipText: {
+  dropdownLabel: {
+    fontSize: 10,
+    fontWeight: '500',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  dropdownValue: {
     fontSize: 14,
     fontWeight: '500',
   },
-  filterChipTextActive: {
-    color: '#FFFFFF',
+  activeFilters: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    gap: 8,
+  },
+  activeChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    gap: 6,
+  },
+  activeChipText: {
+    fontSize: 13,
+    fontWeight: '500',
+  },
+  clearAllBtn: {
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+  },
+  clearAllText: {
+    fontSize: 13,
+    fontWeight: '500',
   },
   listContent: {
     padding: 16,
@@ -437,21 +667,18 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     marginBottom: 12,
   },
-  subjectPillsScroll: {
+  categoryInfo: {
+    flexDirection: 'row',
+    gap: 16,
     marginBottom: 12,
   },
-  subjectPillsContainer: {
+  categoryItem: {
     flexDirection: 'row',
+    alignItems: 'center',
     gap: 6,
   },
-  subjectPill: {
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 14,
-  },
-  subjectPillText: {
-    fontSize: 11,
-    fontWeight: '500',
+  categoryText: {
+    fontSize: 13,
   },
   modalityRow: {
     flexDirection: 'row',
@@ -477,10 +704,56 @@ const styles = StyleSheet.create({
     padding: 40,
   },
   emptyText: {
-    fontSize: 16,
+    fontSize: 18,
+    fontWeight: '600',
     marginTop: 16,
+  },
+  emptySubtext: {
+    fontSize: 14,
+    marginTop: 8,
   },
   loadMore: {
     padding: 20,
+  },
+  // Modal styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  modalContent: {
+    width: '100%',
+    maxWidth: 400,
+    maxHeight: '70%',
+    borderRadius: 16,
+    overflow: 'hidden',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(0,0,0,0.1)',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  modalList: {
+    maxHeight: 400,
+  },
+  modalOption: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(0,0,0,0.05)',
+  },
+  modalOptionText: {
+    fontSize: 16,
   },
 });
