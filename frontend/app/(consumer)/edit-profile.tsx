@@ -97,7 +97,7 @@ export default function EditProfileScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <AppHeader showBack showUserName title="Edit Profile" />
+      <AppHeader showBack showUserName title=t("pages.edit_profile.title") />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

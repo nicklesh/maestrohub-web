@@ -297,7 +297,7 @@ export default function ReferralsScreen() {
               <View style={styles.applyContainer}>
                 <TextInput
                   style={[styles.applyInput, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-                  placeholder="Enter code"
+                  placeholder=t("pages.referrals.enter_code")
                   placeholderTextColor={colors.textMuted}
                   value={applyCode}
                   onChangeText={setApplyCode}

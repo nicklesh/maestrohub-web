@@ -374,7 +374,7 @@ export default function SearchScreen() {
             <Ionicons name="search" size={20} color={colors.textMuted} />
             <TextInput
               style={[styles.searchInput, { color: colors.text }, isTablet && styles.searchInputTablet]}
-              placeholder="Search tutors, subjects..."
+              placeholder=t("pages.search.search_placeholder")
               placeholderTextColor={colors.textMuted}
               value={searchQuery}
               onChangeText={setSearchQuery}
