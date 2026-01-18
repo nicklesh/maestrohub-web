@@ -4625,11 +4625,150 @@ async def admin_get_market_analytics(request: Request, market_id: Optional[str] 
     
     return {"analytics": analytics}
 
+# ============== TAX REPORTS ==============
+
+@api_router.get("/tax-reports/available-years")
+async def get_available_tax_years(request: Request):
+    """Get available years for tax reports"""
+    global tax_report_service
+    if not tax_report_service:
+        tax_report_service = TaxReportService(db)
+    
+    user = await require_auth(request)
+    years = await tax_report_service.get_available_years(user.user_id, user.role)
+    return {"years": years}
+
+@api_router.get("/tax-reports")
+async def get_tax_reports(request: Request):
+    """Get all tax reports for user"""
+    global tax_report_service
+    if not tax_report_service:
+        tax_report_service = TaxReportService(db)
+    
+    user = await require_auth(request)
+    reports = await tax_report_service.get_user_reports(user.user_id)
+    return {"reports": reports}
+
+@api_router.post("/tax-reports/request")
+async def request_tax_report(request: Request, year: int = Query(...), market_id: Optional[str] = Query(None)):
+    """Request generation of a tax report"""
+    global tax_report_service
+    if not tax_report_service:
+        tax_report_service = TaxReportService(db)
+    
+    user = await require_auth(request)
+    
+    # Default to user's market
+    if not market_id:
+        market_id = user.market_id or "US_USD"
+    
+    result = await tax_report_service.request_report_generation(
+        user.user_id, user.role, year, market_id
+    )
+    return result
+
+@api_router.get("/tax-reports/{report_id}/status")
+async def get_tax_report_status(report_id: str, request: Request):
+    """Get status of a tax report"""
+    global tax_report_service
+    if not tax_report_service:
+        tax_report_service = TaxReportService(db)
+    
+    await require_auth(request)
+    report = await tax_report_service.get_report_status(report_id)
+    if not report:
+        raise HTTPException(status_code=404, detail="Report not found")
+    return report
+
+# ============== REFERRALS ==============
+
+@api_router.get("/referrals")
+async def get_referrals(request: Request):
+    """Get user's referral stats and list"""
+    global referral_service
+    if not referral_service:
+        referral_service = ReferralService(db)
+    
+    user = await require_auth(request)
+    return await referral_service.get_user_referrals(user.user_id)
+
+@api_router.get("/referrals/code")
+async def get_referral_code(request: Request):
+    """Get user's referral code"""
+    global referral_service
+    if not referral_service:
+        referral_service = ReferralService(db)
+    
+    user = await require_auth(request)
+    code = await referral_service.get_referral_code(user.user_id)
+    return {"referral_code": code}
+
+@api_router.post("/referrals/apply")
+async def apply_referral_code(request: Request, code: str = Query(...)):
+    """Apply a referral code during registration"""
+    global referral_service
+    if not referral_service:
+        referral_service = ReferralService(db)
+    
+    user = await require_auth(request)
+    
+    # Find referrer
+    referrer = await referral_service.find_referrer_by_code(code)
+    if not referrer:
+        raise HTTPException(status_code=404, detail="Invalid referral code")
+    
+    if referrer["user_id"] == user.user_id:
+        raise HTTPException(status_code=400, detail="Cannot use your own referral code")
+    
+    result = await referral_service.create_referral(
+        referrer_id=referrer["user_id"],
+        referrer_role=referrer["role"],
+        referred_id=user.user_id,
+        referred_role=user.role
+    )
+    return result
+
+@api_router.get("/referrals/credits")
+async def get_session_credits(request: Request):
+    """Get user's available session credits from referrals"""
+    global referral_service
+    if not referral_service:
+        referral_service = ReferralService(db)
+    
+    user = await require_auth(request)
+    return await referral_service.check_user_credits(user.user_id)
+
+# ============== KID NOTIFICATIONS ==============
+
+@api_router.get("/bookings/{booking_id}/kid-notifications")
+async def get_booking_kid_notifications(booking_id: str, request: Request):
+    """Get kid notifications for a booking"""
+    global kid_notification_service
+    if not kid_notification_service:
+        kid_notification_service = KidNotificationService(db, email_service)
+    
+    await require_auth(request)
+    notifications = await kid_notification_service.get_booking_notifications(booking_id)
+    return {"notifications": notifications}
+
+@api_router.post("/bookings/{booking_id}/notify-kid")
+async def send_kid_notification(booking_id: str, request: Request):
+    """Manually send a notification to the kid for this booking"""
+    global kid_notification_service
+    if not kid_notification_service:
+        kid_notification_service = KidNotificationService(db, email_service)
+    
+    await require_auth(request)
+    result = await kid_notification_service.send_session_reminder_to_kid(booking_id)
+    if not result:
+        return {"status": "not_sent", "message": "No notification configured for this student"}
+    return {"status": "sent", "notifications": result.get("notifications_sent", [])}
+
 # ============== HEALTH CHECK ==============
 
 @api_router.get("/")
 async def root():
-    return {"message": "Maestro Hub API", "version": "1.0.0"}
+    return {"message": "Maestro Habitat API", "version": "1.0.0"}
 
 @api_router.get("/health")
 async def health():
