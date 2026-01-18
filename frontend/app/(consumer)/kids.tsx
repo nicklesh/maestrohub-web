@@ -218,7 +218,7 @@ export default function KidsScreen() {
           <Ionicons name="mail" size={14} color={colors.textMuted} />
           <Text style={[styles.emailText, { color: colors.textMuted }]}>{item.email}</Text>
           <TouchableOpacity onPress={() => handleSendSchedule(item)}>
-            <Text style={[styles.sendLink, { color: colors.primary }]}>Send Schedule</Text>
+            <Text style={[styles.sendLink, { color: colors.primary }]}>{t('pages.kids.send_schedule')}</Text>
           </TouchableOpacity>
         </View>
       )}
