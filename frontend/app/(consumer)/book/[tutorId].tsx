@@ -356,7 +356,7 @@ export default function BookingScreen() {
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
-        <AppHeader showBack title="Book Lesson" />
+        <AppHeader showBack title={t('pages.booking.title')} />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -366,18 +366,18 @@ export default function BookingScreen() {
 
   const renderStudentStep = () => (
     <View style={styles.stepContent}>
-      <Text style={[styles.stepTitle, isDesktop && styles.stepTitleDesktop]}>Select Student</Text>
-      <Text style={[styles.stepSubtitle, isDesktop && styles.stepSubtitleDesktop]}>Who will be taking this lesson?</Text>
+      <Text style={[styles.stepTitle, isDesktop && styles.stepTitleDesktop]}>{t('pages.booking.select_student')}</Text>
+      <Text style={[styles.stepSubtitle, isDesktop && styles.stepSubtitleDesktop]}>{t('pages.booking.who_taking_lesson')}</Text>
       
       {students.length === 0 ? (
         <View style={styles.noStudents}>
           <Ionicons name="person-add-outline" size={isTablet ? 56 : 48} color={colors.textMuted} />
-          <Text style={styles.noStudentsText}>No students added yet</Text>
+          <Text style={styles.noStudentsText}>{t('pages.booking.no_students_added')}</Text>
           <TouchableOpacity
             style={[styles.addStudentButton, isTablet && styles.addStudentButtonTablet]}
             onPress={() => router.push('/(consumer)/students')}
           >
-            <Text style={[styles.addStudentButtonText, isTablet && styles.addStudentButtonTextTablet]}>Add Student</Text>
+            <Text style={[styles.addStudentButtonText, isTablet && styles.addStudentButtonTextTablet]}>{t('pages.booking.add_student')}</Text>
           </TouchableOpacity>
         </View>
       ) : (
