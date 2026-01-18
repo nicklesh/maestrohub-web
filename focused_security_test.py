@@ -10,7 +10,7 @@ import uuid
 from datetime import datetime, timezone, timedelta
 
 # Configuration
-BASE_URL = "https://maestro-habitat.preview.emergentagent.com/api"
+BASE_URL = "https://maestro-habitat-1.preview.emergentagent.com/api"
 TIMEOUT = 30
 
 # Test credentials
