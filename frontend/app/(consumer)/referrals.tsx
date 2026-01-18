@@ -51,6 +51,7 @@ export default function ReferralsScreen() {
   const { token, user } = useAuth();
   const { colors } = useTheme();
   const { showSuccess, showError, showInfo } = useToast();
+  const { t } = useTranslation();
   const { width } = useWindowDimensions();
   
   const [loading, setLoading] = useState(true);

@@ -91,6 +91,7 @@ export default function InviteProviderScreen() {
   const { token, user } = useAuth();
   const { colors } = useTheme();
   const { showSuccess, showError, showInfo } = useToast();
+  const { t } = useTranslation();
   const [invites, setInvites] = useState<Invite[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
