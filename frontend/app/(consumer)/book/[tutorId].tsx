@@ -171,6 +171,29 @@ export default function BookingScreen() {
     }
   };
 
+  // Helper for web-compatible alerts
+  const showAlert = (title: string, message: string, buttons?: Array<{ text: string; onPress?: () => void; style?: string }>) => {
+    if (Platform.OS === 'web' && typeof window !== 'undefined') {
+      if (buttons && buttons.length > 1) {
+        // Multi-button: use confirm
+        const result = window.confirm(`${title}\n\n${message}`);
+        if (result && buttons[1]?.onPress) {
+          buttons[1].onPress();
+        } else if (!result && buttons[0]?.onPress) {
+          buttons[0].onPress();
+        }
+      } else {
+        // Single button: use alert
+        window.alert(`${title}\n\n${message}`);
+        if (buttons?.[0]?.onPress) {
+          buttons[0].onPress();
+        }
+      }
+    } else {
+      Alert.alert(title, message, buttons);
+    }
+  };
+
   const handleSelectStudent = async (student: Student) => {
     // Prevent double-click
     if (submitting) return;
@@ -199,29 +222,6 @@ export default function BookingScreen() {
     }
     // Check if user has payment methods before proceeding
     checkPaymentMethodsAndProceed();
-  };
-
-  // Helper for web-compatible alerts
-  const showAlert = (title: string, message: string, buttons?: Array<{ text: string; onPress?: () => void; style?: string }>) => {
-    if (Platform.OS === 'web' && typeof window !== 'undefined') {
-      if (buttons && buttons.length > 1) {
-        // Multi-button: use confirm
-        const result = window.confirm(`${title}\n\n${message}`);
-        if (result && buttons[1]?.onPress) {
-          buttons[1].onPress();
-        } else if (!result && buttons[0]?.onPress) {
-          buttons[0].onPress();
-        }
-      } else {
-        // Single button: use alert
-        window.alert(`${title}\n\n${message}`);
-        if (buttons?.[0]?.onPress) {
-          buttons[0].onPress();
-        }
-      }
-    } else {
-      Alert.alert(title, message, buttons);
-    }
   };
 
   const checkPaymentMethodsAndProceed = async () => {
