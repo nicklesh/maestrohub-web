@@ -49,6 +49,7 @@ export default function BookingScreen() {
   const router = useRouter();
   const { width } = useWindowDimensions();
   const { colors } = useTheme();
+  const { showSuccess, showError, showInfo } = useToast();
   const { token } = useAuth();
   const params = useLocalSearchParams<{
     tutorId: string;
