@@ -471,24 +471,24 @@ export default function BookingScreen() {
 
   const renderPaymentStep = () => (
     <ScrollView style={styles.stepContent} contentContainerStyle={styles.intakeScroll}>
-      <Text style={[styles.stepTitle, isDesktop && styles.stepTitleDesktop]}>Payment Method</Text>
+      <Text style={[styles.stepTitle, isDesktop && styles.stepTitleDesktop]}>{t('pages.booking.payment_method')}</Text>
       <Text style={[styles.stepSubtitle, isDesktop && styles.stepSubtitleDesktop]}>
-        Select your preferred payment method
+        {t('pages.booking.select_payment_method')}
       </Text>
       
       {/* Order Summary */}
       <View style={[styles.paymentSummaryCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-        <Text style={[styles.paymentSummaryTitle, { color: colors.text }]}>Order Summary</Text>
+        <Text style={[styles.paymentSummaryTitle, { color: colors.text }]}>{t('pages.booking.order_summary')}</Text>
         <View style={styles.paymentSummaryRow}>
           <Text style={[styles.paymentSummaryLabel, { color: colors.textMuted }]}>
-            {tutor?.duration_minutes || 60} min lesson with {tutor?.user_name}
+            {t('pages.booking.min_lesson_with', { minutes: tutor?.duration_minutes || 60, name: tutor?.user_name })}
           </Text>
           <Text style={[styles.paymentSummaryValue, { color: colors.text }]}>
             {tutor?.currency_symbol || '$'}{tutor?.base_price?.toFixed(2)}
           </Text>
         </View>
         <View style={[styles.paymentSummaryRow, styles.paymentTotalRow]}>
-          <Text style={[styles.paymentTotalLabel, { color: colors.text }]}>Total</Text>
+          <Text style={[styles.paymentTotalLabel, { color: colors.text }]}>{t('pages.booking.total')}</Text>
           <Text style={[styles.paymentTotalValue, { color: colors.primary }]}>
             {tutor?.currency_symbol || '$'}{tutor?.base_price?.toFixed(2)}
           </Text>
@@ -499,10 +499,10 @@ export default function BookingScreen() {
       <View style={[styles.paymentSummaryCard, { backgroundColor: colors.primaryLight, borderColor: colors.primary }]}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 8 }}>
           <Ionicons name="flash" size={20} color={colors.primary} />
-          <Text style={[styles.paymentSummaryTitle, { color: colors.primary, marginBottom: 0 }]}>Auto-Payment</Text>
+          <Text style={[styles.paymentSummaryTitle, { color: colors.primary, marginBottom: 0 }]}>{t('pages.booking.auto_payment')}</Text>
         </View>
         <Text style={{ fontSize: 13, color: colors.primary, lineHeight: 18 }}>
-          Your default payment method will be charged automatically. If the primary method fails, we'll try your other linked payment methods.
+          {t('pages.booking.auto_payment_desc')}
         </Text>
       </View>
       
@@ -510,7 +510,7 @@ export default function BookingScreen() {
       <View style={[styles.securityNote, { backgroundColor: colors.successLight }]}>
         <Ionicons name="shield-checkmark" size={20} color={colors.success} />
         <Text style={[styles.securityNoteText, { color: colors.success }]}>
-          Secure payment • 90% goes to tutor, 10% platform fee
+          {t('pages.booking.secure_payment')}
         </Text>
       </View>
       
