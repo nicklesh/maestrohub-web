@@ -416,13 +416,13 @@ export default function BookingScreen() {
       style={styles.keyboardView}
     >
       <ScrollView style={styles.stepContent} contentContainerStyle={styles.intakeScroll}>
-        <Text style={[styles.stepTitle, isDesktop && styles.stepTitleDesktop]}>Learning Goals</Text>
-        <Text style={[styles.stepSubtitle, isDesktop && styles.stepSubtitleDesktop]}>Help the tutor prepare for the session</Text>
+        <Text style={[styles.stepTitle, isDesktop && styles.stepTitleDesktop]}>{t('pages.booking.learning_goals')}</Text>
+        <Text style={[styles.stepSubtitle, isDesktop && styles.stepSubtitleDesktop]}>{t('pages.booking.help_tutor_prepare')}</Text>
         
-        <Text style={[styles.inputLabel, isDesktop && styles.inputLabelDesktop]}>What do you want to learn? *</Text>
+        <Text style={[styles.inputLabel, isDesktop && styles.inputLabelDesktop]}>{t('pages.booking.what_to_learn')} *</Text>
         <TextInput
           style={[styles.textArea, isTablet && styles.textAreaTablet]}
-          placeholder="e.g., Need help with algebra equations, preparing for SAT math..."
+          placeholder={t('pages.booking.what_to_learn_placeholder')}
           placeholderTextColor={colors.textMuted}
           value={goals}
           onChangeText={setGoals}
@@ -430,19 +430,19 @@ export default function BookingScreen() {
           numberOfLines={3}
         />
         
-        <Text style={[styles.inputLabel, isDesktop && styles.inputLabelDesktop]}>Current level *</Text>
+        <Text style={[styles.inputLabel, isDesktop && styles.inputLabelDesktop]}>{t('pages.booking.current_level')} *</Text>
         <TextInput
           style={[styles.input, isTablet && styles.inputTablet]}
-          placeholder="e.g., 8th grade, Beginner, Intermediate..."
+          placeholder={t('pages.booking.current_level_placeholder')}
           placeholderTextColor={colors.textMuted}
           value={currentLevel}
           onChangeText={setCurrentLevel}
         />
         
-        <Text style={[styles.inputLabel, isDesktop && styles.inputLabelDesktop]}>Additional notes (optional)</Text>
+        <Text style={[styles.inputLabel, isDesktop && styles.inputLabelDesktop]}>{t('pages.booking.additional_notes')}</Text>
         <TextInput
           style={[styles.textArea, isTablet && styles.textAreaTablet]}
-          placeholder="Anything else the tutor should know..."
+          placeholder={t('pages.booking.additional_notes_placeholder')}
           placeholderTextColor={colors.textMuted}
           value={notes}
           onChangeText={setNotes}
@@ -458,12 +458,12 @@ export default function BookingScreen() {
             {policyAcknowledged && <Ionicons name="checkmark" size={16} color="#fff" />}
           </View>
           <Text style={[styles.checkboxLabel, isDesktop && styles.checkboxLabelDesktop]}>
-            I acknowledge the tutor's cancellation policy ({tutor?.policies.cancel_window_hours}h notice required)
+            {t('pages.booking.acknowledge_policy', { hours: tutor?.policies.cancel_window_hours })}
           </Text>
         </TouchableOpacity>
         
         <TouchableOpacity style={[styles.primaryButton, isTablet && styles.primaryButtonTablet]} onPress={handleIntakeSubmit}>
-          <Text style={[styles.primaryButtonText, isTablet && styles.primaryButtonTextTablet]}>Continue to Payment</Text>
+          <Text style={[styles.primaryButtonText, isTablet && styles.primaryButtonTextTablet]}>{t('pages.booking.continue_to_payment')}</Text>
         </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>
