@@ -28,7 +28,9 @@ interface Kid {
   grade?: string;
   notes?: string;
   email?: string;
+  phone?: string;
   auto_send_schedule: boolean;
+  notify_upcoming_sessions: boolean;
 }
 
 export default function KidsScreen() {
@@ -47,10 +49,12 @@ export default function KidsScreen() {
   const [formAge, setFormAge] = useState('');
   const [formGrade, setFormGrade] = useState('');
   const [formEmail, setFormEmail] = useState('');
+  const [formPhone, setFormPhone] = useState('');
   const [formAutoSend, setFormAutoSend] = useState(false);
+  const [formNotifyUpcoming, setFormNotifyUpcoming] = useState(false);
 
   const loadKids = useCallback(async () => {
-    try {
+    try:
       const response = await api.get('/students', {
         headers: { Authorization: `Bearer ${token}` }
       });
