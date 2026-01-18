@@ -120,7 +120,7 @@ export default function AdminMarketsScreen() {
       if (Platform.OS === 'web') {
         showError('Market toggle logged. Server restart required to apply changes.');
       } else {
-        Alert.alert('Market Toggle', 'Market toggle logged. Server restart required to apply changes.');
+        showInfo('Market toggle logged. Server restart required to apply changes.', 'Market Toggle');
       }
       loadData();
     } catch (error) {

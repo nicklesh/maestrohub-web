@@ -153,7 +153,7 @@ export default function ConsumerReportsScreen() {
               UTI: 'com.adobe.pdf',
             });
           } else {
-            Alert.alert('Success', `Report saved to ${fileName}`);
+            showInfo(`Report saved to ${fileName}`, 'Success');
           }
         } else {
           throw new Error('Download failed');

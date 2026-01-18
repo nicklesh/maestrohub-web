@@ -100,7 +100,7 @@ export default function PackagesScreen() {
 
   const handleCreatePackage = async () => {
     if (!newPackage.name.trim()) {
-      Alert.alert('Required', 'Please enter a package name');
+      showInfo('Please enter a package name', 'Required');
       return;
     }
     
@@ -120,7 +120,7 @@ export default function PackagesScreen() {
       });
       loadData();
     } catch (error: any) {
-      Alert.alert('Error', error.response?.data?.detail || 'Failed to create package');
+      showInfo(error.response?.data?.detail || 'Failed to create package', 'Error');
     } finally {
       setCreating(false);
     }
@@ -133,7 +133,7 @@ export default function PackagesScreen() {
       });
       loadData();
     } catch (error: any) {
-      Alert.alert('Error', error.response?.data?.detail || 'Failed to update package');
+      showInfo(error.response?.data?.detail || 'Failed to update package', 'Error');
     }
   };
 
@@ -153,7 +153,7 @@ export default function PackagesScreen() {
               });
               loadData();
             } catch (error: any) {
-              Alert.alert('Error', error.response?.data?.detail || 'Failed to delete package');
+              showInfo(error.response?.data?.detail || 'Failed to delete package', 'Error');
             }
           }
         }

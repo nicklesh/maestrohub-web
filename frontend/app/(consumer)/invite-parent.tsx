@@ -166,7 +166,7 @@ export default function InviteParentScreen() {
       loadInvites();
     } catch (error: any) {
       console.error('Failed to send invite:', error);
-      Alert.alert('Error', error.response?.data?.detail || 'Failed to send invitation');
+      showInfo(error.response?.data?.detail || 'Failed to send invitation', 'Error');
     } finally {
       setSending(false);
     }
@@ -187,7 +187,7 @@ export default function InviteParentScreen() {
       }
       
       if (Platform.OS === 'web') {
-        window.alert(`Link copied to clipboard!\n\nOpen ${platform.name} and paste the invite message in a post or direct message.`);
+        showInfo(`Link copied to clipboard!\n\nOpen ${platform.name} and paste the invite message in a post or direct message.`);
         window.open(url, '_blank');
       } else {
         Alert.alert(

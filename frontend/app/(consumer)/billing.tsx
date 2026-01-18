@@ -108,7 +108,7 @@ export default function BillingScreen() {
       });
       loadData();
     } catch (error: any) {
-      Alert.alert('Error', error.response?.data?.detail || 'Failed to update auto-pay');
+      showInfo(error.response?.data?.detail || 'Failed to update auto-pay', 'Error');
     } finally {
       setSavingAutoPay(false);
     }
@@ -127,7 +127,7 @@ export default function BillingScreen() {
       setShowDayPickerModal(false);
       loadData();
     } catch (error: any) {
-      Alert.alert('Error', error.response?.data?.detail || 'Failed to update auto-pay date');
+      showInfo(error.response?.data?.detail || 'Failed to update auto-pay date', 'Error');
     } finally {
       setSavingAutoPay(false);
     }
@@ -148,7 +148,7 @@ export default function BillingScreen() {
       setShowProviderModal(false);
       loadData();
     } catch (error: any) {
-      Alert.alert('Error', error.response?.data?.detail || 'Failed to link payment method');
+      showInfo(error.response?.data?.detail || 'Failed to link payment method', 'Error');
     } finally {
       setLinkingProvider(null);
     }
@@ -170,7 +170,7 @@ export default function BillingScreen() {
               });
               loadData();
             } catch (error: any) {
-              Alert.alert('Error', error.response?.data?.detail || 'Failed to remove payment method');
+              showInfo(error.response?.data?.detail || 'Failed to remove payment method', 'Error');
             }
           }
         }
@@ -185,7 +185,7 @@ export default function BillingScreen() {
       });
       loadData();
     } catch (error: any) {
-      Alert.alert('Error', error.response?.data?.detail || 'Failed to set default');
+      showInfo(error.response?.data?.detail || 'Failed to set default', 'Error');
     }
   };
 

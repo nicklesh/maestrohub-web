@@ -52,7 +52,7 @@ export default function EditProfileScreen() {
       await refreshUser();
       showSuccess('Profile updated successfully');
     } catch (error: any) {
-      Alert.alert('Error', error.response?.data?.detail || 'Failed to update profile');
+      showInfo(error.response?.data?.detail || 'Failed to update profile', 'Error');
     } finally {
       setSavingProfile(false);
     }
@@ -88,7 +88,7 @@ export default function EditProfileScreen() {
       setNewPassword('');
       setConfirmPassword('');
     } catch (error: any) {
-      Alert.alert('Error', error.response?.data?.detail || 'Failed to change password');
+      showInfo(error.response?.data?.detail || 'Failed to change password', 'Error');
     } finally {
       setSavingPassword(false);
     }

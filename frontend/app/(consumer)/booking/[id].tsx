@@ -129,18 +129,7 @@ export default function BookingDetailScreen() {
         performCancel();
       }
     } else {
-      Alert.alert(
-        'Cancel Booking',
-        'Are you sure you want to cancel this booking?',
-        [
-          { text: 'No', style: 'cancel' },
-          {
-            text: 'Yes, Cancel',
-            style: 'destructive',
-            onPress: performCancel,
-          },
-        ]
-      );
+      showInfo('Are you sure you want to cancel this booking?', 'Cancel Booking');
     }
   };
 
@@ -154,14 +143,14 @@ export default function BookingDetailScreen() {
       if (Platform.OS === 'web') {
         showError('Your booking has been canceled.');
       } else {
-        Alert.alert('Canceled', 'Your booking has been canceled.');
+        showInfo('Your booking has been canceled.', 'Canceled');
       }
     } catch (error: any) {
       const errorMsg = error.response?.data?.detail || 'Failed to cancel booking';
       if (Platform.OS === 'web') {
-        window.alert(errorMsg);
+        showInfo(errorMsg);
       } else {
-        Alert.alert('Error', errorMsg);
+        showInfo(errorMsg, 'Error');
       }
     } finally {
       setCanceling(false);
@@ -180,15 +169,15 @@ export default function BookingDetailScreen() {
       if (Platform.OS === 'web') {
         showError('Thank you! Your review has been submitted.');
       } else {
-        Alert.alert('Thank you!', 'Your review has been submitted.');
+        showInfo('Your review has been submitted.', 'Thank you!');
       }
       setShowReview(false);
     } catch (error: any) {
       const errorMsg = error.response?.data?.detail || 'Failed to submit review';
       if (Platform.OS === 'web') {
-        window.alert(errorMsg);
+        showInfo(errorMsg);
       } else {
-        Alert.alert('Error', errorMsg);
+        showInfo(errorMsg, 'Error');
       }
     } finally {
       setSubmittingReview(false);
@@ -205,17 +194,17 @@ export default function BookingDetailScreen() {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (Platform.OS === 'web') {
-          window.alert('No-show reported. We\'ll review this and process your refund.');
+          showInfo('No-show reported. We\'ll review this and process your refund.');
         } else {
-          Alert.alert('Reported', 'No-show reported. We\'ll review this and process your refund.');
+          showInfo('No-show reported. We\'ll review this and process your refund.', 'Reported');
         }
         loadBooking();
       } catch (error: any) {
         const errorMsg = error.response?.data?.detail || 'Failed to report no-show';
         if (Platform.OS === 'web') {
-          window.alert(errorMsg);
+          showInfo(errorMsg);
         } else {
-          Alert.alert('Error', errorMsg);
+          showInfo(errorMsg, 'Error');
         }
       } finally {
         setReportingNoShow(false);

@@ -85,17 +85,15 @@ export default function InviteProviderScreen() {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      Alert.alert(
-        'Invite Sent!',
-        `Your invite includes a $${response.data.credit_amount} free session credit!`
-      );
+      showInfo(`Your invite includes a $${response.data.credit_amount} free session credit!`
+      , 'Invite Sent!');
       setShowInviteModal(false);
       setInviteEmail('');
       setInviteName('');
       setInviteMessage('');
       loadInvites();
     } catch (error: any) {
-      Alert.alert('Error', error.response?.data?.detail || 'Failed to send invite');
+      showInfo(error.response?.data?.detail || 'Failed to send invite', 'Error');
     } finally {
       setSending(false);
     }

@@ -162,12 +162,12 @@ export default function BookingScreen() {
         message: error.message
       });
       if (error.response?.status === 409) {
-        Alert.alert('Slot Unavailable', 'This time slot is no longer available. Please select another time.');
+        showInfo('This time slot is no longer available. Please select another time.', 'Slot Unavailable');
         router.back();
       } else {
         const errorMsg = error.response?.data?.detail;
         const displayError = Array.isArray(errorMsg) ? errorMsg[0]?.msg || 'Failed to reserve slot' : (errorMsg || 'Failed to reserve slot');
-        Alert.alert('Error', displayError);
+        showInfo(displayError, 'Error');
       }
       return null;
     }
@@ -186,7 +186,7 @@ export default function BookingScreen() {
         }
       } else {
         // Single button: use alert
-        window.alert(`${title}\n\n${message}`);
+        showInfo(`${title}\n\n${message}`);
         if (buttons?.[0]?.onPress) {
           buttons[0].onPress();
         }
@@ -286,10 +286,8 @@ export default function BookingScreen() {
         
         // If payment used fallback, notify user
         if (response.data.fallback) {
-          Alert.alert(
-            'Payment Processed',
-            `Payment was processed using ${response.data.provider_used} as your primary method was unavailable.`
-          );
+          showInfo(`Payment was processed using ${response.data.provider_used} as your primary method was unavailable.`
+          , 'Payment Processed');
         }
         
         setSubmitting(false);
@@ -330,7 +328,7 @@ export default function BookingScreen() {
     } catch (error: any) {
       console.error('Payment error:', error);
       const errorMsg = error.response?.data?.detail || 'Failed to process payment. Please try again.';
-      Alert.alert('Error', errorMsg);
+      showInfo(errorMsg, 'Error');
       setSubmitting(false);
     }
   };

@@ -120,11 +120,11 @@ export default function ReviewsScreen() {
         headers: { Authorization: `Bearer ${token}` }
       });
       
-      Alert.alert('Thank You!', 'Your review has been submitted successfully.');
+      showInfo('Your review has been submitted successfully.', 'Thank You!');
       setShowReviewModal(false);
       loadData();
     } catch (error: any) {
-      Alert.alert('Error', error.response?.data?.detail || 'Failed to submit review');
+      showInfo(error.response?.data?.detail || 'Failed to submit review', 'Error');
     } finally {
       setSubmitting(false);
     }

@@ -83,7 +83,7 @@ export default function CoachReviewsScreen() {
 
   const handleSubmitResponse = async () => {
     if (!selectedReview || !responseText.trim()) {
-      Alert.alert('Required', 'Please enter a response');
+      showInfo('Please enter a response', 'Required');
       return;
     }
     
@@ -99,7 +99,7 @@ export default function CoachReviewsScreen() {
       setShowResponseModal(false);
       loadData();
     } catch (error: any) {
-      Alert.alert('Error', error.response?.data?.detail || 'Failed to submit response');
+      showInfo(error.response?.data?.detail || 'Failed to submit response', 'Error');
     } finally {
       setSubmitting(false);
     }

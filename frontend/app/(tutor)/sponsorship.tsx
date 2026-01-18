@@ -135,7 +135,7 @@ export default function SponsorshipScreen() {
   const handlePurchase = async () => {
     if (!selectedPlan) return;
     if (selectedCategories.length === 0) {
-      Alert.alert('Required', 'Please select at least one category');
+      showInfo('Please select at least one category', 'Required');
       return;
     }
     
@@ -156,10 +156,10 @@ export default function SponsorshipScreen() {
           [{ text: 'OK', onPress: () => { setShowPurchaseModal(false); loadData(); } }]
         );
       } else if (response.data.redirect_to_billing) {
-        Alert.alert('Payment Method Required', response.data.message);
+        showInfo(response.data.message, 'Payment Method Required');
       }
     } catch (error: any) {
-      Alert.alert('Error', error.response?.data?.detail || 'Failed to purchase sponsorship');
+      showInfo(error.response?.data?.detail || 'Failed to purchase sponsorship', 'Error');
     } finally {
       setPurchasing(false);
     }
@@ -179,11 +179,11 @@ export default function SponsorshipScreen() {
                 headers: { Authorization: `Bearer ${token}` }
               });
               if (response.data.success) {
-                Alert.alert('Renewed!', `Total charged: ${response.data.total_charged}`);
+                showInfo(`Total charged: ${response.data.total_charged}`, 'Renewed!');
                 loadData();
               }
             } catch (error: any) {
-              Alert.alert('Error', error.response?.data?.detail || 'Failed to renew');
+              showInfo(error.response?.data?.detail || 'Failed to renew', 'Error');
             }
           }
         }
@@ -200,33 +200,12 @@ export default function SponsorshipScreen() {
         loadData();
       }
     } catch (error: any) {
-      Alert.alert('Error', error.response?.data?.detail || 'Failed to update');
+      showInfo(error.response?.data?.detail || 'Failed to update', 'Error');
     }
   };
 
   const handleCancel = (sponsorship: ActiveSponsorship) => {
-    Alert.alert(
-      'Cancel Sponsorship',
-      'Your sponsorship will remain active until the end of the current period. Are you sure?',
-      [
-        { text: 'Keep Active', style: 'cancel' },
-        {
-          text: 'Cancel',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await api.post(`/sponsorship/${sponsorship.sponsorship_id}/cancel`, {}, {
-                headers: { Authorization: `Bearer ${token}` }
-              });
-              Alert.alert('Cancelled', 'Your sponsorship will expire at the end of the current period.');
-              loadData();
-            } catch (error: any) {
-              Alert.alert('Error', error.response?.data?.detail || 'Failed to cancel');
-            }
-          }
-        }
-      ]
-    );
+    showInfo('Your sponsorship will remain active until the end of the current period. Are you sure?', 'Cancel Sponsorship');
   };
 
   const pricing = calculateTotal();

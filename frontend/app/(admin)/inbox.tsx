@@ -84,9 +84,9 @@ export default function AdminInboxScreen() {
       });
       
       if (Platform.OS === 'web') {
-        window.alert(`Message marked as ${newStatus}`);
+        showInfo(`Message marked as ${newStatus}`);
       } else {
-        Alert.alert('Success', `Message marked as ${newStatus}`);
+        showInfo(`Message marked as ${newStatus}`, 'Success');
       }
       
       loadMessages();

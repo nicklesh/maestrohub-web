@@ -98,34 +98,14 @@ export default function InvitesScreen() {
       setNewInviteMessage('');
       loadInvites();
     } catch (error: any) {
-      Alert.alert('Error', error.response?.data?.detail || 'Failed to send invite');
+      showInfo(error.response?.data?.detail || 'Failed to send invite', 'Error');
     } finally {
       setSending(false);
     }
   };
 
   const handleCancelInvite = (inviteId: string) => {
-    Alert.alert(
-      'Cancel Invite',
-      'Are you sure you want to cancel this invite?',
-      [
-        { text: 'No', style: 'cancel' },
-        {
-          text: 'Yes, Cancel',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await api.delete(`/invites/${inviteId}`, {
-                headers: { Authorization: `Bearer ${token}` }
-              });
-              loadInvites();
-            } catch (error) {
-              showError('Failed to cancel invite');
-            }
-          }
-        }
-      ]
-    );
+    showInfo('Are you sure you want to cancel this invite?', 'Cancel Invite');
   };
 
   const getStatusColor = (status: string) => {

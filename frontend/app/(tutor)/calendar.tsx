@@ -184,7 +184,7 @@ export default function CalendarScreen() {
 
   const showAlert = (title: string, message: string) => {
     if (Platform.OS === 'web') {
-      window.alert(`${title}: ${message}`);
+      showInfo(`${title}: ${message}`);
     } else {
       Alert.alert(title, message);
     }
@@ -285,14 +285,7 @@ export default function CalendarScreen() {
         await confirmDelete();
       }
     } else {
-      Alert.alert('Delete Vacation', 'Are you sure you want to delete this vacation period?', [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: confirmDelete
-        }
-      ]);
+      showInfo('Are you sure you want to delete this vacation period?', 'Delete Vacation');
     }
   };
 

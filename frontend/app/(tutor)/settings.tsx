@@ -86,9 +86,9 @@ export default function TutorSettings() {
     } catch (error: any) {
       const errorMsg = error.response?.data?.detail || 'Failed to update';
       if (Platform.OS === 'web') {
-        window.alert(errorMsg);
+        showInfo(errorMsg);
       } else {
-        Alert.alert('Error', errorMsg);
+        showInfo(errorMsg, 'Error');
       }
     } finally {
       setToggling(false);
@@ -125,14 +125,7 @@ export default function TutorSettings() {
         await doLogout();
       }
     } else {
-      Alert.alert('Logout', 'Are you sure?', [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Logout',
-          style: 'destructive',
-          onPress: doLogout,
-        },
-      ]);
+      showInfo('Are you sure?', 'Logout');
     }
   };
 
