@@ -168,7 +168,7 @@ export default function KidDetailScreen() {
         <View style={styles.statsRow}>
           <View style={[styles.statCard, { backgroundColor: colors.surface }]}>
             <Text style={[styles.statValue, { color: colors.primary }]}>${totalPaid.toFixed(2)}</Text>
-            <Text style={[styles.statLabel, { color: colors.textMuted }]}>Total Paid</Text>
+            <Text style={[styles.statLabel, { color: colors.textMuted }]}>{t('pages.kids.total_paid')}</Text>
           </View>
           <View style={[styles.statCard, { backgroundColor: colors.surface }]}>
             <Text style={[styles.statValue, { color: colors.warning }]}>${pendingAmount.toFixed(2)}</Text>
