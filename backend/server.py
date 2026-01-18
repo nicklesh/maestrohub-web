@@ -36,6 +36,11 @@ from email_service import (
     no_show_notification_email
 )
 
+# Import new services
+from services.tax_report_service import TaxReportService
+from services.referral_service import ReferralService
+from services.kid_notification_service import KidNotificationService
+
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
@@ -43,6 +48,11 @@ load_dotenv(ROOT_DIR / '.env')
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ.get('DB_NAME', 'maestrohub')]
+
+# Initialize services (after db is created)
+tax_report_service = None
+referral_service = None
+kid_notification_service = None
 
 # JWT Config
 JWT_SECRET = os.environ.get('JWT_SECRET', 'maestrohub-secret-key-change-in-production')
