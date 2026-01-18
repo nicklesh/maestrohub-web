@@ -188,7 +188,7 @@ export default function BookingsScreen() {
       <AppHeader />
       <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
         <View style={[styles.header, isTablet && styles.headerTablet]}>
-          <Text style={[styles.title, { color: colors.text }, isDesktop && styles.titleDesktop]}>My Bookings</Text>
+          <Text style={[styles.title, { color: colors.text }, isDesktop && styles.titleDesktop]}>{t('pages.bookings.title')}</Text>
         </View>
 
         {/* Filter Tabs */}
@@ -202,7 +202,7 @@ export default function BookingsScreen() {
             onPress={() => setFilter('upcoming')}
           >
             <Text style={[styles.tabText, { color: filter === 'upcoming' ? '#FFFFFF' : colors.text }, isTablet && styles.tabTextTablet]}>
-              Upcoming
+              {t('pages.bookings.upcoming')}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -214,7 +214,7 @@ export default function BookingsScreen() {
             onPress={() => setFilter('past')}
           >
             <Text style={[styles.tabText, { color: filter === 'past' ? '#FFFFFF' : colors.text }, isTablet && styles.tabTextTablet]}>
-              Past
+              {t('pages.bookings.past')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -223,7 +223,7 @@ export default function BookingsScreen() {
           <View style={styles.emptyContainer}>
             <Ionicons name="calendar-outline" size={64} color={colors.textMuted} />
             <Text style={[styles.emptyText, { color: colors.textMuted }]}>
-              No {filter} bookings
+              {filter === 'upcoming' ? t('empty_states.no_upcoming_bookings') : t('empty_states.no_past_bookings')}
             </Text>
           </View>
         ) : (
