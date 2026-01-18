@@ -55,6 +55,7 @@ export default function ConsumerReportsScreen() {
   const { token } = useAuth();
   const { colors } = useTheme();
   const { showSuccess, showError } = useToast();
+  const { t } = useTranslation();
   const { width } = useWindowDimensions();
   const isTablet = width >= 768;
   const isDesktop = width >= 1024;
