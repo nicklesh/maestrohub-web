@@ -406,9 +406,9 @@ export default function TutorDetailScreen() {
 
         {/* Time Slots */}
         <View style={[styles.section, { backgroundColor: colors.surface }]}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>Available Times</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.tutor_detail.available_slots')}</Text>
           {availableSlots.length === 0 ? (
-            <Text style={[styles.noSlotsText, { color: colors.textMuted }]}>No available slots for this date</Text>
+            <Text style={[styles.noSlotsText, { color: colors.textMuted }]}>{t('pages.tutor_detail.no_slots')}</Text>
           ) : (
             <View style={styles.slotsGrid}>
               {availableSlots.filter(s => s.is_available).map((slot, index) => {
