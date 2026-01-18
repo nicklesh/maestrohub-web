@@ -5,7 +5,6 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Alert,
   useWindowDimensions,
   Platform,
   Switch,
@@ -15,6 +14,7 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
 import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
+import { useToast } from '@/src/context/ToastContext';
 import AppHeader from '@/src/components/AppHeader';
 
 export default function AdminSettings() {

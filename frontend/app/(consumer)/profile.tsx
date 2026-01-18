@@ -10,7 +10,6 @@ import {
   useWindowDimensions,
   Switch,
   TextInput,
-  Alert,
   Modal,
   KeyboardAvoidingView,
   Platform,
