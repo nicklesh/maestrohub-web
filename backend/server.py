@@ -6198,8 +6198,8 @@ app.include_router(api_router)
 ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:8001",
-    "https://mentor-match-82.preview.emergentagent.com",
-    "https://mentor-match-82.preview.emergentagent.com",
+    "https://maestro-habitat.preview.emergentagent.com",
+    "https://maestro-habitat.preview.emergentagent.com",
 ]
 
 app.add_middleware(
