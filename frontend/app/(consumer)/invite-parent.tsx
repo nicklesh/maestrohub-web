@@ -13,6 +13,8 @@ import {
   Alert,
   RefreshControl,
   Share,
+  Linking,
+  ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -30,6 +32,73 @@ interface ParentInvite {
   created_at: string;
 }
 
+interface SocialPlatform {
+  id: string;
+  name: string;
+  icon: string;
+  color: string;
+  getShareUrl: (message: string, url: string) => string;
+}
+
+const SOCIAL_PLATFORMS: SocialPlatform[] = [
+  {
+    id: 'email',
+    name: 'Email',
+    icon: 'mail',
+    color: '#EA4335',
+    getShareUrl: (message, url) => `mailto:?subject=${encodeURIComponent('Join Maestro Habitat!')}&body=${encodeURIComponent(message + '\n\n' + url)}`,
+  },
+  {
+    id: 'gmail',
+    name: 'Gmail',
+    icon: 'mail-outline',
+    color: '#D44638',
+    getShareUrl: (message, url) => `https://mail.google.com/mail/?view=cm&fs=1&su=${encodeURIComponent('Join Maestro Habitat!')}&body=${encodeURIComponent(message + '\n\n' + url)}`,
+  },
+  {
+    id: 'whatsapp',
+    name: 'WhatsApp',
+    icon: 'logo-whatsapp',
+    color: '#25D366',
+    getShareUrl: (message, url) => `https://wa.me/?text=${encodeURIComponent(message + '\n\n' + url)}`,
+  },
+  {
+    id: 'facebook',
+    name: 'Facebook',
+    icon: 'logo-facebook',
+    color: '#1877F2',
+    getShareUrl: (message, url) => `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(message)}`,
+  },
+  {
+    id: 'twitter',
+    name: 'X (Twitter)',
+    icon: 'logo-twitter',
+    color: '#000000',
+    getShareUrl: (message, url) => `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}&url=${encodeURIComponent(url)}`,
+  },
+  {
+    id: 'linkedin',
+    name: 'LinkedIn',
+    icon: 'logo-linkedin',
+    color: '#0A66C2',
+    getShareUrl: (message, url) => `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
+  },
+  {
+    id: 'instagram',
+    name: 'Instagram',
+    icon: 'logo-instagram',
+    color: '#E4405F',
+    getShareUrl: (message, url) => `https://www.instagram.com/`, // Instagram doesn't support direct sharing via URL
+  },
+  {
+    id: 'tiktok',
+    name: 'TikTok',
+    icon: 'musical-notes',
+    color: '#000000',
+    getShareUrl: (message, url) => `https://www.tiktok.com/`, // TikTok doesn't support direct sharing via URL
+  },
+];
+
 export default function InviteParentScreen() {
   const { token, user } = useAuth();
   const { colors } = useTheme();
@@ -37,10 +106,15 @@ export default function InviteParentScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteName, setInviteName] = useState('');
   const [inviteMessage, setInviteMessage] = useState('');
   const [sending, setSending] = useState(false);
+
+  const referralCode = user?.user_id?.slice(-8) || 'MAESTRO';
+  const shareUrl = 'https://www.maestrohabitat.com';
+  const shareMessage = `Join me on Maestro Habitat - the best platform to find quality coaches for your kids! Use my referral code: ${referralCode}`;
 
   const loadInvites = useCallback(async () => {
     try {
@@ -96,35 +170,55 @@ export default function InviteParentScreen() {
     }
   };
 
-  const handleShareLink = async () => {
-    const referralCode = user?.user_id?.slice(-8) || 'MAESTRO';
-    const shareMessage = `Join me on Maestro Habitat - the best platform to find quality coaches for your kids! Use my referral code: ${referralCode}\n\nSign up at: https://www.maestrohabitat.com`;
+  const handleSocialShare = async (platform: SocialPlatform) => {
+    const url = platform.getShareUrl(shareMessage, shareUrl);
     
+    // For Instagram and TikTok, show a message that they need to copy the link
+    if (platform.id === 'instagram' || platform.id === 'tiktok') {
+      // Copy to clipboard first
+      if (Platform.OS === 'web' && typeof navigator !== 'undefined' && navigator.clipboard) {
+        try {
+          await navigator.clipboard.writeText(shareMessage + '\n\n' + shareUrl);
+        } catch (e) {
+          console.error('Clipboard error:', e);
+        }
+      }
+      
+      if (Platform.OS === 'web') {
+        window.alert(`Link copied to clipboard!\n\nOpen ${platform.name} and paste the invite message in a post or direct message.`);
+        window.open(url, '_blank');
+      } else {
+        Alert.alert(
+          'Link Copied!',
+          `Open ${platform.name} and paste the invite message in a post or direct message.`,
+          [{ text: 'Open ' + platform.name, onPress: () => Linking.openURL(url) }]
+        );
+      }
+      setShowShareModal(false);
+      return;
+    }
+
+    // For other platforms, open the share URL
     try {
       if (Platform.OS === 'web') {
-        // Check if Web Share API is available (usually only on mobile browsers and HTTPS)
-        if (typeof navigator !== 'undefined' && navigator.share) {
-          await navigator.share({
-            title: 'Join Maestro Habitat',
-            text: shareMessage,
-          });
-        } else if (typeof navigator !== 'undefined' && navigator.clipboard) {
-          // Fallback: copy to clipboard
-          await navigator.clipboard.writeText(shareMessage);
-          if (typeof window !== 'undefined') {
-            window.alert('Copied!\n\nInvite link copied to clipboard');
-          }
-        } else {
-          // Final fallback: prompt user to copy manually
-          if (typeof window !== 'undefined') {
-            window.prompt('Copy this invite message:', shareMessage);
-          }
-        }
+        window.open(url, '_blank');
       } else {
-        await Share.share({
-          message: shareMessage,
-        });
+        await Linking.openURL(url);
       }
+      setShowShareModal(false);
+    } catch (error) {
+      console.error('Failed to open share URL:', error);
+      Alert.alert('Error', 'Failed to open sharing option');
+    }
+  };
+
+  const handleNativeShare = async () => {
+    try {
+      await Share.share({
+        message: shareMessage + '\n\n' + shareUrl,
+        title: 'Join Maestro Habitat',
+      });
+      setShowShareModal(false);
     } catch (error) {
       console.error('Share failed:', error);
     }
@@ -210,9 +304,9 @@ export default function InviteParentScreen() {
         </View>
         <TouchableOpacity
           style={[styles.shareButton, { backgroundColor: colors.primary }]}
-          onPress={handleShareLink}
+          onPress={() => setShowShareModal(true)}
         >
-          <Ionicons name="link" size={18} color="#fff" />
+          <Ionicons name="share-outline" size={18} color="#fff" />
           <Text style={styles.shareButtonText}>Share Link</Text>
         </TouchableOpacity>
       </View>
@@ -255,7 +349,69 @@ export default function InviteParentScreen() {
         }
       />
 
-      {/* Invite Modal */}
+      {/* Share Modal with Social Options */}
+      <Modal
+        visible={showShareModal}
+        animationType="slide"
+        transparent
+        onRequestClose={() => setShowShareModal(false)}
+      >
+        <View style={styles.modalContainer}>
+          <TouchableOpacity
+            style={styles.modalBackdrop}
+            activeOpacity={1}
+            onPress={() => setShowShareModal(false)}
+          />
+          <View style={[styles.shareModalContent, { backgroundColor: colors.surface }]}>
+            <View style={styles.modalHeader}>
+              <Text style={[styles.modalTitle, { color: colors.text }]}>Share via</Text>
+              <TouchableOpacity onPress={() => setShowShareModal(false)}>
+                <Ionicons name="close" size={24} color={colors.textMuted} />
+              </TouchableOpacity>
+            </View>
+
+            {/* Preview Card */}
+            <View style={[styles.previewCard, { backgroundColor: colors.background, borderColor: colors.border }]}>
+              <Text style={[styles.previewTitle, { color: colors.text }]}>Join Maestro Habitat!</Text>
+              <Text style={[styles.previewMessage, { color: colors.textMuted }]} numberOfLines={2}>
+                {shareMessage}
+              </Text>
+              <Text style={[styles.previewUrl, { color: colors.primary }]}>{shareUrl}</Text>
+            </View>
+
+            {/* Social Icons Grid */}
+            <ScrollView horizontal={false} showsVerticalScrollIndicator={false}>
+              <View style={styles.socialGrid}>
+                {SOCIAL_PLATFORMS.map((platform) => (
+                  <TouchableOpacity
+                    key={platform.id}
+                    style={styles.socialButton}
+                    onPress={() => handleSocialShare(platform)}
+                  >
+                    <View style={[styles.socialIconCircle, { backgroundColor: platform.color }]}>
+                      <Ionicons name={platform.icon as any} size={24} color="#fff" />
+                    </View>
+                    <Text style={[styles.socialName, { color: colors.text }]}>{platform.name}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </ScrollView>
+
+            {/* Native Share Option (for mobile) */}
+            {Platform.OS !== 'web' && (
+              <TouchableOpacity
+                style={[styles.nativeShareButton, { backgroundColor: colors.primary }]}
+                onPress={handleNativeShare}
+              >
+                <Ionicons name="share-outline" size={20} color="#fff" />
+                <Text style={styles.nativeShareText}>More Options...</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
+      </Modal>
+
+      {/* Invite by Email Modal */}
       <Modal
         visible={showInviteModal}
         animationType="slide"
@@ -487,6 +643,13 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingBottom: 40,
   },
+  shareModalContent: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+    paddingBottom: 40,
+    maxHeight: '70%',
+  },
   modalHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -496,6 +659,62 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 18,
     fontWeight: '600',
+  },
+  previewCard: {
+    padding: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+    marginBottom: 20,
+  },
+  previewTitle: {
+    fontSize: 15,
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+  previewMessage: {
+    fontSize: 13,
+    lineHeight: 18,
+  },
+  previewUrl: {
+    fontSize: 12,
+    marginTop: 8,
+  },
+  socialGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start',
+    gap: 16,
+    paddingVertical: 8,
+  },
+  socialButton: {
+    alignItems: 'center',
+    width: 70,
+  },
+  socialIconCircle: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  socialName: {
+    fontSize: 11,
+    textAlign: 'center',
+  },
+  nativeShareButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 14,
+    borderRadius: 10,
+    gap: 8,
+    marginTop: 16,
+  },
+  nativeShareText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 15,
   },
   inputLabel: {
     fontSize: 13,
