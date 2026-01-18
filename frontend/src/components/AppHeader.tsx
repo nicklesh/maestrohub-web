@@ -10,13 +10,16 @@ import {
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
-  Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
 import { useTheme } from '@/src/context/ThemeContext';
+import { useToast } from '@/src/context/ToastContext';
 import { api } from '@/src/services/api';
+
+// App branding from environment variables
+const APP_NAME = process.env.EXPO_PUBLIC_APP_NAME || 'Maestro Habitat';
 
 interface AppHeaderProps {
   showBack?: boolean;
@@ -30,6 +33,7 @@ const GOLD_COLOR = '#D4AF37';
 export default function AppHeader({ showBack = false, title, showUserName = false }: AppHeaderProps) {
   const { user, logout, token } = useAuth();
   const { colors, isDark } = useTheme();
+  const { showSuccess, showError } = useToast();
   const router = useRouter();
   
   const [showContactSheet, setShowContactSheet] = useState(false);
