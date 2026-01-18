@@ -224,7 +224,7 @@ export default function BookingDetailScreen() {
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
-        <AppHeader showBack title="Booking Details" />
+        <AppHeader showBack title={t('pages.booking_detail.title')} />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -235,16 +235,25 @@ export default function BookingDetailScreen() {
   if (!booking) {
     return (
       <SafeAreaView style={styles.container}>
-        <AppHeader showBack title="Booking Details" />
+        <AppHeader showBack title={t('pages.booking_detail.title')} />
         <View style={styles.loadingContainer}>
-          <Text style={{ color: colors.text }}>Booking not found</Text>
+          <Text style={{ color: colors.text }}>{t('pages.booking_detail.not_found')}</Text>
         </View>
       </SafeAreaView>
     );
   }
 
+  const getStatusTranslated = (status: string) => {
+    if (status === 'booked') return t('pages.bookings.booked');
+    if (status === 'confirmed') return t('pages.bookings.confirmed');
+    if (status === 'completed') return t('pages.bookings.completed');
+    if (status === 'canceled_by_consumer' || status === 'canceled_by_provider') return t('pages.bookings.cancelled');
+    if (status === 'pending') return t('pages.bookings.pending');
+    return status.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
+  };
+
   const statusStyle = getStatusColors(booking.status);
-  const statusText = booking.status.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
+  const statusText = getStatusTranslated(booking.status);
   const isUpcoming = !isPast(parseISO(booking.start_at)) && ['booked', 'confirmed'].includes(booking.status);
   const canReview = booking.status === 'completed';
   // Can report no-show if session time has passed and status is still booked/confirmed
@@ -252,7 +261,7 @@ export default function BookingDetailScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <AppHeader showBack title="Booking Details" />
+      <AppHeader showBack title={t('pages.booking_detail.title')} />
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
