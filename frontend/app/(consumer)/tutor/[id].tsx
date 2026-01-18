@@ -374,7 +374,7 @@ export default function TutorDetailScreen() {
 
         {/* Date Selection */}
         <View style={[styles.section, { backgroundColor: colors.surface }]}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>Select Date</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.tutor_detail.select_date')}</Text>
           <FlatList
             horizontal
             showsHorizontalScrollIndicator={false}
