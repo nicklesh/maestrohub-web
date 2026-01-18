@@ -38,6 +38,7 @@ interface TaxReport {
 export default function TaxReportsScreen() {
   const { token, user } = useAuth();
   const { colors } = useTheme();
+  const { showSuccess, showError, showInfo } = useToast();
   const { width } = useWindowDimensions();
   const [reports, setReports] = useState<TaxReport[]>([]);
   const [availableYears, setAvailableYears] = useState<number[]>([]);
