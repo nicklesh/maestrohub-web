@@ -583,7 +583,8 @@
       "past": "पिछले",
       "no_upcoming_sessions": "कोई आगामी सत्र नहीं",
       "no_past_sessions": "कोई पिछले सत्र नहीं",
-      "with": "के साथ"
+      "with": "के साथ",
+      "send_schedule": "शेड्यूल भेजें"
     },
     "tax_reports": {
       "title": "कर रिपोर्ट",

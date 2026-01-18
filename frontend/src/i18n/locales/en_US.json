@@ -583,7 +583,8 @@
       "past": "Past",
       "no_upcoming_sessions": "No upcoming sessions",
       "no_past_sessions": "No past sessions",
-      "with": "with"
+      "with": "with",
+      "send_schedule": "Send Schedule"
     },
     "tax_reports": {
       "title": "Tax Reports",
