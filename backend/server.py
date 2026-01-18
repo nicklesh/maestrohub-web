@@ -4737,7 +4737,7 @@ async def get_referral_code(request: Request):
         referral_service = ReferralService(db)
     
     user = await require_auth(request)
-    code = await referral_service.get_referral_code(user.user_id)
+    code = await referral_service.get_or_create_referral_code(user.user_id)
     return {"referral_code": code}
 
 @api_router.post("/referrals/apply")
@@ -4759,10 +4759,12 @@ async def apply_referral_code(request: Request, code: str = Query(...)):
     
     result = await referral_service.create_referral(
         referrer_id=referrer["user_id"],
-        referrer_role=referrer["role"],
-        referred_id=user.user_id,
-        referred_role=user.role
+        referred_id=user.user_id
     )
+    
+    if not result.get("success"):
+        raise HTTPException(status_code=400, detail=result.get("error", "Failed to apply referral"))
+    
     return result
 
 @api_router.get("/referrals/credits")
@@ -4773,7 +4775,53 @@ async def get_session_credits(request: Request):
         referral_service = ReferralService(db)
     
     user = await require_auth(request)
-    return await referral_service.check_user_credits(user.user_id)
+    return await referral_service.get_user_credits(user.user_id)
+
+@api_router.post("/referrals/use-credit")
+async def use_session_credit(request: Request, booking_id: str = Query(...)):
+    """Use a free session credit for a booking"""
+    global referral_service
+    if not referral_service:
+        referral_service = ReferralService(db)
+    
+    user = await require_auth(request)
+    result = await referral_service.use_free_session_credit(user.user_id, booking_id)
+    
+    if not result.get("success"):
+        raise HTTPException(status_code=400, detail=result.get("error", "Failed to use credit"))
+    
+    return result
+
+@api_router.get("/referrals/fee-waiver")
+async def check_fee_waiver(request: Request):
+    """Check if provider has active fee waiver"""
+    global referral_service
+    if not referral_service:
+        referral_service = ReferralService(db)
+    
+    user = await require_auth(request)
+    return await referral_service.check_provider_fee_waiver(user.user_id)
+
+# Admin referral endpoints
+@api_router.get("/admin/referrals")
+async def admin_get_all_referrals(request: Request, status: Optional[str] = Query(None)):
+    """Admin: Get all referrals"""
+    global referral_service
+    if not referral_service:
+        referral_service = ReferralService(db)
+    
+    await require_admin(request)
+    return await referral_service.get_all_referrals(status)
+
+@api_router.get("/admin/referrals/stats")
+async def admin_get_referral_stats(request: Request):
+    """Admin: Get referral statistics"""
+    global referral_service
+    if not referral_service:
+        referral_service = ReferralService(db)
+    
+    await require_admin(request)
+    return await referral_service.get_referral_stats()
 
 # ============== KID NOTIFICATIONS ==============
 
