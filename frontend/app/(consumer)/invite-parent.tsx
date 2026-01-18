@@ -97,20 +97,28 @@ export default function InviteParentScreen() {
   };
 
   const handleShareLink = async () => {
+    const referralCode = user?.user_id?.slice(-8) || 'MAESTRO';
+    const shareMessage = `Join me on Maestro Habitat - the best platform to find quality coaches for your kids! Use my referral code: ${referralCode}\n\nSign up at: https://www.maestrohabitat.com`;
+    
     try {
-      const referralCode = user?.user_id?.slice(-8) || 'MAESTRO';
-      const shareMessage = `Join me on Maestro Habitat - the best platform to find quality coaches for your kids! Use my referral code: ${referralCode}\n\nSign up at: https://www.maestrohabitat.com`;
-      
       if (Platform.OS === 'web') {
-        if (navigator.share) {
+        // Check if Web Share API is available (usually only on mobile browsers and HTTPS)
+        if (typeof navigator !== 'undefined' && navigator.share) {
           await navigator.share({
             title: 'Join Maestro Habitat',
             text: shareMessage,
           });
-        } else {
+        } else if (typeof navigator !== 'undefined' && navigator.clipboard) {
           // Fallback: copy to clipboard
           await navigator.clipboard.writeText(shareMessage);
-          Alert.alert('Copied!', 'Invite link copied to clipboard');
+          if (typeof window !== 'undefined') {
+            window.alert('Copied!\n\nInvite link copied to clipboard');
+          }
+        } else {
+          // Final fallback: prompt user to copy manually
+          if (typeof window !== 'undefined') {
+            window.prompt('Copy this invite message:', shareMessage);
+          }
         }
       } else {
         await Share.share({
