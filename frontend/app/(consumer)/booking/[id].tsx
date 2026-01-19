@@ -397,13 +397,13 @@ export default function BookingDetailScreen() {
                   )}
                 </View>
               ) : (
-                <View style={styles.notificationContent}>>
+                <View style={styles.notificationContent}>
                   <View style={[styles.notificationBadge, { backgroundColor: colors.gray200 }]}>
                     <Ionicons name="notifications-off-outline" size={16} color={colors.textMuted} />
-                    <Text style={[styles.notificationBadgeText, { color: colors.textMuted }]}>Not enabled</Text>
+                    <Text style={[styles.notificationBadgeText, { color: colors.textMuted }]}>{t('pages.booking_detail.not_enabled')}</Text>
                   </View>
                   <Text style={[styles.noNotifText, { color: colors.textMuted }]}>
-                    Enable notifications in your kid's profile to send them session reminders
+                    {t('pages.booking_detail.enable_notifications')}
                   </Text>
                 </View>
               )}
