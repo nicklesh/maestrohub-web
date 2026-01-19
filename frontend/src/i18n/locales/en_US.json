@@ -1157,6 +1157,25 @@
       "download_success": "Report downloaded successfully",
       "download_failed": "Failed to download report. Please try again."
     },
+    "tutor_settings": {
+      "title": "Settings",
+      "profile_summary": "Profile Summary",
+      "meeting_link": "Meeting Link",
+      "meeting_link_desc": "Add your Zoom, Teams or Google Meet link for online sessions. This will be shared with students when they book.",
+      "meeting_link_saved": "Meeting link saved!",
+      "meeting_link_save_failed": "Failed to save meeting link",
+      "save_link": "Save Link",
+      "listing_status": "Listing Status",
+      "profile_visible": "Your profile is visible to students",
+      "profile_hidden": "Your profile is hidden",
+      "published": "Published",
+      "publish": "Publish",
+      "categories": "Categories",
+      "subjects": "Subjects",
+      "rate": "Rate",
+      "modality": "Modality",
+      "not_set": "Not set"
+    },
     "invite_parent": {
       "title": "Invite Parents",
       "share_with_friends": "Share with Friends",
