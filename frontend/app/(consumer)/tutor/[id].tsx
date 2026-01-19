@@ -280,7 +280,9 @@ export default function TutorDetailScreen() {
               <View style={styles.policyRow}>
                 <Ionicons name="alert-circle-outline" size={16} color={colors.textMuted} />
                 <Text style={[styles.policyText, { color: colors.textMuted }]}>
-                  {tutor.policies.no_show_policy}
+                  {tutor.policies.no_show_policy === 'Full charge for no-shows' 
+                    ? t('pages.tutor_detail.full_charge_no_shows') 
+                    : tutor.policies.no_show_policy}
                 </Text>
               </View>
             )}
