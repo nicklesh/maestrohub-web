@@ -295,7 +295,7 @@ export default function InviteParentScreen() {
         <View style={styles.shareCardContent}>
           <Ionicons name="share-social" size={28} color={colors.primary} />
           <View style={styles.shareTextContainer}>
-            <Text style={[styles.shareTitle, { color: colors.text }]}>Share with Friends</Text>
+            <Text style={[styles.shareTitle, { color: colors.text }]}>{t('pages.invite_parent.share_with_friends')}</Text>
             <Text style={[styles.shareSubtitle, { color: colors.textMuted }]}>
               Invite other parents to join Maestro Habitat
             </Text>
@@ -306,19 +306,19 @@ export default function InviteParentScreen() {
           onPress={() => setShowShareModal(true)}
         >
           <Ionicons name="share-outline" size={18} color="#fff" />
-          <Text style={styles.shareButtonText}>Share Link</Text>
+          <Text style={styles.shareButtonText}>{t('pages.invite_parent.share_link')}</Text>
         </TouchableOpacity>
       </View>
 
       {/* Invites List */}
       <View style={styles.listHeader}>
-        <Text style={[styles.listTitle, { color: colors.text }]}>Your Invitations</Text>
+        <Text style={[styles.listTitle, { color: colors.text }]}>{t('pages.invite_parent.your_invitations')}</Text>
         <TouchableOpacity
           style={[styles.inviteButton, { backgroundColor: colors.primary }]}
           onPress={() => setShowInviteModal(true)}
         >
           <Ionicons name="add" size={20} color="#fff" />
-          <Text style={styles.inviteButtonText}>Invite by Email</Text>
+          <Text style={styles.inviteButtonText}>{t('pages.invite_parent.invite_by_email')}</Text>
         </TouchableOpacity>
       </View>
 
@@ -340,7 +340,7 @@ export default function InviteParentScreen() {
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
             <Ionicons name="people-outline" size={64} color={colors.textMuted} />
-            <Text style={[styles.emptyTitle, { color: colors.text }]}>No invitations yet</Text>
+            <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('pages.invite_parent.no_invitations')}</Text>
             <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
               Invite other parents to discover great coaches
             </Text>
@@ -363,7 +363,7 @@ export default function InviteParentScreen() {
           />
           <View style={[styles.shareModalContent, { backgroundColor: colors.surface }]}>
             <View style={styles.modalHeader}>
-              <Text style={[styles.modalTitle, { color: colors.text }]}>Share via</Text>
+              <Text style={[styles.modalTitle, { color: colors.text }]}>{t('pages.invite_parent.share_via')}</Text>
               <TouchableOpacity onPress={() => setShowShareModal(false)}>
                 <Ionicons name="close" size={24} color={colors.textMuted} />
               </TouchableOpacity>
@@ -428,7 +428,7 @@ export default function InviteParentScreen() {
           />
           <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
             <View style={styles.modalHeader}>
-              <Text style={[styles.modalTitle, { color: colors.text }]}>Invite a Parent</Text>
+              <Text style={[styles.modalTitle, { color: colors.text }]}>{t('pages.invite_parent.invite_a_parent')}</Text>
               <TouchableOpacity onPress={() => setShowInviteModal(false)}>
                 <Ionicons name="close" size={24} color={colors.textMuted} />
               </TouchableOpacity>
@@ -445,19 +445,19 @@ export default function InviteParentScreen() {
               autoCapitalize="none"
             />
 
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Name (Optional)</Text>
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.invite_parent.name_optional')}</Text>
             <TextInput
               style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-              placeholder="Their name"
+              placeholder={t('pages.invite_parent.their_name')}
               placeholderTextColor={colors.textMuted}
               value={inviteName}
               onChangeText={setInviteName}
             />
 
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Personal Message (Optional)</Text>
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.invite_parent.personal_message')}</Text>
             <TextInput
               style={[styles.input, styles.textArea, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-              placeholder="Add a personal note..."
+              placeholder={t('pages.invite_parent.add_personal_note')}
               placeholderTextColor={colors.textMuted}
               value={inviteMessage}
               onChangeText={setInviteMessage}
@@ -475,7 +475,7 @@ export default function InviteParentScreen() {
               ) : (
                 <>
                   <Ionicons name="send" size={18} color="#fff" />
-                  <Text style={styles.sendButtonText}>Send Invitation</Text>
+                  <Text style={styles.sendButtonText}>{t('pages.invite_parent.send_invitation')}</Text>
                 </>
               )}
             </TouchableOpacity>
