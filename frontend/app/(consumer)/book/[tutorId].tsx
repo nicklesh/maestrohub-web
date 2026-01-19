@@ -51,7 +51,7 @@ export default function BookingScreen() {
   const { colors } = useTheme();
   const { showSuccess, showError, showInfo } = useToast();
   const { t } = useTranslation();
-  const { token } = useAuth();
+  const { token, loading: authLoading } = useAuth();
   const params = useLocalSearchParams<{
     tutorId: string;
     startAt: string;
