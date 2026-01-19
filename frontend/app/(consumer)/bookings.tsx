@@ -165,11 +165,11 @@ export default function BookingsScreen() {
         <View style={[styles.timeRow, { borderTopColor: colors.border }]}>
           <Ionicons name="calendar-outline" size={16} color={colors.textMuted} />
           <Text style={[styles.timeText, { color: colors.textMuted }]}>
-            {format(startDate, 'MMM d, yyyy')}
+            {formatDate(startDate, 'MMM d, yyyy')}
           </Text>
           <Ionicons name="time-outline" size={16} color={colors.textMuted} />
           <Text style={[styles.timeText, { color: colors.textMuted }]}>
-            {format(startDate, 'h:mm a')} - {format(endDate, 'h:mm a')}
+            {formatDate(startDate, 'h:mm a')} - {formatDate(endDate, 'h:mm a')}
           </Text>
         </View>
       </TouchableOpacity>
