@@ -397,7 +397,7 @@ export default function InviteParentScreen() {
 
             {/* Preview Card */}
             <View style={[styles.previewCard, { backgroundColor: colors.background, borderColor: colors.border }]}>
-              <Text style={[styles.previewTitle, { color: colors.text }]}>Join Maestro Habitat!</Text>
+              <Text style={[styles.previewTitle, { color: colors.text }]}>{t('pages.invite_parent.join_maestro_habitat')}</Text>
               <Text style={[styles.previewMessage, { color: colors.textMuted }]} numberOfLines={2}>
                 {shareMessage}
               </Text>
