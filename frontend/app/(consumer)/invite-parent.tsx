@@ -215,11 +215,37 @@ export default function InviteParentScreen() {
     try {
       await Share.share({
         message: shareMessage + '\n\n' + shareUrl,
-        title: 'Join Maestro Habitat',
+        title: t('pages.invite_parent.join_maestro_habitat'),
       });
       setShowShareModal(false);
     } catch (error) {
       console.error('Share failed:', error);
+    }
+  };
+
+  const getShareUrlWithTranslation = (platformId: string, message: string, url: string) => {
+    const joinTitle = t('pages.invite_parent.join_maestro_habitat');
+    switch (platformId) {
+      case 'email':
+        return `mailto:?subject=${encodeURIComponent(joinTitle)}&body=${encodeURIComponent(message + '\n\n' + url)}`;
+      case 'gmail':
+        return `https://mail.google.com/mail/?view=cm&fs=1&su=${encodeURIComponent(joinTitle)}&body=${encodeURIComponent(message + '\n\n' + url)}`;
+      case 'whatsapp':
+        return `https://wa.me/?text=${encodeURIComponent(message + '\n\n' + url)}`;
+      case 'facebook':
+        return `https://www.facebook.com/sharer/sharer.php?quote=${encodeURIComponent(message)}&u=${encodeURIComponent(url)}`;
+      case 'twitter':
+        return `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}&url=${encodeURIComponent(url)}`;
+      case 'linkedin':
+        return `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+      case 'telegram':
+        return `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(message)}`;
+      case 'instagram':
+        return `https://www.instagram.com/`;
+      case 'tiktok':
+        return `https://www.tiktok.com/`;
+      default:
+        return '';
     }
   };
 
