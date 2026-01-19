@@ -125,7 +125,12 @@
     "health_mindfulness": "Health, Mindfulness & Wellbeing",
     "business_communication": "Business, Communication & Leadership",
     "academic": "Academic",
-    "homework_support": "Homework Support"
+    "homework_support": "Homework Support",
+    "finance_legal_negotiation": "Finance, Legal & Negotiation",
+    "coaching_personal_growth": "Coaching & Personal Growth",
+    "relationships_family": "Relationships & Family",
+    "culture_inclusion_experiences": "Culture, Inclusion & Experiences",
+    "health_coaching": "Health Coaching"
   },
   "subjects": {
     "mathematics": "Mathematics",
