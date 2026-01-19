@@ -64,7 +64,7 @@ export default function FAQScreen() {
         setContactSuccess(false);
       }, 2000);
     } catch (error: any) {
-      showToast(error.message || t('errors.something_wrong'), 'error');
+      showToast('error', error.message || t('errors.something_wrong'));
     } finally {
       setIsSending(false);
     }
