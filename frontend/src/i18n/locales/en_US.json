@@ -791,7 +791,17 @@
       "total": "Total",
       "confirm_booking": "Confirm Booking",
       "booking_confirmed": "Booking Confirmed!",
-      "confirmation_message": "Your session has been booked successfully."
+      "confirmation_message": "Your session has been booked successfully.",
+      "pay_amount": "Pay {{amount}}",
+      "manage_payment_methods": "Manage Payment Methods",
+      "processing_payment": "Processing Payment...",
+      "review_details": "Review your booking details",
+      "paid": "Paid",
+      "tutor_label": "Tutor",
+      "student_label": "Student",
+      "date_label": "Date",
+      "time_label": "Time",
+      "payment_label": "Payment"
     },
     "billing": {
       "title": "Billing & Payments",
