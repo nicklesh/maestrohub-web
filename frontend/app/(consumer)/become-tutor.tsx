@@ -81,6 +81,10 @@ export default function BecomeTutorScreen() {
   const [basePrice, setBasePrice] = useState('50');
   const [duration, setDuration] = useState('60');
   const [payoutCountry, setPayoutCountry] = useState<string>('US');
+  
+  // Meeting link settings
+  const [meetingLink, setMeetingLink] = useState('');
+  const [waitingRoomEnabled, setWaitingRoomEnabled] = useState(true);
 
   const styles = getStyles(colors);
 
