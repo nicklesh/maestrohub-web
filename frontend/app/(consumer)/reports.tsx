@@ -121,9 +121,9 @@ export default function ConsumerReportsScreen() {
         window.URL.revokeObjectURL(url);
         
         if (Platform.OS === 'web') {
-          showError('Report downloaded successfully');
+          showSuccess(t('pages.reports.download_success'));
         } else {
-          showSuccess('Report downloaded successfully');
+          showSuccess(t('pages.reports.download_success'));
         }
       } else {
         // For iOS/Android, download to file system and share
