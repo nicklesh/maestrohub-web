@@ -857,6 +857,8 @@
       "message": "संदेश",
       "message_placeholder": "अपनी समस्या या प्रश्न का वर्णन करें...",
       "send_message": "संदेश भेजें",
+      "send": "भेजें",
+      "fill_all_fields": "कृपया सभी फ़ील्ड भरें",
       "success_title": "संदेश भेज दिया गया!",
       "success_message": "हम 24-48 घंटों में जवाब देंगे।"
     },
