@@ -72,7 +72,11 @@ export default function SearchScreen() {
   const getSubjectName = (subjectId: string | undefined | null): string => {
     if (!subjectId) return '';
     // Normalize the subject name to match translation key format
-    const normalizedKey = subjectId.toLowerCase().replace(/[&\s]+/g, '_').replace(/[\/]/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '');
+    // Handle spaces, &, /, and - to convert to underscores
+    const normalizedKey = subjectId.toLowerCase()
+      .replace(/[&\s\-\/]+/g, '_')
+      .replace(/_+/g, '_')
+      .replace(/^_|_$/g, '');
     const key = `subjects.${normalizedKey}`;
     const translated = t(key);
     return translated === key ? subjectId : translated;
