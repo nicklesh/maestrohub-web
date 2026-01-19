@@ -236,11 +236,11 @@ export default function BecomeTutorScreen() {
       });
 
       // Success!
-      showSuccess('Your tutor account has been created! You can now log in with your new tutor email to access your tutor dashboard. Your parent account remains unchanged.');
+      showSuccess(t('pages.become_tutor.account_created'));
       router.replace('/(consumer)/profile');
     } catch (error: any) {
       console.error('Registration error:', error);
-      const message = error.response?.data?.detail || 'Failed to create tutor account. Please try again.';
+      const message = error.response?.data?.detail || t('pages.become_tutor.create_failed');
       showError(message);
     } finally {
       setLoading(false);
@@ -251,19 +251,18 @@ export default function BecomeTutorScreen() {
     <View style={styles.stepContent}>
       <Text style={[styles.stepTitle, { color: colors.text }]}>{t('pages.become_tutor.create_account')}</Text>
       <Text style={[styles.stepDescription, { color: colors.textMuted }]}>
-        To become a tutor, you'll need a separate account with a different email address. 
-        This keeps your parent and tutor roles separate.
+        {t('pages.become_tutor.create_account_desc')}
       </Text>
 
       <View style={styles.infoBox}>
         <Ionicons name="information-circle" size={20} color={colors.primary} />
         <Text style={[styles.infoText, { color: colors.textMuted }]}>
-          Your current parent account ({user?.email}) will remain unchanged. You'll use the new email below to log in as a tutor.
+          {t('pages.become_tutor.account_info', { email: user?.email })}
         </Text>
       </View>
 
       <View style={styles.inputGroup}>
-        <Text style={[styles.label, { color: colors.text }]}>Coach Email *</Text>
+        <Text style={[styles.label, { color: colors.text }]}>{t('pages.become_tutor.coach_email')} *</Text>
         <TextInput
           style={[styles.input, { backgroundColor: colors.surface, borderColor: colors.border, color: colors.text }]}
           placeholder="tutor@example.com"
@@ -276,25 +275,25 @@ export default function BecomeTutorScreen() {
       </View>
 
       <View style={styles.inputGroup}>
-        <Text style={[styles.label, { color: colors.text }]}>Password *</Text>
+        <Text style={[styles.label, { color: colors.text }]}>{t('pages.become_tutor.password')} *</Text>
         <TextInput
           style={[styles.input, { backgroundColor: colors.surface, borderColor: colors.border, color: colors.text }]}
-          placeholder="Min 8 chars, uppercase, lowercase, number"
+          placeholder={t('pages.become_tutor.password_hint')}
           placeholderTextColor={colors.textMuted}
           value={tutorPassword}
           onChangeText={setTutorPassword}
           secureTextEntry
         />
         <Text style={[styles.helperText, { color: colors.textMuted }]}>
-          Password must be at least 8 characters with uppercase, lowercase, and a number
+          {t('pages.become_tutor.password_requirements')}
         </Text>
       </View>
 
       <View style={styles.inputGroup}>
-        <Text style={[styles.label, { color: colors.text }]}>Professional Name *</Text>
+        <Text style={[styles.label, { color: colors.text }]}>{t('pages.become_tutor.professional_name')} *</Text>
         <TextInput
           style={[styles.input, { backgroundColor: colors.surface, borderColor: colors.border, color: colors.text }]}
-          placeholder="Name displayed to students"
+          placeholder={t('pages.become_tutor.name_displayed')}
           placeholderTextColor={colors.textMuted}
           value={tutorName}
           onChangeText={setTutorName}
@@ -307,14 +306,14 @@ export default function BecomeTutorScreen() {
     <View style={styles.stepContent}>
       <Text style={[styles.stepTitle, { color: colors.text }]}>{t('pages.become_tutor.about_you')}</Text>
       <Text style={[styles.stepDescription, { color: colors.textMuted }]}>
-        Tell potential students about yourself and your experience
+        {t('pages.become_tutor.about_you_desc')}
       </Text>
 
       <View style={styles.inputGroup}>
-        <Text style={[styles.label, { color: colors.text }]}>Bio *</Text>
+        <Text style={[styles.label, { color: colors.text }]}>{t('pages.become_tutor.bio')} *</Text>
         <TextInput
           style={[styles.textArea, { backgroundColor: colors.surface, borderColor: colors.border, color: colors.text }]}
-          placeholder="Share your background, experience, teaching style, and what makes you a great tutor..."
+          placeholder={t('pages.become_tutor.bio_placeholder')}
           placeholderTextColor={colors.textMuted}
           value={bio}
           onChangeText={(text) => setBio(text.slice(0, 500))}
