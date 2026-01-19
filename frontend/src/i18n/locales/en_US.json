@@ -603,7 +603,9 @@
       "no_upcoming_sessions": "No upcoming sessions",
       "no_past_sessions": "No past sessions",
       "with": "with",
-      "send_schedule": "Send Schedule"
+      "send_schedule": "Send Schedule",
+      "no_payments_yet": "No payments yet",
+      "schedule_sent_to": "Schedule sent to {{email}}"
     },
     "tax_reports": {
       "title": "Tax Reports",
