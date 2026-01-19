@@ -314,7 +314,7 @@ export default function ReviewsScreen() {
                 <View key={category.key} style={styles.ratingCategory}>
                   <View style={styles.categoryHeader}>
                     <Ionicons name={category.icon as any} size={20} color={colors.primary} />
-                    <Text style={[styles.categoryLabel, { color: colors.text }]}>{category.label}</Text>
+                    <Text style={[styles.categoryLabel, { color: colors.text }]}>{t(category.labelKey)}</Text>
                   </View>
                   {renderStars(
                     ratings[category.key as keyof typeof ratings],
