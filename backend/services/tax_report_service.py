@@ -340,8 +340,8 @@ class TaxReportService:
         elements.append(Spacer(1, 24))
         
         # Transaction list
-        elements.append(Paragraph("<b>Transaction Details</b>", styles['Heading3']))
-        txn_data = [['Date', 'Type', 'Amount', 'Funding Source']]
+        elements.append(Paragraph(f"<b>{get_pdf_text('transaction_details', lang)}</b>", styles['Heading3']))
+        txn_data = [[get_pdf_text('date', lang), get_pdf_text('type', lang), get_pdf_text('amount', lang), get_pdf_text('funding_source', lang)]]
         for t in transactions[:50]:  # Limit to 50 for PDF size
             date_str = t.get("payment_date", "")
             if hasattr(date_str, 'strftime'):
@@ -366,11 +366,11 @@ class TaxReportService:
         
         # Footer
         elements.append(Paragraph(
-            f"<i>Generated on {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}</i>",
+            f"<i>{get_pdf_text('generated_on', lang, date=datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC'))}</i>",
             styles['Normal']
         ))
         elements.append(Paragraph(
-            "<i>This document is for informational purposes. Please consult a tax professional.</i>",
+            f"<i>{get_pdf_text('disclaimer', lang)}</i>",
             styles['Normal']
         ))
         
@@ -383,7 +383,7 @@ class TaxReportService:
     def _generate_annual_pdf(self, user: Dict, user_type: str, year: int,
                             monthly_breakdown: Dict, total_amount: int,
                             total_fees: int, total_payouts: int,
-                            transaction_count: int) -> str:
+                            transaction_count: int, lang: str = "en") -> str:
         """Generate annual 1099-style PDF and return as base64"""
         buffer = io.BytesIO()
         doc = SimpleDocTemplate(buffer, pagesize=letter, rightMargin=72, leftMargin=72,
