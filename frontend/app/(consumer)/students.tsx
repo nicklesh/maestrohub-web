@@ -273,7 +273,7 @@ export default function StudentsScreen() {
                   keyboardType="number-pad"
                 />
 
-                <Text style={styles.inputLabel}>Grade</Text>
+                <Text style={styles.inputLabel}>{t('pages.students.grade')}</Text>
                 <TextInput
                   style={[styles.input, isTablet && styles.inputTablet]}
                   placeholder="e.g., 5th, 8th, 10th"
