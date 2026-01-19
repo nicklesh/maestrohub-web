@@ -103,7 +103,9 @@ export default function TaxReportsScreen() {
     setDownloading(report.report_id);
     try {
       const baseUrl = getBaseUrl();
-      const downloadUrl = `${baseUrl}/tax-reports/${report.report_id}/download`;
+      // Map locale code to language code (e.g., 'hi_IN' -> 'hi')
+      const langCode = locale.split('_')[0];
+      const downloadUrl = `${baseUrl}/tax-reports/${report.report_id}/download?lang=${langCode}`;
       
       if (Platform.OS === 'web') {
         // Create a hidden link and trigger download
@@ -128,13 +130,13 @@ export default function TaxReportsScreen() {
         link.click();
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
-        showSuccess('Report downloaded successfully!');
+        showSuccess(t('pages.tax_reports.report_downloaded'));
       } else {
         // For native, open in browser with auth
         await Linking.openURL(downloadUrl);
       }
     } catch (error: any) {
-      showError('Failed to download report. Please try again.');
+      showError(t('pages.reports.download_failed'));
     } finally {
       setDownloading(null);
     }
