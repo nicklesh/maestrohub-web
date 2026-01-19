@@ -1066,17 +1066,32 @@
       "credit_message": "They'll get a ${{amount}} free session credit when they join!"
     },
     "booking_detail": {
+      "title": "Booking Details",
       "date": "Date",
       "time": "Time",
       "tutor": "TUTOR",
       "student": "STUDENT",
       "kid_notifications": "KID NOTIFICATIONS",
       "not_enabled": "Not enabled",
+      "enabled": "Enabled",
       "enable_notifications": "Enable notifications to send session reminders to a parent or guardian",
       "session_issue": "SESSION ISSUE?",
       "report_no_show": "Report Coach No-Show",
       "cancel_booking": "Cancel Booking",
-      "reschedule": "Reschedule"
+      "reschedule": "Reschedule",
+      "not_found": "Booking not found",
+      "lesson_goals": "Lesson Goals",
+      "level": "Level",
+      "total_paid": "Total Paid",
+      "leave_review": "Leave a Review",
+      "write_review": "Write a Review",
+      "share_experience": "Share your experience (optional)",
+      "submit_review": "Submit Review",
+      "sent_notifications": "Sent Notifications",
+      "sent_to": "sent to",
+      "reminders_will_be_sent": "Reminders will be sent before the session",
+      "kid_notified": "Kid Notified",
+      "no_show_report_desc": "If your coach didn't show up for the session, you can report it here. We'll review and process a full refund."
     },
     "add_child": {
       "title": "Add Child",
