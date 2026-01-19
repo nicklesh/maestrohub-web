@@ -386,14 +386,14 @@ export default function SearchScreen() {
 
   // Category options for dropdown
   const categoryOptions = [
-    { id: 'all', name: 'All Categories' },
-    ...categories.map(c => ({ id: c.id, name: c.name }))
+    { id: 'all', name: t('pages.search.all_categories') },
+    ...categories.map(c => ({ id: c.id, name: getCategoryName(c.id, c.name) }))
   ];
 
   // Subject options for dropdown
   const subjectOptions = [
-    { id: 'all', name: 'All Subjects' },
-    ...availableSubjects.map(s => ({ id: s, name: s }))
+    { id: 'all', name: t('pages.search.all_subjects') },
+    ...availableSubjects.map(s => ({ id: s, name: getSubjectName(s) }))
   ];
 
   return (
