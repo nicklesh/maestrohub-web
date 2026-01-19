@@ -195,15 +195,15 @@ export default function SearchScreen() {
     }
   };
 
-  const getCategoryName = () => {
+  const getCategoryDisplayName = () => {
     if (selectedCategory === 'all') return t('pages.search.all_categories');
     const cat = categories.find(c => c.id === selectedCategory);
-    return cat?.name || t('pages.search.category');
+    return getCategoryName(selectedCategory, cat?.name);
   };
 
-  const getSubjectName = () => {
+  const getSubjectDisplayName = () => {
     if (selectedSubject === 'all') return t('pages.search.all_subjects');
-    return selectedSubject;
+    return getSubjectName(selectedSubject);
   };
 
   const renderTutorCard = ({ item, index }: { item: Tutor; index: number }) => {
@@ -242,20 +242,20 @@ export default function SearchScreen() {
             <View style={styles.ratingRow}>
               <Ionicons name="star" size={14} color="#FFB800" />
               <Text style={[styles.rating, { color: colors.text }]}>
-                {item.rating_avg?.toFixed(1) || '0.0'}
+                {formatNumber(item.rating_avg?.toFixed(1) || '0.0')}
               </Text>
               <Text style={[styles.ratingCount, { color: colors.textMuted }]}>
-                {item.rating_count > 0 ? `(${item.rating_count})` : 'New'}
+                {item.rating_count > 0 ? `(${formatNumber(item.rating_count)})` : t('common.new')}
               </Text>
             </View>
           </View>
           <Text style={[styles.price, { color: colors.primary }]}>
-            {item.currency_symbol || '$'}{item.base_price}/hr
+            {item.currency_symbol || '$'}{formatNumber(item.base_price)}{t('pages.search.per_hour')}
           </Text>
         </View>
 
         <Text style={[styles.bio, { color: colors.textMuted }]} numberOfLines={2}>
-          {item.bio || 'No bio available'}
+          {item.bio || t('pages.search.no_bio')}
         </Text>
 
         {/* Category & Subject Info - Clean text instead of pills */}
@@ -263,13 +263,13 @@ export default function SearchScreen() {
           <View style={styles.categoryItem}>
             <Ionicons name="folder-outline" size={14} color={colors.textMuted} />
             <Text style={[styles.categoryText, { color: colors.textSecondary }]} numberOfLines={1}>
-              {(item.categories || []).slice(0, 2).join(', ') || 'General'}
+              {(item.categories || []).slice(0, 2).map(c => getCategoryName(c)).join(', ') || t('common.general')}
             </Text>
           </View>
           <View style={styles.categoryItem}>
             <Ionicons name="book-outline" size={14} color={colors.textMuted} />
             <Text style={[styles.categoryText, { color: colors.textSecondary }]} numberOfLines={1}>
-              {(item.subjects || []).length} subject{(item.subjects || []).length !== 1 ? 's' : ''}
+              {formatNumber((item.subjects || []).length)} {t('pages.search.subject')}{(item.subjects || []).length !== 1 ? 's' : ''}
             </Text>
           </View>
         </View>
@@ -283,7 +283,7 @@ export default function SearchScreen() {
                 color={colors.textMuted}
               />
               <Text style={[styles.modalityText, { color: colors.textMuted }]}>
-                {m === 'online' ? 'Online' : m === 'hybrid' ? 'Hybrid' : 'In-Person'}
+                {getModalityName(m)}
               </Text>
             </View>
           ))}
