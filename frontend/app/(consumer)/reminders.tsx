@@ -90,10 +90,10 @@ export default function RemindersScreen() {
     const hours = Math.ceil(diff / (1000 * 60 * 60));
     const days = Math.ceil(hours / 24);
 
-    if (hours <= 0) return 'Now';
-    if (hours < 24) return `In ${hours}h`;
-    if (days === 1) return 'Tomorrow';
-    return `In ${days} days`;
+    if (hours <= 0) return t('pages.reminders.now');
+    if (hours < 24) return t('pages.reminders.in_hours', { count: hours });
+    if (days === 1) return t('pages.reminders.tomorrow');
+    return t('pages.reminders.in_days', { count: days });
   };
 
   const getPriorityColor = (priority: string) => {
