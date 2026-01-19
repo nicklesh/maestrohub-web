@@ -225,21 +225,21 @@ export default function AppHeader({ showBack = false, title, showUserName = fals
             }
           ]}>
             <View style={[styles.sheetHandle, { backgroundColor: colors.gray300 }]} />
-            <Text style={[styles.sheetTitle, { color: colors.text }]}>Contact Us</Text>
+            <Text style={[styles.sheetTitle, { color: colors.text }]}>{t('modals.contact_us.title')}</Text>
             
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Subject</Text>
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('modals.contact_us.subject')}</Text>
             <TextInput
               style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-              placeholder="What can we help you with?"
+              placeholder={t('modals.contact_us.subject_placeholder')}
               placeholderTextColor={colors.textMuted}
               value={contactSubject}
               onChangeText={setContactSubject}
             />
             
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Message</Text>
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('modals.contact_us.message')}</Text>
             <TextInput
               style={[styles.input, styles.textArea, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-              placeholder="Describe your issue or question..."
+              placeholder={t('modals.contact_us.message_placeholder')}
               placeholderTextColor={colors.textMuted}
               value={contactMessage}
               onChangeText={setContactMessage}
@@ -255,7 +255,7 @@ export default function AppHeader({ showBack = false, title, showUserName = fals
               {submittingContact ? (
                 <ActivityIndicator color="#FFFFFF" />
               ) : (
-                <Text style={styles.submitButtonText}>Send Message</Text>
+                <Text style={styles.submitButtonText}>{t('modals.contact_us.send')}</Text>
               )}
             </TouchableOpacity>
           </View>
