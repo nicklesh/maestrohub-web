@@ -89,20 +89,34 @@ export default function BookingScreen() {
   const styles = getStyles(colors);
 
   useEffect(() => {
-    loadData();
-  }, []);
+    // Wait for token to be available before loading data
+    if (token) {
+      loadData();
+    }
+  }, [token, tutorId]);
 
   const loadData = async () => {
+    if (!token) {
+      console.log('No token available, skipping loadData');
+      return;
+    }
+    
     try {
       const headers = { Authorization: `Bearer ${token}` };
+      console.log('Loading booking data with token');
       const [tutorRes, studentsRes] = await Promise.all([
         api.get(`/tutors/${tutorId}`),
         api.get('/students', { headers }),
       ]);
       setTutor(tutorRes.data);
       setStudents(studentsRes.data);
-    } catch (error) {
+      console.log('Loaded tutor:', tutorRes.data.user_name, 'and', studentsRes.data.length, 'students');
+    } catch (error: any) {
       console.error('Failed to load data:', error);
+      console.error('Error details:', {
+        status: error.response?.status,
+        data: error.response?.data
+      });
       showError('Failed to load booking data');
     } finally {
       setLoading(false);
