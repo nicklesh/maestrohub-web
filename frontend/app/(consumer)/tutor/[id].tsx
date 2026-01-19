@@ -412,10 +412,10 @@ export default function TutorDetailScreen() {
                   onPress={() => setSelectedDate(item)}
                 >
                   <Text style={[styles.dateDay, { color: isSelected ? '#FFFFFF' : colors.textMuted }]}>
-                    {format(item, 'EEE')}
+                    {formatDate(item, 'EEE')}
                   </Text>
                   <Text style={[styles.dateNum, { color: isSelected ? '#FFFFFF' : colors.text }]}>
-                    {format(item, 'd')}
+                    {formatDate(item, 'd')}
                   </Text>
                 </TouchableOpacity>
               );
