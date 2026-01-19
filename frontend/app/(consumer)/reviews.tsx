@@ -41,11 +41,11 @@ interface Review {
 }
 
 const RATING_CATEGORIES = [
-  { key: 'teaching_quality', label: 'Teaching Quality', icon: 'school' },
-  { key: 'communication', label: 'Communication', icon: 'chatbubbles' },
-  { key: 'punctuality', label: 'Punctuality', icon: 'time' },
-  { key: 'knowledge', label: 'Knowledge', icon: 'book' },
-  { key: 'value_for_money', label: 'Value for Money', icon: 'cash' },
+  { key: 'teaching_quality', labelKey: 'pages.reviews.teaching_quality', icon: 'school' },
+  { key: 'communication', labelKey: 'pages.reviews.communication', icon: 'chatbubbles' },
+  { key: 'punctuality', labelKey: 'pages.reviews.punctuality', icon: 'time' },
+  { key: 'knowledge', labelKey: 'pages.reviews.knowledge', icon: 'book' },
+  { key: 'value_for_money', labelKey: 'pages.reviews.value_for_money', icon: 'cash' },
 ];
 
 export default function ReviewsScreen() {
