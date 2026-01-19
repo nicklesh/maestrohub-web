@@ -186,6 +186,42 @@ export default function TutorDashboard() {
     }
   };
 
+  const openMeetingLinkModal = (booking: Booking) => {
+    setSelectedBooking(booking);
+    setMeetingLink(booking.meeting_link || '');
+    setWaitingRoomEnabled(booking.waiting_room_enabled !== false);
+    setShowMeetingModal(true);
+  };
+
+  const saveMeetingLink = async () => {
+    if (!selectedBooking) return;
+    
+    setSavingMeetingLink(true);
+    try {
+      await api.put(`/bookings/${selectedBooking.booking_id}/meeting-link`, {
+        meeting_link: meetingLink || null,
+        waiting_room_enabled: waitingRoomEnabled
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      // Update local state
+      setBookings(bookings.map(b => 
+        b.booking_id === selectedBooking.booking_id 
+          ? { ...b, meeting_link: meetingLink, waiting_room_enabled: waitingRoomEnabled }
+          : b
+      ));
+      
+      showSuccess(t('pages.booking_detail.meeting_link_updated'));
+      setShowMeetingModal(false);
+    } catch (error) {
+      console.error('Failed to update meeting link:', error);
+      showError(t('pages.booking_detail.meeting_link_update_failed'));
+    } finally {
+      setSavingMeetingLink(false);
+    }
+  };
+
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
