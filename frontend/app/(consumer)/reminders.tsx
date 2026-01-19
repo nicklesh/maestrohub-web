@@ -227,7 +227,7 @@ export default function RemindersScreen() {
             <View style={styles.toggleInfo}>
               <Text style={[styles.settingTitle, { color: colors.text }]}>{t('pages.reminders.weekly_summary')}</Text>
               <Text style={[styles.settingDesc, { color: colors.textMuted }]}>
-                Receive a weekly overview of sessions and payments
+                {t('pages.reminders.weekly_summary_desc')}
               </Text>
             </View>
             <Switch
