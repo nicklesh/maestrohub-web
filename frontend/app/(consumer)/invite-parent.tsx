@@ -139,7 +139,7 @@ export default function InviteParentScreen() {
 
   const handleSendInvite = async () => {
     if (!inviteEmail.trim()) {
-      showError('Please enter an email address');
+      showError(t('forms.validation.enter_email_address'));
       return;
     }
 
