@@ -270,7 +270,7 @@ export default function ReviewsScreen() {
                 <View style={styles.ratingsGrid}>
                   {RATING_CATEGORIES.map((cat) => (
                     <View key={cat.key} style={styles.ratingItem}>
-                      <Text style={[styles.ratingLabel, { color: colors.textMuted }]}>{cat.label}</Text>
+                      <Text style={[styles.ratingLabel, { color: colors.textMuted }]}>{t(cat.labelKey)}</Text>
                       {renderStars(review[cat.key as keyof typeof review] as number)}
                     </View>
                   ))}
