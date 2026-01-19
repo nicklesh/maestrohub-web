@@ -329,7 +329,7 @@ export default function TutorDetailScreen() {
                   <View style={{ alignItems: 'flex-end' }}>
                     <Text style={[styles.totalLabel, { color: colors.textMuted }]}>{t('pages.tutor_detail.total')}</Text>
                     <Text style={[styles.totalPrice, { color: colors.primary }]}>
-                      {tutor.currency_symbol}{pkg.total_price.toFixed(0)}
+                      {tutor.currency_symbol}{formatNumber(pkg.total_price.toFixed(0))}
                     </Text>
                   </View>
                 </View>
