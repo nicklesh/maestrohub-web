@@ -26,6 +26,7 @@ interface TutorProfile {
   bio: string;
   categories: string[];
   meeting_link?: string;
+  waiting_room_enabled?: boolean;
   subjects: string[];
   levels: string[];
   modality: string[];
