@@ -357,7 +357,7 @@ export default function TaxReportsScreen() {
           <Text style={[styles.infoText, { color: colors.textSecondary }]}>
             {user?.role === 'provider' 
               ? 'Generate 1099 equivalent forms for your coaching earnings. Reports for the last 5 years are available for download.'
-              : 'Generate payment summaries for your educational expenses. Use these for tax deductions or record-keeping.'}
+              : '{	('pages.tax_reports.consumer_info')}'}
           </Text>
         </View>
       </View>
