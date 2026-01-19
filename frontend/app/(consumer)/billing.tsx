@@ -240,7 +240,7 @@ export default function BillingScreen() {
         <View style={[styles.section, { backgroundColor: colors.surface }]}>
           <View style={styles.sectionHeader}>
             <Ionicons name="wallet" size={24} color={colors.warning} />
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>Pending Balance</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.billing.pending_balance')}</Text>
           </View>
 
           <View style={styles.balanceCard}>
@@ -248,7 +248,7 @@ export default function BillingScreen() {
               {market?.currency_symbol || '$'}{(billing?.pending_balance || 0).toFixed(2)}
             </Text>
             <Text style={[styles.balanceLabel, { color: colors.textMuted }]}>
-              {billing?.pending_balance ? 'Due for upcoming sessions' : 'No pending payments'}
+              {billing?.pending_balance ? t('pages.billing.due_for_sessions') : t('pages.billing.no_pending_payments')}
             </Text>
           </View>
         </View>
@@ -257,17 +257,17 @@ export default function BillingScreen() {
         <View style={[styles.section, { backgroundColor: colors.surface }]}>
           <View style={styles.sectionHeader}>
             <Ionicons name="card" size={24} color={colors.primary} />
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>Payment Methods</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.billing.payment_methods')}</Text>
           </View>
 
           {linkedProviders.length === 0 ? (
             <View style={styles.emptyState}>
               <Ionicons name="card-outline" size={48} color={colors.textMuted} />
               <Text style={[styles.emptyText, { color: colors.textMuted }]}>
-                No payment methods linked yet
+                {t('pages.billing.no_payment_methods')}
               </Text>
               <Text style={[styles.emptySubtext, { color: colors.textMuted }]}>
-                Add a payment method to book sessions
+                {t('pages.billing.add_payment_method_desc')}
               </Text>
             </View>
           ) : (
@@ -286,7 +286,7 @@ export default function BillingScreen() {
                       <Text style={[styles.providerName, { color: colors.text }]}>{provider.display_name}</Text>
                       {provider.is_default && (
                         <View style={[styles.defaultBadge, { backgroundColor: colors.primary + '20' }]}>
-                          <Text style={[styles.defaultBadgeText, { color: colors.primary }]}>Default</Text>
+                          <Text style={[styles.defaultBadgeText, { color: colors.primary }]}>{t('pages.billing.default')}</Text>
                         </View>
                       )}
                     </View>
@@ -296,7 +296,7 @@ export default function BillingScreen() {
                           style={[styles.actionButton, { backgroundColor: colors.background }]}
                           onPress={() => handleSetDefault(provider.provider_id)}
                         >
-                          <Text style={[styles.actionButtonText, { color: colors.primary }]}>Set Default</Text>
+                          <Text style={[styles.actionButtonText, { color: colors.primary }]}>{t('pages.billing.set_default')}</Text>
                         </TouchableOpacity>
                       )}
                       <TouchableOpacity 
@@ -318,7 +318,7 @@ export default function BillingScreen() {
               onPress={() => setShowProviderModal(true)}
             >
               <Ionicons name="add" size={20} color={colors.primary} />
-              <Text style={[styles.addMethodText, { color: colors.primary }]}>Add Payment Method</Text>
+              <Text style={[styles.addMethodText, { color: colors.primary }]}>{t('pages.billing.add_payment_method')}</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -327,14 +327,14 @@ export default function BillingScreen() {
         <View style={[styles.section, { backgroundColor: colors.surface }]}>
           <View style={styles.sectionHeader}>
             <Ionicons name="repeat" size={24} color={colors.primary} />
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>Auto-Pay</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.billing.auto_pay')}</Text>
           </View>
 
           <View style={styles.autoPayRow}>
             <View style={styles.autoPayInfo}>
-              <Text style={[styles.autoPayLabel, { color: colors.text }]}>Enable Auto-Pay</Text>
+              <Text style={[styles.autoPayLabel, { color: colors.text }]}>{t('pages.billing.enable_auto_pay')}</Text>
               <Text style={[styles.autoPayDesc, { color: colors.textMuted }]}>
-                Automatically pay pending balance monthly
+                {t('pages.billing.auto_pay_desc')}
               </Text>
             </View>
             <Switch
@@ -348,7 +348,7 @@ export default function BillingScreen() {
 
           {linkedProviders.length === 0 && (
             <Text style={[styles.warningText, { color: colors.warning }]}>
-              Add a payment method to enable auto-pay
+              {t('pages.billing.add_payment_to_enable')}
             </Text>
           )}
 
@@ -359,16 +359,16 @@ export default function BillingScreen() {
                 onPress={() => setShowDayPickerModal(true)}
               >
                 <View>
-                  <Text style={[styles.daySelectorLabel, { color: colors.textMuted }]}>Payment Day</Text>
+                  <Text style={[styles.daySelectorLabel, { color: colors.textMuted }]}>{t('pages.billing.payment_day')}</Text>
                   <Text style={[styles.daySelectorValue, { color: colors.text }]}>
-                    {selectedDay}{getOrdinalSuffix(selectedDay)} of each month
+                    {selectedDay}{getOrdinalSuffix(selectedDay)} {t('pages.billing.of_each_month')}
                   </Text>
                 </View>
                 <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
               </TouchableOpacity>
 
               <View style={[styles.nextAutoPayCard, { backgroundColor: colors.background }]}>
-                <Text style={[styles.nextAutoPayLabel, { color: colors.textMuted }]}>Next Auto-Pay</Text>
+                <Text style={[styles.nextAutoPayLabel, { color: colors.textMuted }]}>{t('pages.billing.next_auto_pay')}</Text>
                 <Text style={[styles.nextAutoPayDate, { color: colors.text }]}>
                   {formatDate(billing.auto_pay.next_auto_pay_date)}
                 </Text>
@@ -384,7 +384,7 @@ export default function BillingScreen() {
         <View style={[styles.securityNote, { backgroundColor: colors.primaryLight }]}>
           <Ionicons name="shield-checkmark" size={20} color={colors.primary} />
           <Text style={[styles.securityNoteText, { color: colors.primary }]}>
-            Maestro Habitat does not store your payment details. All payments are processed securely through your selected payment provider.
+            {t('pages.billing.security_note')}
           </Text>
         </View>
       </ScrollView>
@@ -399,9 +399,9 @@ export default function BillingScreen() {
           />
           <View style={[styles.bottomSheet, { backgroundColor: colors.surface }]}>
             <View style={[styles.sheetHandle, { backgroundColor: colors.gray300 }]} />
-            <Text style={[styles.sheetTitle, { color: colors.text }]}>Add Payment Method</Text>
+            <Text style={[styles.sheetTitle, { color: colors.text }]}>{t('pages.billing.add_payment_method')}</Text>
             <Text style={[styles.sheetSubtitle, { color: colors.textMuted }]}>
-              Select a payment provider for {market?.currency === 'INR' ? 'India' : 'US'} market
+              {t('pages.billing.select_provider', { market: market?.currency === 'INR' ? 'India' : 'US' })}
             </Text>
 
             {unlinkedProviders.map((provider) => {
@@ -429,7 +429,7 @@ export default function BillingScreen() {
 
             {unlinkedProviders.length === 0 && (
               <Text style={[styles.allLinkedText, { color: colors.textMuted }]}>
-                All available payment methods have been linked
+                {t('pages.billing.all_methods_linked')}
               </Text>
             )}
           </View>
