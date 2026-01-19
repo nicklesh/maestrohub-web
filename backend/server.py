@@ -2746,11 +2746,44 @@ async def get_booking(booking_id: str, request: Request):
         "student_name": student["name"] if student else "Unknown",
         "currency": market_config["currency"],
         "currency_symbol": market_config["currency_symbol"],
-        "meeting_link": booking_tutor.get("meeting_link") if booking_tutor else None,
-        "waiting_room_enabled": booking_tutor.get("waiting_room_enabled", True) if booking_tutor else True,
+        "meeting_link": booking.get("meeting_link") or (booking_tutor.get("meeting_link") if booking_tutor else None),
+        "waiting_room_enabled": booking.get("waiting_room_enabled") if booking.get("meeting_link") else (booking_tutor.get("waiting_room_enabled", True) if booking_tutor else True),
         "kid_notifications": kid_notifications,
         "student_notify_settings": student_notify_settings
     }
+
+@api_router.put("/bookings/{booking_id}/meeting-link")
+async def update_booking_meeting_link(booking_id: str, data: BookingMeetingLinkUpdate, request: Request):
+    """Allow coach to set or update meeting link for a specific booking"""
+    user = await require_auth(request)
+    booking = await db.bookings.find_one({"booking_id": booking_id}, {"_id": 0})
+    if not booking:
+        raise HTTPException(status_code=404, detail="Booking not found")
+    
+    # Only the coach can update the meeting link
+    tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+    if not tutor or tutor["tutor_id"] != booking["tutor_id"]:
+        raise HTTPException(status_code=403, detail="Only the coach can update meeting link")
+    
+    # Booking must be active (booked or confirmed)
+    if booking["status"] not in ["booked", "confirmed"]:
+        raise HTTPException(status_code=400, detail="Cannot update meeting link for this booking")
+    
+    # Validate meeting link if provided
+    if data.meeting_link and not validate_meeting_link(data.meeting_link):
+        raise HTTPException(status_code=400, detail="Invalid meeting link URL")
+    
+    update_data = {
+        "meeting_link": data.meeting_link,
+        "waiting_room_enabled": data.waiting_room_enabled
+    }
+    
+    await db.bookings.update_one(
+        {"booking_id": booking_id},
+        {"$set": update_data}
+    )
+    
+    return {"success": True, "message": "Meeting link updated", "meeting_link": data.meeting_link}
 
 @api_router.post("/bookings/{booking_id}/cancel")
 async def cancel_booking(booking_id: str, request: Request):
