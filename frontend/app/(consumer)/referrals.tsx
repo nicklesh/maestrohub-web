@@ -349,7 +349,7 @@ export default function ReferralsScreen() {
             <Ionicons name="people-outline" size={64} color={colors.textMuted} />
             <Text style={[styles.emptyText, { color: colors.text }]}>{t('pages.referrals.no_referrals')}</Text>
             <Text style={[styles.emptySubtext, { color: colors.textMuted }]}>
-              Share your referral code with friends to start earning rewards!
+              {t('pages.referrals.no_referrals_desc')}
             </Text>
           </View>
         }
