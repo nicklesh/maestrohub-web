@@ -413,9 +413,9 @@ export default function BookingDetailScreen() {
           {/* Intake Info */}
           {booking.intake_response && (
             <View style={[styles.card, isTablet && styles.cardTablet]}>
-              <Text style={styles.cardTitle}>Lesson Goals</Text>
+              <Text style={styles.cardTitle}>{t('pages.booking_detail.lesson_goals')}</Text>
               <Text style={[styles.intakeText, isDesktop && styles.intakeTextDesktop]}>{booking.intake_response.goals}</Text>
-              <Text style={styles.intakeLabel}>Level: {booking.intake_response.current_level}</Text>
+              <Text style={styles.intakeLabel}>{t('pages.booking_detail.level')}: {booking.intake_response.current_level}</Text>
               {booking.intake_response.notes && (
                 <Text style={[styles.intakeText, isDesktop && styles.intakeTextDesktop]}>{booking.intake_response.notes}</Text>
               )}
@@ -425,7 +425,7 @@ export default function BookingDetailScreen() {
           {/* Price */}
           <View style={[styles.card, isTablet && styles.cardTablet]}>
             <View style={styles.priceRow}>
-              <Text style={[styles.priceLabel, isDesktop && styles.priceLabelDesktop]}>Total Paid</Text>
+              <Text style={[styles.priceLabel, isDesktop && styles.priceLabelDesktop]}>{t('pages.booking_detail.total_paid')}</Text>
               <Text style={[styles.priceValue, isDesktop && styles.priceValueDesktop]}>{booking.currency_symbol || '$'}{booking.price_snapshot}</Text>
             </View>
           </View>
@@ -442,7 +442,7 @@ export default function BookingDetailScreen() {
               ) : (
                 <>
                   <Ionicons name="close-circle-outline" size={20} color={colors.error} />
-                  <Text style={styles.cancelButtonText}>Cancel Booking</Text>
+                  <Text style={styles.cancelButtonText}>{t('pages.booking_detail.cancel_booking')}</Text>
                 </>
               )}
             </TouchableOpacity>
@@ -451,7 +451,7 @@ export default function BookingDetailScreen() {
           {/* Review Section */}
           {canReview && (
             <View style={[styles.card, isTablet && styles.cardTablet]}>
-              <Text style={styles.cardTitle}>Leave a Review</Text>
+              <Text style={styles.cardTitle}>{t('pages.booking_detail.leave_review')}</Text>
               {showReview ? (
                 <View>
                   <View style={styles.ratingRow}>
@@ -467,7 +467,7 @@ export default function BookingDetailScreen() {
                   </View>
                   <TextInput
                     style={[styles.reviewInput, isTablet && styles.reviewInputTablet]}
-                    placeholder="Share your experience (optional)"
+                    placeholder={t('pages.booking_detail.share_experience')}
                     placeholderTextColor={colors.textMuted}
                     value={reviewComment}
                     onChangeText={setReviewComment}
@@ -482,7 +482,7 @@ export default function BookingDetailScreen() {
                     {submittingReview ? (
                       <ActivityIndicator color="#fff" />
                     ) : (
-                      <Text style={[styles.submitReviewText, isTablet && styles.submitReviewTextTablet]}>Submit Review</Text>
+                      <Text style={[styles.submitReviewText, isTablet && styles.submitReviewTextTablet]}>{t('pages.booking_detail.submit_review')}</Text>
                     )}
                   </TouchableOpacity>
                 </View>
@@ -492,7 +492,7 @@ export default function BookingDetailScreen() {
                   onPress={() => setShowReview(true)}
                 >
                   <Ionicons name="create-outline" size={20} color={colors.primary} />
-                  <Text style={styles.writeReviewText}>Write a Review</Text>
+                  <Text style={styles.writeReviewText}>{t('pages.booking_detail.write_review')}</Text>
                 </TouchableOpacity>
               )}
             </View>
