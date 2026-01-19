@@ -101,7 +101,7 @@ export default function KidsScreen() {
 
   const handleSave = async () => {
     if (!formName.trim()) {
-      showError('Please enter the child\'s name');
+      showError(t('forms.validation.enter_child_name'));
       return;
     }
 
@@ -133,33 +133,33 @@ export default function KidsScreen() {
       resetForm();
       loadKids();
     } catch (error: any) {
-      showError(error.response?.data?.detail || 'Failed to save');
+      showError(error.response?.data?.detail || t('messages.errors.failed_to_save'));
     } finally {
       setSaving(false);
     }
   };
 
-  const handleDelete = async (kid: Kid) => {
-    // Use window.confirm on web
-    if (Platform.OS === 'web') {
-      const confirmed = window.confirm(`Are you sure you want to remove ${kid.name}?`);
-      if (confirmed) {
-        try {
-          await api.delete(`/students/${kid.student_id}`, {
-            headers: { Authorization: `Bearer ${token}` }
-          });
-          loadKids();
-          showSuccess('Child removed');
-        } catch (error) {
-          showError('Failed to delete');
-        }
-      }
-    } else {
-      // For native, proceed directly (or implement native confirmation)
-      try {
-        await api.delete(`/students/${kid.student_id}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+  const confirmDelete = (kid: Kid) => {
+    setKidToDelete(kid);
+    setShowDeleteModal(true);
+  };
+
+  const handleDelete = async () => {
+    if (!kidToDelete) return;
+    
+    try {
+      await api.delete(`/students/${kidToDelete.student_id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      loadKids();
+      showSuccess(t('messages.success.child_deleted'));
+    } catch (error) {
+      showError(t('messages.errors.failed_to_delete'));
+    } finally {
+      setShowDeleteModal(false);
+      setKidToDelete(null);
+    }
+  };
         loadKids();
         showSuccess('Child removed');
       } catch (error) {
