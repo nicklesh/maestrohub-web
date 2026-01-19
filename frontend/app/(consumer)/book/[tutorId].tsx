@@ -588,43 +588,43 @@ export default function BookingScreen() {
         <View style={[styles.successBanner, { backgroundColor: colors.successLight }]}>
           <Ionicons name="checkmark-circle" size={24} color={colors.success} />
           <Text style={[styles.successBannerText, { color: colors.success }]}>
-            Payment successful!
+            {t('messages.success.payment_successful')}
           </Text>
         </View>
       )}
       
-      <Text style={[styles.stepTitle, isDesktop && styles.stepTitleDesktop]}>Confirm Booking</Text>
-      <Text style={[styles.stepSubtitle, isDesktop && styles.stepSubtitleDesktop]}>Review your booking details</Text>
+      <Text style={[styles.stepTitle, isDesktop && styles.stepTitleDesktop]}>{t('pages.booking.confirm_booking')}</Text>
+      <Text style={[styles.stepSubtitle, isDesktop && styles.stepSubtitleDesktop]}>{t('pages.booking.review_details')}</Text>
       
       <View style={[styles.summaryCard, isTablet && styles.summaryCardTablet]}>
         <View style={styles.summaryRow}>
-          <Text style={[styles.summaryLabel, isDesktop && styles.summaryLabelDesktop]}>Tutor</Text>
+          <Text style={[styles.summaryLabel, isDesktop && styles.summaryLabelDesktop]}>{t('pages.booking.tutor_label')}</Text>
           <Text style={[styles.summaryValue, isDesktop && styles.summaryValueDesktop]}>{tutor?.user_name}</Text>
         </View>
         <View style={styles.summaryRow}>
-          <Text style={[styles.summaryLabel, isDesktop && styles.summaryLabelDesktop]}>Student</Text>
+          <Text style={[styles.summaryLabel, isDesktop && styles.summaryLabelDesktop]}>{t('pages.booking.student_label')}</Text>
           <Text style={[styles.summaryValue, isDesktop && styles.summaryValueDesktop]}>{selectedStudent?.name}</Text>
         </View>
         <View style={styles.summaryRow}>
-          <Text style={[styles.summaryLabel, isDesktop && styles.summaryLabelDesktop]}>Date</Text>
+          <Text style={[styles.summaryLabel, isDesktop && styles.summaryLabelDesktop]}>{t('pages.booking.date_label')}</Text>
           <Text style={[styles.summaryValue, isDesktop && styles.summaryValueDesktop]}>
             {format(parseISO(startAt!), 'EEEE, MMMM d, yyyy')}
           </Text>
         </View>
         <View style={styles.summaryRow}>
-          <Text style={[styles.summaryLabel, isDesktop && styles.summaryLabelDesktop]}>Time</Text>
+          <Text style={[styles.summaryLabel, isDesktop && styles.summaryLabelDesktop]}>{t('pages.booking.time_label')}</Text>
           <Text style={[styles.summaryValue, isDesktop && styles.summaryValueDesktop]}>
             {format(parseISO(startAt!), 'h:mm a')} - {format(parseISO(endAt!), 'h:mm a')}
           </Text>
         </View>
         <View style={styles.summaryRow}>
-          <Text style={[styles.summaryLabel, isDesktop && styles.summaryLabelDesktop]}>Payment</Text>
+          <Text style={[styles.summaryLabel, isDesktop && styles.summaryLabelDesktop]}>{t('pages.booking.payment_label')}</Text>
           <Text style={[styles.summaryValue, isDesktop && styles.summaryValueDesktop, { color: colors.success }]}>
-            {paymentSuccess ? '✓ Paid' : 'Pending'}
+            {paymentSuccess ? `✓ ${t('pages.booking.paid')}` : t('pages.bookings.pending')}
           </Text>
         </View>
         <View style={[styles.summaryRow, styles.summaryRowTotal]}>
-          <Text style={styles.summaryLabelTotal}>Total</Text>
+          <Text style={styles.summaryLabelTotal}>{t('pages.booking.total')}</Text>
           <Text style={[styles.summaryValueTotal, isDesktop && styles.summaryValueTotalDesktop]}>{tutor?.currency_symbol || '$'}{tutor?.base_price}</Text>
         </View>
       </View>
@@ -638,7 +638,7 @@ export default function BookingScreen() {
           <ActivityIndicator color="#fff" />
         ) : (
           <Text style={[styles.primaryButtonText, isTablet && styles.primaryButtonTextTablet]}>
-            Done
+            {t('common.done')}
           </Text>
         )}
       </TouchableOpacity>
