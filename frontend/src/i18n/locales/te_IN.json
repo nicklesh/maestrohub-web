@@ -109,7 +109,10 @@
     "coaching_personal_growth": "Coaching & Personal Growth",
     "relationships_family": "Relationships & Family",
     "culture_inclusion_experiences": "Culture, Inclusion & Experiences",
-    "health_coaching": "Health Coaching"
+    "health_coaching": "Health Coaching",
+    "finance_legal": "वित्त, कानूनी और बातचीत",
+    "coaching_personal": "कोचिंग और व्यक्तिगत विकास",
+    "culture_inclusion": "संस्कृति, समावेश और अनुभव"
   },
   "buttons": {
     "submit": "Submit",
@@ -1402,7 +1405,16 @@
     "continue": "Продолжить",
     "sent": "Отправлено",
     "accepted": "Принято",
-    "expired": "Истекло"
+    "expired": "Истекло",
+    "update": "अपडेट करें",
+    "refresh": "रिफ्रेश करें",
+    "retry": "पुन: प्रयास करें",
+    "copy": "कॉपी करें",
+    "min": "न्यूनतम",
+    "max": "अधिकतम",
+    "per": "प्रति",
+    "on": "चालू",
+    "off": "बंद"
   },
   "faq": {
     "consumer": [
