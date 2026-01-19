@@ -1326,8 +1326,13 @@
       "not_enabled": "Not enabled",
       "enabled": "Enabled",
       "enable_notifications": "Enable notifications to send session reminders to a parent or guardian",
-      "session_issue": "SESSION ISSUE?",
+      "session_issue": "Session Issue?",
+      "session_issue_desc": "If your coach didn't show up for the session, you can report it here. We'll review and process a full refund.",
       "report_no_show": "Report Coach No-Show",
+      "no_show_confirm": "Are you sure you want to report that the coach didn't show up? This will be reviewed and you'll receive a full refund if confirmed.",
+      "no_show_reported": "No-show reported. We'll review this and process your refund.",
+      "no_show_failed": "Failed to report no-show",
+      "reported": "Reported",
       "cancel_booking": "Cancel Booking",
       "reschedule": "Reschedule",
       "not_found": "Booking not found",
@@ -1342,7 +1347,8 @@
       "sent_to": "sent to",
       "reminders_will_be_sent": "Reminders will be sent before the session",
       "kid_notified": "Kid Notified",
-      "no_show_report_desc": "If your coach didn't show up for the session, you can report it here. We'll review and process a full refund."
+      "no_show_report_desc": "If your coach didn't show up for the session, you can report it here. We'll review and process a full refund.",
+      "with_tutor": "with {{name}}"
     },
     "add_child": {
       "title": "Add Child",
