@@ -103,7 +103,7 @@ export default function InviteProviderScreen() {
   const [sending, setSending] = useState(false);
 
   const shareUrl = 'https://www.maestrohabitat.com';
-  const shareMessage = `Join Maestro Habitat as a coach! Share your expertise and help students learn. Great opportunity to earn by teaching what you love! 🎓`;
+  const shareMessage = t('pages.invite_provider.share_message');
 
   const loadInvites = useCallback(async () => {
     try {
