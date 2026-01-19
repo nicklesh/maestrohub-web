@@ -91,7 +91,7 @@ export default function InviteProviderScreen() {
   const { token, user } = useAuth();
   const { colors } = useTheme();
   const { showSuccess, showError, showInfo } = useToast();
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const [invites, setInvites] = useState<Invite[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -104,6 +104,11 @@ export default function InviteProviderScreen() {
 
   const shareUrl = 'https://www.maestrohabitat.com';
   const shareMessage = t('pages.invite_provider.share_message');
+
+  const formatDate = (dateString: string) => {
+    const localeCode = locale === 'hi_IN' ? 'hi-IN' : locale?.replace('_', '-') || 'en-US';
+    return new Date(dateString).toLocaleDateString(localeCode);
+  };
 
   const loadInvites = useCallback(async () => {
     try {
