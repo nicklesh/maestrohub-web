@@ -474,7 +474,12 @@
       "enter_child_name": "कृपया बच्चे का नाम दर्ज करें",
       "enter_email_address": "कृपया ईमेल पता दर्ज करें",
       "select_at_least_one_subject": "कृपया कम से कम एक विषय/कौशल चुनें",
-      "select_at_least_one_level": "कृपया कम से कम एक स्तर चुनें"
+      "select_at_least_one_level": "कृपया कम से कम एक स्तर चुनें",
+      "enter_professional_name": "कृपया अपना पेशेवर नाम दर्ज करें",
+      "enter_bio": "कृपया बायो दर्ज करें",
+      "enter_bio_min_chars": "कृपया बायो दर्ज करें (कम से कम {{count}} अक्षर)",
+      "select_at_least_one_category": "कृपया कम से कम एक श्रेणी चुनें",
+      "enter_referral_code": "कृपया रेफरल कोड दर्ज करें"
     }
   },
   "messages": {
