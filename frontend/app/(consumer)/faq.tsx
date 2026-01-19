@@ -6,6 +6,9 @@ import {
   ScrollView,
   TouchableOpacity,
   useWindowDimensions,
+  Modal,
+  TextInput,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -13,6 +16,7 @@ import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 import { useToast } from '@/src/context/ToastContext';
 import { useTranslation } from '@/src/i18n';
 import AppHeader from '@/src/components/AppHeader';
+import api from '@/src/services/api';
 
 interface FAQItem {
   question: string;
