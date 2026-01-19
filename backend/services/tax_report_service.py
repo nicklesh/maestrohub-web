@@ -204,7 +204,8 @@ class TaxReportService:
         # Logo Header
         if os.path.exists(LOGO_PATH):
             try:
-                logo = Image(LOGO_PATH, width=1.5*inch, height=0.5*inch)
+                # Logo is vertical, maintain aspect ratio (same as regular reports)
+                logo = Image(LOGO_PATH, width=0.75*inch, height=1*inch)
                 logo.hAlign = 'LEFT'
                 elements.append(logo)
                 elements.append(Spacer(1, 8))
@@ -311,7 +312,8 @@ class TaxReportService:
         # Logo Header
         if os.path.exists(LOGO_PATH):
             try:
-                logo = Image(LOGO_PATH, width=1.5*inch, height=0.5*inch)
+                # Logo is vertical, maintain aspect ratio (same as regular reports)
+                logo = Image(LOGO_PATH, width=0.75*inch, height=1*inch)
                 logo.hAlign = 'LEFT'
                 elements.append(logo)
                 elements.append(Spacer(1, 8))
