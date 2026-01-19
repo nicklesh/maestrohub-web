@@ -406,6 +406,80 @@ export default function TutorDashboard() {
           </TouchableOpacity>
         </View>
       </ScrollView>
+
+      {/* Meeting Link Modal */}
+      <Modal
+        visible={showMeetingModal}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setShowMeetingModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
+            <View style={styles.modalHeader}>
+              <Text style={[styles.modalTitle, { color: colors.text }]}>
+                {t('pages.booking_detail.edit_meeting_link')}
+              </Text>
+              <TouchableOpacity onPress={() => setShowMeetingModal(false)}>
+                <Ionicons name="close" size={24} color={colors.text} />
+              </TouchableOpacity>
+            </View>
+            
+            {selectedBooking && (
+              <View style={styles.bookingPreview}>
+                <Text style={[styles.bookingPreviewDate, { color: colors.text }]}>
+                  {formatDate(selectedBooking.start_at)}
+                </Text>
+                <Text style={[styles.bookingPreviewTime, { color: colors.textMuted }]}>
+                  {format(parseISO(selectedBooking.start_at), 'h:mm a')} - {format(parseISO(selectedBooking.end_at), 'h:mm a')}
+                </Text>
+                <Text style={[styles.bookingPreviewStudent, { color: colors.textMuted }]}>
+                  {selectedBooking.student_name}
+                </Text>
+              </View>
+            )}
+            
+            <TextInput
+              style={[styles.meetingLinkInput, { 
+                backgroundColor: colors.inputBackground, 
+                borderColor: colors.border,
+                color: colors.text 
+              }]}
+              placeholder={t('pages.booking_detail.meeting_link_placeholder')}
+              placeholderTextColor={colors.textMuted}
+              value={meetingLink}
+              onChangeText={setMeetingLink}
+              autoCapitalize="none"
+              keyboardType="url"
+            />
+            
+            <View style={styles.waitingRoomRow}>
+              <Text style={[styles.waitingRoomLabel, { color: colors.text }]}>
+                {t('pages.booking_detail.has_waiting_room')}
+              </Text>
+              <Switch
+                value={waitingRoomEnabled}
+                onValueChange={setWaitingRoomEnabled}
+                trackColor={{ false: colors.border, true: colors.primary }}
+              />
+            </View>
+            
+            <TouchableOpacity
+              style={[styles.saveMeetingLinkButton, { backgroundColor: colors.primary }]}
+              onPress={saveMeetingLink}
+              disabled={savingMeetingLink}
+            >
+              {savingMeetingLink ? (
+                <ActivityIndicator size="small" color="#fff" />
+              ) : (
+                <Text style={styles.saveMeetingLinkText}>
+                  {t('pages.booking_detail.update_meeting_link')}
+                </Text>
+              )}
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
