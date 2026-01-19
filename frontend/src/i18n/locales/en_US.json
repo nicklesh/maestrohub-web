@@ -14,20 +14,25 @@
     "consumer": "Parent"
   },
   "levels": {
-    "elementary": "Elementary",
-    "middle_school": "Middle School",
-    "high_school": "High School",
+    "elementary": "Elementary (K-5)",
+    "middle_school": "Middle School (6-8)",
+    "high_school": "High School (9-12)",
     "college": "College",
     "adult": "Adult",
     "beginner": "Beginner",
     "intermediate": "Intermediate",
     "advanced": "Advanced",
+    "professional": "Professional",
     "all_levels": "All Levels"
   },
   "modality": {
     "online": "Online",
     "in_person": "In-Person",
     "hybrid": "Hybrid"
+  },
+  "countries": {
+    "united_states": "United States",
+    "india": "India"
   },
   "navigation": {
     "home": "Home",
