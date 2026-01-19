@@ -194,7 +194,16 @@
     "photography": "Photography",
     "dance": "Dance",
     "theater": "Theater",
-    "all_subjects": "All Subjects"
+    "all_subjects": "All Subjects",
+    "health_coaching": "Health Coaching",
+    "life_coaching": "Life Coaching",
+    "career_coaching": "Career Coaching",
+    "executive_coaching": "Executive Coaching",
+    "wellness": "Wellness",
+    "nutrition": "Nutrition",
+    "fitness": "Fitness",
+    "meditation": "Meditation",
+    "mindfulness": "Mindfulness"
   },
   "buttons": {
     "submit": "Submit",
