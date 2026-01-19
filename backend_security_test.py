@@ -23,7 +23,7 @@ import sys
 import os
 
 # Configuration
-BASE_URL = "https://translate-hub-74.preview.emergentagent.com/api"
+BASE_URL = "https://localify-4.preview.emergentagent.com/api"
 TIMEOUT = 30
 
 # Test credentials from the request
