@@ -319,7 +319,7 @@ export default function InviteProviderScreen() {
               {t('pages.invite_provider.credit_message', { amount: 50 })}
             </Text>
 
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Provider's Email *</Text>
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.invite_provider.providers_email')} *</Text>
             <TextInput
               style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
               placeholder="tutor@example.com"
