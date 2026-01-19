@@ -900,9 +900,9 @@
       "session_packages": "Session Packages",
       "save_up_to": "Save up to {{percent}}%",
       "book_multiple_save": "Book multiple sessions and save!",
-      "sessions_valid_days": "{{count}} sessions • Valid {{days}} days",
-      "per_session_label": "Per session",
-      "total_label": "Total",
+      "sessions_valid": "{{sessions}} sessions • Valid {{days}} days",
+      "off": "OFF",
+      "total": "Total",
       "would_recommend": "{{percent}}% would recommend",
       "coach_response": "Coach's Response:"
     },
