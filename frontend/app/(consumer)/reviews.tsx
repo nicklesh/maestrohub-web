@@ -182,7 +182,7 @@ export default function ReviewsScreen() {
           onPress={() => setActiveTab('pending')}
         >
           <Text style={[styles.tabText, { color: activeTab === 'pending' ? colors.primary : colors.textMuted }]}>
-            Pending ({pendingReviews.length})
+            {t('pages.reviews.pending')} ({pendingReviews.length})
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -190,7 +190,7 @@ export default function ReviewsScreen() {
           onPress={() => setActiveTab('submitted')}
         >
           <Text style={[styles.tabText, { color: activeTab === 'submitted' ? colors.primary : colors.textMuted }]}>
-            Submitted ({myReviews.length})
+            {t('pages.reviews.submitted')} ({myReviews.length})
           </Text>
         </TouchableOpacity>
       </View>
