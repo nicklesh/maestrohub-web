@@ -162,8 +162,33 @@ export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return interpolate(text, params);
   }, [translations]);
 
+  // Localized date formatting
+  const formatDate = useCallback((date: Date | string, formatStr: string): string => {
+    return formatLocalizedDate(date, formatStr, locale);
+  }, [locale]);
+
+  // Localized number formatting
+  const formatNumber = useCallback((num: number | string): string => {
+    return toLocalizedNumber(num, locale);
+  }, [locale]);
+
+  // Localized currency formatting
+  const formatCurrencyFn = useCallback((amount: number, currencySymbol = '$'): string => {
+    return formatLocalizedCurrency(amount, locale, currencySymbol);
+  }, [locale]);
+
   return (
-    <I18nContext.Provider value={{ locale, setLocale, t: translate, translations, isRTL, localeName }}>
+    <I18nContext.Provider value={{ 
+      locale, 
+      setLocale, 
+      t: translate, 
+      translations, 
+      isRTL, 
+      localeName,
+      formatDate,
+      formatNumber,
+      formatCurrency: formatCurrencyFn,
+    }}>
       {children}
     </I18nContext.Provider>
   );
