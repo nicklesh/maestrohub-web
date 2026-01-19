@@ -317,7 +317,8 @@
       "child_updated": "Child updated successfully",
       "link_copied": "Link copied to clipboard!",
       "code_copied": "Code copied to clipboard",
-      "child_deleted": "Child removed successfully"
+      "child_deleted": "Child removed successfully",
+      "payment_successful": "Payment Successful!"
     },
     "errors": {
       "generic": "Something went wrong. Please try again.",
