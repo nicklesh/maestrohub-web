@@ -20,7 +20,8 @@ logger = logging.getLogger(__name__)
 # Constants
 CURRENT_YEAR = datetime.now(timezone.utc).year
 YEARS_AVAILABLE = 5  # Current year + 4 previous years
-LOGO_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets', 'logo.png')
+# Use the same logo as regular reports (blue/yellow trimmed logo)
+LOGO_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets', 'mh_logo_trimmed.png')
 
 
 class TaxReportService:
