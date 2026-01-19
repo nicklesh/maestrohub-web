@@ -1067,17 +1067,32 @@
       "credit_message": "जब वे शामिल होंगे तो उन्हें ${{amount}} मुफ्त सत्र क्रेडिट मिलेगा!"
     },
     "booking_detail": {
+      "title": "बुकिंग विवरण",
       "date": "तारीख",
       "time": "समय",
       "tutor": "ट्यूटर",
       "student": "छात्र",
       "kid_notifications": "बच्चे की सूचनाएं",
       "not_enabled": "सक्षम नहीं",
+      "enabled": "सक्षम",
       "enable_notifications": "माता-पिता या अभिभावक को सत्र रिमाइंडर भेजने के लिए सूचनाएं सक्षम करें",
       "session_issue": "सत्र समस्या?",
       "report_no_show": "कोच नो-शो रिपोर्ट करें",
       "cancel_booking": "बुकिंग रद्द करें",
-      "reschedule": "पुनर्निर्धारित करें"
+      "reschedule": "पुनर्निर्धारित करें",
+      "not_found": "बुकिंग नहीं मिली",
+      "lesson_goals": "पाठ के लक्ष्य",
+      "level": "स्तर",
+      "total_paid": "कुल भुगतान",
+      "leave_review": "समीक्षा छोड़ें",
+      "write_review": "समीक्षा लिखें",
+      "share_experience": "अपना अनुभव साझा करें (वैकल्पिक)",
+      "submit_review": "समीक्षा जमा करें",
+      "sent_notifications": "भेजी गई सूचनाएं",
+      "sent_to": "को भेजा गया",
+      "reminders_will_be_sent": "सत्र से पहले रिमाइंडर भेजे जाएंगे",
+      "kid_notified": "बच्चे को सूचित किया गया",
+      "no_show_report_desc": "अगर आपका कोच सत्र में नहीं आया, तो आप यहां रिपोर्ट कर सकते हैं। हम समीक्षा करेंगे और पूर्ण धनवापसी करेंगे।"
     },
     "add_child": {
       "title": "बच्चा जोड़ें",
