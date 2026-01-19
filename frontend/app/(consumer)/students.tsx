@@ -242,7 +242,7 @@ export default function StudentsScreen() {
                   <Text style={styles.modalCancel}>{t('buttons.cancel')}</Text>
                 </TouchableOpacity>
                 <Text style={[styles.modalTitle, isDesktop && styles.modalTitleDesktop]}>
-                  {editingStudent ? 'Edit Student' : 'Add Student'}
+                  {editingStudent ? t('pages.students.edit_student') : t('pages.students.add_student')}
                 </Text>
                 <TouchableOpacity onPress={handleSave} disabled={saving}>
                   {saving ? (
