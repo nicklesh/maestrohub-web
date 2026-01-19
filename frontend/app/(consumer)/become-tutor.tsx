@@ -118,6 +118,21 @@ export default function BecomeTutorScreen() {
   const selectedCountry = PAYOUT_COUNTRIES.find(c => c.id === payoutCountry);
   const currencySymbol = selectedCountry?.symbol || '$';
 
+  // Validate meeting link URL
+  const validateMeetingLink = (url: string): boolean => {
+    if (!url.trim()) return true; // Optional field
+    
+    const normalizedUrl = url.trim().toLowerCase();
+    const validPatterns = [
+      /^https?:\/\/([\w-]+\.)?zoom\.us\//,
+      /^https?:\/\/teams\.microsoft\.com\//,
+      /^https?:\/\/meet\.google\.com\//,
+      /^https?:\/\/[\w-]+\.webex\.com\//,
+    ];
+    
+    return validPatterns.some(pattern => pattern.test(normalizedUrl));
+  };
+
   const showAlert = (title: string, message: string) => {
     if (Platform.OS === 'web') {
       showInfo(`${title}: ${message}`);
