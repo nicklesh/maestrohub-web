@@ -182,82 +182,91 @@ export default function SearchScreen() {
     return selectedSubject;
   };
 
-  const renderTutorCard = ({ item }: { item: Tutor }) => (
-    <TouchableOpacity
-      style={[
-        styles.card,
-        { backgroundColor: colors.surface, borderColor: item.is_sponsored ? colors.warning : colors.border },
-        item.is_sponsored && { borderWidth: 2 },
-        isTablet && styles.cardTablet,
-        isDesktop && { flex: 0.32, marginHorizontal: 4 }
-      ]}
-      onPress={() => router.push(`/(consumer)/tutor/${item.tutor_id}`)}
-    >
-      {/* Sponsored Badge */}
-      {item.is_sponsored && (
-        <View style={[styles.sponsoredBadge, { backgroundColor: colors.warning }]}>
-          <Ionicons name="star" size={10} color="#fff" />
-          <Text style={styles.sponsoredBadgeText}>{t('pages.search.sponsored')}</Text>
-        </View>
-      )}
-      
-      <View style={styles.cardHeader}>
-        <View style={[styles.avatar, { backgroundColor: colors.primary }]}>
-          <Text style={styles.avatarText}>{item.user_name?.charAt(0)?.toUpperCase() || 'T'}</Text>
-        </View>
-        <View style={styles.cardInfo}>
-          <Text style={[styles.tutorName, { color: colors.text }]} numberOfLines={1}>{item.user_name}</Text>
-          <View style={styles.ratingRow}>
-            <Ionicons name="star" size={14} color="#FFB800" />
-            <Text style={[styles.rating, { color: colors.text }]}>
-              {item.rating_avg?.toFixed(1) || '0.0'}
-            </Text>
-            <Text style={[styles.ratingCount, { color: colors.textMuted }]}>
-              {item.rating_count > 0 ? `(${item.rating_count})` : 'New'}
-            </Text>
+  const renderTutorCard = ({ item, index }: { item: Tutor; index: number }) => {
+    // Calculate consistent card width for multi-column layouts
+    const cardStyle = numColumns > 1 ? {
+      flex: 1,
+      maxWidth: `${100 / numColumns - 2}%` as any,
+      marginHorizontal: 6,
+    } : {};
+
+    return (
+      <TouchableOpacity
+        style={[
+          styles.card,
+          { backgroundColor: colors.surface, borderColor: item.is_sponsored ? colors.warning : colors.border },
+          item.is_sponsored && { borderWidth: 2 },
+          isTablet && styles.cardTablet,
+          cardStyle
+        ]}
+        onPress={() => router.push(`/(consumer)/tutor/${item.tutor_id}`)}
+      >
+        {/* Sponsored Badge */}
+        {item.is_sponsored && (
+          <View style={[styles.sponsoredBadge, { backgroundColor: colors.warning }]}>
+            <Ionicons name="star" size={10} color="#fff" />
+            <Text style={styles.sponsoredBadgeText}>{t('pages.search.sponsored')}</Text>
           </View>
+        )}
+        
+        <View style={styles.cardHeader}>
+          <View style={[styles.avatar, { backgroundColor: colors.primary }]}>
+            <Text style={styles.avatarText}>{item.user_name?.charAt(0)?.toUpperCase() || 'T'}</Text>
+          </View>
+          <View style={styles.cardInfo}>
+            <Text style={[styles.tutorName, { color: colors.text }]} numberOfLines={1}>{item.user_name}</Text>
+            <View style={styles.ratingRow}>
+              <Ionicons name="star" size={14} color="#FFB800" />
+              <Text style={[styles.rating, { color: colors.text }]}>
+                {item.rating_avg?.toFixed(1) || '0.0'}
+              </Text>
+              <Text style={[styles.ratingCount, { color: colors.textMuted }]}>
+                {item.rating_count > 0 ? `(${item.rating_count})` : 'New'}
+              </Text>
+            </View>
+          </View>
+          <Text style={[styles.price, { color: colors.primary }]}>
+            {item.currency_symbol || '$'}{item.base_price}/hr
+          </Text>
         </View>
-        <Text style={[styles.price, { color: colors.primary }]}>
-          {item.currency_symbol || '$'}{item.base_price}/hr
+
+        <Text style={[styles.bio, { color: colors.textMuted }]} numberOfLines={2}>
+          {item.bio || 'No bio available'}
         </Text>
-      </View>
 
-      <Text style={[styles.bio, { color: colors.textMuted }]} numberOfLines={2}>
-        {item.bio || 'No bio available'}
-      </Text>
-
-      {/* Category & Subject Info - Clean text instead of pills */}
-      <View style={styles.categoryInfo}>
-        <View style={styles.categoryItem}>
-          <Ionicons name="folder-outline" size={14} color={colors.textMuted} />
-          <Text style={[styles.categoryText, { color: colors.textSecondary }]} numberOfLines={1}>
-            {(item.categories || []).slice(0, 2).join(', ') || 'General'}
-          </Text>
-        </View>
-        <View style={styles.categoryItem}>
-          <Ionicons name="book-outline" size={14} color={colors.textMuted} />
-          <Text style={[styles.categoryText, { color: colors.textSecondary }]} numberOfLines={1}>
-            {(item.subjects || []).length} subject{(item.subjects || []).length !== 1 ? 's' : ''}
-          </Text>
-        </View>
-      </View>
-
-      <View style={styles.modalityRow}>
-        {(item.modality || []).map((m) => (
-          <View key={m} style={styles.modalityItem}>
-            <Ionicons
-              name={m === 'online' ? 'videocam' : m === 'hybrid' ? 'sync' : 'location'}
-              size={14}
-              color={colors.textMuted}
-            />
-            <Text style={[styles.modalityText, { color: colors.textMuted }]}>
-              {m === 'online' ? 'Online' : m === 'hybrid' ? 'Hybrid' : 'In-Person'}
+        {/* Category & Subject Info - Clean text instead of pills */}
+        <View style={styles.categoryInfo}>
+          <View style={styles.categoryItem}>
+            <Ionicons name="folder-outline" size={14} color={colors.textMuted} />
+            <Text style={[styles.categoryText, { color: colors.textSecondary }]} numberOfLines={1}>
+              {(item.categories || []).slice(0, 2).join(', ') || 'General'}
             </Text>
           </View>
-        ))}
-      </View>
-    </TouchableOpacity>
-  );
+          <View style={styles.categoryItem}>
+            <Ionicons name="book-outline" size={14} color={colors.textMuted} />
+            <Text style={[styles.categoryText, { color: colors.textSecondary }]} numberOfLines={1}>
+              {(item.subjects || []).length} subject{(item.subjects || []).length !== 1 ? 's' : ''}
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.modalityRow}>
+          {(item.modality || []).map((m) => (
+            <View key={m} style={styles.modalityItem}>
+              <Ionicons
+                name={m === 'online' ? 'videocam' : m === 'hybrid' ? 'sync' : 'location'}
+                size={14}
+                color={colors.textMuted}
+              />
+              <Text style={[styles.modalityText, { color: colors.textMuted }]}>
+                {m === 'online' ? 'Online' : m === 'hybrid' ? 'Hybrid' : 'In-Person'}
+              </Text>
+            </View>
+          ))}
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   // Dropdown selector component
   const DropdownSelector = ({ 
