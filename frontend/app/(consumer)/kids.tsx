@@ -567,4 +567,53 @@ const styles = StyleSheet.create({
   },
   saveButtonDisabled: { opacity: 0.7 },
   saveButtonText: { color: '#FFFFFF', fontSize: 15, fontWeight: '600' },
+  // Delete confirmation modal styles
+  confirmModal: {
+    position: 'absolute',
+    bottom: '35%',
+    left: 20,
+    right: 20,
+    borderRadius: 16,
+    padding: 24,
+    alignItems: 'center',
+  },
+  confirmIconContainer: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  confirmTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  confirmMessage: {
+    fontSize: 14,
+    textAlign: 'center',
+    marginBottom: 24,
+    lineHeight: 20,
+  },
+  confirmButtons: {
+    flexDirection: 'row',
+    gap: 12,
+    width: '100%',
+  },
+  confirmButton: {
+    flex: 1,
+    padding: 14,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  cancelButton: {
+    borderWidth: 1,
+  },
+  deleteButton: {},
+  confirmButtonText: {
+    fontSize: 15,
+    fontWeight: '600',
+  },
 });
