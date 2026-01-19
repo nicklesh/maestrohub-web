@@ -3824,7 +3824,8 @@ async def get_provider_report(
 async def get_consumer_report_pdf(
     request: Request,
     start_date: Optional[str] = None,
-    end_date: Optional[str] = None
+    end_date: Optional[str] = None,
+    lang: str = "en"
 ):
     """Generate PDF report for consumer"""
     user = await require_auth(request)
@@ -3840,35 +3841,118 @@ async def get_consumer_report_pdf(
         from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
         from reportlab.lib.units import inch
         from reportlab.lib.enums import TA_CENTER
+        from reportlab.pdfbase import pdfmetrics
+        from reportlab.pdfbase.ttfonts import TTFont
     except ImportError:
         raise HTTPException(status_code=500, detail="PDF generation not available")
+    
+    # Register fonts for Hindi support
+    assets_dir = os.path.join(os.path.dirname(__file__), 'assets')
+    noto_devanagari_path = os.path.join(assets_dir, 'NotoSansDevanagari-Regular.ttf')
+    noto_sans_path = os.path.join(assets_dir, 'NotoSans-Regular.ttf')
+    noto_sans_bold_path = os.path.join(assets_dir, 'NotoSans-Bold.ttf')
+    
+    try:
+        if os.path.exists(noto_devanagari_path):
+            try:
+                pdfmetrics.getFont('NotoDevanagari')
+            except:
+                pdfmetrics.registerFont(TTFont('NotoDevanagari', noto_devanagari_path))
+        if os.path.exists(noto_sans_path):
+            try:
+                pdfmetrics.getFont('NotoSans')
+            except:
+                pdfmetrics.registerFont(TTFont('NotoSans', noto_sans_path))
+        if os.path.exists(noto_sans_bold_path):
+            try:
+                pdfmetrics.getFont('NotoSansBold')
+            except:
+                pdfmetrics.registerFont(TTFont('NotoSansBold', noto_sans_bold_path))
+    except Exception as e:
+        logger.warning(f"Failed to register fonts: {e}")
+    
+    # Choose font based on language
+    font_name = 'NotoDevanagari' if lang == 'hi' else 'NotoSans'
+    font_bold = font_name if lang == 'hi' else 'NotoSansBold'
+    
+    # Translation dictionary for report labels
+    translations = {
+        'en': {
+            'session_report': 'Session Report',
+            'generated': 'Generated',
+            'summary': 'Summary',
+            'total_sessions': 'Total Sessions',
+            'completed': 'Completed',
+            'upcoming': 'Upcoming',
+            'canceled': 'Canceled',
+            'total_spent': 'Total Spent',
+            'sessions_by_student_category': 'Sessions by Student & Category',
+            'sessions_by_student': 'Sessions by Student',
+            'sessions_by_tutor': 'Sessions by Tutor',
+            'monthly_breakdown': 'Monthly Breakdown',
+            'student': 'Student',
+            'sessions': 'Sessions',
+            'amount': 'Amount',
+            'tutor': 'Tutor',
+            'month': 'Month',
+            'category': 'Category',
+            'subject': 'Subject',
+            'total': 'TOTAL',
+            'tagline': 'Find your coach, master your skill',
+        },
+        'hi': {
+            'session_report': 'सत्र रिपोर्ट',
+            'generated': 'जनरेट किया गया',
+            'summary': 'सारांश',
+            'total_sessions': 'कुल सत्र',
+            'completed': 'पूर्ण',
+            'upcoming': 'आगामी',
+            'canceled': 'रद्द',
+            'total_spent': 'कुल खर्च',
+            'sessions_by_student_category': 'छात्र और श्रेणी के अनुसार सत्र',
+            'sessions_by_student': 'छात्र के अनुसार सत्र',
+            'sessions_by_tutor': 'ट्यूटर के अनुसार सत्र',
+            'monthly_breakdown': 'मासिक विवरण',
+            'student': 'छात्र',
+            'sessions': 'सत्र',
+            'amount': 'राशि',
+            'tutor': 'ट्यूटर',
+            'month': 'महीना',
+            'category': 'श्रेणी',
+            'subject': 'विषय',
+            'total': 'कुल',
+            'tagline': 'अपना कोच खोजें, अपने कौशल में महारत हासिल करें',
+        }
+    }
+    
+    t = translations.get(lang, translations['en'])
     
     buffer = io.BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=letter, rightMargin=72, leftMargin=72, topMargin=72, bottomMargin=72)
     
     styles = getSampleStyleSheet()
-    title_style = ParagraphStyle('Title', parent=styles['Heading1'], fontSize=24, spaceAfter=10, alignment=TA_CENTER)
-    tagline_style = ParagraphStyle('Tagline', parent=styles['Normal'], fontSize=12, spaceAfter=20, alignment=TA_CENTER, textColor=colors.grey)
-    heading_style = ParagraphStyle('Heading', parent=styles['Heading2'], fontSize=16, spaceAfter=12)
-    subheading_style = ParagraphStyle('SubHeading', parent=styles['Heading3'], fontSize=13, spaceAfter=8, textColor=colors.HexColor('#2563eb'))
+    title_style = ParagraphStyle('Title', parent=styles['Heading1'], fontSize=24, spaceAfter=10, alignment=TA_CENTER, fontName=font_name)
+    tagline_style = ParagraphStyle('Tagline', parent=styles['Normal'], fontSize=12, spaceAfter=20, alignment=TA_CENTER, textColor=colors.grey, fontName=font_name)
+    heading_style = ParagraphStyle('Heading', parent=styles['Heading2'], fontSize=16, spaceAfter=12, fontName=font_name)
+    subheading_style = ParagraphStyle('SubHeading', parent=styles['Heading3'], fontSize=13, spaceAfter=8, textColor=colors.HexColor('#2563eb'), fontName=font_name)
+    normal_style = ParagraphStyle('NormalCustom', parent=styles['Normal'], fontName=font_name)
     
     story = []
     
     # Logo and Header
     logo_path = os.path.join(os.path.dirname(__file__), 'assets', 'mh_logo_trimmed.png')
     if os.path.exists(logo_path):
-        # Logo is 595x793 (vertical), maintain aspect ratio
         logo = Image(logo_path, width=0.75*inch, height=1*inch)
         logo.hAlign = 'CENTER'
         story.append(logo)
     
     story.append(Paragraph("Maestro Habitat", title_style))
-    story.append(Paragraph("Find your coach, master your skill", tagline_style))
+    story.append(Paragraph(t['tagline'], tagline_style))
     story.append(Spacer(1, 10))
     
     # Report info
-    story.append(Paragraph(f"<b>Session Report</b> for {user.name}", styles['Normal']))
-    story.append(Paragraph(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')}", styles['Normal']))
+    story.append(Paragraph(f"<b>{t['session_report']}</b> for {user.name}", normal_style))
+    story.append(Paragraph(f"{t['generated']}: {datetime.now().strftime('%Y-%m-%d %H:%M')}", normal_style))
     story.append(Spacer(1, 20))
     
     # Summary
