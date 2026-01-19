@@ -191,8 +191,8 @@ export default function TaxReportsScreen() {
             />
             <Text style={[styles.reportTypeText, { color: colors.text }]}>
               {report.report_type === 'annual_1099' 
-                ? 'Annual 1099' 
-                : `${getMonthName(report.report_month || 1)} Summary`}
+                ? t('pages.tax_reports.annual_1099') 
+                : `${getMonthName(report.report_month || 1)} ${t('pages.tax_reports.monthly_summary')}`}
             </Text>
           </View>
           <Text style={[styles.reportDate, { color: colors.textMuted }]}>
