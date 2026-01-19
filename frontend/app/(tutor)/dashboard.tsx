@@ -8,6 +8,9 @@ import {
   ActivityIndicator,
   RefreshControl,
   useWindowDimensions,
+  Modal,
+  TextInput,
+  Switch,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -27,6 +30,8 @@ interface Booking {
   end_at: string;
   status: string;
   price_snapshot: number;
+  meeting_link?: string;
+  waiting_room_enabled?: boolean;
 }
 
 interface TutorStats {
