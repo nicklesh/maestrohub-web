@@ -130,11 +130,11 @@ export default function RemindersScreen() {
         }
       >
         {/* Active Reminders */}
-        <Text style={[styles.sectionLabel, { color: colors.text }]}>Active Reminders</Text>
+        <Text style={[styles.sectionLabel, { color: colors.text }]}>{t('pages.reminders.active_reminders')}</Text>
         {reminders.length === 0 ? (
           <View style={[styles.emptyCard, { backgroundColor: colors.surface }]}>
             <Ionicons name="alarm-outline" size={32} color={colors.textMuted} />
-            <Text style={[styles.emptyText, { color: colors.textMuted }]}>No active reminders</Text>
+            <Text style={[styles.emptyText, { color: colors.textMuted }]}>{t('pages.reminders.no_active_reminders')}</Text>
           </View>
         ) : (
           reminders.map((reminder) => (
@@ -162,11 +162,11 @@ export default function RemindersScreen() {
         )}
 
         {/* Reminder Settings */}
-        <Text style={[styles.sectionLabel, { color: colors.text, marginTop: 24 }]}>Reminder Settings</Text>
+        <Text style={[styles.sectionLabel, { color: colors.text, marginTop: 24 }]}>{t('pages.reminders.reminder_settings')}</Text>
 
         <View style={[styles.settingsCard, { backgroundColor: colors.surface }]}>
-          <Text style={[styles.settingTitle, { color: colors.text }]}>Session Reminders</Text>
-          <Text style={[styles.settingDesc, { color: colors.textMuted }]}>Get notified before each session</Text>
+          <Text style={[styles.settingTitle, { color: colors.text }]}>{t('pages.reminders.session_reminders')}</Text>
+          <Text style={[styles.settingDesc, { color: colors.textMuted }]}>{t('pages.reminders.session_reminders_desc')}</Text>
           <View style={styles.optionRow}>
             {sessionHourOptions.map((hours) => (
               <TouchableOpacity
@@ -194,8 +194,8 @@ export default function RemindersScreen() {
         </View>
 
         <View style={[styles.settingsCard, { backgroundColor: colors.surface }]}>
-          <Text style={[styles.settingTitle, { color: colors.text }]}>Payment Reminders</Text>
-          <Text style={[styles.settingDesc, { color: colors.textMuted }]}>Get notified before payment is due</Text>
+          <Text style={[styles.settingTitle, { color: colors.text }]}>{t('pages.reminders.payment_reminders')}</Text>
+          <Text style={[styles.settingDesc, { color: colors.textMuted }]}>{t('pages.reminders.payment_reminders_desc')}</Text>
           <View style={styles.optionRow}>
             {paymentDayOptions.map((days) => (
               <TouchableOpacity
@@ -225,7 +225,7 @@ export default function RemindersScreen() {
         <View style={[styles.settingsCard, { backgroundColor: colors.surface }]}>
           <View style={styles.toggleRow}>
             <View style={styles.toggleInfo}>
-              <Text style={[styles.settingTitle, { color: colors.text }]}>Weekly Summary</Text>
+              <Text style={[styles.settingTitle, { color: colors.text }]}>{t('pages.reminders.weekly_summary')}</Text>
               <Text style={[styles.settingDesc, { color: colors.textMuted }]}>
                 Receive a weekly overview of sessions and payments
               </Text>
