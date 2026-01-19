@@ -1363,7 +1363,11 @@
     "see_more": "See More",
     "see_less": "See Less",
     "copied": "Copied!",
-    "share": "Share"
+    "share": "Share",
+    "general": "General",
+    "select_category": "Select Category",
+    "select_subject": "Select Subject",
+    "na": "N/A"
   },
   "faq": {
     "consumer": [
