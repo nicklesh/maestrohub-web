@@ -1630,9 +1630,5 @@
       "message_placeholder": "अपनी समस्या या प्रश्न का वर्णन करें...",
       "send": "संदेश भेजें"
     }
-  },
-  "notifications": {
-    "system_update": "सिस्टम अपडेट",
-    "platform_improvements": "प्लेटफ़ॉर्म सुधार सफलतापूर्वक लागू किए गए"
   }
 }
