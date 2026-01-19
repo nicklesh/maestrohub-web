@@ -208,9 +208,26 @@ export default function HomeScreen() {
 
   // Helper function to translate subject names
   const getSubjectName = (subjectId: string): string => {
-    const key = `subjects.${subjectId}`;
+    // Normalize the ID for lookup
+    const normalizedId = subjectId?.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+    const key = `subjects.${normalizedId}`;
     const translated = t(key);
-    return translated === key ? subjectId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : translated;
+    // If translation key doesn't exist, try formatting the original ID nicely
+    if (translated === key) {
+      // Also try common mappings
+      const mappings: Record<string, string> = {
+        'mathematics': t('subjects.mathematics'),
+        'sat_prep': t('subjects.sat_prep'),
+        'sat prep': t('subjects.sat_prep'),
+        'music': t('subjects.music'),
+        'piano': t('subjects.piano'),
+        'homework_support': t('subjects.homework_support'),
+        'homework support': t('subjects.homework_support'),
+      };
+      return mappings[normalizedId] || mappings[subjectId?.toLowerCase()] || 
+             subjectId?.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || '';
+    }
+    return translated;
   };
 
   const renderTutorCard = ({ item }: { item: Tutor }) => (
