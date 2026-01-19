@@ -515,7 +515,7 @@ export default function BecomeTutorScreen() {
               />
             ))}
           </View>
-          <Text style={[styles.progressText, { color: colors.textMuted }]}>Step {step} of 4</Text>
+          <Text style={[styles.progressText, { color: colors.textMuted }]}>{t('pages.become_tutor.step_of', { current: step, total: 4 })}</Text>
 
           {step === 1 && renderStep1()}
           {step === 2 && renderStep2()}
