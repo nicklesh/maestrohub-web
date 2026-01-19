@@ -670,6 +670,7 @@
       "subject_count_one": "{{count}} subject",
       "per_hour": "/hr",
       "reviews_count": "({{count}})",
+      "reviews": "reviews",
       "no_bio": "No bio available",
       "online": "Online",
       "hybrid": "Hybrid",
