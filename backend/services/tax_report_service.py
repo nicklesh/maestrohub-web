@@ -13,15 +13,62 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image
 from reportlab.lib.units import inch
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.rl_config import rl_config
 import base64
 
 logger = logging.getLogger(__name__)
+
+# Suppress warnings for missing font glyphs
+rl_config.warnOnMissingFontGlyphs = 0
 
 # Constants
 CURRENT_YEAR = datetime.now(timezone.utc).year
 YEARS_AVAILABLE = 5  # Current year + 4 previous years
 # Use the same logo as regular reports (blue/yellow trimmed logo)
-LOGO_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets', 'mh_logo_trimmed.png')
+ASSETS_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets')
+LOGO_PATH = os.path.join(ASSETS_DIR, 'mh_logo_trimmed.png')
+
+# Font paths for Hindi/Devanagari support
+NOTO_DEVANAGARI_PATH = os.path.join(ASSETS_DIR, 'NotoSansDevanagari-Regular.ttf')
+NOTO_SANS_PATH = os.path.join(ASSETS_DIR, 'NotoSans-Regular.ttf')
+NOTO_SANS_BOLD_PATH = os.path.join(ASSETS_DIR, 'NotoSans-Bold.ttf')
+
+# Register fonts for Hindi support
+_fonts_registered = False
+def register_fonts():
+    """Register custom fonts for Hindi/Devanagari support"""
+    global _fonts_registered
+    if _fonts_registered:
+        return
+    
+    try:
+        # Register Noto Sans Devanagari for Hindi text
+        if os.path.exists(NOTO_DEVANAGARI_PATH):
+            pdfmetrics.registerFont(TTFont('NotoDevanagari', NOTO_DEVANAGARI_PATH))
+            logger.info("Registered NotoSansDevanagari font")
+        else:
+            logger.warning(f"Devanagari font not found at {NOTO_DEVANAGARI_PATH}")
+        
+        # Register Noto Sans for fallback/Latin text
+        if os.path.exists(NOTO_SANS_PATH):
+            pdfmetrics.registerFont(TTFont('NotoSans', NOTO_SANS_PATH))
+            logger.info("Registered NotoSans font")
+        
+        if os.path.exists(NOTO_SANS_BOLD_PATH):
+            pdfmetrics.registerFont(TTFont('NotoSansBold', NOTO_SANS_BOLD_PATH))
+            logger.info("Registered NotoSansBold font")
+        
+        _fonts_registered = True
+    except Exception as e:
+        logger.error(f"Failed to register fonts: {e}")
+
+def get_font_name(lang: str = "en", bold: bool = False) -> str:
+    """Get appropriate font name based on language"""
+    if lang == "hi":
+        return 'NotoDevanagari'
+    return 'NotoSansBold' if bold else 'NotoSans'
 
 # PDF Translation Strings
 PDF_TRANSLATIONS = {
