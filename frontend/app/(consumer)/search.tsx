@@ -508,7 +508,7 @@ export default function SearchScreen() {
       <DropdownModal
         visible={showCategoryDropdown}
         onClose={() => setShowCategoryDropdown(false)}
-        title="Select Category"
+        title={t('common.select_category')}
         options={categoryOptions}
         selected={selectedCategory}
         onSelect={(id) => {
@@ -521,7 +521,7 @@ export default function SearchScreen() {
       <DropdownModal
         visible={showSubjectDropdown}
         onClose={() => setShowSubjectDropdown(false)}
-        title="Select Subject"
+        title={t('common.select_subject')}
         options={subjectOptions}
         selected={selectedSubject}
         onSelect={setSelectedSubject}
