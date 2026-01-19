@@ -160,17 +160,10 @@ export default function KidsScreen() {
       setKidToDelete(null);
     }
   };
-        loadKids();
-        showSuccess('Child removed');
-      } catch (error) {
-        showError('Failed to delete');
-      }
-    }
-  };
 
   const handleSendSchedule = async (kid: Kid) => {
     if (!kid.email) {
-      showError('Please add an email address for this child first');
+      showError(t('pages.kids.add_email_first'));
       return;
     }
 
@@ -178,9 +171,9 @@ export default function KidsScreen() {
       await api.post(`/students/${kid.student_id}/send-schedule`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      showSuccess(`Schedule sent to ${kid.email}`);
+      showSuccess(t('pages.kids.schedule_sent_to', { email: kid.email }));
     } catch (error: any) {
-      showError(error.response?.data?.detail || 'Failed to send schedule');
+      showError(error.response?.data?.detail || t('messages.errors.failed_to_send'));
     }
   };
 
