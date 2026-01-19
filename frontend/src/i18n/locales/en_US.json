@@ -1331,7 +1331,8 @@
       "free_session_credit": "${{amount}} Free Session Credit",
       "sent_date": "Sent: {{date}}",
       "share_social_desc": "Invite coaches to join Maestro Habitat",
-      "credit_message": "They'll get a ${{amount}} free session credit when they join!"
+      "credit_message": "They'll get a ${{amount}} free session credit when they join!",
+      "share_message": "Join Maestro Habitat as a coach! Share your expertise and help students learn. Great opportunity to earn by teaching what you love! 🎓"
     },
     "booking_detail": {
       "title": "Booking Details",
