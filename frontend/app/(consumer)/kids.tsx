@@ -400,6 +400,42 @@ export default function KidsScreen() {
           </View>
         </KeyboardAvoidingView>
       </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal visible={showDeleteModal} animationType="fade" transparent>
+        <View style={styles.modalOverlay}>
+          <TouchableOpacity
+            style={styles.modalBackdrop}
+            activeOpacity={1}
+            onPress={() => { setShowDeleteModal(false); setKidToDelete(null); }}
+          />
+          <View style={[styles.confirmModal, { backgroundColor: colors.surface }]}>
+            <View style={[styles.confirmIconContainer, { backgroundColor: colors.errorLight || '#FEE2E2' }]}>
+              <Ionicons name="warning" size={32} color={colors.error} />
+            </View>
+            <Text style={[styles.confirmTitle, { color: colors.text }]}>
+              {t('pages.kids.confirm_remove_title')}
+            </Text>
+            <Text style={[styles.confirmMessage, { color: colors.textMuted }]}>
+              {t('pages.kids.confirm_remove_message', { name: kidToDelete?.name || '' })}
+            </Text>
+            <View style={styles.confirmButtons}>
+              <TouchableOpacity
+                style={[styles.confirmButton, styles.cancelButton, { borderColor: colors.border }]}
+                onPress={() => { setShowDeleteModal(false); setKidToDelete(null); }}
+              >
+                <Text style={[styles.confirmButtonText, { color: colors.text }]}>{t('common.cancel')}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.confirmButton, styles.deleteButton, { backgroundColor: colors.error }]}
+                onPress={handleDelete}
+              >
+                <Text style={[styles.confirmButtonText, { color: '#FFFFFF' }]}>{t('common.remove')}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
