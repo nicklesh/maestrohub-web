@@ -194,7 +194,16 @@
     "photography": "फोटोग्राफी",
     "dance": "नृत्य",
     "theater": "थिएटर",
-    "all_subjects": "सभी विषय"
+    "all_subjects": "सभी विषय",
+    "health_coaching": "स्वास्थ्य कोचिंग",
+    "life_coaching": "जीवन कोचिंग",
+    "career_coaching": "करियर कोचिंग",
+    "executive_coaching": "कार्यकारी कोचिंग",
+    "wellness": "कल्याण",
+    "nutrition": "पोषण",
+    "fitness": "फिटनेस",
+    "meditation": "ध्यान",
+    "mindfulness": "सचेतनता"
   },
   "buttons": {
     "submit": "जमा करें",
