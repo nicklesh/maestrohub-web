@@ -208,7 +208,7 @@ export default function ReviewsScreen() {
               <Ionicons name="star-outline" size={64} color={colors.textMuted} />
               <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('pages.reviews.no_pending_reviews')}</Text>
               <Text style={[styles.emptyText, { color: colors.textMuted }]}>
-                Complete sessions with coaches to leave reviews
+                {t('pages.reviews.no_pending_reviews_desc')}
               </Text>
             </View>
           ) : (
