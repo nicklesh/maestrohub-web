@@ -15,13 +15,9 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Tabl
 from reportlab.lib.units import inch
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.rl_config import rl_config
 import base64
 
 logger = logging.getLogger(__name__)
-
-# Suppress warnings for missing font glyphs
-rl_config.warnOnMissingFontGlyphs = 0
 
 # Constants
 CURRENT_YEAR = datetime.now(timezone.utc).year
