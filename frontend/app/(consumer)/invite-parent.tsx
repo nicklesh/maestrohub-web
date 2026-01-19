@@ -174,7 +174,7 @@ export default function InviteParentScreen() {
   };
 
   const handleSocialShare = async (platform: SocialPlatform) => {
-    const url = platform.getShareUrl(shareMessage, shareUrl);
+    const url = getShareUrlWithTranslation(platform.id, shareMessage, shareUrl);
     
     // For Instagram and TikTok, show a message that they need to copy the link
     if (platform.id === 'instagram' || platform.id === 'tiktok') {
@@ -187,7 +187,7 @@ export default function InviteParentScreen() {
         }
       }
       
-      showSuccess(`Link copied! Open ${platform.name} and paste the invite message.`, 'Link Copied!');
+      showSuccess(t('pages.invite_parent.link_copied', { name: platform.name }), t('common.copied'));
       if (Platform.OS === 'web') {
         window.open(url, '_blank');
       } else {
