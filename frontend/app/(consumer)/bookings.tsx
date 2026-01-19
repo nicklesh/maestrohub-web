@@ -45,7 +45,7 @@ export default function BookingsScreen() {
   const router = useRouter();
   const { width } = useWindowDimensions();
   const { colors } = useTheme();
-  const { t } = useTranslation();
+  const { t, formatDate } = useTranslation();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
