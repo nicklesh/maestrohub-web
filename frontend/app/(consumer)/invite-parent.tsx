@@ -342,7 +342,7 @@ export default function InviteParentScreen() {
             <Ionicons name="people-outline" size={64} color={colors.textMuted} />
             <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('pages.invite_parent.no_invitations')}</Text>
             <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
-              Invite other parents to discover great coaches
+              {t('pages.invite_parent.no_invitations_desc')}
             </Text>
           </View>
         }
