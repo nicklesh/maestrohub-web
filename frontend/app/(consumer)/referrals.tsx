@@ -262,13 +262,13 @@ export default function ReferralsScreen() {
                   {!isProvider && credits.free_session_credits > 0 && (
                     <View style={[styles.creditBadge, { backgroundColor: colors.success }]}>
                       <Ionicons name="star" size={16} color="#fff" />
-                      <Text style={styles.creditText}>{credits.free_session_credits} Free Sessions</Text>
+                      <Text style={styles.creditText}>{credits.free_session_credits} {t('pages.referrals.free_sessions')}</Text>
                     </View>
                   )}
                   {isProvider && credits.has_active_fee_waiver && (
                     <View style={[styles.creditBadge, { backgroundColor: colors.success }]}>
                       <Ionicons name="shield-checkmark" size={16} color="#fff" />
-                      <Text style={styles.creditText}>{credits.fee_waiver_days_remaining} Days Fee Waiver</Text>
+                      <Text style={styles.creditText}>{credits.fee_waiver_days_remaining} {t('pages.referrals.days_fee_waiver')}</Text>
                     </View>
                   )}
                 </View>
