@@ -71,9 +71,11 @@ export default function SearchScreen() {
   // Helper function to translate subject names
   const getSubjectName = (subjectId: string | undefined | null): string => {
     if (!subjectId) return '';
-    const key = `subjects.${subjectId}`;
+    // Normalize the subject name to match translation key format
+    const normalizedKey = subjectId.toLowerCase().replace(/[&\s]+/g, '_').replace(/[\/]/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '');
+    const key = `subjects.${normalizedKey}`;
     const translated = t(key);
-    return translated === key ? subjectId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : translated;
+    return translated === key ? subjectId : translated;
   };
 
   // Helper function to translate modality
