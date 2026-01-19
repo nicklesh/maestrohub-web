@@ -423,6 +423,14 @@
     "unverified": "Unverified"
   },
   "pages": {
+    "notifications": {
+      "title": "सूचनाएं",
+      "just_now": "अभी",
+      "hours_ago": "{{count}} घंटे पहले",
+      "days_ago": "{{count}} दिन पहले",
+      "no_notifications": "कोई सूचना नहीं",
+      "no_notifications_desc": "आप अप टू डेट हैं!"
+    },
     "home": {
       "hero_title": "अपना परफेक्ट कोच खोजें",
       "hero_subtitle": "व्यक्तिगत सीखने के अनुभवों के लिए विशेषज्ञ ट्यूटर और कोच से जुड़ें",
