@@ -13,6 +13,22 @@
     "admin": "एडमिन",
     "consumer": "माता-पिता"
   },
+  "levels": {
+    "elementary": "प्राथमिक",
+    "middle_school": "माध्यमिक स्कूल",
+    "high_school": "हाई स्कूल",
+    "college": "कॉलेज",
+    "adult": "वयस्क",
+    "beginner": "शुरुआती",
+    "intermediate": "मध्यवर्ती",
+    "advanced": "उन्नत",
+    "all_levels": "सभी स्तर"
+  },
+  "modality": {
+    "online": "ऑनलाइन",
+    "in_person": "व्यक्तिगत रूप से",
+    "hybrid": "हाइब्रिड"
+  },
   "navigation": {
     "home": "होम",
     "search": "खोजें",
