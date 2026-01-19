@@ -100,7 +100,9 @@ export default function NotificationsScreen() {
     if (hours < 1) return t('pages.notifications.just_now');
     if (hours < 24) return t('pages.notifications.hours_ago', { count: hours });
     if (days < 7) return t('pages.notifications.days_ago', { count: days });
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    // Use locale-aware date formatting
+    const localeCode = locale === 'hi_IN' ? 'hi-IN' : 'en-US';
+    return date.toLocaleDateString(localeCode, { month: 'short', day: 'numeric' });
   };
 
   const renderNotification = ({ item }: { item: Notification }) => (
