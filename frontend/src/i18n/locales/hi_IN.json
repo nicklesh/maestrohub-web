@@ -1139,6 +1139,19 @@
       "add_first_student": "अपना पहला छात्र जोड़ें",
       "delete_confirm": "क्या आप वाकई इस छात्र को हटाना चाहते हैं?"
     },
+    "kid_detail": {
+      "title": "छात्र विवरण",
+      "years_old": "{{count}} वर्ष",
+      "notes": "नोट्स",
+      "schedule": "शेड्यूल",
+      "payments": "भुगतान",
+      "no_payments": "अभी तक कोई भुगतान नहीं",
+      "no_schedule": "कोई निर्धारित सत्र नहीं",
+      "send_schedule": "शेड्यूल भेजें",
+      "session_with": "{{name}} के साथ सत्र",
+      "total_paid": "कुल भुगतान",
+      "view_details": "विवरण देखें"
+    },
     "edit_profile": {
       "title": "प्रोफाइल संपादित करें",
       "personal_info": "व्यक्तिगत जानकारी",
