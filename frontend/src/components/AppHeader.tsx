@@ -35,6 +35,7 @@ export default function AppHeader({ showBack = false, title, showUserName = fals
   const { user, logout, token } = useAuth();
   const { colors, isDark } = useTheme();
   const { showSuccess, showError } = useToast();
+  const { t } = useTranslation();
   const router = useRouter();
   
   const [showContactSheet, setShowContactSheet] = useState(false);
