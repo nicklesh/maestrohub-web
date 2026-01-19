@@ -230,14 +230,14 @@ export default function TaxReportsScreen() {
             ) : (
               <>
                 <Ionicons name="download" size={16} color="#fff" />
-                <Text style={styles.downloadText}>Download PDF</Text>
+                <Text style={styles.downloadText}>{t('pages.tax_reports.download_pdf')}</Text>
               </>
             )}
           </TouchableOpacity>
         ) : (
           <View style={[styles.archivedBadge, { backgroundColor: colors.gray200 }]}>
             <Ionicons name="archive" size={14} color={colors.textMuted} />
-            <Text style={[styles.archivedText, { color: colors.textMuted }]}>Archived</Text>
+            <Text style={[styles.archivedText, { color: colors.textMuted }]}>{t('pages.tax_reports.archived')}</Text>
           </View>
         )}
       </View>
@@ -259,7 +259,7 @@ export default function TaxReportsScreen() {
           </View>
           {isArchived && (
             <View style={[styles.archivedYearBadge, { backgroundColor: colors.gray200 }]}>
-              <Text style={[styles.archivedYearText, { color: colors.textMuted }]}>Archived</Text>
+              <Text style={[styles.archivedYearText, { color: colors.textMuted }]}>{t('pages.tax_reports.archived')}</Text>
             </View>
           )}
         </View>
@@ -289,7 +289,7 @@ export default function TaxReportsScreen() {
                 ) : (
                   <>
                     <Ionicons name="document-text" size={18} color="#fff" />
-                    <Text style={styles.generateText}>Generate Annual Report</Text>
+                    <Text style={styles.generateText}>{t('pages.tax_reports.generate_annual_report')}</Text>
                   </>
                 )}
               </TouchableOpacity>
@@ -299,7 +299,7 @@ export default function TaxReportsScreen() {
                 onPress={() => handleRequestArchived(year)}
               >
                 <Ionicons name="mail" size={18} color={colors.primary} />
-                <Text style={[styles.requestText, { color: colors.primary }]}>Request via Inbox</Text>
+                <Text style={[styles.requestText, { color: colors.primary }]}>{t('pages.tax_reports.request_via_inbox')}</Text>
               </TouchableOpacity>
             )}
           </View>
@@ -377,7 +377,7 @@ export default function TaxReportsScreen() {
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
             <Ionicons name="document-text-outline" size={64} color={colors.textMuted} />
-            <Text style={[styles.emptyText, { color: colors.text }]}>No tax years available</Text>
+            <Text style={[styles.emptyText, { color: colors.text }]}>{t('pages.tax_reports.no_tax_years')}</Text>
             <Text style={[styles.emptySubtext, { color: colors.textMuted }]}>
               Reports will appear here once you have payment transactions
             </Text>
