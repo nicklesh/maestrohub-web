@@ -376,7 +376,11 @@
       "agree_to_policies": "कृपया नीतियों से सहमत हों",
       "enter_learning_goals": "कृपया सीखने के लक्ष्य दर्ज करें",
       "enter_current_level": "कृपया वर्तमान स्तर दर्ज करें",
-      "acknowledge_cancellation_policy": "कृपया रद्दीकरण नीति स्वीकार करें"
+      "acknowledge_cancellation_policy": "कृपया रद्दीकरण नीति स्वीकार करें",
+      "enter_child_name": "कृपया बच्चे का नाम दर्ज करें",
+      "enter_email_address": "कृपया ईमेल पता दर्ज करें",
+      "select_at_least_one_subject": "कृपया कम से कम एक विषय/कौशल चुनें",
+      "select_at_least_one_level": "कृपया कम से कम एक स्तर चुनें"
     }
   },
   "messages": {
