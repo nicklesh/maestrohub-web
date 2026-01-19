@@ -297,7 +297,7 @@ export default function InviteParentScreen() {
           <View style={styles.shareTextContainer}>
             <Text style={[styles.shareTitle, { color: colors.text }]}>{t('pages.invite_parent.share_with_friends')}</Text>
             <Text style={[styles.shareSubtitle, { color: colors.textMuted }]}>
-              Invite other parents to join Maestro Habitat
+              {t('pages.invite_parent.share_subtitle')}
             </Text>
           </View>
         </View>
