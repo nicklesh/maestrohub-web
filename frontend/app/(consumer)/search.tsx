@@ -254,7 +254,7 @@ export default function SearchScreen() {
                 {formatNumber(item.rating_avg?.toFixed(1) || '0.0')}
               </Text>
               <Text style={[styles.ratingCount, { color: colors.textMuted }]}>
-                {item.rating_count > 0 ? `(${formatNumber(item.rating_count)})` : t('common.new')}
+                {item.rating_count > 0 ? `(${formatNumber(item.rating_count)} ${t('pages.search.reviews')})` : t('common.new')}
               </Text>
             </View>
           </View>
