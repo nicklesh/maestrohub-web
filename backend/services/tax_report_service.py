@@ -31,32 +31,36 @@ NOTO_DEVANAGARI_PATH = os.path.join(ASSETS_DIR, 'NotoSansDevanagari-Regular.ttf'
 NOTO_SANS_PATH = os.path.join(ASSETS_DIR, 'NotoSans-Regular.ttf')
 NOTO_SANS_BOLD_PATH = os.path.join(ASSETS_DIR, 'NotoSans-Bold.ttf')
 
-# Register fonts for Hindi support
-_fonts_registered = False
+# Register fonts for Hindi support - force re-registration each time
 def register_fonts():
     """Register custom fonts for Hindi/Devanagari support"""
-    global _fonts_registered
-    if _fonts_registered:
-        return
-    
     try:
-        # Register Noto Sans Devanagari for Hindi text
-        if os.path.exists(NOTO_DEVANAGARI_PATH):
-            pdfmetrics.registerFont(TTFont('NotoDevanagari', NOTO_DEVANAGARI_PATH))
-            logger.info("Registered NotoSansDevanagari font")
-        else:
-            logger.warning(f"Devanagari font not found at {NOTO_DEVANAGARI_PATH}")
+        # Check if font is already registered
+        try:
+            pdfmetrics.getFont('NotoDevanagari')
+            logger.debug("NotoDevanagari font already registered")
+        except KeyError:
+            # Register Noto Sans Devanagari for Hindi text
+            if os.path.exists(NOTO_DEVANAGARI_PATH):
+                pdfmetrics.registerFont(TTFont('NotoDevanagari', NOTO_DEVANAGARI_PATH))
+                logger.info("Registered NotoSansDevanagari font")
+            else:
+                logger.warning(f"Devanagari font not found at {NOTO_DEVANAGARI_PATH}")
         
-        # Register Noto Sans for fallback/Latin text
-        if os.path.exists(NOTO_SANS_PATH):
-            pdfmetrics.registerFont(TTFont('NotoSans', NOTO_SANS_PATH))
-            logger.info("Registered NotoSans font")
+        try:
+            pdfmetrics.getFont('NotoSans')
+        except KeyError:
+            if os.path.exists(NOTO_SANS_PATH):
+                pdfmetrics.registerFont(TTFont('NotoSans', NOTO_SANS_PATH))
+                logger.info("Registered NotoSans font")
         
-        if os.path.exists(NOTO_SANS_BOLD_PATH):
-            pdfmetrics.registerFont(TTFont('NotoSansBold', NOTO_SANS_BOLD_PATH))
-            logger.info("Registered NotoSansBold font")
+        try:
+            pdfmetrics.getFont('NotoSansBold')
+        except KeyError:
+            if os.path.exists(NOTO_SANS_BOLD_PATH):
+                pdfmetrics.registerFont(TTFont('NotoSansBold', NOTO_SANS_BOLD_PATH))
+                logger.info("Registered NotoSansBold font")
         
-        _fonts_registered = True
     except Exception as e:
         logger.error(f"Failed to register fonts: {e}")
 
