@@ -22,7 +22,10 @@
     "beginner": "शुरुआती",
     "intermediate": "मध्यवर्ती",
     "advanced": "उन्नत",
-    "all_levels": "सभी स्तर"
+    "all_levels": "सभी स्तर",
+    "elementary_school": "प्राथमिक स्कूल",
+    "pre_school": "प्री-स्कूल",
+    "k_12": "K-12"
   },
   "modality": {
     "online": "ऑनलाइन",
