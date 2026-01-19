@@ -6512,8 +6512,8 @@ app.include_router(api_router)
 ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:8001",
-    "https://lingosphere-3.preview.emergentagent.com",
-    "https://lingosphere-3.preview.emergentagent.com",
+    "https://translate-hub-74.preview.emergentagent.com",
+    "https://translate-hub-74.preview.emergentagent.com",
 ]
 
 app.add_middleware(
