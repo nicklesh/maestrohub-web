@@ -54,6 +54,29 @@ tax_report_service = None
 referral_service = None
 kid_notification_service = None
 
+# Meeting Link URL Validation
+def validate_meeting_link(url: str) -> bool:
+    """Validate that the URL is a valid Zoom, Teams, or Google Meet link"""
+    if not url:
+        return True  # Empty is valid (optional field)
+    
+    # Normalize URL
+    url = url.strip().lower()
+    
+    # Valid meeting URL patterns
+    valid_patterns = [
+        r'^https?://([\w-]+\.)?zoom\.us/',  # Zoom
+        r'^https?://teams\.microsoft\.com/',  # Microsoft Teams
+        r'^https?://meet\.google\.com/',  # Google Meet
+        r'^https?://[\w-]+\.webex\.com/',  # Cisco Webex
+    ]
+    
+    for pattern in valid_patterns:
+        if re.match(pattern, url):
+            return True
+    
+    return False
+
 # JWT Config
 JWT_SECRET = os.environ.get('JWT_SECRET', 'maestrohabitat-secret-key-change-in-production')
 JWT_ALGORITHM = 'HS256'
