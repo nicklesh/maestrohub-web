@@ -1,72 +1,78 @@
 <analysis>
+
 **original_problem_statement:**
-The user's primary goal is to make the entire application fully translatable (internationalization - i18n). This involves translating all user-facing content, including static text, labels, buttons, modals, and dynamic content.
+The user's goal is to make the application fully translatable (i18n). This involves translating all user-facing content, including static text, dynamic content, modals, and generated PDFs.
 
-The user has provided extensive feedback via screenshots, highlighting numerous pages and components that remain untranslated. The list of pages requiring translation includes, but is not limited to:
-- Home (category cards)
-- Search (filters, coach cards, bios)
-- Tutor Details (about, subjects, levels, policies)
-- Bookings & Booking Details (status pills, labels)
-- My Kids & Kid Details (forms, stats, notifications)
-- Add/Edit Child Modals
-- Contact Us Modal
-- FAQ (all content)
-- Become a Coach flow
-- Invite Providers/Parents pages
-- Referrals, Tax Reports, Reminders, Notifications, Edit Profile pages
-
-Additionally, the user has reported functional bugs, such as a Continue to Payment button not working and several pages crashing after initial i18n attempts.
+The user has provided multiple rounds of detailed feedback, highlighting specific pages and strings that remain untranslated. Key functional bugs were also reported and have been addressed, but the core translation work is ongoing.
 
 **PRODUCT REQUIREMENTS:**
 - Implement translations for all static text across all consumer-facing screens.
 - Ensure all modal dialogs, forms, and placeholders are translated.
 - Translate all success, error, info, and warning messages (toasts).
 - Translate dynamic content where possible (e.g., status labels).
-- Ensure all 18+ language JSON files are fully populated with correct translations, removing any English fallback text.
-- Fix any bugs introduced during the i18n implementation, including page crashes and broken functionality.
+- Translate generated PDF reports (Tax Reports, General Reports).
+- Ensure all 18+ language JSON files are fully populated with correct translations.
+- Fix any UI/functional bugs introduced during the i18n implementation.
+- Address specific UI layout issues as reported (e.g., inconsistent card widths).
+- The user has also requested seed data to validate functionality.
 
 **User's preferred language**: English
 
 **what currently exists?**
-- A fully configured i18n framework using  and  is in place.
-- 18+ locale JSON files exist in  and have been populated with thousands of translation keys.
-- A language selection screen allows users to switch languages.
-- Critical page-crashing bugs (e.g., ) that arose during implementation have been fixed across more than 16 files by correctly instantiating the  hook.
-- Significant progress has been made on translating key pages, including , , , , , , and .
-- The frontend testing agent successfully verified the initial i18n setup on the profile page.
+- A working i18n framework () is in place.
+- The critical Continue to Payment button bug has been fixed by resolving an authentication timing issue on the booking page.
+- An inconsistent coach card width issue on the search page has been resolved.
+- Numerous pages have undergone a first pass of i18n implementation, including , , , , , , , , , , and . However, many strings on these pages were missed and are still hardcoded.
+- The backend PDF generation service for tax reports () was updated to use the correct company logo and to accept a language parameter to generate translated PDFs. However, this is currently broken.
 
 **Last working item**:
-- Last item agent was working: Applying comprehensive translations to the Bookings () and Booking Details () pages in response to user feedback (Msg 421). This included translating status labels, static text, and card content.
+- Last item agent was working: Addressing a detailed list of missed translations from user feedback (Msg 404). The agent had just finished adding translations to the  modal within  and was in the process of fixing untranslated strings on the  page.
 - Status: **IN PROGRESS**
 - Agent Testing Done: N
-- Which testing method agent to use? **Manual testing**. The next agent must log in, switch the language to Hindi (or another non-English language), and navigate to the My Bookings page and click into a specific booking. Verify that status pills (Booked), labels (Student:), and all content on the details page (Date, Time, TUTOR, STUDENT) are now translated as per the user's screenshots.
-- User Testing Done: N (User reported the issue, prompting this work, but has not verified the fix).
+- Which testing method agent to use? **Manual testing**. After applying fixes, the agent must log in, switch the language to Hindi, navigate to the specific pages mentioned by the user (Referrals, Invite Parents, Notifications, etc.), and verify that the hardcoded English text has been replaced with the correct translated text from the  file.
+- User Testing Done: N
 
 **All Pending/In progress Issue list**:
-- Issue 1: Continue to Payment button is non-functional (P1)
-- Issue 2: Web Auth state persists incorrectly between user sessions on web (P1)
+- Issue 1: PDF reports are not translated and/or are corrupted (P0)
+- Issue 2: Numerous specific UI strings remain untranslated across multiple pages (P0)
+- Issue 3: Web Auth state persists incorrectly between user sessions on web (P1)
 
 **Issues Detail:**
-- **Issue 1: Continue to Payment button is non-functional**
-    - **Attempted fixes:** The agent reviewed the  function in . The logic appeared correct, leading to the suspicion that it might be a user-side validation failure (e.g., not filling required fields) or a subtle state bug. No code changes were made to fix it.
+- **Issue 1: PDF reports are not translated and/or are corrupted**
+    - **Attempted fixes:** The agent modified  to accept a  parameter and use a dictionary for translations. It also modified the frontend to pass the language. This failed. The user-provided PDF for tax reports shows gibberish text when generated in Hindi, suggesting a font or encoding issue with  for non-ASCII characters. The regular report PDF remains in English.
     - **Next debug checklist:**
-        1. Manually test the booking flow on the web preview.
-        2. Open the browser's developer console and check for any console errors when the Continue to Payment button is clicked.
-        3. Add  statements inside  to trace the execution path and check the values of , , and .
-        4. Check the Network tab to see if the  API call is being made and what its response is.
-    - **Why fix this issue and what will be achieved with the fix?** This is a critical bug blocking the core user flow of booking a session.
-    - **Status:** NOT STARTED
+        1.  In , investigate how to correctly register and use a font that supports Devanagari script (for Hindi) with . A standard font like Helvetica will not work.
+        2.  Verify the  parameter is being correctly passed from the frontend through the backend API endpoint () to the  and  functions.
+        3.  Add  on the frontend in  to confirm  is passing the correct language code (e.g., 'hi_IN').
+        4.  Apply the same font/encoding fix to the regular report generation logic in .
+    - **Why fix this issue and what will be achieved with the fix?** This is a core feature requested by the user. The reports are unusable for non-English speakers in their current state.
+    - **Status:** NOT STARTED (since the last attempt failed)
+    - **Is recurring issue?** Y
+    - **Should Test frontend/backend/both after fix?** Backend
+    - **Blocked on other issue:** None
+
+- **Issue 2: Numerous specific UI strings remain untranslated across multiple pages**
+    - **Attempted fixes:** The agent used Python and  scripts for bulk replacements, which missed many strings and introduced syntax errors. The agent is now manually fixing files based on user feedback. The last fix was applied to .
+    - **Next debug checklist:**
+        1.  Systematically go through each point in the user's message (Msg 265 and Msg 404).
+        2.  For each point, open the corresponding  file (e.g., , , , ).
+        3.  Find the hardcoded English string (e.g., Receive a weekly overview...).
+        4.  Wrap it with .
+        5.  Add the new key and its translation to  and .
+        6.  Repeat for all items on the user's list.
+    - **Why fix this issue and what will be achieved with the fix?** This will complete the main i18n task and satisfy the user's primary request.
+    - **Status:** IN PROGRESS
     - **Is recurring issue?** Y
     - **Should Test frontend/backend/both after fix?** Frontend
     - **Blocked on other issue:** None
 
-- **Issue 2: Web Auth state persists incorrectly between user sessions on web**
-    - **Attempted fixes:** None in this session. The agent acknowledged the issue and its impact on testing (e.g., language preference resetting on navigation).
+- **Issue 3: Web Auth state persists incorrectly between user sessions on web**
+    - **Attempted fixes:** None. The agent has worked around it but not addressed the root cause. This issue makes testing difficult as it resets language preferences and requires re-login on page navigation/refresh.
     - **Next debug checklist:**
-        1. Examine .
-        2. Investigate how the auth token and language preference are stored (e.g., ) and rehydrated on web platform.
-        3. Check the logic in the root  to see how session state is managed on page loads/refreshes.
-    - **Why fix this issue and what will be achieved with the fix?** Fixing this is critical for reliable testing on the web preview and for providing a usable web experience. It currently forces re-logins and resets user preferences like language.
+        1.  Examine .
+        2.  Investigate how the auth token and language preference are stored and rehydrated on the web platform.
+        3.  Check the logic in the root  to see how session state is managed.
+    - **Why fix this issue and what will be achieved with the fix?** Fixing this is critical for reliable testing on the web preview and for a usable web experience.
     - **Status:** NOT STARTED
     - **Is recurring issue?** Y
     - **Should Test frontend/backend/both after fix?** Frontend
@@ -77,34 +83,38 @@ Additionally, the user has reported functional bugs, such as a Continue to Payme
 
 **Task Detail:**
 - **Task 1: Complete Comprehensive i18n Migration**
-    - **Where to resume:** The user has provided multiple rounds of detailed feedback with screenshots. The immediate next steps are to address the remaining untranslated parts on the pages the agent just worked on:
-        1.  ****: The user reported (Msg 382) that the Add Child and Edit Child modal form fields (Name, Age, Grade, placeholders, checkboxes) are still not translated, even though the agent worked on this file.
-        2.  ****: Verify all parts of this page are translated.
-        3.  ** & **: The user's latest feedback (Msg 421) indicates these pages are still not fully translated. Double-check all labels and status pills.
-    - After fixing the above, systematically work through the user's full list of untranslated pages: **FAQ, Contact Us, Become a Coach, Invite Parents/Providers, Referrals, Tax Reports, Reminders, Notifications, Edit Profile**.
-    - **What will be achieved with this?** This will fulfill the user's primary request for a fully internationalized application.
+    - **Where to resume:** The agent was fixing hardcoded strings in . The next step is to continue working through the user's detailed list from Msg 404, which includes untranslated text in:
+        -  (System Update)
+        -  (Annual 1099)
+        -  (Your Rewards)
+        -  (Invite other parents...)
+        -  (Invite providers...)
+        - and the bottom sheets associated with invite flows.
+    - **What will be achieved with this?** This will fulfill the user's primary request for a fully internationalized application UI.
     - **Status:** IN PROGRESS
     - **Should Test frontend/backend/both after fix?** Frontend
     - **Blocked on something:** None
 
 **Upcoming and Future Tasks**
-- **P0 - Translate Dynamic Content from Backend:** The user has pointed out that category names, subject names, and coach bios are not translated. This requires a strategy to handle translations for data fetched from the API. This might involve storing translations in the DB or creating mapping on the frontend.
-- **P1 - Translate All Toast Messages:** A global search for all , ,  calls is needed to ensure their message strings are wrapped in .
-- **P1 - Populate All Locale Files:** Use a translation service or script to accurately translate all the newly added English keys into the 17 other language files. The previous agent used a script that copied English keys as placeholders.
-- **P2 - Replace :** Refactor confirmation dialogs to use a custom, non-blocking modal component for better UX.
+- **P0 - Fix PDF Generation:** As detailed in All Pending/In progress Issue list, this is a high-priority bug that needs a dedicated fix, likely involving custom fonts in the backend  implementation.
+- **P1 - Provide Seed Data:** The user explicitly requested seed data to validate functionality (Msg 404). A backend script or service should be created to populate the database with sample users, sessions, and transactions to make testing easier.
+- **P1 - Translate Dynamic Content from Backend:** Category names, subject names, and level names in the Become a Coach flow are still not translated because they come from the database. A strategy for backend-driven translations is required.
+- **P2 - Populate All 17 Other Locale Files:** Once all English keys are finalized, they need to be professionally translated and populated into the other language files (e.g., , ).
 
 **Completed work in this session**
-- **Critical Bug Fixes (DONE):**
-  - Fixed the  crash on ~16 pages by adding  where it was missing.
-  - Corrected multiple JSX syntax errors (e.g.,  instead of ) that were introduced by faulty automated scripts and were breaking the Metro bundler.
-- **i18n Infrastructure (DONE):**
-  - Significantly expanded the master  file with hundreds of new keys for various pages.
-  - Used a script to propagate these new keys to all other 17+ locale files as placeholders.
-- **i18n Page Translations (PARTIALLY DONE):**
-  - Applied  calls to many hardcoded strings across , , , , , , , , and others.
+- **Critical Bug Fix:** Fixed the Continue to Payment button by adding  and  checks in , resolving a critical auth timing issue.
+- **UI Layout Fix:** Corrected inconsistent coach card widths in  by adjusting flexbox styles.
+- **Extensive i18n Implementation (In Progress):**
+  - Applied  calls to dozens of strings across , , , , , , , , , , and .
+  - Added hundreds of new translation keys to  and .
+  - Fixed the Contact Us modal translation in .
+- **Backend PDF Update:**
+  - Changed the logo in tax report PDFs to match the standard company logo in .
+  - Implemented (currently failing) logic to support PDF translations.
+- **Syntax Bug Fix:** Repaired a UI-crashing syntax error in  that was introduced by a faulty  command.
 
 **Earlier issues found/mentioned but not fixed**
-- The two main issues listed in the All Pending/In progress Issue list cover this: the non-functional Continue to Payment button and the persistent Web Auth state bug.
+- The main unfixed issues are the **broken PDF translations** and the **persistent web auth state bug**, as detailed in the pending issues list.
 
 **Known issue recurrence from previous fork**
 - **Issue recurrence in previous fork:** Web authentication state ( on web).
@@ -115,79 +125,72 @@ Additionally, the user has reported functional bugs, such as a Continue to Payme
 
 
 **Key Technical Concepts**
-- **Internationalization (i18n):** Using  and  with the  hook and  function.
-- **Bulk File Editing:** Use of Python scripts and command-line tools (, ) for large-scale refactoring. **Caution:** This proved to be error-prone, causing syntax corruption that required significant manual cleanup.
-- **Component-Based Translation:** Applying translations directly within React Native components.
-
-**key DB schema**
-- No changes to DB schema in this session.
-
-**changes in tech stack**
-- No changes to the core tech stack.
+- **Internationalization (i18n):** Using  with  hook on the frontend.
+- **Backend PDF Generation:** Using  in a FastAPI service. The current implementation has font/encoding issues with non-ASCII characters.
+- **React Native State Management:** Using React Context () to manage user session. Timing issues with this context on web were the source of the booking bug.
+- **Expo File-Based Routing:** All screens are managed as files under .
 
 **All files of reference**
-- : The directory containing all the  files that need translation.
-- : The master file for all translation keys.
-- : The primary target for non-English translation testing.
-- : Contains the broken Continue to Payment button.
+- : Directory with all consumer-facing screens requiring translation.
+- : Backend service for generating tax report PDFs. Contains the broken translation logic.
+- : Contains the API endpoints and logic for generating regular report PDFs.
+- : The master English translation file.
+- : The target Hindi translation file.
+- : Shared component containing the Contact Us modal.
 
 **Critical Info for New Agent**
-- **Your top priority (P0) is to continue the comprehensive i18n migration.** Do not assume a file is done. The user has repeatedly found untranslated strings on pages the previous agent considered complete. Start by addressing the latest user feedback from messages 382 and 421 regarding the , , and  pages.
-- **Be extremely cautious with automated scripts.** The previous agent spent a lot of time fixing syntax errors ( instead of , missing braces in ) caused by  and Python scripts. Manual, file-by-file updates are slower but safer. If you use a script, verify its output meticulously.
-- **The Continue to Payment button is a critical functional bug (P1).** Investigate it by checking for browser console errors and tracing the code execution in .
-- **The web auth bug is a major pain point for testing.** Be prepared for the UI to revert to English or require re-login when navigating between pages on the web preview.
-- **A major unaddressed challenge is translating dynamic data from the backend** (e.g., category names like Academics). This will require a new strategy.
+- **Your top priority (P0) is to fix the remaining UI translations.** Systematically work through the user's detailed feedback in message #404. Start by finishing the work on  and then move to the other pages (, , , etc.). Do not use automated scripts; update files manually and verify.
+- **Your second priority (P0) is to fix the broken PDF generation.** The tax report PDF is gibberish in Hindi. This is a backend issue in . You will need to research how to properly embed a font that supports Devanagari script (for Hindi) using the  library. The same fix will be needed for regular reports in .
+- **The user requested seed data.** This is a new task (P1) that needs to be planned and executed. It will likely involve creating a new backend endpoint to populate the database.
+- **Avoid  and broad-stroke scripts.** They have consistently introduced syntax errors and missed edge cases. A manual, file-by-file approach is required for the remaining translation work.
+- The web auth bug is a known annoyance that complicates testing. Be prepared to log in frequently or test flows in a single, uninterrupted session.
 
 **documents created in this job**
-- : Script to add keys to JSON files.
-- : Faulty script to apply  calls to TSX files.
-- : Script to add a large batch of keys to locale files.
+- : Script to add keys to JSON files. (Used multiple times)
+- : Script to apply  calls to TSX files. (Used multiple times)
 
 **Last 10 User Messages and any pending HUMAN messages**
-1. **User (Msg 421):** Reports  page status labels and  page are still not translated. (IN PROGRESS)
-2. **User (Msg 382):** Reports Continue to Payment button still broken, and / forms are not translated. (Partially Addressed)
-3. **User (Msg 291):** Asks agent to continue but first fix a new crash in . (RESOLVED)
-4. **User (Msg 264):** Confirms all screenshots have been uploaded and asks for everything to be translated. (Acknowledged)
-5. **User (Msg 262):** Uploads screenshots of untranslated , , , , and  pages. (Acknowledged)
-6. **User (Msg 260):** Uploads screenshots of untranslated , , , , and  pages. (Acknowledged)
-7. **User (Msg 258):** Uploads screenshots of untranslated , , , and  pages. (Acknowledged)
-8. **User (Msg 256):** Starts uploading screenshots of untranslated pages, starting with , , , and . (Acknowledged)
-9. **User (Msg 221):** Confirms page crashes are fixed but provides a long list of pages still needing translation. (IN PROGRESS)
-10. **User (Msg 124):** Provides the first major list of 12 areas with missing translations and reports that many pages are crashing. (Partially Addressed)
+1.  **User (Msg 404):** Provided a very long, detailed list of remaining untranslated strings across many pages (Contact Us, Notifications, Reports, Tax Reports, Rewards, Invite flows) and reported that the generated PDFs are either not translated or are gibberish. (IN PROGRESS)
+2.  **User (Msg 323):** Reported the tax report logo was wrong and the PDF was not translated. (Partially Addressed - Logo fixed, translation failed)
+3.  **User (Msg 306):** Reported a Broken UI after the agent used a  script, which crashed the app. (RESOLVED)
+4.  **User (Msg 265):** Provided the first very detailed list of missed translations across 8+ pages, noting the agent's previous bulk update was incomplete. (Partially Addressed)
+5.  **User (Msg 212):** Pointed out that the agent had added keys to JSON files but forgot to update the components, so pages were still in English. (RESOLVED)
+6.  **User (Msg 189):** Gave a high-level list of 8 new areas to translate. (Acknowledged)
+7.  **User (Msg 176):** Reported that  was showing raw keys like forms.name instead of text. (RESOLVED)
+8.  **User (Msg 161):** Reported that  and  were showing raw translation keys in Hindi. (RESOLVED)
+9.  **User (Msg 94):** Confirmed booking issue was fixed, reported inconsistent coach card widths, and asked the agent to continue with i18n. (RESOLVED)
+10. **User (Msg 5):** Instructed the agent to fix the Continue to Payment button first, then work on i18n. (RESOLVED)
 
 **Project Health Check:**
 - **Broken:**
-    - The core booking flow is blocked by the non-functional Continue to Payment button.
-    - Web authentication/session persistence is unreliable, hindering testing.
+    - PDF Generation: Tax report PDFs are corrupted (gibberish text) when generated for Hindi. Regular report PDFs are not translated at all.
+    - Web Authentication: Session state and language preference do not persist reliably on web, hindering testing.
 - **Mocked:**
-    - Payment System.
+    - Payment System is simulated.
 - **In-Progress:**
-    - The app-wide internationalization effort is the main active task, estimated to be ~50-60% complete.
+    - The app-wide internationalization effort is the main active task, estimated to be ~80% complete for static UI content, but with many specific strings still missing.
 
 **3rd Party Integrations**
+- **reportlab (PDF Generation):** Integrated on the backend. Has font/encoding issues.
+- **i18next / react-i18next (Internationalization):** Integrated on the frontend.
 - **Resend (Email):** LIVE.
 - **Stripe (Payments):** Simulated.
 - **ip-api.com (IP Geolocation):** Integrated.
-- **reportlab (PDF Generation):** Integrated.
-- **i18next / react-i18next (Internationalization):** Integrated.
 
 **Testing status**
-- Testing agent used after significant changes: YES (but only early in the session; many changes have been made since)
+- Testing agent used after significant changes: NO (Agent has been using manual screenshot tool).
 - Troubleshoot agent used after agent stuck in loop: NO
 - Test files created: None.
-- Known regressions: None, but existing bugs remain.
+- Known regressions: PDF generation was modified and is now in a broken state for non-English languages.
 
 **Credentials to test flow:**
 - **Consumer:**  / 
 - **Coach:**  / 
 - **Admin:**  / 
-- **Sample Referral Code:** 
 
 **What agent forgot to execute**
-- The agent has not addressed how to translate dynamic content fetched from the backend (e.g., category names, subjects, coach bios), which the user has explicitly pointed out as untranslated.
-- The agent did not complete the translation of forms on the  page, despite working on the file.
-- The agent did not fully resolve the Continue to Payment bug, moving on after a brief investigation.
-- The agent did not update project documentation ().
-- The agent did not begin refactoring  dialogs as mentioned in the initial handoff.
+- The agent has not yet implemented the user's request for **seed data** (Msg 404).
+- The agent's fix for PDF translations is incomplete and has left the feature in a broken state.
+- The agent has not addressed the translation of dynamic data from the backend (e.g., subject/category names).
 
 </analysis>
