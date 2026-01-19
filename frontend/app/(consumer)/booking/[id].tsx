@@ -20,7 +20,7 @@ import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 import { useToast } from '@/src/context/ToastContext';
 import { useTranslation } from '@/src/i18n';
 import AppHeader from '@/src/components/AppHeader';
-import { format, parseISO, isPast } from 'date-fns';
+import { parseISO, isPast } from 'date-fns';
 
 interface KidNotification {
   notification_id: string;
