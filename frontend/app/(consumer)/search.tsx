@@ -46,7 +46,7 @@ export default function SearchScreen() {
   const params = useLocalSearchParams();
   const { width } = useWindowDimensions();
   const { colors } = useTheme();
-  const { t } = useTranslation();
+  const { t, formatNumber } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedSubject, setSelectedSubject] = useState<string>('all');
@@ -59,6 +59,30 @@ export default function SearchScreen() {
   // Dropdown modal states
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [showSubjectDropdown, setShowSubjectDropdown] = useState(false);
+
+  // Helper function to translate category names
+  const getCategoryName = (categoryId: string, originalName?: string): string => {
+    const key = `categories.${categoryId}`;
+    const translated = t(key);
+    return translated === key ? (originalName || categoryId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())) : translated;
+  };
+
+  // Helper function to translate subject names
+  const getSubjectName = (subjectId: string): string => {
+    const key = `subjects.${subjectId}`;
+    const translated = t(key);
+    return translated === key ? subjectId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : translated;
+  };
+
+  // Helper function to translate modality
+  const getModalityName = (modality: string): string => {
+    switch (modality.toLowerCase()) {
+      case 'online': return t('pages.search.online');
+      case 'in-person': return t('pages.search.in_person');
+      case 'hybrid': return t('pages.search.hybrid');
+      default: return modality;
+    }
+  };
 
   // Responsive breakpoints
   const isTablet = width >= 768;
