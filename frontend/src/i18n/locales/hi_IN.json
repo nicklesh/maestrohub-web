@@ -14,14 +14,15 @@
     "consumer": "माता-पिता"
   },
   "levels": {
-    "elementary": "प्राथमिक",
-    "middle_school": "माध्यमिक स्कूल",
-    "high_school": "हाई स्कूल",
+    "elementary": "प्राथमिक (K-5)",
+    "middle_school": "माध्यमिक स्कूल (6-8)",
+    "high_school": "हाई स्कूल (9-12)",
     "college": "कॉलेज",
     "adult": "वयस्क",
     "beginner": "शुरुआती",
     "intermediate": "मध्यवर्ती",
     "advanced": "उन्नत",
+    "professional": "पेशेवर",
     "all_levels": "सभी स्तर",
     "elementary_school": "प्राथमिक स्कूल",
     "pre_school": "प्री-स्कूल",
@@ -29,6 +30,13 @@
   },
   "modality": {
     "online": "ऑनलाइन",
+    "in_person": "व्यक्तिगत रूप से",
+    "hybrid": "हाइब्रिड"
+  },
+  "countries": {
+    "united_states": "संयुक्त राज्य अमेरिका",
+    "india": "भारत"
+  },
     "in_person": "व्यक्तिगत रूप से",
     "hybrid": "हाइब्रिड"
   },
