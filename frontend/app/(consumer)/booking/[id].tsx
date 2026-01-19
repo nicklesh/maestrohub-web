@@ -302,6 +302,36 @@ export default function BookingDetailScreen() {
                 </View>
               </View>
             </View>
+            
+            {/* Meeting Link - Show for online sessions with upcoming status */}
+            {booking.meeting_link && !isPast(parseISO(booking.start_at)) && (
+              <View style={[styles.meetingLinkRow, { borderTopWidth: 1, borderTopColor: colors.border, paddingTop: 16, marginTop: 16 }]}>
+                <View style={styles.dateContainer}>
+                  <Ionicons name="videocam" size={24} color={colors.success} />
+                  <View style={styles.dateInfo}>
+                    <Text style={styles.dateLabel}>{t('pages.booking_detail.meeting_link')}</Text>
+                    <TouchableOpacity
+                      onPress={() => {
+                        if (Platform.OS === 'web') {
+                          window.open(booking.meeting_link, '_blank');
+                        } else {
+                          Linking.openURL(booking.meeting_link!);
+                        }
+                      }}
+                    >
+                      <Text style={[styles.meetingLinkValue, { color: colors.primary }]} numberOfLines={1}>
+                        {t('pages.booking_detail.join_meeting')}
+                      </Text>
+                    </TouchableOpacity>
+                    {booking.waiting_room_enabled && (
+                      <Text style={[styles.waitingRoomNote, { color: colors.textMuted }]}>
+                        {t('pages.booking_detail.waiting_room_note')}
+                      </Text>
+                    )}
+                  </View>
+                </View>
+              </View>
+            )}
           </View>
 
           {/* Tutor Info */}
