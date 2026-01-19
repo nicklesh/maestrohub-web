@@ -347,7 +347,7 @@ export default function ReviewsScreen() {
                   color={wouldRecommend ? colors.success : colors.textMuted}
                 />
                 <Text style={[styles.recommendText, { color: colors.text }]}>
-                  I would recommend this coach
+                  {t('pages.reviews.would_recommend')}
                 </Text>
               </TouchableOpacity>
             </ScrollView>
