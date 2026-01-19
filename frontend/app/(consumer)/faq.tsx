@@ -44,7 +44,7 @@ export default function FAQScreen() {
 
   const handleSendContact = async () => {
     if (!contactSubject.trim() || !contactMessage.trim()) {
-      showToast(t('pages.contact.fill_all_fields'), 'warning');
+      showToast('warning', t('pages.contact.fill_all_fields'));
       return;
     }
 
