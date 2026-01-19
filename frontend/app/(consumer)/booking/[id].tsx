@@ -284,7 +284,7 @@ export default function BookingDetailScreen() {
                 <View style={styles.dateInfo}>
                   <Text style={styles.dateLabel}>{t('pages.booking_detail.date')}</Text>
                   <Text style={[styles.dateValue, isDesktop && styles.dateValueDesktop]}>
-                    {format(parseISO(booking.start_at), 'EEEE, MMMM d, yyyy')}
+                    {formatDate(parseISO(booking.start_at), 'EEEE, MMMM d, yyyy')}
                   </Text>
                 </View>
               </View>
@@ -295,7 +295,7 @@ export default function BookingDetailScreen() {
                 <View style={styles.dateInfo}>
                   <Text style={styles.dateLabel}>{t('pages.booking_detail.time')}</Text>
                   <Text style={[styles.dateValue, isDesktop && styles.dateValueDesktop]}>
-                    {format(parseISO(booking.start_at), 'h:mm a')} - {format(parseISO(booking.end_at), 'h:mm a')}
+                    {formatDate(parseISO(booking.start_at), 'h:mm a')} - {formatDate(parseISO(booking.end_at), 'h:mm a')}
                   </Text>
                 </View>
               </View>
