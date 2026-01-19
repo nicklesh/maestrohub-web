@@ -100,7 +100,7 @@ export default function ConsumerReportsScreen() {
 
   const downloadPDF = async () => {
     setDownloading(true);
-    const lang = i18n.language === 'hi_IN' ? 'hi' : 'en';
+    const lang = locale === 'hi_IN' ? 'hi' : 'en';
     try {
       if (Platform.OS === 'web') {
         // Use fetch with authorization header for authenticated download
