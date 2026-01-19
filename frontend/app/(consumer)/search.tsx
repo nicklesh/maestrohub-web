@@ -61,14 +61,16 @@ export default function SearchScreen() {
   const [showSubjectDropdown, setShowSubjectDropdown] = useState(false);
 
   // Helper function to translate category names
-  const getCategoryName = (categoryId: string, originalName?: string): string => {
+  const getCategoryName = (categoryId: string | undefined | null, originalName?: string): string => {
+    if (!categoryId) return originalName || t('common.general');
     const key = `categories.${categoryId}`;
     const translated = t(key);
     return translated === key ? (originalName || categoryId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())) : translated;
   };
 
   // Helper function to translate subject names
-  const getSubjectName = (subjectId: string): string => {
+  const getSubjectName = (subjectId: string | undefined | null): string => {
+    if (!subjectId) return '';
     const key = `subjects.${subjectId}`;
     const translated = t(key);
     return translated === key ? subjectId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : translated;
@@ -76,9 +78,10 @@ export default function SearchScreen() {
 
   // Helper function to translate modality
   const getModalityName = (modality: string): string => {
-    switch (modality.toLowerCase()) {
+    const m = modality.toLowerCase().replace('-', '_');
+    switch (m) {
       case 'online': return t('pages.search.online');
-      case 'in-person': return t('pages.search.in_person');
+      case 'in_person': return t('pages.search.in_person');
       case 'hybrid': return t('pages.search.hybrid');
       default: return modality;
     }
