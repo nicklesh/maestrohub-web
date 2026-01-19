@@ -69,7 +69,7 @@ export default function TutorDetailScreen() {
   const { id } = useLocalSearchParams();
   const { width } = useWindowDimensions();
   const { colors } = useTheme();
-  const { t } = useTranslation();
+  const { t, formatNumber, formatDate } = useTranslation();
   const [tutor, setTutor] = useState<Tutor | null>(null);
   const [packages, setPackages] = useState<SessionPackage[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -78,6 +78,25 @@ export default function TutorDetailScreen() {
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
+
+  // Helper functions for translations
+  const getLevelName = (level: string): string => {
+    const key = `levels.${level.toLowerCase().replace(/\s+/g, '_')}`;
+    const translated = t(key);
+    return translated === key ? level : translated;
+  };
+
+  const getSubjectName = (subject: string): string => {
+    const key = `subjects.${subject.toLowerCase().replace(/\s+/g, '_')}`;
+    const translated = t(key);
+    return translated === key ? subject : translated;
+  };
+
+  const getCategoryName = (category: string): string => {
+    const key = `categories.${category.toLowerCase().replace(/\s+/g, '_')}`;
+    const translated = t(key);
+    return translated === key ? category : translated;
+  };
 
   // Responsive breakpoints
   const isTablet = width >= 768;
