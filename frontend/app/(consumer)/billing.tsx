@@ -217,7 +217,7 @@ export default function BillingScreen() {
   if (loading) {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-        <AppHeader showBack showUserName title="Billing & Payments" />
+        <AppHeader showBack showUserName title={t('pages.billing.title')} />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -227,7 +227,7 @@ export default function BillingScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <AppHeader showBack showUserName title="Billing & Payments" />
+      <AppHeader showBack showUserName title={t('pages.billing.title')} />
 
       <ScrollView
         style={styles.content}
