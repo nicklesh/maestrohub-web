@@ -282,7 +282,7 @@ export default function StudentsScreen() {
                   onChangeText={setGrade}
                 />
 
-                <Text style={styles.inputLabel}>Notes</Text>
+                <Text style={styles.inputLabel}>{t('pages.students.notes')}</Text>
                 <TextInput
                   style={[styles.input, styles.textArea, isTablet && styles.inputTablet]}
                   placeholder="Any special needs or notes..."
