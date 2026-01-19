@@ -125,7 +125,7 @@ export default function EditProfileScreen() {
             />
             <Text style={[styles.helperText, { color: colors.textMuted }]}>{t('pages.edit_profile.email_cannot_change')}</Text>
 
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('forms.phone')}</Text>
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.edit_profile.phone')}</Text>
             <TextInput
               style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
               placeholder={t('pages.edit_profile.phone_placeholder')}
