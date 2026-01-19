@@ -1090,6 +1090,18 @@
       "manage_markets": "Manage Markets",
       "manage_pricing": "Manage Pricing"
     },
+    "students": {
+      "title": "छात्र",
+      "add_student": "छात्र जोड़ें",
+      "edit_student": "छात्र संपादित करें",
+      "name": "नाम",
+      "age": "उम्र",
+      "grade": "ग्रेड",
+      "notes": "नोट्स",
+      "no_students": "अभी तक कोई छात्र नहीं जोड़ा गया",
+      "add_first_student": "अपना पहला छात्र जोड़ें",
+      "delete_confirm": "क्या आप वाकई इस छात्र को हटाना चाहते हैं?"
+    },
     "edit_profile": {
       "title": "प्रोफाइल संपादित करें",
       "personal_info": "व्यक्तिगत जानकारी",
