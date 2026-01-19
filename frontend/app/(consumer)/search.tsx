@@ -467,6 +467,7 @@ export default function SearchScreen() {
             numColumns={numColumns}
             key={numColumns}
             contentContainerStyle={[styles.listContent, isDesktop && styles.listContentDesktop]}
+            columnWrapperStyle={numColumns > 1 ? { justifyContent: 'flex-start', gap: 8 } : undefined}
             onEndReached={() => hasMore && !loading && searchTutors(false)}
             onEndReachedThreshold={0.3}
             ListFooterComponent={
