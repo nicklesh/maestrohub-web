@@ -207,10 +207,10 @@ export default function TutorDetailScreen() {
           <View style={styles.ratingRow}>
             <Ionicons name="star" size={16} color="#FFB800" />
             <Text style={[styles.ratingText, { color: colors.text }]}>
-              {tutor.rating_avg?.toFixed(1) || '0.0'}
+              {formatNumber(tutor.rating_avg?.toFixed(1) || '0.0')}
             </Text>
             <Text style={[styles.ratingCount, { color: colors.textMuted }]}>
-              ({tutor.rating_count || 0} reviews)
+              ({formatNumber(tutor.rating_count || 0)} {t('pages.tutor_detail.reviews')})
             </Text>
           </View>
 
@@ -219,14 +219,14 @@ export default function TutorDetailScreen() {
               <View key={m} style={[styles.tag, { backgroundColor: colors.primaryLight }]}>
                 <Ionicons name={m === 'online' ? 'videocam' : 'location'} size={14} color={colors.primary} />
                 <Text style={[styles.tagText, { color: colors.primary }]}>
-                  {m === 'online' ? t('modality.online') : t('modality.in_person')}
+                  {m === 'online' ? t('modality.online') : m === 'hybrid' ? t('modality.hybrid') : t('modality.in_person')}
                 </Text>
               </View>
             ))}
           </View>
 
           <Text style={[styles.priceText, { color: colors.primary }]}>
-            {tutor.currency_symbol || '$'}{tutor.base_price}{t('pages.tutor_detail.per_hour')}
+            {tutor.currency_symbol || '$'}{formatNumber(tutor.base_price)}{t('pages.tutor_detail.per_hour')}
           </Text>
         </View>
 
@@ -243,7 +243,7 @@ export default function TutorDetailScreen() {
             <View style={styles.chipsList}>
               {tutor.subjects.map((s) => (
                 <View key={s} style={[styles.chip, { backgroundColor: colors.background, borderColor: colors.border }]}>
-                  <Text style={[styles.chipText, { color: colors.text }]}>{s}</Text>
+                  <Text style={[styles.chipText, { color: colors.text }]}>{getSubjectName(s)}</Text>
                 </View>
               ))}
             </View>
@@ -257,7 +257,7 @@ export default function TutorDetailScreen() {
             <View style={styles.chipsList}>
               {tutor.levels.map((l) => (
                 <View key={l} style={[styles.chip, { backgroundColor: colors.background, borderColor: colors.border }]}>
-                  <Text style={[styles.chipText, { color: colors.text }]}>{l === 'beginner' ? t('levels.beginner') : l === 'intermediate' ? t('levels.intermediate') : l === 'advanced' ? t('levels.advanced') : l.replace('_', ' ')}</Text>
+                  <Text style={[styles.chipText, { color: colors.text }]}>{getLevelName(l)}</Text>
                 </View>
               ))}
             </View>
