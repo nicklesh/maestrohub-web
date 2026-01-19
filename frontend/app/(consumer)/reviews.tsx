@@ -153,7 +153,8 @@ export default function ReviewsScreen() {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    const localeCode = locale === 'hi_IN' ? 'hi-IN' : locale?.replace('_', '-') || 'en-US';
+    return new Date(dateString).toLocaleDateString(localeCode, {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
