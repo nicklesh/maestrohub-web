@@ -251,7 +251,7 @@ export default function InviteParentScreen() {
         </View>
         <View style={styles.inviteInfo}>
           <Text style={[styles.inviteName, { color: colors.text }]}>
-            {item.invitee_name || 'Parent'}
+            {item.invitee_name || t('pages.invite_parent.parent')}
           </Text>
           <Text style={[styles.inviteEmail, { color: colors.textMuted }]}>
             {item.invitee_email}
@@ -260,7 +260,7 @@ export default function InviteParentScreen() {
         <View style={[styles.statusBadge, { backgroundColor: getStatusColor(item.status) + '20' }]}>
           <Ionicons name={getStatusIcon(item.status) as any} size={14} color={getStatusColor(item.status)} />
           <Text style={[styles.statusText, { color: getStatusColor(item.status) }]}>
-            {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
+            {t(`common.${item.status}`)}
           </Text>
         </View>
       </View>
@@ -270,7 +270,7 @@ export default function InviteParentScreen() {
         </Text>
       )}
       <Text style={[styles.inviteDate, { color: colors.textMuted }]}>
-        Sent {new Date(item.created_at).toLocaleDateString()}
+        {t('pages.invite_parent.sent')} {new Date(item.created_at).toLocaleDateString(locale === 'hi_IN' ? 'hi-IN' : locale?.replace('_', '-') || 'en-US')}
       </Text>
     </View>
   );
