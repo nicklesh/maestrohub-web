@@ -13,6 +13,22 @@
     "admin": "Admin",
     "consumer": "Parent"
   },
+  "levels": {
+    "elementary": "Elementary",
+    "middle_school": "Middle School",
+    "high_school": "High School",
+    "college": "College",
+    "adult": "Adult",
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced",
+    "all_levels": "All Levels"
+  },
+  "modality": {
+    "online": "Online",
+    "in_person": "In-Person",
+    "hybrid": "Hybrid"
+  },
   "navigation": {
     "home": "Home",
     "search": "Search",
