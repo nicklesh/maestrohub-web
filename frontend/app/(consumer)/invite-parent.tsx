@@ -434,7 +434,7 @@ export default function InviteParentScreen() {
               </TouchableOpacity>
             </View>
 
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Email Address *</Text>
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.invite_parent.email_address')} *</Text>
             <TextInput
               style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
               placeholder="parent@example.com"
