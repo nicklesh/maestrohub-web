@@ -198,7 +198,7 @@ export default function ConsumerReportsScreen() {
         <View style={[styles.contentWrapper, containerMaxWidth ? { maxWidth: containerMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
           {/* Header */}
           <View style={styles.header}>
-            <Text style={[styles.title, { color: colors.text }]}>Reports</Text>
+            <Text style={[styles.title, { color: colors.text }]}>{t('pages.reports.title')}</Text>
             <TouchableOpacity 
               style={[styles.downloadButton, downloading && styles.downloadButtonDisabled]}
               onPress={downloadPDF}
@@ -209,7 +209,7 @@ export default function ConsumerReportsScreen() {
               ) : (
                 <>
                   <Ionicons name="document-text-outline" size={18} color={colors.white} />
-                  <Text style={styles.downloadButtonText}>PDF</Text>
+                  <Text style={styles.downloadButtonText}>{t('pages.reports.download_pdf')}</Text>
                 </>
               )}
             </TouchableOpacity>
@@ -220,29 +220,29 @@ export default function ConsumerReportsScreen() {
             <View style={[styles.summaryCard, { backgroundColor: colors.cardPrimary }]}>
               <Ionicons name="layers-outline" size={24} color={colors.white} />
               <Text style={styles.summaryValue}>{summary?.total_sessions || 0}</Text>
-              <Text style={styles.summaryLabel}>Total Sessions</Text>
+              <Text style={styles.summaryLabel}>{t('pages.reports.total_sessions')}</Text>
             </View>
             <View style={[styles.summaryCard, { backgroundColor: colors.cardSuccess }]}>
               <Ionicons name="checkmark-done-outline" size={24} color={colors.white} />
               <Text style={styles.summaryValue}>{summary?.completed_sessions || 0}</Text>
-              <Text style={styles.summaryLabel}>Completed</Text>
+              <Text style={styles.summaryLabel}>{t('pages.reports.completed')}</Text>
             </View>
             <View style={[styles.summaryCard, { backgroundColor: colors.cardWarning }]}>
               <Ionicons name="hourglass-outline" size={24} color={colors.white} />
               <Text style={styles.summaryValue}>{summary?.upcoming_sessions || 0}</Text>
-              <Text style={styles.summaryLabel}>Upcoming</Text>
+              <Text style={styles.summaryLabel}>{t('pages.reports.upcoming')}</Text>
             </View>
             <View style={[styles.summaryCard, { backgroundColor: colors.cardInfo }]}>
               <Ionicons name="receipt-outline" size={24} color={colors.white} />
               <Text style={styles.summaryValue}>{formatCurrency(summary?.total_spent_cents || 0)}</Text>
-              <Text style={styles.summaryLabel}>Total Spent</Text>
+              <Text style={styles.summaryLabel}>{t('pages.reports.total_spent')}</Text>
             </View>
           </View>
 
           {/* By Tutor Section */}
           {byTutor.length > 0 && (
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Sessions by Coach</Text>
+              <Text style={styles.sectionTitle}>{t('pages.reports.sessions_by_coach')}</Text>
               {byTutor.map((item, index) => (
                 <View key={index} style={styles.listItem}>
                   <View style={styles.listItemLeft}>
@@ -251,7 +251,7 @@ export default function ConsumerReportsScreen() {
                     </View>
                     <View>
                       <Text style={styles.listItemName}>{item.tutor_name}</Text>
-                      <Text style={styles.listItemSub}>{item.sessions} sessions</Text>
+                      <Text style={styles.listItemSub}>{item.sessions} {t('pages.reports.sessions')}</Text>
                     </View>
                   </View>
                   <Text style={styles.listItemAmount}>{formatCurrency(item.spent_cents)}</Text>
@@ -263,7 +263,7 @@ export default function ConsumerReportsScreen() {
           {/* By Student Section */}
           {byStudent.length > 0 && (
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Sessions by Student</Text>
+              <Text style={styles.sectionTitle}>{t('pages.reports.sessions_by_student')}</Text>
               {byStudent.map((item, index) => (
                 <View key={index} style={styles.listItem}>
                   <View style={styles.listItemLeft}>
@@ -272,7 +272,7 @@ export default function ConsumerReportsScreen() {
                     </View>
                     <View>
                       <Text style={styles.listItemName}>{item.student_name}</Text>
-                      <Text style={styles.listItemSub}>{item.sessions} sessions</Text>
+                      <Text style={styles.listItemSub}>{item.sessions} {t('pages.reports.sessions')}</Text>
                     </View>
                   </View>
                   <Text style={styles.listItemAmount}>{formatCurrency(item.spent_cents)}</Text>
@@ -284,12 +284,12 @@ export default function ConsumerReportsScreen() {
           {/* Monthly Breakdown */}
           {byMonth.length > 0 && (
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Monthly Breakdown</Text>
+              <Text style={styles.sectionTitle}>{t('pages.reports.monthly_breakdown')}</Text>
               {byMonth.slice(0, 6).map((item, index) => (
                 <View key={index} style={styles.monthItem}>
                   <Text style={styles.monthLabel}>{item.month}</Text>
                   <View style={styles.monthStats}>
-                    <Text style={styles.monthSessions}>{item.sessions} sessions</Text>
+                    <Text style={styles.monthSessions}>{item.sessions} {t('pages.reports.sessions')}</Text>
                     <Text style={styles.monthAmount}>{formatCurrency(item.spent_cents)}</Text>
                   </View>
                 </View>
