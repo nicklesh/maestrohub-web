@@ -249,7 +249,7 @@ export default function BecomeTutorScreen() {
 
   const renderStep1 = () => (
     <View style={styles.stepContent}>
-      <Text style={[styles.stepTitle, { color: colors.text }]}>Create Your Coach Account</Text>
+      <Text style={[styles.stepTitle, { color: colors.text }]}>{t('pages.become_tutor.create_account')}</Text>
       <Text style={[styles.stepDescription, { color: colors.textMuted }]}>
         To become a tutor, you'll need a separate account with a different email address. 
         This keeps your parent and tutor roles separate.
@@ -305,7 +305,7 @@ export default function BecomeTutorScreen() {
 
   const renderStep2 = () => (
     <View style={styles.stepContent}>
-      <Text style={[styles.stepTitle, { color: colors.text }]}>About You</Text>
+      <Text style={[styles.stepTitle, { color: colors.text }]}>{t('pages.become_tutor.about_you')}</Text>
       <Text style={[styles.stepDescription, { color: colors.textMuted }]}>
         Tell potential students about yourself and your experience
       </Text>
@@ -330,12 +330,12 @@ export default function BecomeTutorScreen() {
 
   const renderStep3 = () => (
     <View style={styles.stepContent}>
-      <Text style={[styles.stepTitle, { color: colors.text }]}>Your Expertise</Text>
+      <Text style={[styles.stepTitle, { color: colors.text }]}>{t('pages.become_tutor.your_expertise')}</Text>
       <Text style={[styles.stepDescription, { color: colors.textMuted }]}>
         Select categories, subjects, and levels you can teach
       </Text>
 
-      <Text style={[styles.sectionLabel, { color: colors.text }]}>Categories</Text>
+      <Text style={[styles.sectionLabel, { color: colors.text }]}>{t('pages.become_tutor.categories')}</Text>
       <View style={styles.chipGrid}>
         {categories.map((cat) => (
           <TouchableOpacity
@@ -365,7 +365,7 @@ export default function BecomeTutorScreen() {
 
       {availableSubjects.length > 0 && (
         <>
-          <Text style={[styles.sectionLabel, { color: colors.text }]}>Subjects/Skills</Text>
+          <Text style={[styles.sectionLabel, { color: colors.text }]}>{t('pages.become_tutor.subjects_skills')}</Text>
           <View style={styles.chipGrid}>
             {availableSubjects.map((subject) => (
               <TouchableOpacity
@@ -388,7 +388,7 @@ export default function BecomeTutorScreen() {
         </>
       )}
 
-      <Text style={[styles.sectionLabel, { color: colors.text }]}>Levels</Text>
+      <Text style={[styles.sectionLabel, { color: colors.text }]}>{t('pages.become_tutor.levels')}</Text>
       <View style={styles.chipGrid}>
         {LEVELS.map((level) => (
           <TouchableOpacity
@@ -413,12 +413,12 @@ export default function BecomeTutorScreen() {
 
   const renderStep4 = () => (
     <View style={styles.stepContent}>
-      <Text style={[styles.stepTitle, { color: colors.text }]}>Pricing & Availability</Text>
+      <Text style={[styles.stepTitle, { color: colors.text }]}>{t('pages.become_tutor.pricing_availability')}</Text>
       <Text style={[styles.stepDescription, { color: colors.textMuted }]}>
         Set your rates and how you'll deliver lessons
       </Text>
 
-      <Text style={[styles.sectionLabel, { color: colors.text }]}>Modality</Text>
+      <Text style={[styles.sectionLabel, { color: colors.text }]}>{t('pages.become_tutor.modality')}</Text>
       <View style={styles.chipGrid}>
         {MODALITIES.map((mod) => (
           <TouchableOpacity
@@ -444,7 +444,7 @@ export default function BecomeTutorScreen() {
         ))}
       </View>
 
-      <Text style={[styles.sectionLabel, { color: colors.text }]}>Payout Country</Text>
+      <Text style={[styles.sectionLabel, { color: colors.text }]}>{t('pages.become_tutor.payout_country')}</Text>
       <View style={styles.chipGrid}>
         {PAYOUT_COUNTRIES.map((country) => (
           <TouchableOpacity
@@ -467,7 +467,7 @@ export default function BecomeTutorScreen() {
 
       <View style={styles.priceRow}>
         <View style={styles.priceInput}>
-          <Text style={[styles.label, { color: colors.text }]}>Price per Hour</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t('pages.become_tutor.price_per_hour')}</Text>
           <View style={[styles.inputWithPrefix, { backgroundColor: colors.surface, borderColor: colors.border }]}>
             <Text style={[styles.prefix, { color: colors.textMuted }]}>{currencySymbol}</Text>
             <TextInput
@@ -480,7 +480,7 @@ export default function BecomeTutorScreen() {
         </View>
 
         <View style={styles.priceInput}>
-          <Text style={[styles.label, { color: colors.text }]}>Session Length</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t('pages.become_tutor.session_length')}</Text>
           <View style={[styles.inputWithPrefix, { backgroundColor: colors.surface, borderColor: colors.border }]}>
             <TextInput
               style={[styles.priceTextInput, { color: colors.text, minWidth: 40 }]}
@@ -498,7 +498,7 @@ export default function BecomeTutorScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <AppHeader title="Become a Coach" showBack onBack={handleBack} />
+      <AppHeader title={t('pages.become_tutor.title')} showBack onBack={handleBack} />
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardView}
@@ -543,7 +543,7 @@ export default function BecomeTutorScreen() {
                 <ActivityIndicator color="#FFFFFF" />
               ) : (
                 <>
-                  <Text style={styles.nextButtonText}>Create Coach Account</Text>
+                  <Text style={styles.nextButtonText}>{t('pages.become_tutor.create_coach_account')}</Text>
                   <Ionicons name="checkmark" size={20} color="#FFFFFF" />
                 </>
               )}
