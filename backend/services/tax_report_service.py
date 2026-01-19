@@ -23,6 +23,96 @@ YEARS_AVAILABLE = 5  # Current year + 4 previous years
 # Use the same logo as regular reports (blue/yellow trimmed logo)
 LOGO_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets', 'mh_logo_trimmed.png')
 
+# PDF Translation Strings
+PDF_TRANSLATIONS = {
+    "en": {
+        "monthly_statement": "Monthly {user_type} Statement",
+        "name": "Name",
+        "email": "Email",
+        "user_id": "User ID",
+        "summary": "Summary",
+        "description": "Description",
+        "amount": "Amount",
+        "total_transactions": "Total Transactions",
+        "total_amount": "Total Amount",
+        "platform_fees": "Platform Fees",
+        "net_payouts": "Net Payouts",
+        "transaction_details": "Transaction Details",
+        "date": "Date",
+        "type": "Type",
+        "funding_source": "Funding Source",
+        "generated_on": "Generated on {date}",
+        "disclaimer": "This document is for informational purposes. Please consult a tax professional.",
+        "form_1099": "Form 1099-K Equivalent - Tax Year {year}",
+        "payment_card_transactions": "Payment Card and Third Party Network Transactions",
+        "annual_payment_summary": "Annual Payment Summary - Tax Year {year}",
+        "educational_payments": "Record of Educational Service Payments",
+        "payer_info": "PAYER'S Information",
+        "platform_name": "Maestro Habitat Inc.",
+        "platform_desc": "Platform for Educational Services",
+        "payee_info": "PAYEE'S Information",
+        "annual_summary": "Annual Summary",
+        "box": "Box",
+        "gross_amount": "Gross Amount of Payment Card/Third Party Network Transactions",
+        "platform_fees_deducted": "Platform Fees Deducted",
+        "net_earnings": "Net Earnings (Payouts)",
+        "total_paid": "Total Amount Paid",
+        "monthly_breakdown": "Monthly Breakdown",
+        "month": "Month",
+        "transactions": "Transactions",
+        "gross": "Gross",
+        "fees": "Fees",
+        "net": "Net",
+        "no_activity": "No activity",
+    },
+    "hi": {
+        "monthly_statement": "मासिक {user_type} विवरण",
+        "name": "नाम",
+        "email": "ईमेल",
+        "user_id": "उपयोगकर्ता आईडी",
+        "summary": "सारांश",
+        "description": "विवरण",
+        "amount": "राशि",
+        "total_transactions": "कुल लेनदेन",
+        "total_amount": "कुल राशि",
+        "platform_fees": "प्लेटफ़ॉर्म शुल्क",
+        "net_payouts": "शुद्ध भुगतान",
+        "transaction_details": "लेनदेन विवरण",
+        "date": "तिथि",
+        "type": "प्रकार",
+        "funding_source": "धनराशि स्रोत",
+        "generated_on": "{date} को जनरेट किया गया",
+        "disclaimer": "यह दस्तावेज़ सूचनात्मक उद्देश्यों के लिए है। कृपया कर पेशेवर से परामर्श करें।",
+        "form_1099": "फॉर्म 1099-K समकक्ष - कर वर्ष {year}",
+        "payment_card_transactions": "भुगतान कार्ड और तृतीय पक्ष नेटवर्क लेनदेन",
+        "annual_payment_summary": "वार्षिक भुगतान सारांश - कर वर्ष {year}",
+        "educational_payments": "शैक्षिक सेवा भुगतानों का रिकॉर्ड",
+        "payer_info": "भुगतानकर्ता की जानकारी",
+        "platform_name": "मास्ट्रो हैबिटेट इंक.",
+        "platform_desc": "शैक्षिक सेवाओं के लिए प्लेटफ़ॉर्म",
+        "payee_info": "प्राप्तकर्ता की जानकारी",
+        "annual_summary": "वार्षिक सारांश",
+        "box": "बॉक्स",
+        "gross_amount": "भुगतान कार्ड/तृतीय पक्ष नेटवर्क लेनदेन की कुल राशि",
+        "platform_fees_deducted": "प्लेटफ़ॉर्म शुल्क कटौती",
+        "net_earnings": "शुद्ध आय (भुगतान)",
+        "total_paid": "कुल भुगतान राशि",
+        "monthly_breakdown": "मासिक विवरण",
+        "month": "महीना",
+        "transactions": "लेनदेन",
+        "gross": "कुल",
+        "fees": "शुल्क",
+        "net": "शुद्ध",
+        "no_activity": "कोई गतिविधि नहीं",
+    }
+}
+
+def get_pdf_text(key: str, lang: str = "en", **kwargs) -> str:
+    """Get translated text for PDF generation"""
+    translations = PDF_TRANSLATIONS.get(lang, PDF_TRANSLATIONS["en"])
+    text = translations.get(key, PDF_TRANSLATIONS["en"].get(key, key))
+    return text.format(**kwargs) if kwargs else text
+
 
 class TaxReportService:
     def __init__(self, db, email_service=None, notification_service=None):
