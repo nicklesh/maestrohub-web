@@ -259,7 +259,7 @@ export default function InviteProviderScreen() {
           <View style={styles.infoContent}>
             <Text style={[styles.infoTitle, { color: colors.primary }]}>{t('pages.invite_provider.refer_and_earn')}</Text>
             <Text style={[styles.infoText, { color: colors.text }]}>
-              Invite providers and get a free session credit when they join!
+              {t('pages.invite_provider.refer_desc')}
             </Text>
           </View>
         </View>
