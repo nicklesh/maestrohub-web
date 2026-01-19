@@ -1119,7 +1119,8 @@
       "session_length": "Session Length",
       "create_coach_account": "Create Coach Account",
       "account_created": "Your tutor account has been created! You can now log in with your new tutor email to access your tutor dashboard. Your parent account remains unchanged.",
-      "create_failed": "Failed to create tutor account. Please try again."
+      "create_failed": "Failed to create tutor account. Please try again.",
+      "different_email_required": "Please use a different email address than your parent account"
     },
     "admin": {
       "dashboard": "Admin Dashboard",
