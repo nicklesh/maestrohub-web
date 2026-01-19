@@ -186,7 +186,7 @@ export default function BookingDetailScreen() {
   };
 
   const handleReportNoShow = async () => {
-    const confirmMsg = "Are you sure you want to report that the coach didn't show up? This will be reviewed and you'll receive a full refund if confirmed.";
+    const confirmMsg = t('pages.booking_detail.no_show_confirm');
     
     const doReport = async () => {
       setReportingNoShow(true);
@@ -195,17 +195,17 @@ export default function BookingDetailScreen() {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (Platform.OS === 'web') {
-          showInfo('No-show reported. We\'ll review this and process your refund.');
+          showInfo(t('pages.booking_detail.no_show_reported'));
         } else {
-          showInfo('No-show reported. We\'ll review this and process your refund.', 'Reported');
+          showInfo(t('pages.booking_detail.no_show_reported'), t('pages.booking_detail.reported'));
         }
         loadBooking();
       } catch (error: any) {
-        const errorMsg = error.response?.data?.detail || 'Failed to report no-show';
+        const errorMsg = error.response?.data?.detail || t('pages.booking_detail.no_show_failed');
         if (Platform.OS === 'web') {
           showInfo(errorMsg);
         } else {
-          showInfo(errorMsg, 'Error');
+          showInfo(errorMsg, t('common.error'));
         }
       } finally {
         setReportingNoShow(false);
