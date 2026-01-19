@@ -21,6 +21,7 @@ import zh_CN from './locales/zh_CN.json';
 import zh_SG from './locales/zh_SG.json';
 import ja_JP from './locales/ja_JP.json';
 import ko_KR from './locales/ko_KR.json';
+import ru_RU from './locales/ru_RU.json';
 
 // Supported locales with metadata
 export const SUPPORTED_LOCALES = {
@@ -28,6 +29,7 @@ export const SUPPORTED_LOCALES = {
   'es_ES': { name: 'Spanish (Spain)', nativeName: 'Español (España)', data: es_ES, rtl: false },
   'fr_FR': { name: 'French (France)', nativeName: 'Français (France)', data: fr_FR, rtl: false },
   'de_DE': { name: 'German (Germany)', nativeName: 'Deutsch (Deutschland)', data: de_DE, rtl: false },
+  'ru_RU': { name: 'Russian (Russia)', nativeName: 'Русский (Россия)', data: ru_RU, rtl: false },
   'hi_IN': { name: 'Hindi (India)', nativeName: 'हिन्दी (भारत)', data: hi_IN, rtl: false },
   'te_IN': { name: 'Telugu (India)', nativeName: 'తెలుగు (భారతదేశం)', data: te_IN, rtl: false },
   'ta_IN': { name: 'Tamil (India)', nativeName: 'தமிழ் (இந்தியா)', data: ta_IN, rtl: false },
