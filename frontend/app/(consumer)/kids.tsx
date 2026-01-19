@@ -46,6 +46,8 @@ export default function KidsScreen() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingKid, setEditingKid] = useState<Kid | null>(null);
   const [saving, setSaving] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [kidToDelete, setKidToDelete] = useState<Kid | null>(null);
 
   // Form state
   const [formName, setFormName] = useState('');
