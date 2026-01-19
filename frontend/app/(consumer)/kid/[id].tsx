@@ -244,8 +244,8 @@ export default function KidDetailScreen() {
                   <View key={booking.booking_id} style={[styles.bookingCard, { backgroundColor: colors.surface }, isCanceled && { opacity: 0.7 }]}>
                     <View style={styles.bookingHeader}>
                       <View>
-                        <Text style={[styles.bookingSubject, { color: colors.text }]}>{booking.subject}</Text>
-                        <Text style={[styles.bookingTutor, { color: colors.textMuted }]}>with {booking.tutor_name}</Text>
+                        <Text style={[styles.bookingSubject, { color: colors.text }]}>{translateSubject(booking.subject)}</Text>
+                        <Text style={[styles.bookingTutor, { color: colors.textMuted }]}>{t('common.with')} {booking.tutor_name}</Text>
                       </View>
                       <View style={[styles.statusBadge, { backgroundColor: getStatusColor(booking.status) + '20' }]}>
                         <Text style={[styles.statusText, { color: getStatusColor(booking.status) }]}>
@@ -256,7 +256,7 @@ export default function KidDetailScreen() {
                     <View style={styles.bookingFooter}>
                     <Ionicons name="time-outline" size={14} color={colors.textMuted} />
                     <Text style={[styles.bookingTime, { color: colors.textMuted }]}>
-                      {formatDate(booking.start_at)} · {booking.duration_minutes} min
+                      {formatDate(booking.start_at)} · {booking.duration_minutes} {t('time.min')}
                     </Text>
                   </View>
                 </View>
