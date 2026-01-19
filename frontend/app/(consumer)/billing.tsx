@@ -445,7 +445,7 @@ export default function BillingScreen() {
             onPress={() => setShowDayPickerModal(false)} 
           />
           <View style={[styles.dayPickerSheet, { backgroundColor: colors.surface }]}>
-            <Text style={[styles.sheetTitle, { color: colors.text }]}>Select Payment Day</Text>
+            <Text style={[styles.sheetTitle, { color: colors.text }]}>{t('pages.billing.select_payment_day')}</Text>
             <Text style={[styles.dayPickerHint, { color: colors.textMuted }]}>
               Choose which day of the month to auto-pay
             </Text>
