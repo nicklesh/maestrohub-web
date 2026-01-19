@@ -537,8 +537,8 @@ class TaxReportService:
         )
         return report
     
-    async def download_report(self, report_id: str, user_id: str) -> Optional[bytes]:
-        """Get PDF bytes for download"""
+    async def download_report(self, report_id: str, user_id: str, lang: str = "en") -> Optional[bytes]:
+        """Get PDF bytes for download, regenerating with the specified language"""
         report = await self.db.tax_reports.find_one(
             {"report_id": report_id, "user_id": user_id},
             {"_id": 0}
@@ -551,6 +551,73 @@ class TaxReportService:
         if report.get("is_archived"):
             return None  # Must request through inbox
         
+        # If language is not English, regenerate the PDF with translations
+        if lang != "en":
+            user = await self.db.users.find_one({"user_id": user_id}, {"_id": 0})
+            if not user:
+                return None
+            
+            user_type = report.get("user_type", "consumer")
+            year = report.get("report_year")
+            month = report.get("report_month")
+            
+            # Get transaction data to regenerate PDF
+            if month:  # Monthly report
+                start_date = datetime(year, month, 1, tzinfo=timezone.utc)
+                if month == 12:
+                    end_date = datetime(year + 1, 1, 1, tzinfo=timezone.utc)
+                else:
+                    end_date = datetime(year, month + 1, 1, tzinfo=timezone.utc)
+                
+                transactions = await self.db.payment_transactions.find({
+                    "user_id": user_id,
+                    "user_type": user_type,
+                    "payment_date": {"$gte": start_date, "$lt": end_date},
+                    "status": "completed"
+                }).to_list(1000)
+                
+                total_amount = sum(t.get("amount_cents", 0) for t in transactions)
+                total_fees = sum(t.get("platform_fee_cents", 0) for t in transactions)
+                total_payouts = sum(t.get("payout_amount_cents", 0) for t in transactions)
+                
+                pdf_base64 = self._generate_monthly_pdf(
+                    user, user_type, year, month, transactions,
+                    total_amount, total_fees, total_payouts, lang=lang
+                )
+            else:  # Annual report
+                start_date = datetime(year, 1, 1, tzinfo=timezone.utc)
+                end_date = datetime(year + 1, 1, 1, tzinfo=timezone.utc)
+                
+                transactions = await self.db.payment_transactions.find({
+                    "user_id": user_id,
+                    "user_type": user_type,
+                    "payment_date": {"$gte": start_date, "$lt": end_date},
+                    "status": "completed"
+                }).to_list(10000)
+                
+                total_amount = sum(t.get("amount_cents", 0) for t in transactions)
+                total_fees = sum(t.get("platform_fee_cents", 0) for t in transactions)
+                total_payouts = sum(t.get("payout_amount_cents", 0) for t in transactions)
+                
+                # Build monthly breakdown
+                monthly_breakdown = {}
+                for t in transactions:
+                    m = t.get("payment_date").month if hasattr(t.get("payment_date"), "month") else 1
+                    if m not in monthly_breakdown:
+                        monthly_breakdown[m] = {"amount": 0, "fees": 0, "count": 0}
+                    monthly_breakdown[m]["amount"] += t.get("amount_cents", 0)
+                    monthly_breakdown[m]["fees"] += t.get("platform_fee_cents", 0)
+                    monthly_breakdown[m]["count"] += 1
+                
+                pdf_base64 = self._generate_annual_pdf(
+                    user, user_type, year, monthly_breakdown,
+                    total_amount, total_fees, total_payouts,
+                    len(transactions), lang=lang
+                )
+            
+            return base64.b64decode(pdf_base64)
+        
+        # English - use stored PDF
         pdf_base64 = report.get("report_data")
         if pdf_base64:
             return base64.b64decode(pdf_base64)
