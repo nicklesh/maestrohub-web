@@ -36,9 +36,9 @@
     "markets": "Markets",
     "pricing": "Pricing",
     "security": "Security",
-    "appearance": "Appearance",
+    "appearance": "Apariencia",
     "back": "Back",
-    "edit_profile": "Edit Profile",
+    "edit_profile": "Editar Perfil",
     "become_coach": "Become a Coach",
     "invite_parents": "Invite Parents",
     "invite_providers": "Invite Providers",
@@ -50,7 +50,7 @@
     "view_schedule": "Ver Horario",
     "payments": "Pagos",
     "view_schedule_payments": "Ver Horario y Pagos",
-    "support": "Поддержка",
+    "support": "Soporte",
     "my_kids": "Mis Hijos"
   },
   "categories": {
@@ -244,7 +244,7 @@
       "date_of_birth": "Date of Birth",
       "gender": "Gender",
       "timezone": "Timezone",
-      "language": "Language",
+      "language": "Idioma",
       "currency": "Currency",
       "referral_code": "Referral Code",
       "promo_code": "Promo Code",
@@ -264,7 +264,7 @@
       "password": "Enter your password",
       "name": "Enter your name",
       "phone": "Enter phone number",
-      "search": "Search...",
+      "search": "Buscar",
       "search_tutors": "Search for coaches...",
       "search_subjects": "Search coaches, subjects...",
       "message": "Type your message...",
@@ -373,7 +373,7 @@
       "delete": "Are you sure you want to delete this?",
       "remove": "Are you sure you want to remove this?",
       "cancel_booking": "Are you sure you want to cancel this booking?",
-      "logout": "Are you sure you want to logout?",
+      "logout": "Cerrar Sesión",
       "discard_changes": "Discard unsaved changes?",
       "delete_child": "Are you sure you want to remove this child?",
       "remove_payment": "Are you sure you want to remove this payment method?"
@@ -488,7 +488,7 @@
       "subject_count_one": "{{count}} subject",
       "per_hour": "/hr",
       "reviews_count": "({{count}})",
-      "reviews": "reviews",
+      "reviews": "Reseñas",
       "no_bio": "No bio available",
       "online": "Online",
       "hybrid": "Hybrid",
@@ -714,8 +714,8 @@
     },
     "settings": {
       "title": "Configuración",
-      "account": "Account",
-      "appearance": "Appearance",
+      "account": "Cuenta",
+      "appearance": "Apariencia",
       "dark_mode": "Modo Oscuro",
       "language": "Idioma",
       "notifications": "Notificaciones",
@@ -729,7 +729,7 @@
       "terms_of_service": "Terms of Service",
       "privacy_policy": "Privacy Policy",
       "version": "Version",
-      "logout": "Logout"
+      "logout": "Cerrar Sesión"
     },
     "contact": {
       "title": "Contáctenos",
@@ -906,7 +906,7 @@
       "mark_all_read": "Marcar todas como leídas",
       "clear_all": "Borrar todo",
       "no_notifications": "Sin notificaciones",
-      "settings": "Configuración de notificaciones",
+      "settings": "Configuración",
       "no_notifications_desc": "Aquí verás actualizaciones sobre tus sesiones y pagos",
       "just_now": "Ahora mismo",
       "hours_ago": "hace {{count}}h",
@@ -1008,7 +1008,7 @@
       "different_email_required": "Please use a different email address than your parent account"
     },
     "admin": {
-      "dashboard": "Admin Dashboard",
+      "dashboard": "Panel",
       "total_users": "Total Users",
       "total_bookings": "Total Bookings",
       "total_revenue": "Total Revenue",
@@ -1284,7 +1284,7 @@
     "per_hour": "per hour",
     "per_hr": "/hr",
     "rating": "Rating",
-    "reviews": "reviews",
+    "reviews": "Reseñas",
     "review": "review",
     "sessions_completed": "sessions completed",
     "years_experience": "years experience",
