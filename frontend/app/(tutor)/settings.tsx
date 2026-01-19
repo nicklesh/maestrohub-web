@@ -42,9 +42,11 @@ export default function TutorSettings() {
   const { showSuccess, showError } = useToast();
   const router = useRouter();
   const { width } = useWindowDimensions();
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<TutorProfile | null>(null);
   const [toggling, setToggling] = useState(false);
+  const [savingMeetingLink, setSavingMeetingLink] = useState(false);
 
   // Responsive breakpoints
   const isTablet = width >= 768;
