@@ -1102,9 +1102,12 @@
       "add_student": "Add Student",
       "edit_student": "Edit Student",
       "name": "Name",
+      "name_placeholder": "Student's name",
       "age": "Age",
+      "age_placeholder": "Age",
       "grade": "Grade",
       "notes": "Notes",
+      "notes_placeholder": "Any special needs or notes...",
       "no_students": "No students added yet",
       "add_first_student": "Add your first student",
       "delete_confirm": "Are you sure you want to delete this student?"
