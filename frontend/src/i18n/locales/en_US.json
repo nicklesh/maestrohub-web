@@ -1242,7 +1242,7 @@
       "weekly_summary": "Weekly Summary",
       "weekly_summary_desc": "Receive a weekly overview of sessions and payments",
       "settings_saved": "Reminder settings saved",
-      "settings_failed": "Failed to save settings",
+      "settings_save_failed": "Failed to save settings",
       "in_hours": "In {{count}}h",
       "tomorrow": "Tomorrow",
       "in_days": "In {{count}} days",
