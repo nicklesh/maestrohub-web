@@ -215,7 +215,7 @@ export default function RemindersScreen() {
                     config.payment_reminder_days === days && { color: '#FFFFFF' }
                   ]}
                 >
-                  {days === 1 ? '1 day' : `${days} days`}
+                  {days === 1 ? t('time.one_day') : t('time.n_days', { count: days })}
                 </Text>
               </TouchableOpacity>
             ))}
