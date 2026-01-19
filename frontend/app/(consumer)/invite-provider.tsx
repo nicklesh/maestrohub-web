@@ -333,7 +333,7 @@ export default function InviteProviderScreen() {
             <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.invite_provider.providers_name')}</Text>
             <TextInput
               style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-              placeholder="John Smith"
+              placeholder={t('pages.invite_provider.name_placeholder')}
               placeholderTextColor={colors.textMuted}
               value={inviteName}
               onChangeText={setInviteName}
