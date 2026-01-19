@@ -243,7 +243,7 @@ export default function ReviewsScreen() {
               <Ionicons name="document-text-outline" size={64} color={colors.textMuted} />
               <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('pages.reviews.no_reviews_yet')}</Text>
               <Text style={[styles.emptyText, { color: colors.textMuted }]}>
-                Your submitted reviews will appear here
+                {t('pages.reviews.no_reviews_desc')}
               </Text>
             </View>
           ) : (
