@@ -1934,6 +1934,14 @@ async def get_my_tutor_profile(request: Request):
 @api_router.put("/tutors/profile", response_model=TutorProfile)
 async def update_tutor_profile(data: TutorProfileCreate, request: Request):
     user = await require_auth(request)
+    
+    # Validate meeting link if provided
+    if data.meeting_link and not validate_meeting_link(data.meeting_link):
+        raise HTTPException(
+            status_code=400, 
+            detail="Invalid meeting link. Please use a valid Zoom, Microsoft Teams, Google Meet, or Webex URL."
+        )
+    
     result = await db.tutors.update_one(
         {"user_id": user.user_id},
         {"$set": data.dict()}
