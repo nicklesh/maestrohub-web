@@ -316,7 +316,7 @@ export default function InviteProviderScreen() {
             <View style={[styles.sheetHandle, { backgroundColor: colors.gray300 }]} />
             <Text style={[styles.sheetTitle, { color: colors.text }]}>{t('pages.invite_provider.invite_a_provider')}</Text>
             <Text style={[styles.sheetSubtitle, { color: colors.textMuted }]}>
-              They'll get a $50 free session credit when they join!
+              {t('pages.invite_provider.credit_message', { amount: 50 })}
             </Text>
 
             <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Provider's Email *</Text>
