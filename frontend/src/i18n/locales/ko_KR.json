@@ -1239,7 +1239,9 @@
       "reminders_will_be_sent": "Reminders will be sent before the session",
       "kid_notified": "Kid Notified",
       "no_show_report_desc": "If your coach didn't show up for the session, you can report it here. We'll review and process a full refund.",
-      "with_tutor": "with {{name}}"
+      "with_tutor": "with {{name}}",
+      "join_meeting": "세션 참가",
+      "waiting_room_note": "선생님이 대기실에서 입장을 승인합니다"
     },
     "add_child": {
       "title": "Add Child",
@@ -1616,5 +1618,21 @@
       "message_placeholder": "Describe your issue or question...",
       "send": "Send Message"
     }
+  },
+  "notifications": {
+    "title": "알림",
+    "all": "전체",
+    "unread": "읽지 않음",
+    "mark_all_read": "모두 읽음으로 표시",
+    "clear_all": "모두 지우기",
+    "no_notifications": "알림 없음",
+    "settings": "알림 설정",
+    "no_notifications_desc": "여기에서 세션 및 결제에 대한 업데이트를 확인할 수 있습니다",
+    "just_now": "방금",
+    "hours_ago": "{{count}}시간 전",
+    "days_ago": "{{count}}일 전",
+    "mark_as_read": "읽음으로 표시",
+    "system_update": "시스템 업데이트",
+    "platform_improvements": "플랫폼 개선 사항이 성공적으로 배포되었습니다"
   }
 }

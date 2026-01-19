@@ -1239,7 +1239,9 @@
       "reminders_will_be_sent": "Reminders will be sent before the session",
       "kid_notified": "Kid Notified",
       "no_show_report_desc": "If your coach didn't show up for the session, you can report it here. We'll review and process a full refund.",
-      "with_tutor": "with {{name}}"
+      "with_tutor": "with {{name}}",
+      "join_meeting": "הצטרף לשיעור",
+      "waiting_room_note": "המורה יאשר את כניסתך מחדר ההמתנה"
     },
     "add_child": {
       "title": "Add Child",
@@ -1616,5 +1618,21 @@
       "message_placeholder": "Describe your issue or question...",
       "send": "Send Message"
     }
+  },
+  "notifications": {
+    "title": "התראות",
+    "all": "הכל",
+    "unread": "לא נקראו",
+    "mark_all_read": "סמן הכל כנקרא",
+    "clear_all": "נקה הכל",
+    "no_notifications": "אין התראות",
+    "settings": "הגדרות התראות",
+    "no_notifications_desc": "כאן תראה עדכונים על השיעורים והתשלומים שלך",
+    "just_now": "עכשיו",
+    "hours_ago": "לפני {{count}} שעות",
+    "days_ago": "לפני {{count}} ימים",
+    "mark_as_read": "סמן כנקרא",
+    "system_update": "עדכון מערכת",
+    "platform_improvements": "שיפורי הפלטפורמה נפרסו בהצלחה"
   }
 }

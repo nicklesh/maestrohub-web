@@ -1239,7 +1239,9 @@
       "reminders_will_be_sent": "Reminders will be sent before the session",
       "kid_notified": "Kid Notified",
       "no_show_report_desc": "If your coach didn't show up for the session, you can report it here. We'll review and process a full refund.",
-      "with_tutor": "with {{name}}"
+      "with_tutor": "with {{name}}",
+      "join_meeting": "Unirse a la Sesión",
+      "waiting_room_note": "El profesor te admitirá desde la sala de espera"
     },
     "add_child": {
       "title": "Add Child",
@@ -1616,5 +1618,21 @@
       "message_placeholder": "Describe your issue or question...",
       "send": "Send Message"
     }
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "all": "Todas",
+    "unread": "No leídas",
+    "mark_all_read": "Marcar todas como leídas",
+    "clear_all": "Borrar todo",
+    "no_notifications": "Sin notificaciones",
+    "settings": "Configuración de notificaciones",
+    "no_notifications_desc": "Aquí verás actualizaciones sobre tus sesiones y pagos",
+    "just_now": "Ahora mismo",
+    "hours_ago": "hace {{count}}h",
+    "days_ago": "hace {{count}}d",
+    "mark_as_read": "Marcar como leída",
+    "system_update": "Actualización del Sistema",
+    "platform_improvements": "Mejoras de la plataforma implementadas con éxito"
   }
 }

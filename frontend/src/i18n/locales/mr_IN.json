@@ -1239,7 +1239,9 @@
       "reminders_will_be_sent": "Reminders will be sent before the session",
       "kid_notified": "Kid Notified",
       "no_show_report_desc": "If your coach didn't show up for the session, you can report it here. We'll review and process a full refund.",
-      "with_tutor": "with {{name}}"
+      "with_tutor": "with {{name}}",
+      "join_meeting": "सत्रात सामील व्हा",
+      "waiting_room_note": "कोच तुम्हाला प्रतीक्षा खोलीतून प्रवेश देईल"
     },
     "add_child": {
       "title": "Add Child",
@@ -1616,5 +1618,21 @@
       "message_placeholder": "Describe your issue or question...",
       "send": "Send Message"
     }
+  },
+  "notifications": {
+    "title": "सूचना",
+    "all": "सर्व",
+    "unread": "न वाचलेले",
+    "mark_all_read": "सर्व वाचलेले म्हणून चिन्हांकित करा",
+    "clear_all": "सर्व साफ करा",
+    "no_notifications": "कोणतीही सूचना नाही",
+    "settings": "सूचना सेटिंग्ज",
+    "no_notifications_desc": "तुमच्या सत्रे आणि पेमेंटबद्दल अपडेट्स येथे दिसतील",
+    "just_now": "आत्ताच",
+    "hours_ago": "{{count}} तासांपूर्वी",
+    "days_ago": "{{count}} दिवसांपूर्वी",
+    "mark_as_read": "वाचलेले म्हणून चिन्हांकित करा",
+    "system_update": "सिस्टम अपडेट",
+    "platform_improvements": "प्लॅटफॉर्म सुधारणा यशस्वीरित्या लागू केल्या"
   }
 }

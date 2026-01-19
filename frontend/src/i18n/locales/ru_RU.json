@@ -1239,7 +1239,9 @@
       "reminders_will_be_sent": "Reminders will be sent before the session",
       "kid_notified": "Kid Notified",
       "no_show_report_desc": "If your coach didn't show up for the session, you can report it here. We'll review and process a full refund.",
-      "with_tutor": "with {{name}}"
+      "with_tutor": "with {{name}}",
+      "join_meeting": "Присоединиться к занятию",
+      "waiting_room_note": "Преподаватель впустит вас из комнаты ожидания"
     },
     "add_child": {
       "title": "Add Child",
@@ -1616,5 +1618,21 @@
       "message_placeholder": "Describe your issue or question...",
       "send": "Send Message"
     }
+  },
+  "notifications": {
+    "title": "Уведомления",
+    "all": "Все",
+    "unread": "Непрочитанные",
+    "mark_all_read": "Отметить все как прочитанные",
+    "clear_all": "Очистить все",
+    "no_notifications": "Нет уведомлений",
+    "settings": "Настройки уведомлений",
+    "no_notifications_desc": "Здесь будут обновления о ваших занятиях и платежах",
+    "just_now": "Только что",
+    "hours_ago": "{{count}} ч назад",
+    "days_ago": "{{count}} д назад",
+    "mark_as_read": "Отметить как прочитанное",
+    "system_update": "Системное обновление",
+    "platform_improvements": "Улучшения платформы успешно внедрены"
   }
 }

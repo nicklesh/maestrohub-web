@@ -1239,7 +1239,9 @@
       "reminders_will_be_sent": "Reminders will be sent before the session",
       "kid_notified": "Kid Notified",
       "no_show_report_desc": "If your coach didn't show up for the session, you can report it here. We'll review and process a full refund.",
-      "with_tutor": "with {{name}}"
+      "with_tutor": "with {{name}}",
+      "join_meeting": "加入课程",
+      "waiting_room_note": "老师将从等候室允许您进入"
     },
     "add_child": {
       "title": "Add Child",
@@ -1616,5 +1618,21 @@
       "message_placeholder": "Describe your issue or question...",
       "send": "Send Message"
     }
+  },
+  "notifications": {
+    "title": "通知",
+    "all": "全部",
+    "unread": "未读",
+    "mark_all_read": "全部标记为已读",
+    "clear_all": "清除全部",
+    "no_notifications": "没有通知",
+    "settings": "通知设置",
+    "no_notifications_desc": "您将在此处看到有关课程和付款的更新",
+    "just_now": "刚刚",
+    "hours_ago": "{{count}}小时前",
+    "days_ago": "{{count}}天前",
+    "mark_as_read": "标记为已读",
+    "system_update": "系统更新",
+    "platform_improvements": "平台改进已成功部署"
   }
 }

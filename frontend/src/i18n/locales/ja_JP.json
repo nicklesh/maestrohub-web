@@ -1239,7 +1239,9 @@
       "reminders_will_be_sent": "Reminders will be sent before the session",
       "kid_notified": "Kid Notified",
       "no_show_report_desc": "If your coach didn't show up for the session, you can report it here. We'll review and process a full refund.",
-      "with_tutor": "with {{name}}"
+      "with_tutor": "with {{name}}",
+      "join_meeting": "セッションに参加",
+      "waiting_room_note": "講師が待機室からあなたを入室させます"
     },
     "add_child": {
       "title": "Add Child",
@@ -1616,5 +1618,21 @@
       "message_placeholder": "Describe your issue or question...",
       "send": "Send Message"
     }
+  },
+  "notifications": {
+    "title": "通知",
+    "all": "すべて",
+    "unread": "未読",
+    "mark_all_read": "すべて既読にする",
+    "clear_all": "すべてクリア",
+    "no_notifications": "通知はありません",
+    "settings": "通知設定",
+    "no_notifications_desc": "セッションと支払いに関する更新がここに表示されます",
+    "just_now": "たった今",
+    "hours_ago": "{{count}}時間前",
+    "days_ago": "{{count}}日前",
+    "mark_as_read": "既読にする",
+    "system_update": "システムアップデート",
+    "platform_improvements": "プラットフォームの改善が正常にデプロイされました"
   }
 }

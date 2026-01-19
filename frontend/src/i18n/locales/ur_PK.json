@@ -1239,7 +1239,9 @@
       "reminders_will_be_sent": "Reminders will be sent before the session",
       "kid_notified": "Kid Notified",
       "no_show_report_desc": "If your coach didn't show up for the session, you can report it here. We'll review and process a full refund.",
-      "with_tutor": "with {{name}}"
+      "with_tutor": "with {{name}}",
+      "join_meeting": "سیشن میں شامل ہوں",
+      "waiting_room_note": "کوچ آپ کو انتظار کے کمرے سے داخل کریں گے"
     },
     "add_child": {
       "title": "Add Child",
@@ -1623,5 +1625,21 @@
     "register": "رجسٹر",
     "email": "ای میل",
     "password": "پاس ورڈ"
+  },
+  "notifications": {
+    "title": "اطلاعات",
+    "all": "سب",
+    "unread": "نہیں پڑھا",
+    "mark_all_read": "سب پڑھا ہوا نشان زد کریں",
+    "clear_all": "سب صاف کریں",
+    "no_notifications": "کوئی اطلاع نہیں",
+    "settings": "اطلاع کی ترتیبات",
+    "no_notifications_desc": "یہاں آپ کے سیشنز اور ادائیگیوں کے بارے میں اپ ڈیٹس دیکھیں گے",
+    "just_now": "ابھی",
+    "hours_ago": "{{count}} گھنٹے پہلے",
+    "days_ago": "{{count}} دن پہلے",
+    "mark_as_read": "پڑھا ہوا نشان زد کریں",
+    "system_update": "سسٹم اپ ڈیٹ",
+    "platform_improvements": "پلیٹ فارم کی بہتری کامیابی سے لگائی گئی"
   }
 }
