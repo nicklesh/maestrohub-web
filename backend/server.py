@@ -6633,8 +6633,8 @@ app.include_router(api_router)
 ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:8001",
-    "https://localify-4.preview.emergentagent.com",
-    "https://localify-4.preview.emergentagent.com",
+    "https://meetup-coach.preview.emergentagent.com",
+    "https://meetup-coach.preview.emergentagent.com",
 ]
 
 app.add_middleware(

@@ -7,7 +7,7 @@ import requests
 import json
 import time
 
-BASE_URL = "https://localify-4.preview.emergentagent.com/api"
+BASE_URL = "https://meetup-coach.preview.emergentagent.com/api"
 
 def test_jwt_detailed():
     """Test JWT validation in detail"""
