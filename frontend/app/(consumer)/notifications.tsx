@@ -30,7 +30,7 @@ interface Notification {
 export default function NotificationsScreen() {
   const { token } = useAuth();
   const { colors } = useTheme();
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
