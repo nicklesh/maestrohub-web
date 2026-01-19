@@ -111,13 +111,20 @@ export default function KidDetailScreen() {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
+    const localeCode = locale === 'hi_IN' ? 'hi-IN' : locale?.replace('_', '-') || 'en-US';
+    return date.toLocaleDateString(localeCode, {
       weekday: 'short',
       month: 'short',
       day: 'numeric',
       hour: 'numeric',
       minute: '2-digit'
     });
+  };
+
+  const translateSubject = (subject: string) => {
+    const key = `subjects.${subject.toLowerCase().replace(/\s+/g, '_')}`;
+    const translated = t(key, subject);
+    return translated !== key ? translated : subject;
   };
 
   const getStatusColor = (status: string) => {
