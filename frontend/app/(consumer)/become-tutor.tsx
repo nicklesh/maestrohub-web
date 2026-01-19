@@ -124,35 +124,35 @@ export default function BecomeTutorScreen() {
 
   const validateStep1 = () => {
     if (!tutorEmail.trim()) {
-      showError('Please enter an email address for your tutor account');
+      showError(t('forms.validation.enter_email_address'));
       return false;
     }
     if (!tutorEmail.includes('@')) {
-      showError('Please enter a valid email address');
+      showError(t('forms.validation.invalid_email'));
       return false;
     }
     if (user?.email && tutorEmail.toLowerCase() === user.email.toLowerCase()) {
-      showError('You must use a different email address for your tutor account. Your parent account uses this email.');
+      showError(t('pages.become_tutor.different_email_required'));
       return false;
     }
     if (!tutorPassword || tutorPassword.length < 8) {
-      showError('Password must be at least 8 characters');
+      showError(t('forms.validation.password_min_length'));
       return false;
     }
     if (!/[A-Z]/.test(tutorPassword)) {
-      showError('Password must contain at least one uppercase letter');
+      showError(t('forms.validation.password_uppercase'));
       return false;
     }
     if (!/[a-z]/.test(tutorPassword)) {
-      showError('Password must contain at least one lowercase letter');
+      showError(t('forms.validation.password_lowercase'));
       return false;
     }
     if (!/[0-9]/.test(tutorPassword)) {
-      showError('Password must contain at least one number');
+      showError(t('forms.validation.password_number'));
       return false;
     }
     if (!tutorName.trim()) {
-      showError('Please enter your professional name');
+      showError(t('forms.validation.enter_professional_name'));
       return false;
     }
     return true;
@@ -160,7 +160,7 @@ export default function BecomeTutorScreen() {
 
   const validateStep2 = () => {
     if (!bio.trim() || bio.length < 50) {
-      showError('Please enter a bio (at least 50 characters)');
+      showError(t('forms.validation.enter_bio_min_chars', { count: 50 }));
       return false;
     }
     return true;
@@ -168,15 +168,15 @@ export default function BecomeTutorScreen() {
 
   const validateStep3 = () => {
     if (selectedCategories.length === 0) {
-      showError('Please select at least one category');
+      showError(t('forms.validation.select_at_least_one_category'));
       return false;
     }
     if (selectedSubjects.length === 0) {
-      showError('Please select at least one subject/skill');
+      showError(t('forms.validation.select_at_least_one_subject'));
       return false;
     }
     if (selectedLevels.length === 0) {
-      showError('Please select at least one level');
+      showError(t('forms.validation.select_at_least_one_level'));
       return false;
     }
     return true;
