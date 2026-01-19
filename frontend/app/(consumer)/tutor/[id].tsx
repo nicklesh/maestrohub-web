@@ -291,13 +291,13 @@ export default function TutorDetailScreen() {
         {packages.length > 0 && (
           <View style={[styles.section, { backgroundColor: colors.surface }]}>
             <View style={styles.sectionHeader}>
-              <Text style={[styles.sectionTitle, { color: colors.text }]}>Session Packages</Text>
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.tutor_detail.session_packages')}</Text>
               <View style={[styles.saveBadge, { backgroundColor: colors.success + '20' }]}>
-                <Text style={[styles.saveBadgeText, { color: colors.success }]}>Save up to {Math.max(...packages.map(p => p.discount_percent))}%</Text>
+                <Text style={[styles.saveBadgeText, { color: colors.success }]}>{t('pages.tutor_detail.save_up_to', { percent: Math.max(...packages.map(p => p.discount_percent)) })}</Text>
               </View>
             </View>
             <Text style={[styles.packageHint, { color: colors.textMuted }]}>
-              Book multiple sessions and save!
+              {t('pages.tutor_detail.book_multiple_save')}
             </Text>
             {packages.map((pkg) => (
               <TouchableOpacity
@@ -312,22 +312,22 @@ export default function TutorDetailScreen() {
                   <View>
                     <Text style={[styles.packageName, { color: colors.text }]}>{pkg.name}</Text>
                     <Text style={[styles.packageSessions, { color: colors.textMuted }]}>
-                      {pkg.session_count} sessions • Valid {pkg.validity_days} days
+                      {t('pages.tutor_detail.sessions_valid', { sessions: formatNumber(pkg.session_count), days: formatNumber(pkg.validity_days) })}
                     </Text>
                   </View>
                   <View style={[styles.discountTag, { backgroundColor: colors.success }]}>
-                    <Text style={styles.discountTagText}>{pkg.discount_percent}% OFF</Text>
+                    <Text style={styles.discountTagText}>{formatNumber(pkg.discount_percent)}% {t('pages.tutor_detail.off')}</Text>
                   </View>
                 </View>
                 <View style={styles.packagePricing}>
                   <View>
-                    <Text style={[styles.perSessionLabel, { color: colors.textMuted }]}>Per session</Text>
+                    <Text style={[styles.perSessionLabel, { color: colors.textMuted }]}>{t('pages.tutor_detail.per_session')}</Text>
                     <Text style={[styles.perSessionPrice, { color: colors.text }]}>
-                      {tutor.currency_symbol}{pkg.price_per_session.toFixed(0)}
+                      {tutor.currency_symbol}{formatNumber(pkg.price_per_session.toFixed(0))}
                     </Text>
                   </View>
                   <View style={{ alignItems: 'flex-end' }}>
-                    <Text style={[styles.totalLabel, { color: colors.textMuted }]}>Total</Text>
+                    <Text style={[styles.totalLabel, { color: colors.textMuted }]}>{t('pages.tutor_detail.total')}</Text>
                     <Text style={[styles.totalPrice, { color: colors.primary }]}>
                       {tutor.currency_symbol}{pkg.total_price.toFixed(0)}
                     </Text>
