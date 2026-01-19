@@ -188,7 +188,7 @@ export default function ReferralsScreen() {
         </View>
         
         <View style={styles.progressContainer}>
-          <Text style={[styles.progressLabel, { color: colors.textMuted }]}>Sessions Progress</Text>
+          <Text style={[styles.progressLabel, { color: colors.textMuted }]}>{t('pages.referrals.sessions_progress')}</Text>
           <View style={styles.progressRow}>
             <View style={[styles.progressBar, { backgroundColor: colors.gray200 }]}>
               <View 
@@ -208,7 +208,7 @@ export default function ReferralsScreen() {
         {item.status === 'rewarded' && (
           <View style={[styles.rewardBanner, { backgroundColor: colors.successLight }]}>
             <Ionicons name="gift" size={16} color={colors.success} />
-            <Text style={[styles.rewardText, { color: colors.success }]}>Reward earned!</Text>
+            <Text style={[styles.rewardText, { color: colors.success }]}>{t('pages.referrals.reward_earned')}</Text>
           </View>
         )}
       </View>
@@ -277,7 +277,7 @@ export default function ReferralsScreen() {
 
             {/* Your Referral Code */}
             <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-              <Text style={[styles.cardTitle, { color: colors.text }]}>Your Referral Code</Text>
+              <Text style={[styles.cardTitle, { color: colors.text }]}>{t('pages.referrals.your_referral_code')}</Text>
               <View style={styles.codeContainer}>
                 <Text style={[styles.codeText, { color: colors.primary }]}>{referralCode}</Text>
                 <View style={styles.codeActions}>
@@ -311,7 +311,7 @@ export default function ReferralsScreen() {
                   {applying ? (
                     <ActivityIndicator size="small" color="#fff" />
                   ) : (
-                    <Text style={styles.applyButtonText}>Apply</Text>
+                    <Text style={styles.applyButtonText}>{t('pages.referrals.apply')}</Text>
                   )}
                 </TouchableOpacity>
               </View>
@@ -320,19 +320,19 @@ export default function ReferralsScreen() {
             {/* Stats */}
             {stats && (
               <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-                <Text style={[styles.cardTitle, { color: colors.text }]}>Your Stats</Text>
+                <Text style={[styles.cardTitle, { color: colors.text }]}>{t('pages.referrals.your_stats')}</Text>
                 <View style={styles.statsRow}>
                   <View style={styles.statItem}>
                     <Text style={[styles.statValue, { color: colors.primary }]}>{stats.total_referrals}</Text>
-                    <Text style={[styles.statLabel, { color: colors.textMuted }]}>Total</Text>
+                    <Text style={[styles.statLabel, { color: colors.textMuted }]}>{t('pages.referrals.total')}</Text>
                   </View>
                   <View style={styles.statItem}>
                     <Text style={[styles.statValue, { color: colors.warning }]}>{stats.pending_referrals}</Text>
-                    <Text style={[styles.statLabel, { color: colors.textMuted }]}>Pending</Text>
+                    <Text style={[styles.statLabel, { color: colors.textMuted }]}>{t('pages.referrals.pending')}</Text>
                   </View>
                   <View style={styles.statItem}>
                     <Text style={[styles.statValue, { color: colors.success }]}>{stats.rewarded_referrals}</Text>
-                    <Text style={[styles.statLabel, { color: colors.textMuted }]}>Rewarded</Text>
+                    <Text style={[styles.statLabel, { color: colors.textMuted }]}>{t('pages.referrals.rewarded')}</Text>
                   </View>
                 </View>
               </View>
@@ -340,14 +340,14 @@ export default function ReferralsScreen() {
 
             {/* Referrals Header */}
             {referrals.length > 0 && (
-              <Text style={[styles.sectionTitle, { color: colors.text }]}>Your Referrals</Text>
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.referrals.your_referrals')}</Text>
             )}
           </>
         }
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
             <Ionicons name="people-outline" size={64} color={colors.textMuted} />
-            <Text style={[styles.emptyText, { color: colors.text }]}>No referrals yet</Text>
+            <Text style={[styles.emptyText, { color: colors.text }]}>{t('pages.referrals.no_referrals')}</Text>
             <Text style={[styles.emptySubtext, { color: colors.textMuted }]}>
               Share your referral code with friends to start earning rewards!
             </Text>
