@@ -167,10 +167,17 @@ export default function HomeScreen() {
 
   // Helper function to translate category names
   const getCategoryName = (categoryId: string, originalName: string): string => {
-    const key = `categories.${categoryId}`;
+    // Normalize the ID for lookup (lowercase, replace spaces with underscores)
+    const normalizedId = categoryId?.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+    const key = `categories.${normalizedId}`;
     const translated = t(key);
-    // If translation key doesn't exist, return original name
-    return translated === key ? originalName : translated;
+    // If translation key doesn't exist, try the original name as key
+    if (translated === key) {
+      const nameKey = `categories.${originalName?.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '')}`;
+      const nameTranslated = t(nameKey);
+      return nameTranslated === nameKey ? originalName : nameTranslated;
+    }
+    return translated;
   };
 
   const renderCategoryCard = (category: Category, index: number) => (
