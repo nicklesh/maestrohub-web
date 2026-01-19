@@ -50,7 +50,8 @@
     "view_schedule": "शेड्यूल देखें",
     "payments": "भुगतान",
     "view_schedule_payments": "शेड्यूल और भुगतान देखें",
-    "support": "Поддержка"
+    "support": "Поддержка",
+    "my_kids": "मेरे बच्चे"
   },
   "categories": {
     "academics": "शैक्षणिक",
@@ -542,7 +543,22 @@
       "my_reviews": "मेरी समीक्षाएं",
       "billing_payments": "बिलिंग और भुगतान",
       "invite_friends": "दोस्तों को आमंत्रित करें",
-      "become_coach": "कोच बनें"
+      "become_coach": "कोच बनें",
+      "reminders": "रिमाइंडर",
+      "reviews": "समीक्षाएं",
+      "billing": "बिलिंग",
+      "reports": "रिपोर्ट",
+      "tax_reports": "टैक्स रिपोर्ट",
+      "referrals": "रेफरल",
+      "invite_parents": "माता-पिता को आमंत्रित करें",
+      "invite_providers": "कोच को आमंत्रित करें",
+      "become_tutor": "कोच बनें",
+      "contact": "संपर्क करें",
+      "help_center": "सहायता केंद्र",
+      "language": "भाषा",
+      "logout": "लॉग आउट",
+      "appearance": "दिखावट",
+      "account": "खाता"
     },
     "bookings": {
       "title": "मेरी बुकिंग",
@@ -1321,7 +1337,7 @@
   "common": {
     "loading": "लोड हो रहा है...",
     "error": "त्रुटि",
-    "success": "सफलता",
+    "success": "सफल",
     "warning": "चेतावनी",
     "info": "जानकारी",
     "yes": "हां",
@@ -1329,7 +1345,7 @@
     "ok": "ठीक है",
     "cancel": "रद्द करें",
     "close": "बंद करें",
-    "save": "सहेजें",
+    "save": "सेव करें",
     "delete": "हटाएं",
     "edit": "संपादित करें",
     "add": "जोड़ें",
@@ -1385,7 +1401,7 @@
     "select_subject": "विषय चुनें",
     "na": "उपलब्ध नहीं",
     "view": "देखें",
-    "done": "हो गया",
+    "done": "पूर्ण",
     "continue": "जारी रखें",
     "sent": "भेजा गया",
     "accepted": "स्वीकृत",
