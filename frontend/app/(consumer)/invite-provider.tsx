@@ -202,11 +202,6 @@ export default function InviteProviderScreen() {
     }
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  };
-
   const renderInvite = ({ item }: { item: Invite }) => (
     <View style={[styles.inviteCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
       <View style={styles.inviteHeader}>
@@ -223,7 +218,7 @@ export default function InviteProviderScreen() {
         </View>
         <View style={[styles.statusBadge, { backgroundColor: getStatusColor(item.status) + '20' }]}>
           <Text style={[styles.statusText, { color: getStatusColor(item.status) }]}>
-            {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
+            {t(`common.${item.status}`)}
           </Text>
         </View>
       </View>
@@ -232,12 +227,12 @@ export default function InviteProviderScreen() {
         <View style={[styles.creditBadge, { backgroundColor: colors.success + '20' }]}>
           <Ionicons name="gift" size={16} color={colors.success} />
           <Text style={[styles.creditText, { color: colors.success }]}>
-            ${item.credit_amount} Free Session Credit
+            {t('pages.invite_provider.free_session_credit', { amount: item.credit_amount })}
           </Text>
         </View>
       )}
 
-      <Text style={[styles.inviteDate, { color: colors.textMuted }]}>Sent: {formatDate(item.created_at)}</Text>
+      <Text style={[styles.inviteDate, { color: colors.textMuted }]}>{t('pages.invite_provider.sent_date', { date: formatDate(item.created_at) })}</Text>
     </View>
   );
 
