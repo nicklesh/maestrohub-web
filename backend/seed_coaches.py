@@ -23,9 +23,14 @@ def hash_password(password: str) -> str:
 # Hardcoded categories (same as in server.py)
 CATEGORIES = [
     {"id": "academics", "name": "Academics", "subjects": [
-        "Homework Support", "Mathematics", "Advanced Mathematics", "Science", 
-        "Coding/Programming", "Languages & Writing", "Social Studies & Humanities", 
-        "Test Prep", "Study & Academic Skills"
+        "Academic Tutoring", "Reading & Writing", "History", "World Languages",
+        "Private Lessons", "1-on-1 Coaching", "By Learning Need", "ADHD", "Autism",
+        "Dyslexia", "Gifted", "SAT/ACT", "AP Test Prep", "Geometry", "Algebra I",
+        "Algebra II", "College Algebra", "Linear Algebra", "Trigonometry", "Pre-Calculus",
+        "Calculus I", "Calculus II", "College Calculus", "Differential Calculus",
+        "Integral Calculus", "Statistics & Probability", "Homework Support", "Mathematics",
+        "Advanced Mathematics", "Science", "Coding/Programming", "Social Studies & Humanities",
+        "Study & Academic Skills"
     ]},
     {"id": "performance_arts", "name": "Performance & Creative Arts", "subjects": [
         "Performance Coaching", "Sports", "Music", "Acting", "Voice", "Dance", 
