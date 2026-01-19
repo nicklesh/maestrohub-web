@@ -1235,7 +1235,7 @@
       "weekly_summary": "साप्ताहिक सारांश",
       "weekly_summary_desc": "सत्रों और भुगतानों का साप्ताहिक अवलोकन प्राप्त करें",
       "settings_saved": "रिमाइंडर सेटिंग्स सहेजी गईं",
-      "settings_failed": "सेटिंग्स सहेजने में विफल",
+      "settings_save_failed": "सेटिंग्स सहेजने में विफल",
       "in_hours": "{{count}} घंटे में",
       "tomorrow": "कल",
       "in_days": "{{count}} दिनों में",
