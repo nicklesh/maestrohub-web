@@ -438,7 +438,7 @@ export default function BecomeTutorScreen() {
               styles.chipText,
               { color: colors.text, marginLeft: 4 },
               selectedModalities.includes(mod.id) && { color: '#FFFFFF' }
-            ]}>{mod.name}</Text>
+            ]}>{t(mod.key)}</Text>
           </TouchableOpacity>
         ))}
       </View>
@@ -459,7 +459,7 @@ export default function BecomeTutorScreen() {
               styles.chipText,
               { color: colors.text },
               payoutCountry === country.id && { color: '#FFFFFF' }
-            ]}>{country.flag} {country.name}</Text>
+            ]}>{country.flag} {t(country.key)}</Text>
           </TouchableOpacity>
         ))}
       </View>
