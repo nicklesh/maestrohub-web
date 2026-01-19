@@ -511,6 +511,44 @@ export default function BecomeTutorScreen() {
           </View>
         </View>
       </View>
+
+      {/* Meeting Link Section - Only show if online modality is selected */}
+      {selectedModalities.includes('online') && (
+        <View style={styles.section}>
+          <Text style={[styles.sectionLabel, { color: colors.text }]}>{t('pages.become_tutor.meeting_settings')}</Text>
+          <Text style={[styles.sectionDesc, { color: colors.textMuted }]}>{t('pages.become_tutor.meeting_settings_desc')}</Text>
+          
+          <Text style={[styles.label, { color: colors.text, marginTop: 16 }]}>{t('pages.become_tutor.meeting_link')}</Text>
+          <TextInput
+            style={[styles.input, { backgroundColor: colors.surface, borderColor: meetingLink && !validateMeetingLink(meetingLink) ? colors.error : colors.border, color: colors.text }]}
+            placeholder={t('pages.become_tutor.meeting_link_placeholder')}
+            placeholderTextColor={colors.textMuted}
+            value={meetingLink}
+            onChangeText={setMeetingLink}
+            autoCapitalize="none"
+            keyboardType="url"
+          />
+          {meetingLink && !validateMeetingLink(meetingLink) && (
+            <Text style={[styles.errorText, { color: colors.error }]}>{t('pages.become_tutor.invalid_meeting_link')}</Text>
+          )}
+          <Text style={[styles.hintText, { color: colors.textMuted }]}>{t('pages.become_tutor.meeting_link_hint')}</Text>
+
+          <TouchableOpacity
+            style={styles.checkboxRow}
+            onPress={() => setWaitingRoomEnabled(!waitingRoomEnabled)}
+          >
+            <Ionicons 
+              name={waitingRoomEnabled ? 'checkbox' : 'square-outline'} 
+              size={24} 
+              color={waitingRoomEnabled ? colors.primary : colors.textMuted} 
+            />
+            <View style={styles.checkboxTextContainer}>
+              <Text style={[styles.checkboxLabel, { color: colors.text }]}>{t('pages.become_tutor.waiting_room_enabled')}</Text>
+              <Text style={[styles.checkboxDesc, { color: colors.textMuted }]}>{t('pages.become_tutor.waiting_room_desc')}</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 
