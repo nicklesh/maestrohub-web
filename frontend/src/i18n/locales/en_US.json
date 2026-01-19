@@ -469,9 +469,14 @@
       "enter_current_level": "Please enter current level",
       "acknowledge_cancellation_policy": "Please acknowledge cancellation policy",
       "enter_child_name": "Please enter the child's name",
-      "enter_email_address": "Please enter email address",
+      "enter_email_address": "Please enter an email address",
       "select_at_least_one_subject": "Please select at least one subject/skill",
-      "select_at_least_one_level": "Please select at least one level"
+      "select_at_least_one_level": "Please select at least one level",
+      "enter_professional_name": "Please enter your professional name",
+      "enter_bio": "Please enter a bio",
+      "enter_bio_min_chars": "Please enter a bio (at least {{count}} characters)",
+      "select_at_least_one_category": "Please select at least one category",
+      "enter_referral_code": "Please enter a referral code"
     }
   },
   "messages": {
