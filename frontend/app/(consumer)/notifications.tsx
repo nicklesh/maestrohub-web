@@ -97,9 +97,9 @@ export default function NotificationsScreen() {
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const days = Math.floor(hours / 24);
 
-    if (hours < 1) return 'Just now';
-    if (hours < 24) return `${hours}h ago`;
-    if (days < 7) return `${days}d ago`;
+    if (hours < 1) return t('pages.notifications.just_now');
+    if (hours < 24) return t('pages.notifications.hours_ago', { count: hours });
+    if (days < 7) return t('pages.notifications.days_ago', { count: days });
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   };
 
