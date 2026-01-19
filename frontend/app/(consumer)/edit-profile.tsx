@@ -108,7 +108,7 @@ export default function EditProfileScreen() {
           <View style={[styles.section, { backgroundColor: colors.surface }]}>
             <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.edit_profile.profile_info')}</Text>
 
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('forms.name')}</Text>
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.edit_profile.name')}</Text>
             <TextInput
               style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
               placeholder={t('pages.edit_profile.name_placeholder')}
@@ -117,7 +117,7 @@ export default function EditProfileScreen() {
               onChangeText={setName}
             />
 
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('forms.email')}</Text>
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.edit_profile.email')}</Text>
             <TextInput
               style={[styles.input, styles.inputDisabled, { backgroundColor: colors.gray100, color: colors.textMuted, borderColor: colors.border }]}
               value={user?.email}
