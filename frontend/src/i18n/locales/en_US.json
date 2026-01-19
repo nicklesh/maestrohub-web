@@ -1260,7 +1260,16 @@
       "no_show_report_desc": "If your coach didn't show up for the session, you can report it here. We'll review and process a full refund.",
       "with_tutor": "with {{name}}",
       "join_meeting": "Join Session",
-      "waiting_room_note": "Coach will admit you from the waiting room"
+      "waiting_room_note": "Coach will admit you from the waiting room",
+      "meeting_link": "Meeting Link",
+      "meeting_link_placeholder": "https://zoom.us/j/... or https://meet.google.com/...",
+      "update_meeting_link": "Update Meeting Link",
+      "meeting_link_updated": "Meeting link updated successfully",
+      "meeting_link_update_failed": "Failed to update meeting link",
+      "has_waiting_room": "Has waiting room",
+      "edit_meeting_link": "Edit Meeting Link",
+      "no_meeting_link": "No meeting link set",
+      "set_meeting_link": "Set Meeting Link"
     },
     "add_child": {
       "title": "Add Child",
