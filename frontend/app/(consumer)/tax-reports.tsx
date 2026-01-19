@@ -273,7 +273,7 @@ export default function TaxReportsScreen() {
         ) : (
           <View style={styles.noReportContainer}>
             <Text style={[styles.noReportText, { color: colors.textMuted }]}>
-              No reports generated for this year
+              {t('pages.tax_reports.no_reports_for_year')}
             </Text>
             
             {!isArchived ? (
