@@ -899,8 +899,8 @@
     },
     "edit_profile": {
       "title": "प्रोफाइल संपादित करें",
-      "personal_info": "Personal Information",
-      "contact_info": "Contact Information",
+      "personal_info": "व्यक्तिगत जानकारी",
+      "contact_info": "संपर्क जानकारी",
       "save_changes": "परिवर्तन सहेजें",
       "name": "नाम",
       "email": "ईमेल",
@@ -915,7 +915,20 @@
       "current_password_placeholder": "वर्तमान पासवर्ड दर्ज करें",
       "new_password": "नया पासवर्ड",
       "new_password_placeholder": "नया पासवर्ड दर्ज करें",
-      "update_password": "पासवर्ड अपडेट करें"
+      "confirm_password": "नया पासवर्ड पुष्टि करें",
+      "confirm_password_placeholder": "नया पासवर्ड पुष्टि करें",
+      "change_password_btn": "पासवर्ड बदलें",
+      "update_password": "पासवर्ड अपडेट करें",
+      "name_placeholder": "आपका नाम",
+      "phone_placeholder": "+91 12345 67890",
+      "name_required": "नाम खाली नहीं हो सकता",
+      "profile_updated": "प्रोफाइल सफलतापूर्वक अपडेट की गई",
+      "update_failed": "प्रोफाइल अपडेट करने में विफल",
+      "fill_password_fields": "कृपया सभी पासवर्ड फ़ील्ड भरें",
+      "passwords_not_match": "नए पासवर्ड मेल नहीं खाते",
+      "password_min_length": "नया पासवर्ड कम से कम 6 अक्षरों का होना चाहिए",
+      "password_changed": "पासवर्ड सफलतापूर्वक बदला गया",
+      "password_change_failed": "पासवर्ड बदलने में विफल"
     },
     "scheduled_jobs": {
       "title": "Scheduled Jobs",
