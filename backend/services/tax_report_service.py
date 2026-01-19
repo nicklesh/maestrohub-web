@@ -275,7 +275,7 @@ class TaxReportService:
     # ============== PDF GENERATION ==============
     def _generate_monthly_pdf(self, user: Dict, user_type: str, year: int, month: int,
                               transactions: List[Dict], total_amount: int,
-                              total_fees: int, total_payouts: int) -> str:
+                              total_fees: int, total_payouts: int, lang: str = "en") -> str:
         """Generate monthly summary PDF and return as base64"""
         buffer = io.BytesIO()
         doc = SimpleDocTemplate(buffer, pagesize=letter, rightMargin=72, leftMargin=72,
@@ -305,26 +305,26 @@ class TaxReportService:
         # Header
         elements.append(Paragraph("Maestro Habitat", title_style))
         elements.append(Spacer(1, 12))
-        elements.append(Paragraph(f"Monthly {user_type.title()} Statement", styles['Heading2']))
+        elements.append(Paragraph(get_pdf_text("monthly_statement", lang, user_type=user_type.title()), styles['Heading2']))
         elements.append(Paragraph(f"{month_name} {year}", styles['Normal']))
         elements.append(Spacer(1, 24))
         
         # User info
-        elements.append(Paragraph(f"<b>Name:</b> {user.get('name', 'N/A')}", styles['Normal']))
-        elements.append(Paragraph(f"<b>Email:</b> {user.get('email', 'N/A')}", styles['Normal']))
-        elements.append(Paragraph(f"<b>User ID:</b> {user.get('user_id', 'N/A')}", styles['Normal']))
+        elements.append(Paragraph(f"<b>{get_pdf_text('name', lang)}:</b> {user.get('name', 'N/A')}", styles['Normal']))
+        elements.append(Paragraph(f"<b>{get_pdf_text('email', lang)}:</b> {user.get('email', 'N/A')}", styles['Normal']))
+        elements.append(Paragraph(f"<b>{get_pdf_text('user_id', lang)}:</b> {user.get('user_id', 'N/A')}", styles['Normal']))
         elements.append(Spacer(1, 24))
         
         # Summary
-        elements.append(Paragraph("<b>Summary</b>", styles['Heading3']))
+        elements.append(Paragraph(f"<b>{get_pdf_text('summary', lang)}</b>", styles['Heading3']))
         summary_data = [
-            ['Description', 'Amount'],
-            ['Total Transactions', str(len(transactions))],
-            ['Total Amount', f"{currency_symbol}{total_amount/100:.2f}"],
+            [get_pdf_text('description', lang), get_pdf_text('amount', lang)],
+            [get_pdf_text('total_transactions', lang), str(len(transactions))],
+            [get_pdf_text('total_amount', lang), f"{currency_symbol}{total_amount/100:.2f}"],
         ]
         if user_type == "provider":
-            summary_data.append(['Platform Fees', f"{currency_symbol}{total_fees/100:.2f}"])
-            summary_data.append(['Net Payouts', f"{currency_symbol}{total_payouts/100:.2f}"])
+            summary_data.append([get_pdf_text('platform_fees', lang), f"{currency_symbol}{total_fees/100:.2f}"])
+            summary_data.append([get_pdf_text('net_payouts', lang), f"{currency_symbol}{total_payouts/100:.2f}"])
         
         summary_table = Table(summary_data, colWidths=[3*inch, 2*inch])
         summary_table.setStyle(TableStyle([
