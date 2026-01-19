@@ -257,7 +257,7 @@ export default function InviteProviderScreen() {
         <View style={[styles.infoBanner, { backgroundColor: colors.primaryLight }]}>
           <Ionicons name="gift" size={24} color={colors.primary} />
           <View style={styles.infoContent}>
-            <Text style={[styles.infoTitle, { color: colors.primary }]}>Refer & Earn</Text>
+            <Text style={[styles.infoTitle, { color: colors.primary }]}>{t('pages.invite_provider.refer_and_earn')}</Text>
             <Text style={[styles.infoText, { color: colors.text }]}>
               Invite providers and get a free session credit when they join!
             </Text>
@@ -270,7 +270,7 @@ export default function InviteProviderScreen() {
           onPress={() => setShowInviteModal(true)}
         >
           <Ionicons name="person-add" size={20} color="#FFFFFF" />
-          <Text style={styles.inviteButtonText}>Invite a Provider</Text>
+          <Text style={styles.inviteButtonText}>{t('pages.invite_provider.invite_a_provider')}</Text>
         </TouchableOpacity>
 
         {/* Social Share Button */}
@@ -279,14 +279,14 @@ export default function InviteProviderScreen() {
           onPress={() => setShowShareModal(true)}
         >
           <Ionicons name="share-social" size={20} color={colors.primary} />
-          <Text style={[styles.shareButtonText, { color: colors.primary }]}>Share on Social Media</Text>
+          <Text style={[styles.shareButtonText, { color: colors.primary }]}>{t('pages.invite_provider.share_on_social')}</Text>
         </TouchableOpacity>
 
         {/* Invites List */}
         {invites.length === 0 ? (
           <View style={styles.emptyContainer}>
             <Ionicons name="mail-outline" size={48} color={colors.textMuted} />
-            <Text style={[styles.emptyText, { color: colors.textMuted }]}>No invites sent yet</Text>
+            <Text style={[styles.emptyText, { color: colors.textMuted }]}>{t('pages.invite_provider.no_invites_sent')}</Text>
           </View>
         ) : (
           <FlatList
@@ -314,7 +314,7 @@ export default function InviteProviderScreen() {
           />
           <View style={[styles.bottomSheet, { backgroundColor: colors.surface }]}>
             <View style={[styles.sheetHandle, { backgroundColor: colors.gray300 }]} />
-            <Text style={[styles.sheetTitle, { color: colors.text }]}>Invite a Provider</Text>
+            <Text style={[styles.sheetTitle, { color: colors.text }]}>{t('pages.invite_provider.invite_a_provider')}</Text>
             <Text style={[styles.sheetSubtitle, { color: colors.textMuted }]}>
               They'll get a $50 free session credit when they join!
             </Text>
@@ -330,7 +330,7 @@ export default function InviteProviderScreen() {
               autoCapitalize="none"
             />
 
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Provider's Name (optional)</Text>
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.invite_provider.providers_name')}</Text>
             <TextInput
               style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
               placeholder="John Smith"
@@ -339,10 +339,10 @@ export default function InviteProviderScreen() {
               onChangeText={setInviteName}
             />
 
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Personal Message (optional)</Text>
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.invite_provider.personal_message')}</Text>
             <TextInput
               style={[styles.input, styles.textArea, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-              placeholder="Hi! I'd love to have you as my tutor..."
+              placeholder={t('pages.invite_provider.message_placeholder')}
               placeholderTextColor={colors.textMuted}
               value={inviteMessage}
               onChangeText={setInviteMessage}
@@ -360,7 +360,7 @@ export default function InviteProviderScreen() {
               ) : (
                 <>
                   <Ionicons name="send" size={18} color="#FFFFFF" />
-                  <Text style={styles.sendButtonText}>Send Invite</Text>
+                  <Text style={styles.sendButtonText}>{t('pages.invite_provider.send_invite')}</Text>
                 </>
               )}
             </TouchableOpacity>
@@ -378,7 +378,7 @@ export default function InviteProviderScreen() {
           />
           <View style={[styles.bottomSheet, { backgroundColor: colors.surface }]}>
             <View style={[styles.sheetHandle, { backgroundColor: colors.gray300 }]} />
-            <Text style={[styles.sheetTitle, { color: colors.text }]}>Share on Social Media</Text>
+            <Text style={[styles.sheetTitle, { color: colors.text }]}>{t('pages.invite_provider.share_on_social')}</Text>
             <Text style={[styles.sheetSubtitle, { color: colors.textMuted }]}>
               Invite coaches to join Maestro Habitat
             </Text>
