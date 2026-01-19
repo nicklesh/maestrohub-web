@@ -206,7 +206,7 @@ export default function ReviewsScreen() {
           pendingReviews.length === 0 ? (
             <View style={styles.emptyState}>
               <Ionicons name="star-outline" size={64} color={colors.textMuted} />
-              <Text style={[styles.emptyTitle, { color: colors.text }]}>No Pending Reviews</Text>
+              <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('pages.reviews.no_pending_reviews')}</Text>
               <Text style={[styles.emptyText, { color: colors.textMuted }]}>
                 Complete sessions with coaches to leave reviews
               </Text>
@@ -232,7 +232,7 @@ export default function ReviewsScreen() {
                   onPress={() => handleStartReview(tutor)}
                 >
                   <Ionicons name="star" size={18} color="#fff" />
-                  <Text style={styles.reviewButtonText}>Write Review</Text>
+                  <Text style={styles.reviewButtonText}>{t('pages.reviews.write_review')}</Text>
                 </TouchableOpacity>
               </View>
             ))
@@ -241,7 +241,7 @@ export default function ReviewsScreen() {
           myReviews.length === 0 ? (
             <View style={styles.emptyState}>
               <Ionicons name="document-text-outline" size={64} color={colors.textMuted} />
-              <Text style={[styles.emptyTitle, { color: colors.text }]}>No Reviews Yet</Text>
+              <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('pages.reviews.no_reviews_yet')}</Text>
               <Text style={[styles.emptyText, { color: colors.textMuted }]}>
                 Your submitted reviews will appear here
               </Text>
@@ -324,12 +324,12 @@ export default function ReviewsScreen() {
               ))}
 
               <View style={styles.commentSection}>
-                <Text style={[styles.commentLabel, { color: colors.text }]}>Comments (Optional)</Text>
+                <Text style={[styles.commentLabel, { color: colors.text }]}>{t('pages.reviews.comments_optional')}</Text>
                 <TextInput
                   style={[styles.commentInput, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
                   multiline
                   numberOfLines={4}
-                  placeholder="Share your experience..."
+                  placeholder={t('pages.reviews.share_experience')}
                   placeholderTextColor={colors.textMuted}
                   value={comment}
                   onChangeText={setComment}
@@ -366,7 +366,7 @@ export default function ReviewsScreen() {
                 {submitting ? (
                   <ActivityIndicator size="small" color="#fff" />
                 ) : (
-                  <Text style={styles.submitButtonText}>Submit Review</Text>
+                  <Text style={styles.submitButtonText}>{t('pages.reviews.submit_review')}</Text>
                 )}
               </TouchableOpacity>
             </View>
