@@ -4683,14 +4683,14 @@ async def get_tax_report_detail(report_id: str, request: Request):
     return report_summary
 
 @api_router.get("/tax-reports/{report_id}/download")
-async def download_tax_report(report_id: str, request: Request):
+async def download_tax_report(report_id: str, request: Request, lang: str = Query("en")):
     """Download tax report PDF"""
     global tax_report_service
     if not tax_report_service:
         tax_report_service = TaxReportService(db, email_service)
     
     user = await require_auth(request)
-    pdf_bytes = await tax_report_service.download_report(report_id, user.user_id)
+    pdf_bytes = await tax_report_service.download_report(report_id, user.user_id, lang=lang)
     
     if not pdf_bytes:
         raise HTTPException(status_code=404, detail="Report not found or archived")
