@@ -57,7 +57,7 @@ export default function FAQScreen() {
       setContactSuccess(true);
       setContactSubject('');
       setContactMessage('');
-      showToast(t('pages.contact.success_message'), 'success');
+      showToast('success', t('pages.contact.success_message'));
       // Auto-close after 2 seconds
       setTimeout(() => {
         setShowContactModal(false);
