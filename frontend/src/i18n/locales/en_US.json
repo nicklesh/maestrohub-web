@@ -423,6 +423,14 @@
     "unverified": "Unverified"
   },
   "pages": {
+    "notifications": {
+      "title": "Notifications",
+      "just_now": "Just now",
+      "hours_ago": "{{count}}h ago",
+      "days_ago": "{{count}}d ago",
+      "no_notifications": "No notifications",
+      "no_notifications_desc": "You're all caught up!"
+    },
     "home": {
       "hero_title": "Find Your Perfect Coach",
       "hero_subtitle": "Connect with expert tutors and coaches for personalized learning experiences",
