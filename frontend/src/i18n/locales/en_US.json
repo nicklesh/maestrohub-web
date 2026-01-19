@@ -1291,7 +1291,10 @@
       "invitation_sent": "Invitation sent successfully!",
       "sent": "Sent",
       "parent": "Parent",
-      "pending": "Pending"
+      "pending": "Pending",
+      "join_maestro_habitat": "Join Maestro Habitat!",
+      "share_message": "Join me on Maestro Habitat - the best platform to find quality coaches for your kids! Use my referral code: {{code}}",
+      "more_options": "More Options..."
     },
     "invite_provider": {
       "title": "Invite Providers",
