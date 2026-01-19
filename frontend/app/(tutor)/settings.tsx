@@ -691,4 +691,26 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     fontWeight: '600',
     color: colors.error,
   },
+  meetingHintSmall: {
+    fontSize: 12,
+    marginTop: 4,
+    marginBottom: 12,
+  },
+  waitingRoomRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 16,
+    gap: 12,
+  },
+  waitingRoomTextContainer: {
+    flex: 1,
+  },
+  waitingRoomLabel: {
+    fontSize: 15,
+    fontWeight: '500',
+  },
+  waitingRoomDesc: {
+    fontSize: 13,
+    marginTop: 2,
+  },
 });
