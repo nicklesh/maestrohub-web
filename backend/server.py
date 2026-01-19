@@ -2742,6 +2742,8 @@ async def get_booking(booking_id: str, request: Request):
         "student_name": student["name"] if student else "Unknown",
         "currency": market_config["currency"],
         "currency_symbol": market_config["currency_symbol"],
+        "meeting_link": booking_tutor.get("meeting_link") if booking_tutor else None,
+        "waiting_room_enabled": booking_tutor.get("waiting_room_enabled", True) if booking_tutor else True,
         "kid_notifications": kid_notifications,
         "student_notify_settings": student_notify_settings
     }
