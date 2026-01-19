@@ -3956,23 +3956,23 @@ async def get_consumer_report_pdf(
     story.append(Spacer(1, 20))
     
     # Summary
-    story.append(Paragraph("Summary", heading_style))
+    story.append(Paragraph(t['summary'], heading_style))
     summary = report["summary"]
     symbol = summary["currency_symbol"]
     
     summary_data = [
-        ["Total Sessions", str(summary["total_sessions"])],
-        ["Completed", str(summary["completed_sessions"])],
-        ["Upcoming", str(summary["upcoming_sessions"])],
-        ["Canceled", str(summary["canceled_sessions"])],
-        ["Total Spent", f"{symbol}{summary['total_spent_cents']/100:.2f}"]
+        [t['total_sessions'], str(summary["total_sessions"])],
+        [t['completed'], str(summary["completed_sessions"])],
+        [t['upcoming'], str(summary["upcoming_sessions"])],
+        [t['canceled'], str(summary["canceled_sessions"])],
+        [t['total_spent'], f"{symbol}{summary['total_spent_cents']/100:.2f}"]
     ]
     
     summary_table = Table(summary_data, colWidths=[3*inch, 2*inch])
     summary_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, -1), colors.whitesmoke),
         ('GRID', (0, 0), (-1, -1), 1, colors.grey),
-        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+        ('FONTNAME', (0, 0), (-1, -1), font_name),
         ('FONTSIZE', (0, 0), (-1, -1), 11),
         ('PADDING', (0, 0), (-1, -1), 8),
     ]))
@@ -3981,12 +3981,12 @@ async def get_consumer_report_pdf(
     
     # By Student with Category Grouping
     if report.get("by_student_category"):
-        story.append(Paragraph("Sessions by Student & Category", heading_style))
+        story.append(Paragraph(t['sessions_by_student_category'], heading_style))
         for student_group in report["by_student_category"]:
             # Student header
             story.append(Paragraph(f"{student_group['student_name']}", subheading_style))
             
-            student_data = [["Category", "Subject", "Sessions", "Amount"]]
+            student_data = [[t['category'], t['subject'], t['sessions'], t['amount']]]
             for cat in student_group.get("categories", []):
                 for subj in cat.get("subjects", []):
                     student_data.append([
@@ -3999,14 +3999,15 @@ async def get_consumer_report_pdf(
                     student_data.append([cat["category_name"], "-", str(cat["sessions"]), f"{symbol}{cat['spent_cents']/100:.2f}"])
             
             # Add student total row
-            student_data.append(["", "TOTAL", str(student_group["total_sessions"]), f"{symbol}{student_group['total_spent_cents']/100:.2f}"])
+            student_data.append(["", t['total'], str(student_group["total_sessions"]), f"{symbol}{student_group['total_spent_cents']/100:.2f}"])
             
             student_table = Table(student_data, colWidths=[1.8*inch, 1.8*inch, 1*inch, 1.2*inch])
             student_table.setStyle(TableStyle([
                 ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2563eb')),
                 ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
                 ('BACKGROUND', (0, -1), (-1, -1), colors.HexColor('#f0f4ff')),
-                ('FONTNAME', (0, -1), (-1, -1), 'Helvetica-Bold'),
+                ('FONTNAME', (0, -1), (-1, -1), font_bold),
+                ('FONTNAME', (0, 0), (-1, -1), font_name),
                 ('GRID', (0, 0), (-1, -1), 1, colors.grey),
                 ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
                 ('FONTSIZE', (0, 0), (-1, -1), 9),
