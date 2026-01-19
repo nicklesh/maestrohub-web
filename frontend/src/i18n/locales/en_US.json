@@ -284,7 +284,10 @@
       "invalid_time": "Please enter a valid time",
       "select_time_slot": "Please select a time slot",
       "select_child": "Please select a child",
-      "agree_to_policies": "Please agree to the policies"
+      "agree_to_policies": "Please agree to the policies",
+      "enter_learning_goals": "Please enter learning goals",
+      "enter_current_level": "Please enter current level",
+      "acknowledge_cancellation_policy": "Please acknowledge cancellation policy"
     }
   },
   "messages": {
