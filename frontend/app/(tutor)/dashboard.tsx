@@ -781,4 +781,91 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     width: 1,
     backgroundColor: 'rgba(255,255,255,0.2)',
   },
+  // New styles for meeting link feature
+  bookingActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  meetingLinkButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: colors.primaryLight || colors.surface,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  meetingLinkIndicator: {
+    fontSize: 11,
+    marginTop: 4,
+    fontWeight: '500',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    padding: 24,
+    paddingBottom: 40,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  bookingPreview: {
+    marginBottom: 20,
+    padding: 16,
+    borderRadius: 12,
+    backgroundColor: colors.background,
+  },
+  bookingPreviewDate: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  bookingPreviewTime: {
+    fontSize: 14,
+    marginTop: 4,
+  },
+  bookingPreviewStudent: {
+    fontSize: 14,
+    marginTop: 4,
+  },
+  meetingLinkInput: {
+    borderWidth: 1,
+    borderRadius: 12,
+    padding: 16,
+    fontSize: 15,
+    marginBottom: 16,
+  },
+  waitingRoomRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  waitingRoomLabel: {
+    fontSize: 15,
+    fontWeight: '500',
+  },
+  saveMeetingLinkButton: {
+    borderRadius: 12,
+    padding: 16,
+    alignItems: 'center',
+  },
+  saveMeetingLinkText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
 });
