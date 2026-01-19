@@ -89,11 +89,17 @@ export default function BookingScreen() {
   const styles = getStyles(colors);
 
   useEffect(() => {
-    // Wait for token to be available before loading data
-    if (token) {
+    // Wait for auth to finish loading and token to be available before loading data
+    if (!authLoading && token) {
       loadData();
+    } else if (!authLoading && !token) {
+      // Auth finished loading but no token - user not logged in
+      console.log('No auth token available after auth loaded');
+      setLoading(false);
+      showError('Please log in to book a session');
+      router.replace('/login');
     }
-  }, [token, tutorId]);
+  }, [authLoading, token, tutorId]);
 
   const loadData = async () => {
     if (!token) {
