@@ -915,7 +915,20 @@
       "current_password_placeholder": "Enter current password",
       "new_password": "New Password",
       "new_password_placeholder": "Enter new password",
-      "update_password": "Update Password"
+      "confirm_password": "Confirm New Password",
+      "confirm_password_placeholder": "Confirm new password",
+      "change_password_btn": "Change Password",
+      "update_password": "Update Password",
+      "name_placeholder": "Your name",
+      "phone_placeholder": "+1 (555) 000-0000",
+      "name_required": "Name cannot be empty",
+      "profile_updated": "Profile updated successfully",
+      "update_failed": "Failed to update profile",
+      "fill_password_fields": "Please fill in all password fields",
+      "passwords_not_match": "New passwords do not match",
+      "password_min_length": "New password must be at least 6 characters",
+      "password_changed": "Password changed successfully",
+      "password_change_failed": "Failed to change password"
     },
     "scheduled_jobs": {
       "title": "Scheduled Jobs",
