@@ -199,6 +199,13 @@ export default function HomeScreen() {
     </TouchableOpacity>
   );
 
+  // Helper function to translate subject names
+  const getSubjectName = (subjectId: string): string => {
+    const key = `subjects.${subjectId}`;
+    const translated = t(key);
+    return translated === key ? subjectId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : translated;
+  };
+
   const renderTutorCard = ({ item }: { item: Tutor }) => (
     <TouchableOpacity
       style={[
@@ -218,17 +225,17 @@ export default function HomeScreen() {
           {item.user_name}
         </Text>
         <Text style={styles.tutorSubjects} numberOfLines={1}>
-          {item.subjects?.slice(0, 2).join(', ')}
+          {item.subjects?.slice(0, 2).map(s => getSubjectName(s)).join(', ')}
         </Text>
         <View style={styles.tutorMeta}>
           <View style={styles.ratingContainer}>
             <Ionicons name="star" size={14} color={colors.accent} />
             <Text style={styles.rating}>
-              {item.rating_avg > 0 ? item.rating_avg.toFixed(1) : 'New'}
+              {item.rating_avg > 0 ? formatNumber(item.rating_avg.toFixed(1)) : t('common.new')}
             </Text>
           </View>
           <Text style={[styles.price, isTablet && styles.priceTablet]}>
-            {item.currency_symbol || currentMarket?.currency_symbol || '$'}{item.base_price}/hr
+            {item.currency_symbol || currentMarket?.currency_symbol || '$'}{formatNumber(item.base_price)}{t('pages.search.per_hour')}
           </Text>
         </View>
       </View>
