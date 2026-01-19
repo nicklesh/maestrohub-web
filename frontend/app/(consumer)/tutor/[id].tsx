@@ -346,13 +346,13 @@ export default function TutorDetailScreen() {
               <View style={styles.reviewStats}>
                 <Ionicons name="star" size={14} color="#FFB800" />
                 <Text style={[styles.reviewStatText, { color: colors.text }]}>
-                  {tutor.rating_avg?.toFixed(1)} ({reviewStats.total})
+                  {formatNumber(tutor.rating_avg?.toFixed(1) || '0')} ({formatNumber(reviewStats.total)} {reviewStats.total === 1 ? t('pages.tutor_detail.review') : t('pages.tutor_detail.reviews')})
                 </Text>
               </View>
             </View>
             {reviewStats.recommend_pct > 0 && (
               <Text style={[styles.recommendText, { color: colors.success }]}>
-                {reviewStats.recommend_pct}% would recommend
+                {t('pages.tutor_detail.would_recommend', { percent: formatNumber(reviewStats.recommend_pct) })}
               </Text>
             )}
             {reviews.slice(0, 3).map((review) => (
@@ -382,7 +382,7 @@ export default function TutorDetailScreen() {
                 )}
                 {review.coach_response && (
                   <View style={[styles.coachResponse, { backgroundColor: colors.primary + '10' }]}>
-                    <Text style={[styles.coachResponseLabel, { color: colors.primary }]}>Coach's Response:</Text>
+                    <Text style={[styles.coachResponseLabel, { color: colors.primary }]}>{t('pages.tutor_detail.coach_response')}</Text>
                     <Text style={[styles.coachResponseText, { color: colors.text }]}>{review.coach_response}</Text>
                   </View>
                 )}
