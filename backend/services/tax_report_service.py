@@ -493,8 +493,10 @@ class TaxReportService:
             except Exception as e:
                 logger.warning(f"Failed to add logo to PDF: {e}")
         
-        # Header
-        elements.append(Paragraph("Maestro Habitat", title_style))
+        # Header - use Latin font for brand name
+        brand_title_style = ParagraphStyle('BrandTitle', parent=styles['Heading1'], fontSize=20,
+                                           textColor=colors.HexColor('#2563EB'), fontName='NotoSans')
+        elements.append(Paragraph("Maestro Habitat", brand_title_style))
         elements.append(Spacer(1, 12))
         if user_type == "provider":
             elements.append(Paragraph(get_pdf_text("form_1099", lang, year=year), heading2_style))
