@@ -448,24 +448,40 @@ class TaxReportService:
                             total_fees: int, total_payouts: int,
                             transaction_count: int, lang: str = "en") -> str:
         """Generate annual 1099-style PDF and return as base64"""
+        # Register fonts for Hindi support
+        register_fonts()
+        
         buffer = io.BytesIO()
         doc = SimpleDocTemplate(buffer, pagesize=letter, rightMargin=72, leftMargin=72,
                                topMargin=72, bottomMargin=72)
         
+        # Get the appropriate font based on language
+        font_name = get_font_name(lang)
+        font_bold = get_font_name(lang, bold=True) if lang != "hi" else font_name
+        
         styles = getSampleStyleSheet()
+        
+        # Create language-aware styles
         title_style = ParagraphStyle('Title', parent=styles['Heading1'], fontSize=20,
-                                     textColor=colors.HexColor('#2563EB'))
+                                     textColor=colors.HexColor('#2563EB'), fontName=font_name)
+        heading2_style = ParagraphStyle('Heading2Custom', parent=styles['Heading2'], fontName=font_name, fontSize=14)
+        heading3_style = ParagraphStyle('Heading3Custom', parent=styles['Heading3'], fontName=font_name, fontSize=12)
+        normal_style = ParagraphStyle('NormalCustom', parent=styles['Normal'], fontName=font_name, fontSize=10)
         
         # Determine currency from user's market
         currency = "USD"
         currency_symbol = "$"
+        
+        # Hindi month names for localization
+        month_names_en = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        month_names_hi = ['', 'जनवरी', 'फ़रवरी', 'मार्च', 'अप्रैल', 'मई', 'जून', 'जुलाई', 'अगस्त', 'सितंबर', 'अक्टूबर', 'नवंबर', 'दिसंबर']
+        month_names = month_names_hi if lang == "hi" else month_names_en
         
         elements = []
         
         # Logo Header
         if os.path.exists(LOGO_PATH):
             try:
-                # Logo is vertical, maintain aspect ratio (same as regular reports)
                 logo = Image(LOGO_PATH, width=0.75*inch, height=1*inch)
                 logo.hAlign = 'LEFT'
                 elements.append(logo)
@@ -477,28 +493,28 @@ class TaxReportService:
         elements.append(Paragraph("Maestro Habitat", title_style))
         elements.append(Spacer(1, 12))
         if user_type == "provider":
-            elements.append(Paragraph(get_pdf_text("form_1099", lang, year=year), styles['Heading2']))
-            elements.append(Paragraph(get_pdf_text("payment_card_transactions", lang), styles['Normal']))
+            elements.append(Paragraph(get_pdf_text("form_1099", lang, year=year), heading2_style))
+            elements.append(Paragraph(get_pdf_text("payment_card_transactions", lang), normal_style))
         else:
-            elements.append(Paragraph(get_pdf_text("annual_payment_summary", lang, year=year), styles['Heading2']))
-            elements.append(Paragraph(get_pdf_text("educational_payments", lang), styles['Normal']))
+            elements.append(Paragraph(get_pdf_text("annual_payment_summary", lang, year=year), heading2_style))
+            elements.append(Paragraph(get_pdf_text("educational_payments", lang), normal_style))
         elements.append(Spacer(1, 24))
         
         # Platform info
-        elements.append(Paragraph(f"<b>{get_pdf_text('payer_info', lang)}</b>", styles['Heading3']))
-        elements.append(Paragraph(get_pdf_text("platform_name", lang), styles['Normal']))
-        elements.append(Paragraph(get_pdf_text("platform_desc", lang), styles['Normal']))
+        elements.append(Paragraph(f"<b>{get_pdf_text('payer_info', lang)}</b>", heading3_style))
+        elements.append(Paragraph(get_pdf_text("platform_name", lang), normal_style))
+        elements.append(Paragraph(get_pdf_text("platform_desc", lang), normal_style))
         elements.append(Spacer(1, 16))
         
         # Recipient info
-        elements.append(Paragraph(f"<b>{get_pdf_text('payee_info', lang)}</b>", styles['Heading3']))
-        elements.append(Paragraph(f"{get_pdf_text('name', lang)}: {user.get('name', 'N/A')}", styles['Normal']))
-        elements.append(Paragraph(f"{get_pdf_text('email', lang)}: {user.get('email', 'N/A')}", styles['Normal']))
-        elements.append(Paragraph(f"{get_pdf_text('user_id', lang)}: {user.get('user_id', 'N/A')}", styles['Normal']))
+        elements.append(Paragraph(f"<b>{get_pdf_text('payee_info', lang)}</b>", heading3_style))
+        elements.append(Paragraph(f"{get_pdf_text('name', lang)}: {user.get('name', 'N/A')}", normal_style))
+        elements.append(Paragraph(f"{get_pdf_text('email', lang)}: {user.get('email', 'N/A')}", normal_style))
+        elements.append(Paragraph(f"{get_pdf_text('user_id', lang)}: {user.get('user_id', 'N/A')}", normal_style))
         elements.append(Spacer(1, 24))
         
         # Annual Summary
-        elements.append(Paragraph(f"<b>{get_pdf_text('annual_summary', lang)}</b>", styles['Heading3']))
+        elements.append(Paragraph(f"<b>{get_pdf_text('annual_summary', lang)}</b>", heading3_style))
         summary_data = [
             [get_pdf_text('box', lang), get_pdf_text('description', lang), get_pdf_text('amount', lang)],
             ['1a', get_pdf_text('gross_amount', lang), f"{currency_symbol}{total_amount/100:,.2f}"],
@@ -512,7 +528,7 @@ class TaxReportService:
         summary_table.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2563EB')),
             ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTNAME', (0, 0), (-1, -1), font_name),
             ('FONTSIZE', (0, 0), (-1, -1), 10),
             ('GRID', (0, 0), (-1, -1), 1, colors.grey),
             ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
@@ -521,9 +537,9 @@ class TaxReportService:
         elements.append(Spacer(1, 24))
         
         # Monthly breakdown
-        elements.append(Paragraph(f"<b>{get_pdf_text('monthly_breakdown', lang)}</b>", styles['Heading3']))
+        elements.append(Paragraph(f"<b>{get_pdf_text('monthly_breakdown', lang)}</b>", heading3_style))
         month_data = [[get_pdf_text('month', lang), get_pdf_text('transactions', lang), get_pdf_text('amount', lang), get_pdf_text('fees', lang)]]
-        month_names = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        
         for m in range(1, 13):
             if m in monthly_breakdown:
                 mb = monthly_breakdown[m]
@@ -536,10 +552,10 @@ class TaxReportService:
             else:
                 month_data.append([month_names[m], '0', f"{currency_symbol}0.00", f"{currency_symbol}0.00"])
         
-        month_table = Table(month_data, colWidths=[1*inch, 1.2*inch, 1.5*inch, 1.5*inch])
+        month_table = Table(month_data, colWidths=[1.2*inch, 1.2*inch, 1.5*inch, 1.5*inch])
         month_table.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#F1F5F9')),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTNAME', (0, 0), (-1, -1), font_name),
             ('FONTSIZE', (0, 0), (-1, -1), 9),
             ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
             ('ALIGN', (1, 0), (-1, -1), 'RIGHT'),
@@ -547,26 +563,30 @@ class TaxReportService:
         elements.append(month_table)
         elements.append(Spacer(1, 24))
         
-        # Important notice
-        elements.append(Paragraph("<b>Important Tax Information</b>", styles['Heading3']))
-        elements.append(Paragraph(
-            "This document summarizes payment transactions processed through Maestro Habitat. "
-            "It is provided for your records and to assist with tax preparation. "
-            "This is NOT an official IRS form but contains equivalent information for your tax reporting needs.",
-            styles['Normal']
-        ))
+        # Important notice - translated
+        important_notice_title = "महत्वपूर्ण कर जानकारी" if lang == "hi" else "Important Tax Information"
+        important_notice_text1 = ("यह दस्तावेज़ मास्ट्रो हैबिटेट के माध्यम से संसाधित भुगतान लेनदेन का सारांश प्रस्तुत करता है। "
+                                  "यह आपके रिकॉर्ड और कर तैयारी में सहायता के लिए प्रदान किया गया है। "
+                                  "यह कोई आधिकारिक IRS फॉर्म नहीं है लेकिन इसमें आपकी कर रिपोर्टिंग आवश्यकताओं के लिए समकक्ष जानकारी है।") if lang == "hi" else \
+                                 ("This document summarizes payment transactions processed through Maestro Habitat. "
+                                  "It is provided for your records and to assist with tax preparation. "
+                                  "This is NOT an official IRS form but contains equivalent information for your tax reporting needs.")
+        important_notice_text2 = ("कृपया इस दस्तावेज़ को अपने रिकॉर्ड के लिए रखें और अपने कर रिटर्न पर "
+                                  "इन राशियों की रिपोर्टिंग के बारे में सलाह के लिए एक योग्य कर पेशेवर से परामर्श करें।") if lang == "hi" else \
+                                 ("Please retain this document for your records and consult with a qualified tax professional "
+                                  "for advice on reporting these amounts on your tax return.")
+        
+        elements.append(Paragraph(f"<b>{important_notice_title}</b>", heading3_style))
+        elements.append(Paragraph(important_notice_text1, normal_style))
         elements.append(Spacer(1, 12))
-        elements.append(Paragraph(
-            "Please retain this document for your records and consult with a qualified tax professional "
-            "for advice on reporting these amounts on your tax return.",
-            styles['Normal']
-        ))
+        elements.append(Paragraph(important_notice_text2, normal_style))
         elements.append(Spacer(1, 24))
         
         # Footer
+        doc_generated = "दस्तावेज़ जनरेट:" if lang == "hi" else "Document generated:"
         elements.append(Paragraph(
-            f"<i>Document generated: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}</i>",
-            styles['Normal']
+            f"<i>{doc_generated} {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}</i>",
+            normal_style
         ))
         
         doc.build(elements)
