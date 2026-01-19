@@ -380,7 +380,7 @@ export default function InviteProviderScreen() {
             <View style={[styles.sheetHandle, { backgroundColor: colors.gray300 }]} />
             <Text style={[styles.sheetTitle, { color: colors.text }]}>{t('pages.invite_provider.share_on_social')}</Text>
             <Text style={[styles.sheetSubtitle, { color: colors.textMuted }]}>
-              Invite coaches to join Maestro Habitat
+              {t('pages.invite_provider.share_social_desc')}
             </Text>
             
             <View style={styles.socialGrid}>
