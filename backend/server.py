@@ -429,6 +429,10 @@ class Booking(BaseModel):
     payment_id: Optional[str] = None
     created_at: datetime
 
+class BookingMeetingLinkUpdate(BaseModel):
+    meeting_link: Optional[str] = None
+    waiting_room_enabled: bool = True
+
 class ReviewCreate(BaseModel):
     rating: int = Field(ge=1, le=5)
     comment: Optional[str] = None
