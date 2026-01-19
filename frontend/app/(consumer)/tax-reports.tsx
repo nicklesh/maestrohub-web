@@ -352,12 +352,12 @@ export default function TaxReportsScreen() {
           <Text style={[styles.infoTitle, { color: colors.text }]}>
             {user?.role === 'provider' 
               ? 'Provider Tax Documents'
-              : 'Payment Records'}
+              : t('pages.tax_reports.payment_records')}
           </Text>
           <Text style={[styles.infoText, { color: colors.textSecondary }]}>
             {user?.role === 'provider' 
-              ? 'Generate 1099 equivalent forms for your coaching earnings. Reports for the last 5 years are available for download.'
-              : '{	('pages.tax_reports.consumer_info')}'}
+              ? t('pages.tax_reports.provider_info')
+              : t('pages.tax_reports.consumer_info')}
           </Text>
         </View>
       </View>
