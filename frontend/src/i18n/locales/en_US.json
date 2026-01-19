@@ -631,7 +631,8 @@
       "code_copied": "Referral code copied to clipboard!",
       "code_applied": "Referral code applied successfully!",
       "share_message": "Join me on Maestro Habitat! Use my referral code {{code}} when you sign up.",
-      "earn_reward_desc": "Earn 1 FREE session for each referral who completes 2 paid sessions"
+      "earn_reward_desc": "Earn 1 FREE session for each referral who completes 2 paid sessions",
+      "share_desc": "Share your referral code with friends to start earning rewards!"
     },
     "settings": {
       "title": "Settings",
@@ -799,7 +800,9 @@
       "just_now": "Just now",
       "hours_ago": "{{count}}h ago",
       "days_ago": "{{count}}d ago",
-      "mark_as_read": "Mark as read"
+      "mark_as_read": "Mark as read",
+      "system_update": "System Update",
+      "platform_improvements": "Platform improvements deployed successfully"
     },
     "reviews": {
       "title": "Reviews",
@@ -1044,7 +1047,8 @@
       "no_invites_sent": "No invites sent yet",
       "free_session_credit": "${{amount}} Free Session Credit",
       "sent_date": "Sent: {{date}}",
-      "share_social_desc": "Invite coaches to join Maestro Habitat"
+      "share_social_desc": "Invite coaches to join Maestro Habitat",
+      "credit_message": "They'll get a ${{amount}} free session credit when they join!"
     },
     "booking_detail": {
       "date": "Date",
@@ -1277,5 +1281,15 @@
     "online": "Online",
     "in_person": "In-Person",
     "hybrid": "Hybrid"
+  },
+  "modals": {
+    "contact_us": {
+      "title": "Contact Us",
+      "subject": "Subject",
+      "subject_placeholder": "What can we help you with?",
+      "message": "Message",
+      "message_placeholder": "Describe your issue or question...",
+      "send": "Send Message"
+    }
   }
 }
