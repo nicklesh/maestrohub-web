@@ -101,7 +101,7 @@ export default function ReferralsScreen() {
 
   const copyToClipboard = async () => {
     await Clipboard.setStringAsync(referralCode);
-    showSuccess('Referral code copied to clipboard!');
+    showSuccess(t('pages.referrals.code_copied'));
   };
 
   const shareReferralCode = async () => {
