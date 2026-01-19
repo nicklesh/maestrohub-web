@@ -196,7 +196,7 @@ export default function StudentsScreen() {
         <View style={[styles.headerActions, isTablet && styles.headerActionsTablet]}>
           <TouchableOpacity style={[styles.addButton, isTablet && styles.addButtonTablet]} onPress={openAddModal}>
             <Ionicons name="add" size={24} color={colors.primary} />
-            <Text style={styles.addButtonText}>Add Student</Text>
+            <Text style={styles.addButtonText}>{t('pages.students.add_student')}</Text>
           </TouchableOpacity>
         </View>
 
