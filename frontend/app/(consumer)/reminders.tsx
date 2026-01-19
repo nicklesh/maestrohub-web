@@ -75,9 +75,9 @@ export default function RemindersScreen() {
         headers: { Authorization: `Bearer ${token}` }
       });
       setConfig(newConfig);
-      showSuccess('Reminder settings saved');
+      showSuccess(t('pages.reminders.settings_saved'));
     } catch (error) {
-      showError('Failed to save settings');
+      showError(t('pages.reminders.settings_save_failed'));
     } finally {
       setSaving(false);
     }
