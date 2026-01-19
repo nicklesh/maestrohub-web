@@ -3931,7 +3931,8 @@ async def get_consumer_report_pdf(
     doc = SimpleDocTemplate(buffer, pagesize=letter, rightMargin=72, leftMargin=72, topMargin=72, bottomMargin=72)
     
     styles = getSampleStyleSheet()
-    title_style = ParagraphStyle('Title', parent=styles['Heading1'], fontSize=24, spaceAfter=10, alignment=TA_CENTER, fontName=font_name)
+    # Use Latin font for brand name (Maestro Habitat)
+    brand_title_style = ParagraphStyle('BrandTitle', parent=styles['Heading1'], fontSize=24, spaceAfter=10, alignment=TA_CENTER, fontName='NotoSans')
     tagline_style = ParagraphStyle('Tagline', parent=styles['Normal'], fontSize=12, spaceAfter=20, alignment=TA_CENTER, textColor=colors.grey, fontName=font_name)
     heading_style = ParagraphStyle('Heading', parent=styles['Heading2'], fontSize=16, spaceAfter=12, fontName=font_name)
     subheading_style = ParagraphStyle('SubHeading', parent=styles['Heading3'], fontSize=13, spaceAfter=8, textColor=colors.HexColor('#2563eb'), fontName=font_name)
@@ -3946,7 +3947,7 @@ async def get_consumer_report_pdf(
         logo.hAlign = 'CENTER'
         story.append(logo)
     
-    story.append(Paragraph("Maestro Habitat", title_style))
+    story.append(Paragraph("Maestro Habitat", brand_title_style))
     story.append(Paragraph(t['tagline'], tagline_style))
     story.append(Spacer(1, 10))
     
