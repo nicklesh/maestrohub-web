@@ -1268,6 +1268,7 @@
       "share_on_social": "Share on Social Media",
       "providers_email": "Provider's Email",
       "providers_name": "Provider's Name (optional)",
+      "name_placeholder": "John Smith",
       "personal_message": "Personal Message (optional)",
       "message_placeholder": "Hi! I'd love to have you as my tutor...",
       "send_invite": "Send Invite",
