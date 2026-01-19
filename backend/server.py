@@ -4009,7 +4009,7 @@ async def get_consumer_report_pdf(
                 ('FONTNAME', (0, -1), (-1, -1), font_bold),
                 ('FONTNAME', (0, 0), (-1, -1), font_name),
                 ('GRID', (0, 0), (-1, -1), 1, colors.grey),
-                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('FONTNAME', (0, 0), (-1, 0), font_bold),
                 ('FONTSIZE', (0, 0), (-1, -1), 9),
                 ('PADDING', (0, 0), (-1, -1), 5),
             ]))
@@ -4017,8 +4017,8 @@ async def get_consumer_report_pdf(
             story.append(Spacer(1, 12))
     elif report["by_student"]:
         # Fallback to simple student list
-        story.append(Paragraph("Sessions by Student", heading_style))
-        student_data = [["Student", "Sessions", "Amount"]]
+        story.append(Paragraph(t['sessions_by_student'], heading_style))
+        student_data = [[t['student'], t['sessions'], t['amount']]]
         for s in report["by_student"]:
             student_data.append([s["student_name"], str(s["sessions"]), f"{symbol}{s['spent_cents']/100:.2f}"])
         
@@ -4027,7 +4027,8 @@ async def get_consumer_report_pdf(
             ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2563eb')),
             ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
             ('GRID', (0, 0), (-1, -1), 1, colors.grey),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTNAME', (0, 0), (-1, -1), font_name),
+            ('FONTNAME', (0, 0), (-1, 0), font_bold),
             ('FONTSIZE', (0, 0), (-1, -1), 10),
             ('PADDING', (0, 0), (-1, -1), 6),
         ]))
@@ -4036,17 +4037,18 @@ async def get_consumer_report_pdf(
     
     # By Tutor
     if report["by_tutor"]:
-        story.append(Paragraph("Sessions by Tutor", heading_style))
-        tutor_data = [["Tutor", "Sessions", "Amount"]]
-        for t in report["by_tutor"]:
-            tutor_data.append([t["tutor_name"], str(t["sessions"]), f"{symbol}{t['spent_cents']/100:.2f}"])
+        story.append(Paragraph(t['sessions_by_tutor'], heading_style))
+        tutor_data = [[t['tutor'], t['sessions'], t['amount']]]
+        for tutor_item in report["by_tutor"]:
+            tutor_data.append([tutor_item["tutor_name"], str(tutor_item["sessions"]), f"{symbol}{tutor_item['spent_cents']/100:.2f}"])
         
         tutor_table = Table(tutor_data, colWidths=[3*inch, 1.5*inch, 1.5*inch])
         tutor_table.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2563eb')),
             ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
             ('GRID', (0, 0), (-1, -1), 1, colors.grey),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTNAME', (0, 0), (-1, -1), font_name),
+            ('FONTNAME', (0, 0), (-1, 0), font_bold),
             ('FONTSIZE', (0, 0), (-1, -1), 10),
             ('PADDING', (0, 0), (-1, -1), 6),
         ]))
@@ -4055,8 +4057,8 @@ async def get_consumer_report_pdf(
     
     # By Month
     if report["by_month"]:
-        story.append(Paragraph("Monthly Breakdown", heading_style))
-        month_data = [["Month", "Sessions", "Amount"]]
+        story.append(Paragraph(t['monthly_breakdown'], heading_style))
+        month_data = [[t['month'], t['sessions'], t['amount']]]
         for m in report["by_month"][:12]:  # Last 12 months
             month_data.append([m["month"], str(m["sessions"]), f"{symbol}{m['spent_cents']/100:.2f}"])
         
@@ -4065,7 +4067,8 @@ async def get_consumer_report_pdf(
             ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2563eb')),
             ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
             ('GRID', (0, 0), (-1, -1), 1, colors.grey),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTNAME', (0, 0), (-1, -1), font_name),
+            ('FONTNAME', (0, 0), (-1, 0), font_bold),
             ('FONTSIZE', (0, 0), (-1, -1), 10),
             ('PADDING', (0, 0), (-1, -1), 6),
         ]))
