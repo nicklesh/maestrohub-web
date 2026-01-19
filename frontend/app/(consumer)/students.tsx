@@ -257,7 +257,7 @@ export default function StudentsScreen() {
                 <Text style={styles.inputLabel}>Name *</Text>
                 <TextInput
                   style={[styles.input, isTablet && styles.inputTablet]}
-                  placeholder="Student's name"
+                  placeholder={t('pages.students.name_placeholder')}
                   placeholderTextColor={colors.textMuted}
                   value={name}
                   onChangeText={setName}
