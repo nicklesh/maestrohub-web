@@ -112,7 +112,7 @@ export default function ReferralsScreen() {
     if (Platform.OS === 'web') {
       // On web, copy to clipboard and show message
       await Clipboard.setStringAsync(message);
-      showSuccess('Message copied to clipboard! Paste it in your preferred messaging app to share.');
+      showSuccess(t('pages.referrals.share_message_copied'));
     } else {
       try {
         await Share.share({
