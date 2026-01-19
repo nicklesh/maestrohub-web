@@ -324,15 +324,36 @@ class TaxReportService:
                               transactions: List[Dict], total_amount: int,
                               total_fees: int, total_payouts: int, lang: str = "en") -> str:
         """Generate monthly summary PDF and return as base64"""
+        # Register fonts for Hindi support
+        register_fonts()
+        
         buffer = io.BytesIO()
         doc = SimpleDocTemplate(buffer, pagesize=letter, rightMargin=72, leftMargin=72,
                                topMargin=72, bottomMargin=72)
         
+        # Get the appropriate font based on language
+        font_name = get_font_name(lang)
+        font_bold = get_font_name(lang, bold=True) if lang != "hi" else font_name
+        
         styles = getSampleStyleSheet()
+        
+        # Create language-aware styles
         title_style = ParagraphStyle('Title', parent=styles['Heading1'], fontSize=18, 
-                                     textColor=colors.HexColor('#2563EB'))
+                                     textColor=colors.HexColor('#2563EB'), fontName=font_name)
+        heading2_style = ParagraphStyle('Heading2Custom', parent=styles['Heading2'], fontName=font_name, fontSize=14)
+        heading3_style = ParagraphStyle('Heading3Custom', parent=styles['Heading3'], fontName=font_name, fontSize=12)
+        normal_style = ParagraphStyle('NormalCustom', parent=styles['Normal'], fontName=font_name, fontSize=10)
         
         month_name = datetime(year, month, 1).strftime('%B')
+        # Translate month names for Hindi
+        if lang == "hi":
+            month_names_hi = {
+                'January': 'जनवरी', 'February': 'फ़रवरी', 'March': 'मार्च', 'April': 'अप्रैल',
+                'May': 'मई', 'June': 'जून', 'July': 'जुलाई', 'August': 'अगस्त',
+                'September': 'सितंबर', 'October': 'अक्टूबर', 'November': 'नवंबर', 'December': 'दिसंबर'
+            }
+            month_name = month_names_hi.get(month_name, month_name)
+        
         currency = transactions[0].get("currency", "USD") if transactions else "USD"
         currency_symbol = "$" if currency == "USD" else "₹"
         
@@ -341,7 +362,6 @@ class TaxReportService:
         # Logo Header
         if os.path.exists(LOGO_PATH):
             try:
-                # Logo is vertical, maintain aspect ratio (same as regular reports)
                 logo = Image(LOGO_PATH, width=0.75*inch, height=1*inch)
                 logo.hAlign = 'LEFT'
                 elements.append(logo)
@@ -352,18 +372,18 @@ class TaxReportService:
         # Header
         elements.append(Paragraph("Maestro Habitat", title_style))
         elements.append(Spacer(1, 12))
-        elements.append(Paragraph(get_pdf_text("monthly_statement", lang, user_type=user_type.title()), styles['Heading2']))
-        elements.append(Paragraph(f"{month_name} {year}", styles['Normal']))
+        elements.append(Paragraph(get_pdf_text("monthly_statement", lang, user_type=user_type.title()), heading2_style))
+        elements.append(Paragraph(f"{month_name} {year}", normal_style))
         elements.append(Spacer(1, 24))
         
         # User info
-        elements.append(Paragraph(f"<b>{get_pdf_text('name', lang)}:</b> {user.get('name', 'N/A')}", styles['Normal']))
-        elements.append(Paragraph(f"<b>{get_pdf_text('email', lang)}:</b> {user.get('email', 'N/A')}", styles['Normal']))
-        elements.append(Paragraph(f"<b>{get_pdf_text('user_id', lang)}:</b> {user.get('user_id', 'N/A')}", styles['Normal']))
+        elements.append(Paragraph(f"<b>{get_pdf_text('name', lang)}:</b> {user.get('name', 'N/A')}", normal_style))
+        elements.append(Paragraph(f"<b>{get_pdf_text('email', lang)}:</b> {user.get('email', 'N/A')}", normal_style))
+        elements.append(Paragraph(f"<b>{get_pdf_text('user_id', lang)}:</b> {user.get('user_id', 'N/A')}", normal_style))
         elements.append(Spacer(1, 24))
         
         # Summary
-        elements.append(Paragraph(f"<b>{get_pdf_text('summary', lang)}</b>", styles['Heading3']))
+        elements.append(Paragraph(f"<b>{get_pdf_text('summary', lang)}</b>", heading3_style))
         summary_data = [
             [get_pdf_text('description', lang), get_pdf_text('amount', lang)],
             [get_pdf_text('total_transactions', lang), str(len(transactions))],
@@ -378,7 +398,7 @@ class TaxReportService:
             ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2563EB')),
             ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
             ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTNAME', (0, 0), (-1, -1), font_name),
             ('FONTSIZE', (0, 0), (-1, -1), 10),
             ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
             ('GRID', (0, 0), (-1, -1), 1, colors.grey),
@@ -387,7 +407,7 @@ class TaxReportService:
         elements.append(Spacer(1, 24))
         
         # Transaction list
-        elements.append(Paragraph(f"<b>{get_pdf_text('transaction_details', lang)}</b>", styles['Heading3']))
+        elements.append(Paragraph(f"<b>{get_pdf_text('transaction_details', lang)}</b>", heading3_style))
         txn_data = [[get_pdf_text('date', lang), get_pdf_text('type', lang), get_pdf_text('amount', lang), get_pdf_text('funding_source', lang)]]
         for t in transactions[:50]:  # Limit to 50 for PDF size
             date_str = t.get("payment_date", "")
@@ -403,7 +423,7 @@ class TaxReportService:
         txn_table = Table(txn_data, colWidths=[1.2*inch, 1.8*inch, 1.2*inch, 1.3*inch])
         txn_table.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#F1F5F9')),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTNAME', (0, 0), (-1, -1), font_name),
             ('FONTSIZE', (0, 0), (-1, -1), 9),
             ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
             ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
@@ -414,11 +434,11 @@ class TaxReportService:
         # Footer
         elements.append(Paragraph(
             f"<i>{get_pdf_text('generated_on', lang, date=datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC'))}</i>",
-            styles['Normal']
+            normal_style
         ))
         elements.append(Paragraph(
             f"<i>{get_pdf_text('disclaimer', lang)}</i>",
-            styles['Normal']
+            normal_style
         ))
         
         doc.build(elements)
