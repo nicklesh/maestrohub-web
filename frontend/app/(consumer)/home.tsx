@@ -165,6 +165,14 @@ export default function HomeScreen() {
     }
   };
 
+  // Helper function to translate category names
+  const getCategoryName = (categoryId: string, originalName: string): string => {
+    const key = `categories.${categoryId}`;
+    const translated = t(key);
+    // If translation key doesn't exist, return original name
+    return translated === key ? originalName : translated;
+  };
+
   const renderCategoryCard = (category: Category, index: number) => (
     <TouchableOpacity
       key={category.id}
@@ -183,10 +191,10 @@ export default function HomeScreen() {
         />
       </View>
       <Text style={[styles.categoryName, isTablet && styles.categoryNameTablet]} numberOfLines={2}>
-        {category.name}
+        {getCategoryName(category.id, category.name)}
       </Text>
       <Text style={styles.categorySubjects}>
-        {t('pages.home.subjects_count', { count: category.subjects.length })}
+        {t('pages.home.subjects_count', { count: formatNumber(category.subjects.length) })}
       </Text>
     </TouchableOpacity>
   );
