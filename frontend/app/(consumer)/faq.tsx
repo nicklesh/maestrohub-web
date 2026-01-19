@@ -27,14 +27,48 @@ interface FAQItem {
 export default function FAQScreen() {
   const { colors } = useTheme();
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const { width } = useWindowDimensions();
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  const [showContactModal, setShowContactModal] = useState(false);
+  const [contactSubject, setContactSubject] = useState('');
+  const [contactMessage, setContactMessage] = useState('');
+  const [isSending, setIsSending] = useState(false);
+  const [contactSuccess, setContactSuccess] = useState(false);
   
   const isTablet = width >= 768;
   const isDesktop = width >= 1024;
   const contentMaxWidth = isDesktop ? 800 : isTablet ? 680 : undefined;
   
   const styles = getStyles(colors);
+
+  const handleSendContact = async () => {
+    if (!contactSubject.trim() || !contactMessage.trim()) {
+      showToast(t('pages.contact.fill_all_fields'), 'warning');
+      return;
+    }
+
+    setIsSending(true);
+    try {
+      await api.post('/contact', {
+        subject: contactSubject,
+        message: contactMessage,
+      });
+      setContactSuccess(true);
+      setContactSubject('');
+      setContactMessage('');
+      showToast(t('pages.contact.success_message'), 'success');
+      // Auto-close after 2 seconds
+      setTimeout(() => {
+        setShowContactModal(false);
+        setContactSuccess(false);
+      }, 2000);
+    } catch (error: any) {
+      showToast(error.message || t('errors.something_wrong'), 'error');
+    } finally {
+      setIsSending(false);
+    }
+  };
 
   // FAQ data using translations
   const faqData: FAQItem[] = [
