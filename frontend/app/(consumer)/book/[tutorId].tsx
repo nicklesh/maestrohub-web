@@ -565,7 +565,7 @@ export default function BookingScreen() {
           </View>
         ) : (
           <Text style={[styles.primaryButtonText, isTablet && styles.primaryButtonTextTablet]}>
-            Pay {tutor?.currency_symbol || '$'}{tutor?.base_price?.toFixed(2)}
+            {t('pages.booking.pay_amount', { amount: `${tutor?.currency_symbol || '$'}${tutor?.base_price?.toFixed(2)}` })}
           </Text>
         )}
       </TouchableOpacity>
@@ -575,7 +575,7 @@ export default function BookingScreen() {
         onPress={() => router.push('/(consumer)/billing')}
       >
         <Text style={{ color: colors.primary, fontSize: 14 }}>
-          Manage Payment Methods
+          {t('pages.booking.manage_payment_methods')}
         </Text>
       </TouchableOpacity>
     </ScrollView>
