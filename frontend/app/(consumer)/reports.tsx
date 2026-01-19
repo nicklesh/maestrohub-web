@@ -100,10 +100,11 @@ export default function ConsumerReportsScreen() {
 
   const downloadPDF = async () => {
     setDownloading(true);
+    const lang = i18n.language === 'hi_IN' ? 'hi' : 'en';
     try {
       if (Platform.OS === 'web') {
         // Use fetch with authorization header for authenticated download
-        const response = await api.get('/reports/consumer/pdf', {
+        const response = await api.get(`/reports/consumer/pdf?lang=${lang}`, {
           headers: { Authorization: `Bearer ${token}` },
           responseType: 'blob'
         });
@@ -131,7 +132,7 @@ export default function ConsumerReportsScreen() {
         
         // Get the base URL from API config
         const baseUrl = api.defaults.baseURL || '';
-        const downloadUrl = `${baseUrl}/reports/consumer/pdf`;
+        const downloadUrl = `${baseUrl}/reports/consumer/pdf?lang=${lang}`;
         
         // Download the file with authorization
         const downloadResult = await FileSystem.downloadAsync(
