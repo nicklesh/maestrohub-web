@@ -264,7 +264,7 @@ export default function KidDetailScreen() {
             {payments.length === 0 ? (
               <View style={styles.emptyState}>
                 <Ionicons name="receipt-outline" size={48} color={colors.textMuted} />
-                <Text style={[styles.emptyText, { color: colors.textMuted }]}>No payments yet</Text>
+                <Text style={[styles.emptyText, { color: colors.textMuted }]}>{t('pages.kid_detail.no_payments')}</Text>
               </View>
             ) : (
               payments.map((payment) => (
