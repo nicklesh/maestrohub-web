@@ -45,9 +45,9 @@ export default function AppHeader({ showBack = false, title, showUserName = fals
 
   const getRoleDisplay = (role: string) => {
     switch (role) {
-      case 'consumer': return 'Parent';
-      case 'tutor': return 'Tutor';
-      case 'admin': return 'Admin';
+      case 'consumer': return t('roles.parent');
+      case 'tutor': return t('roles.tutor');
+      case 'admin': return t('roles.admin');
       default: return role;
     }
   };
