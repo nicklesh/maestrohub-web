@@ -20,89 +20,6 @@ interface FAQItem {
   category: string;
 }
 
-const faqData: FAQItem[] = [
-  // Getting Started
-  {
-    category: 'Getting Started',
-    question: 'How do I create an account?',
-    answer: 'To create an account, tap "Sign Up" on the login screen. You can register using your email address or sign in with Google. Choose whether you want to join as a Parent/Student (to find coaches) or as a Coach/Tutor (to offer your services).'
-  },
-  {
-    category: 'Getting Started',
-    question: 'How do I find the right coach for me?',
-    answer: 'Use the search feature to browse coaches by category, subject, or name. You can filter by availability, price range, and modality (online/in-person). Each coach profile includes their bio, ratings, reviews, and areas of expertise.'
-  },
-  {
-    category: 'Getting Started',
-    question: 'Is my personal information secure?',
-    answer: 'Yes! We take data security seriously. Your personal information is encrypted and stored securely. We never share your data with third parties without your consent. Review our Privacy Policy for more details.'
-  },
-  // Booking & Sessions
-  {
-    category: 'Booking & Sessions',
-    question: 'How do I book a session?',
-    answer: 'Find a coach you like, view their profile, and tap "Book Session". Select an available time slot from their calendar, confirm the session duration and type, then proceed to payment. You\'ll receive a confirmation once the booking is complete.'
-  },
-  {
-    category: 'Booking & Sessions',
-    question: 'Can I reschedule or cancel a session?',
-    answer: 'Yes, you can reschedule or cancel sessions from the "My Bookings" section. Please note that cancellation policies vary by coach - check the coach\'s profile for their specific policy. Generally, cancellations made 24+ hours in advance are fully refundable.'
-  },
-  {
-    category: 'Booking & Sessions',
-    question: 'What happens if a coach cancels?',
-    answer: 'If a coach cancels a session, you\'ll be automatically notified and receive a full refund. You can then rebook with the same coach or find another one. Coaches who cancel frequently may have their accounts reviewed.'
-  },
-  // Payments & Billing
-  {
-    category: 'Payments & Billing',
-    question: 'What payment methods are accepted?',
-    answer: 'We accept all major credit cards (Visa, Mastercard, American Express) and debit cards. In some regions, we also support Apple Pay and Google Pay. All payments are processed securely through our payment provider.'
-  },
-  {
-    category: 'Payments & Billing',
-    question: 'When am I charged for a session?',
-    answer: 'You\'re charged when you book a session. The payment is held securely and released to the coach after the session is completed. If you cancel within the allowed timeframe, you\'ll receive a full refund.'
-  },
-  {
-    category: 'Payments & Billing',
-    question: 'How do I view my payment history?',
-    answer: 'Go to Account > Reports to view your complete payment history, download invoices, and see upcoming charges. You can filter by date range and export reports as PDF.'
-  },
-  // For Coaches
-  {
-    category: 'For Coaches',
-    question: 'How do I become a coach on Maestro Habitat?',
-    answer: 'From your Parent account, go to Account > "Become a Coach" to start the onboarding process. You\'ll need to create a new account with a different email address, complete your profile, set your availability and pricing, and submit for review.'
-  },
-  {
-    category: 'For Coaches',
-    question: 'How do I set my availability?',
-    answer: 'Go to the Calendar tab in your coach dashboard. You can set recurring weekly availability (e.g., Mon-Fri 9am-5pm) and block off specific dates for vacations or time off. Your availability updates in real-time for clients.'
-  },
-  {
-    category: 'For Coaches',
-    question: 'When and how do I get paid?',
-    answer: 'Payments are processed weekly for all completed sessions. Set up your payout method in Account > Billing. You can choose direct deposit to your bank account. Payment processing typically takes 2-3 business days.'
-  },
-  // Technical Support
-  {
-    category: 'Technical Support',
-    question: 'The app isn\'t working properly. What should I do?',
-    answer: 'Try these steps: 1) Close and reopen the app, 2) Check your internet connection, 3) Update to the latest version from the App Store, 4) Log out and log back in. If issues persist, contact us through Account > Contact Us.'
-  },
-  {
-    category: 'Technical Support',
-    question: 'How do I update my profile information?',
-    answer: 'Go to Account > Edit Profile to update your name, email, profile picture, and other details. For coaches, additional profile settings are available in the Settings tab of your coach dashboard.'
-  },
-  {
-    category: 'Technical Support',
-    question: 'How do I contact support?',
-    answer: 'You can reach our support team through Account > Contact Us. Fill out the form with your question and we\'ll respond within 24-48 hours. For urgent issues, please include "URGENT" in the subject line.'
-  },
-];
-
 export default function FAQScreen() {
   const { colors } = useTheme();
   const { t } = useTranslation();
@@ -115,10 +32,103 @@ export default function FAQScreen() {
   
   const styles = getStyles(colors);
 
+  // FAQ data using translations
+  const faqData: FAQItem[] = [
+    // Getting Started
+    {
+      category: t('pages.faq.getting_started'),
+      question: t('pages.faq.questions.how_create_account'),
+      answer: t('pages.faq.answers.how_create_account')
+    },
+    {
+      category: t('pages.faq.getting_started'),
+      question: t('pages.faq.questions.how_find_coach'),
+      answer: t('pages.faq.answers.how_find_coach')
+    },
+    {
+      category: t('pages.faq.getting_started'),
+      question: t('pages.faq.questions.is_info_secure'),
+      answer: t('pages.faq.answers.is_info_secure')
+    },
+    // Booking & Sessions
+    {
+      category: t('pages.faq.booking_sessions'),
+      question: t('pages.faq.questions.how_book_session'),
+      answer: t('pages.faq.answers.how_book_session')
+    },
+    {
+      category: t('pages.faq.booking_sessions'),
+      question: t('pages.faq.questions.can_reschedule'),
+      answer: t('pages.faq.answers.can_reschedule')
+    },
+    {
+      category: t('pages.faq.booking_sessions'),
+      question: t('pages.faq.questions.coach_cancels'),
+      answer: t('pages.faq.answers.coach_cancels')
+    },
+    // Payments & Billing
+    {
+      category: t('pages.faq.payments_billing'),
+      question: t('pages.faq.questions.payment_methods'),
+      answer: t('pages.faq.answers.payment_methods')
+    },
+    {
+      category: t('pages.faq.payments_billing'),
+      question: t('pages.faq.questions.when_charged'),
+      answer: t('pages.faq.answers.when_charged')
+    },
+    {
+      category: t('pages.faq.payments_billing'),
+      question: t('pages.faq.questions.view_payment_history'),
+      answer: t('pages.faq.answers.view_payment_history')
+    },
+    // For Coaches
+    {
+      category: t('pages.faq.for_coaches'),
+      question: t('pages.faq.questions.become_coach'),
+      answer: t('pages.faq.answers.become_coach')
+    },
+    {
+      category: t('pages.faq.for_coaches'),
+      question: t('pages.faq.questions.set_availability'),
+      answer: t('pages.faq.answers.set_availability')
+    },
+    {
+      category: t('pages.faq.for_coaches'),
+      question: t('pages.faq.questions.when_get_paid'),
+      answer: t('pages.faq.answers.when_get_paid')
+    },
+    // Technical Support
+    {
+      category: t('pages.faq.technical_support'),
+      question: t('pages.faq.questions.app_not_working'),
+      answer: t('pages.faq.answers.app_not_working')
+    },
+    {
+      category: t('pages.faq.technical_support'),
+      question: t('pages.faq.questions.update_profile'),
+      answer: t('pages.faq.answers.update_profile')
+    },
+    {
+      category: t('pages.faq.technical_support'),
+      question: t('pages.faq.questions.contact_support'),
+      answer: t('pages.faq.answers.contact_support')
+    },
+  ];
+
   const categories = [...new Set(faqData.map(item => item.category))];
 
   const toggleExpand = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index);
+  };
+
+  const getCategoryIcon = (category: string): string => {
+    if (category === t('pages.faq.getting_started')) return 'rocket-outline';
+    if (category === t('pages.faq.booking_sessions')) return 'calendar-outline';
+    if (category === t('pages.faq.payments_billing')) return 'card-outline';
+    if (category === t('pages.faq.for_coaches')) return 'school-outline';
+    if (category === t('pages.faq.technical_support')) return 'settings-outline';
+    return 'help-circle-outline';
   };
 
   const renderFAQItem = (item: FAQItem, index: number) => {
@@ -152,13 +162,13 @@ export default function FAQScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <AppHeader title="Help Center" showBack />
+      <AppHeader title={t('navigation.help_center')} showBack />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
           <View style={styles.header}>
-            <Text style={[styles.title, { color: colors.text }]}>Frequently Asked Questions</Text>
+            <Text style={[styles.title, { color: colors.text }]}>{t('pages.faq.title')}</Text>
             <Text style={[styles.subtitle, { color: colors.textMuted }]}>
-              Find answers to common questions about Maestro Habitat
+              {t('pages.faq.subtitle')}
             </Text>
           </View>
 
@@ -166,13 +176,7 @@ export default function FAQScreen() {
             <View key={catIndex} style={styles.categorySection}>
               <View style={styles.categoryHeader}>
                 <Ionicons
-                  name={
-                    category === 'Getting Started' ? 'rocket-outline' :
-                    category === 'Booking & Sessions' ? 'calendar-outline' :
-                    category === 'Payments & Billing' ? 'card-outline' :
-                    category === 'For Coaches' ? 'school-outline' :
-                    'help-circle-outline'
-                  }
+                  name={getCategoryIcon(category) as any}
                   size={24}
                   color={colors.primary}
                 />
@@ -180,25 +184,22 @@ export default function FAQScreen() {
               </View>
               {faqData
                 .filter(item => item.category === category)
-                .map((item, index) => {
-                  const globalIndex = faqData.findIndex(
-                    f => f.question === item.question && f.category === item.category
-                  );
-                  return renderFAQItem(item, globalIndex);
-                })}
+                .map((item, index) => renderFAQItem(item, faqData.indexOf(item)))
+              }
             </View>
           ))}
 
-          <View style={styles.contactSection}>
+          {/* Still have questions section */}
+          <View style={[styles.contactSection, { backgroundColor: colors.primaryLight }]}>
+            <Ionicons name="chatbubble-ellipses-outline" size={32} color={colors.primary} />
             <Text style={[styles.contactTitle, { color: colors.text }]}>
-              Still have questions?
+              {t('pages.faq.still_have_questions')}
             </Text>
-            <Text style={[styles.contactText, { color: colors.textMuted }]}>
-              Can't find the answer you're looking for? Please contact our support team.
+            <Text style={[styles.contactSubtitle, { color: colors.textMuted }]}>
+              {t('pages.faq.contact_support')}
             </Text>
             <TouchableOpacity style={[styles.contactButton, { backgroundColor: colors.primary }]}>
-              <Ionicons name="mail-outline" size={20} color="#FFFFFF" />
-              <Text style={styles.contactButtonText}>Contact Support</Text>
+              <Text style={styles.contactButtonText}>{t('pages.faq.contact_us')}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -212,24 +213,22 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 40,
+    padding: 16,
   },
   contentWrapper: {
-    width: '100%',
-    paddingHorizontal: 16,
+    flex: 1,
   },
   header: {
-    paddingVertical: 24,
-    alignItems: 'center',
+    marginBottom: 24,
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 8,
   },
   subtitle: {
-    fontSize: 14,
-    textAlign: 'center',
+    fontSize: 16,
+    lineHeight: 22,
   },
   categorySection: {
     marginBottom: 24,
@@ -237,13 +236,15 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   categoryHeader: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 12,
     marginBottom: 12,
-    paddingLeft: 4,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
   },
   categoryTitle: {
     fontSize: 18,
     fontWeight: '600',
-    marginLeft: 8,
   },
   faqItem: {
     backgroundColor: colors.surface,
@@ -258,53 +259,50 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   },
   questionRow: {
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    gap: 12,
   },
   question: {
+    flex: 1,
     fontSize: 15,
     fontWeight: '500',
-    flex: 1,
-    marginRight: 12,
+    lineHeight: 22,
   },
   answer: {
+    marginTop: 12,
     fontSize: 14,
     lineHeight: 22,
-    marginTop: 12,
     paddingTop: 12,
     borderTopWidth: 1,
     borderTopColor: colors.border,
   },
   contactSection: {
-    alignItems: 'center',
     padding: 24,
-    marginTop: 16,
-    backgroundColor: colors.surface,
     borderRadius: 16,
-    borderWidth: 1,
-    borderColor: colors.border,
+    alignItems: 'center',
+    marginTop: 16,
   },
   contactTitle: {
     fontSize: 18,
     fontWeight: '600',
-    marginBottom: 8,
-  },
-  contactText: {
-    fontSize: 14,
+    marginTop: 12,
     textAlign: 'center',
+  },
+  contactSubtitle: {
+    fontSize: 14,
+    marginTop: 4,
     marginBottom: 16,
+    textAlign: 'center',
   },
   contactButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 12,
     paddingHorizontal: 24,
-    borderRadius: 8,
+    paddingVertical: 12,
+    borderRadius: 10,
   },
   contactButtonText: {
-    color: '#FFFFFF',
+    color: '#fff',
     fontSize: 15,
     fontWeight: '600',
-    marginLeft: 8,
   },
 });
