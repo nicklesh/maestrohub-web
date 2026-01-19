@@ -145,7 +145,7 @@ export default function InviteParentScreen() {
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(inviteEmail.trim())) {
-      showError('Please enter a valid email address');
+      showError(t('forms.validation.invalid_email'));
       return;
     }
 
