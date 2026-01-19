@@ -266,7 +266,7 @@ export default function StudentsScreen() {
                 <Text style={styles.inputLabel}>{t('pages.students.age')}</Text>
                 <TextInput
                   style={[styles.input, isTablet && styles.inputTablet]}
-                  placeholder="Age"
+                  placeholder={t('pages.students.age_placeholder')}
                   placeholderTextColor={colors.textMuted}
                   value={age}
                   onChangeText={setAge}
