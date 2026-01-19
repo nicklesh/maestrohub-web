@@ -1258,7 +1258,9 @@
       "reminders_will_be_sent": "Reminders will be sent before the session",
       "kid_notified": "Kid Notified",
       "no_show_report_desc": "If your coach didn't show up for the session, you can report it here. We'll review and process a full refund.",
-      "with_tutor": "with {{name}}"
+      "with_tutor": "with {{name}}",
+      "join_meeting": "Join Session",
+      "waiting_room_note": "Coach will admit you from the waiting room"
     },
     "add_child": {
       "title": "Add Child",
