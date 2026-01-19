@@ -312,13 +312,26 @@ export default function TutorDashboard() {
                       {format(parseISO(booking.end_at), 'h:mm a')}
                     </Text>
                     <Text style={styles.studentName}>{booking.student_name}</Text>
+                    {booking.meeting_link && (
+                      <Text style={[styles.meetingLinkIndicator, { color: colors.success }]}>
+                        <Ionicons name="videocam" size={12} color={colors.success} /> {t('pages.booking_detail.meeting_link')}
+                      </Text>
+                    )}
                   </View>
-                  <TouchableOpacity
-                    style={[styles.completeButton, isTablet && styles.completeButtonTablet]}
-                    onPress={() => markComplete(booking.booking_id)}
-                  >
-                    <Ionicons name="checkmark" size={20} color={colors.success} />
-                  </TouchableOpacity>
+                  <View style={styles.bookingActions}>
+                    <TouchableOpacity
+                      style={[styles.meetingLinkButton]}
+                      onPress={() => openMeetingLinkModal(booking)}
+                    >
+                      <Ionicons name="link" size={20} color={colors.primary} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[styles.completeButton, isTablet && styles.completeButtonTablet]}
+                      onPress={() => markComplete(booking.booking_id)}
+                    >
+                      <Ionicons name="checkmark" size={20} color={colors.success} />
+                    </TouchableOpacity>
+                  </View>
                 </View>
               ))
             )}
