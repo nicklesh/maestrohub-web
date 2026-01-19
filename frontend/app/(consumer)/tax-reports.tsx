@@ -40,7 +40,7 @@ export default function TaxReportsScreen() {
   const { token, user } = useAuth();
   const { colors } = useTheme();
   const { showSuccess, showError, showInfo } = useToast();
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const { width } = useWindowDimensions();
   const [reports, setReports] = useState<TaxReport[]>([]);
   const [availableYears, setAvailableYears] = useState<number[]>([]);
