@@ -201,7 +201,7 @@ export default function KidsScreen() {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.iconBtn, { backgroundColor: colors.background }]}
-            onPress={() => handleDelete(item)}
+            onPress={() => confirmDelete(item)}
           >
             <Ionicons name="trash" size={18} color={colors.error} />
           </TouchableOpacity>
