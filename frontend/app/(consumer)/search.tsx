@@ -424,14 +424,14 @@ export default function SearchScreen() {
           {/* Filter Dropdowns */}
           <View style={[styles.filtersRow, isTablet && styles.filtersRowTablet]}>
             <DropdownSelector
-              label="Category"
-              value={getCategoryName()}
+              label={t('pages.search.category')}
+              value={getCategoryDisplayName()}
               onPress={() => setShowCategoryDropdown(true)}
               icon="grid-outline"
             />
             <DropdownSelector
-              label="Subject"
-              value={getSubjectName()}
+              label={t('pages.search.subject')}
+              value={getSubjectDisplayName()}
               onPress={() => setShowSubjectDropdown(true)}
               icon="book-outline"
             />
