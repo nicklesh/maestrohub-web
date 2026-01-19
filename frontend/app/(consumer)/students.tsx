@@ -209,7 +209,7 @@ export default function StudentsScreen() {
             </Text>
             <TouchableOpacity style={[styles.ctaButton, isTablet && styles.ctaButtonTablet]} onPress={openAddModal}>
               <Ionicons name="add" size={20} color="#fff" />
-              <Text style={[styles.ctaButtonText, isTablet && styles.ctaButtonTextTablet]}>Add Student</Text>
+              <Text style={[styles.ctaButtonText, isTablet && styles.ctaButtonTextTablet]}>{t('pages.students.add_student')}</Text>
             </TouchableOpacity>
           </View>
         ) : (
