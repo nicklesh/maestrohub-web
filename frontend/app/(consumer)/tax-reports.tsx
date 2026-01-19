@@ -381,7 +381,7 @@ export default function TaxReportsScreen() {
             <Ionicons name="document-text-outline" size={64} color={colors.textMuted} />
             <Text style={[styles.emptyText, { color: colors.text }]}>{t('pages.tax_reports.no_tax_years')}</Text>
             <Text style={[styles.emptySubtext, { color: colors.textMuted }]}>
-              Reports will appear here once you have payment transactions
+              {t('pages.tax_reports.reports_appear_here')}
             </Text>
           </View>
         }
