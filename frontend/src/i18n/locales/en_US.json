@@ -376,7 +376,11 @@
       "agree_to_policies": "Please agree to the policies",
       "enter_learning_goals": "Please enter learning goals",
       "enter_current_level": "Please enter current level",
-      "acknowledge_cancellation_policy": "Please acknowledge cancellation policy"
+      "acknowledge_cancellation_policy": "Please acknowledge cancellation policy",
+      "enter_child_name": "Please enter the child's name",
+      "enter_email_address": "Please enter email address",
+      "select_at_least_one_subject": "Please select at least one subject/skill",
+      "select_at_least_one_level": "Please select at least one level"
     }
   },
   "messages": {
