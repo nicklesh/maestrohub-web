@@ -93,6 +93,9 @@ interface I18nContextType {
   translations: TranslationData;
   isRTL: boolean;
   localeName: string;
+  formatDate: (date: Date | string, formatStr: string) => string;
+  formatNumber: (num: number | string) => string;
+  formatCurrency: (amount: number, currencySymbol?: string) => string;
 }
 
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
