@@ -206,7 +206,20 @@
     "nutrition": "पोषण",
     "fitness": "फिटनेस",
     "meditation": "ध्यान",
-    "mindfulness": "सचेतनता"
+    "mindfulness": "सचेतनता",
+    "leadership_coaching": "नेतृत्व कोचिंग",
+    "personal_development": "व्यक्तिगत विकास",
+    "confidence_coaching": "आत्मविश्वास कोचिंग",
+    "transformational_coaching": "परिवर्तनकारी कोचिंग",
+    "motivational_coaching": "प्रेरणादायक कोचिंग",
+    "public_speaking": "सार्वजनिक भाषण",
+    "communication_skills": "संचार कौशल",
+    "time_management": "समय प्रबंधन",
+    "stress_management": "तनाव प्रबंधन",
+    "relationship_coaching": "रिश्ते की कोचिंग",
+    "parenting_coaching": "पालन-पोषण कोचिंग",
+    "financial_coaching": "वित्तीय कोचिंग",
+    "business_coaching": "व्यवसाय कोचिंग"
   },
   "buttons": {
     "submit": "जमा करें",
