@@ -130,7 +130,7 @@ export default function ReferralsScreen() {
 
   const handleApplyCode = async () => {
     if (!applyCode.trim()) {
-      showError('Please enter a referral code');
+      showError(t('forms.validation.enter_referral_code'));
       return;
     }
     
@@ -142,11 +142,11 @@ export default function ReferralsScreen() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       
-      showSuccess(response.data.message || 'Referral code applied successfully!');
+      showSuccess(response.data.message || t('pages.referrals.code_applied_success'));
       setApplyCode('');
       loadData();
     } catch (error: any) {
-      showError(error.response?.data?.detail || 'Failed to apply referral code');
+      showError(error.response?.data?.detail || t('pages.referrals.code_apply_failed'));
     } finally {
       setApplying(false);
     }
