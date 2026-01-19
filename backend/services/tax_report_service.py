@@ -460,19 +460,15 @@ class TaxReportService:
         
         # Get the appropriate font based on language
         font_name = get_font_name(lang)
-        font_bold = get_font_name(lang, bold=True) if lang != "hi" else font_name
         
         styles = getSampleStyleSheet()
         
         # Create language-aware styles
-        title_style = ParagraphStyle('Title', parent=styles['Heading1'], fontSize=20,
-                                     textColor=colors.HexColor('#2563EB'), fontName=font_name)
         heading2_style = ParagraphStyle('Heading2Custom', parent=styles['Heading2'], fontName=font_name, fontSize=14)
         heading3_style = ParagraphStyle('Heading3Custom', parent=styles['Heading3'], fontName=font_name, fontSize=12)
         normal_style = ParagraphStyle('NormalCustom', parent=styles['Normal'], fontName=font_name, fontSize=10)
         
         # Determine currency from user's market
-        currency = "USD"
         currency_symbol = "$"
         
         # Hindi month names for localization
