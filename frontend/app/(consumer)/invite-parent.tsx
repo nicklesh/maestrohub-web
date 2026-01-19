@@ -117,7 +117,7 @@ export default function InviteParentScreen() {
 
   const referralCode = user?.user_id?.slice(-8) || 'MAESTRO';
   const shareUrl = 'https://www.maestrohabitat.com';
-  const shareMessage = `Join me on Maestro Habitat - the best platform to find quality coaches for your kids! Use my referral code: ${referralCode}`;
+  const shareMessage = t('pages.invite_parent.share_message', { code: referralCode });
 
   const loadInvites = useCallback(async () => {
     try {
