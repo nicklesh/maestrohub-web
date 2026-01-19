@@ -403,7 +403,7 @@ export default function BecomeTutorScreen() {
               styles.chipText,
               { color: colors.text },
               selectedLevels.includes(level.id) && { color: '#FFFFFF' }
-            ]}>{level.name}</Text>
+            ]}>{t(level.key)}</Text>
           </TouchableOpacity>
         ))}
       </View>
