@@ -695,7 +695,10 @@
       "with": "with",
       "send_schedule": "Send Schedule",
       "no_payments_yet": "No payments yet",
-      "schedule_sent_to": "Schedule sent to {{email}}"
+      "schedule_sent_to": "Schedule sent to {{email}}",
+      "add_email_first": "Please add an email address for this child first",
+      "confirm_remove_title": "Remove Child?",
+      "confirm_remove_message": "Are you sure you want to remove {{name}}? This action cannot be undone."
     },
     "tax_reports": {
       "title": "Tax Reports",
