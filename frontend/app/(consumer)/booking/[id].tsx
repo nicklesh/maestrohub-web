@@ -503,10 +503,10 @@ export default function BookingDetailScreen() {
             <View style={[styles.card, isTablet && styles.cardTablet, { borderColor: colors.warning, borderWidth: 1 }]}>
               <View style={styles.noShowHeader}>
                 <Ionicons name="alert-circle" size={24} color={colors.warning} />
-                <Text style={[styles.cardTitle, { color: colors.warning, marginLeft: 8 }]}>Session Issue?</Text>
+                <Text style={[styles.cardTitle, { color: colors.warning, marginLeft: 8 }]}>{t('pages.booking_detail.session_issue')}</Text>
               </View>
               <Text style={[styles.noShowText, { color: colors.textMuted }]}>
-                If your coach didn't show up for the session, you can report it here. We'll review and process a full refund.
+                {t('pages.booking_detail.session_issue_desc')}
               </Text>
               <TouchableOpacity
                 style={[styles.noShowButton, { backgroundColor: colors.warning }]}
@@ -518,7 +518,7 @@ export default function BookingDetailScreen() {
                 ) : (
                   <>
                     <Ionicons name="flag" size={18} color="#fff" />
-                    <Text style={styles.noShowButtonText}>Report Coach No-Show</Text>
+                    <Text style={styles.noShowButtonText}>{t('pages.booking_detail.report_no_show')}</Text>
                   </>
                 )}
               </TouchableOpacity>
