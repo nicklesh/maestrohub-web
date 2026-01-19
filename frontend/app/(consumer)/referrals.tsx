@@ -249,11 +249,11 @@ export default function ReferralsScreen() {
               <View style={styles.rewardHeader}>
                 <Ionicons name="gift" size={28} color={colors.primary} />
                 <Text style={[styles.rewardTitle, { color: colors.text }]}>
-                  {isProvider ? 'Provider Rewards' : 'Your Rewards'}
+                  {isProvider ? t('pages.referrals.provider_rewards') : t('pages.referrals.your_rewards')}
                 </Text>
               </View>
               <Text style={[styles.rewardDesc, { color: colors.textSecondary }]}>
-                {rewardDescription}
+                {t('pages.referrals.earn_reward_desc')}
               </Text>
               
               {/* Credits Display */}
