@@ -630,7 +630,8 @@
       "no_referrals_desc": "Share your referral code with friends to start earning rewards!",
       "code_copied": "Referral code copied to clipboard!",
       "code_applied": "Referral code applied successfully!",
-      "share_message": "Join me on Maestro Habitat! Use my referral code {{code}} when you sign up."
+      "share_message": "Join me on Maestro Habitat! Use my referral code {{code}} when you sign up.",
+      "earn_reward_desc": "Earn 1 FREE session for each referral who completes 2 paid sessions"
     },
     "settings": {
       "title": "Settings",
@@ -864,7 +865,8 @@
       "price_per_hour": "Price per Hour",
       "session_length": "Session Length",
       "create_coach_account": "Create Coach Account",
-      "account_created": "Your tutor account has been created! You can now log in with your new tutor email to access your tutor dashboard. Your parent account remains unchanged."
+      "account_created": "Your tutor account has been created! You can now log in with your new tutor email to access your tutor dashboard. Your parent account remains unchanged.",
+      "create_failed": "Failed to create tutor account. Please try again."
     },
     "admin": {
       "dashboard": "Admin Dashboard",
@@ -1022,7 +1024,9 @@
       "no_invitations_desc": "Invite other parents to discover great coaches",
       "share_via": "Share via",
       "invitation_sent": "Invitation sent successfully!",
-      "sent": "Sent"
+      "sent": "Sent",
+      "parent": "Parent",
+      "pending": "Pending"
     },
     "invite_provider": {
       "title": "Invite Providers",
