@@ -217,6 +217,12 @@ export default function BecomeTutorScreen() {
   };
 
   const handleSubmit = async () => {
+    // Validate meeting link if provided
+    if (meetingLink && !validateMeetingLink(meetingLink)) {
+      showError(t('pages.become_tutor.invalid_meeting_link'));
+      return;
+    }
+
     setLoading(true);
     try {
       // Step 1: Create new tutor user account
@@ -245,6 +251,8 @@ export default function BecomeTutorScreen() {
         base_price: parseFloat(basePrice),
         duration_minutes: parseInt(duration),
         payout_country: payoutCountry,
+        meeting_link: meetingLink.trim() || null,
+        waiting_room_enabled: waitingRoomEnabled,
         policies: {
           cancel_window_hours: 24,
           no_show_policy: 'Full charge for no-shows',
