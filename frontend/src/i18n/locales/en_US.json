@@ -6,6 +6,13 @@
     "support_email": "support@maestrohabitat.com",
     "admin_email": "admin@maestrohabitat.com"
   },
+  "roles": {
+    "parent": "Parent",
+    "tutor": "Tutor",
+    "coach": "Coach",
+    "admin": "Admin",
+    "consumer": "Parent"
+  },
   "navigation": {
     "home": "Home",
     "search": "Search",
