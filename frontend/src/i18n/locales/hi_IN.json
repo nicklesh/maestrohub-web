@@ -946,9 +946,9 @@
       "session_packages": "सत्र पैकेज",
       "save_up_to": "{{percent}}% तक बचाएं",
       "book_multiple_save": "एक से अधिक सत्र बुक करें और बचाएं!",
-      "sessions_valid_days": "{{count}} सत्र • {{days}} दिन वैध",
-      "per_session_label": "प्रति सत्र",
-      "total_label": "कुल",
+      "sessions_valid": "{{sessions}} सत्र • {{days}} दिन वैध",
+      "off": "छूट",
+      "total": "कुल",
       "would_recommend": "{{percent}}% अनुशंसा करेंगे",
       "coach_response": "कोच का जवाब:"
     },
