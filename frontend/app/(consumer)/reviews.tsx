@@ -287,7 +287,7 @@ export default function ReviewsScreen() {
                     color={review.would_recommend ? colors.success : colors.error} 
                   />
                   <Text style={{ color: review.would_recommend ? colors.success : colors.error, fontSize: 12, marginLeft: 4 }}>
-                    {review.would_recommend ? 'Would recommend' : 'Would not recommend'}
+                    {review.would_recommend ? t('pages.reviews.would_recommend_yes') : t('pages.reviews.would_recommend_no')}
                   </Text>
                 </View>
               </View>
