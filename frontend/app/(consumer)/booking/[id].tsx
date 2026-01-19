@@ -877,4 +877,19 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     fontSize: 13,
     fontStyle: 'italic',
   },
+  // Meeting link styles
+  meetingLinkRow: {
+    marginTop: 16,
+  },
+  meetingLinkValue: {
+    fontSize: 15,
+    fontWeight: '600',
+    marginTop: 4,
+    textDecorationLine: 'underline',
+  },
+  waitingRoomNote: {
+    fontSize: 12,
+    marginTop: 4,
+    fontStyle: 'italic',
+  },
 });
