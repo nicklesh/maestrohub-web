@@ -47,11 +47,20 @@ export default function TutorDashboard() {
   const { colors } = useTheme();
   const router = useRouter();
   const { width } = useWindowDimensions();
+  const { t } = useTranslation();
+  const { showSuccess, showError } = useToast();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [hasProfile, setHasProfile] = useState(false);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [stats, setStats] = useState<TutorStats | null>(null);
+  
+  // Meeting link modal state
+  const [showMeetingModal, setShowMeetingModal] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [meetingLink, setMeetingLink] = useState('');
+  const [waitingRoomEnabled, setWaitingRoomEnabled] = useState(true);
+  const [savingMeetingLink, setSavingMeetingLink] = useState(false);
 
   // Responsive breakpoints
   const isTablet = width >= 768;
