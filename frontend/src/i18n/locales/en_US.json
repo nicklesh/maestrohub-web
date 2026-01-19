@@ -8,21 +8,15 @@
   },
   "roles": {
     "parent": "Parent",
-    "tutor": "Tutor",
+    "tutor": "Coach",
     "coach": "Coach",
     "admin": "Admin",
     "consumer": "Parent"
   },
   "levels": {
-    "elementary": "Elementary (K-5)",
-    "middle_school": "Middle School (6-8)",
-    "high_school": "High School (9-12)",
-    "college": "College",
-    "adult": "Adult",
     "beginner": "Beginner",
     "intermediate": "Intermediate",
     "advanced": "Advanced",
-    "professional": "Professional",
     "all_levels": "All Levels"
   },
   "modality": {
@@ -60,7 +54,7 @@
     "tax_reports": "Tax Reports",
     "notifications": "Notifications",
     "scheduled_jobs": "Scheduled Jobs",
-    "tutors": "Tutors",
+    "tutors": "Coaches",
     "markets": "Markets",
     "pricing": "Pricing",
     "security": "Security",
@@ -441,8 +435,8 @@
       "name": "Enter your name",
       "phone": "Enter phone number",
       "search": "Search...",
-      "search_tutors": "Search for tutors...",
-      "search_subjects": "Search tutors, subjects...",
+      "search_tutors": "Search for coaches...",
+      "search_subjects": "Search coaches, subjects...",
       "message": "Type your message...",
       "select_option": "Select an option",
       "enter_code": "Enter code",
@@ -625,22 +619,25 @@
   "pages": {
     "notifications": {
       "title": "Notifications",
+      "no_notifications": "No notifications",
+      "no_notifications_desc": "You'll see updates about your sessions and payments here",
       "just_now": "Just now",
       "hours_ago": "{{count}}h ago",
       "days_ago": "{{count}}d ago",
-      "no_notifications": "No notifications",
-      "no_notifications_desc": "You're all caught up!"
+      "mark_as_read": "Mark as read",
+      "system_update": "System Update",
+      "platform_improvements": "Platform improvements deployed successfully"
     },
     "home": {
       "hero_title": "Find Your Perfect Coach",
-      "hero_subtitle": "Connect with expert tutors and coaches for personalized learning experiences",
+      "hero_subtitle": "Connect with expert coaches and coaches for personalized learning experiences",
       "featured_coaches": "Featured Coaches",
       "browse_categories": "Browse Categories",
       "popular_categories": "Popular Categories",
       "how_it_works": "How It Works",
       "reminders": "Reminders",
       "subjects_count": "{count} subjects",
-      "search_placeholder": "Search tutors, subjects..."
+      "search_placeholder": "Search coaches, subjects..."
     },
     "search": {
       "title": "Find a Coach",
@@ -662,7 +659,7 @@
       "rating": "Rating",
       "category": "Category",
       "subject": "Subject",
-      "search_placeholder": "Search tutors, subjects...",
+      "search_placeholder": "Search coaches, subjects...",
       "per_session": "per session",
       "view_profile": "View Profile",
       "book_now": "Book Now",
@@ -677,7 +674,7 @@
       "online": "Online",
       "hybrid": "Hybrid",
       "in_person": "In-Person",
-      "no_tutors_found": "No tutors found",
+      "no_tutors_found": "No coaches found",
       "try_adjusting_filters": "Try adjusting your filters",
       "clear_all": "Clear all"
     },
@@ -700,7 +697,7 @@
       "and": "and",
       "privacy_link": "Privacy Policy",
       "role_parent": "I'm a Parent",
-      "role_tutor": "I'm a Tutor"
+      "role_tutor": "I'm a Coach"
     },
     "profile": {
       "title": "My Profile",
@@ -715,7 +712,7 @@
       "version": "Version",
       "support": "Support",
       "parent_guardian": "Parent / Guardian",
-      "tutor_instructor": "Tutor / Instructor",
+      "tutor_instructor": "Coach / Instructor",
       "administrator": "Administrator",
       "dark_mode": "Dark Mode",
       "light_mode": "Light Mode",
@@ -740,13 +737,13 @@
       "add_review": "Add Review",
       "view_receipt": "View Receipt",
       "join_session": "Join Session",
-      "message_tutor": "Message Tutor",
+      "message_tutor": "Message Coach",
       "session_info": "Session Information",
       "date_time": "Date & Time",
       "duration": "Duration",
       "price": "Price",
       "status": "Status",
-      "tutor": "Tutor",
+      "tutor": "Coach",
       "student": "Student",
       "notes": "Notes",
       "no_notes": "No notes added",
@@ -900,7 +897,7 @@
       "search_faq": "Search FAQs...",
       "contact_support": "Contact our support team for help",
       "for_parents": "For Parents",
-      "for_tutors": "For Tutors",
+      "for_tutors": "For Coaches",
       "search_placeholder": "Search questions...",
       "still_have_questions": "Still have questions?",
       "contact_us": "Contact Us",
@@ -928,7 +925,7 @@
         "contact_support": "How do I contact support?"
       },
       "answers": {
-        "how_create_account": "To create an account, tap 'Sign Up' on the login screen. You can register using your email address or sign in with Google. Choose whether you want to join as a Parent/Student (to find coaches) or as a Coach/Tutor (to offer your services).",
+        "how_create_account": "To create an account, tap 'Sign Up' on the login screen. You can register using your email address or sign in with Google. Choose whether you want to join as a Parent/Student (to find coaches) or as a Coach/Coach (to offer your services).",
         "how_find_coach": "Use the search feature to browse coaches by category, subject, or name. You can filter by availability, price range, and modality (online/in-person). Each coach profile includes their bio, ratings, reviews, and areas of expertise.",
         "is_info_secure": "Yes! We take data security seriously. Your personal information is encrypted and stored securely. We never share your data with third parties without your consent. Review our Privacy Policy for more details.",
         "how_book_session": "Find a coach you like, view their profile, and tap 'Book Session'. Select an available time slot from their calendar, confirm the session duration and type, then proceed to payment. You'll receive a confirmation once the booking is complete.",
@@ -1011,7 +1008,7 @@
       "processing_payment": "Processing Payment...",
       "review_details": "Review your booking details",
       "paid": "Paid",
-      "tutor_label": "Tutor",
+      "tutor_label": "Coach",
       "student_label": "Student",
       "date_label": "Date",
       "time_label": "Time",
@@ -1042,17 +1039,6 @@
       "select_provider": "Select a payment provider for {{market}} market",
       "all_methods_linked": "All available payment methods have been linked",
       "security_note": "Maestro Habitat does not store your payment details. All payments are processed securely through your selected payment provider."
-    },
-    "notifications": {
-      "title": "Notifications",
-      "no_notifications": "No notifications",
-      "no_notifications_desc": "You'll see updates about your sessions and payments here",
-      "just_now": "Just now",
-      "hours_ago": "{{count}}h ago",
-      "days_ago": "{{count}}d ago",
-      "mark_as_read": "Mark as read",
-      "system_update": "System Update",
-      "platform_improvements": "Platform improvements deployed successfully"
     },
     "reviews": {
       "title": "Reviews",
@@ -1094,8 +1080,8 @@
       "title": "Become a Coach",
       "step_of": "Step {{current}} of {{total}}",
       "create_account": "Create Your Coach Account",
-      "create_account_desc": "To become a tutor, you'll need a separate account with a different email address. This keeps your parent and tutor roles separate.",
-      "account_info": "Your current parent account ({{email}}) will remain unchanged. You'll use the new email below to log in as a tutor.",
+      "create_account_desc": "To become a coach, you'll need a separate account with a different email address. This keeps your parent and coach roles separate.",
+      "account_info": "Your current parent account ({{email}}) will remain unchanged. You'll use the new email below to log in as a coach.",
       "coach_email": "Coach Email",
       "password": "Password",
       "password_hint": "Min 8 chars, uppercase, lowercase, number",
@@ -1105,7 +1091,7 @@
       "about_you": "About You",
       "about_you_desc": "Tell potential students about yourself and your experience",
       "bio": "Bio",
-      "bio_placeholder": "Share your background, experience, teaching style, and what makes you a great tutor...",
+      "bio_placeholder": "Share your background, experience, teaching style, and what makes you a great coach...",
       "your_expertise": "Your Expertise",
       "expertise_desc": "Select categories, subjects, and levels you can teach",
       "categories": "Categories",
@@ -1126,8 +1112,8 @@
       "waiting_room_enabled": "Let meeting invitees wait to be allowed into meeting",
       "waiting_room_desc": "Recommended for security - attendees wait until you admit them",
       "create_coach_account": "Create Coach Account",
-      "account_created": "Your tutor account has been created! You can now log in with your new tutor email to access your tutor dashboard. Your parent account remains unchanged.",
-      "create_failed": "Failed to create tutor account. Please try again.",
+      "account_created": "Your coach account has been created! You can now log in with your new coach email to access your coach dashboard. Your parent account remains unchanged.",
+      "create_failed": "Failed to create coach account. Please try again.",
       "different_email_required": "Please use a different email address than your parent account"
     },
     "admin": {
@@ -1136,9 +1122,9 @@
       "total_bookings": "Total Bookings",
       "total_revenue": "Total Revenue",
       "pending_approvals": "Pending Approvals",
-      "active_tutors": "Active Tutors",
+      "active_tutors": "Active Coaches",
       "recent_activity": "Recent Activity",
-      "manage_tutors": "Manage Tutors",
+      "manage_tutors": "Manage Coaches",
       "manage_markets": "Manage Markets",
       "manage_pricing": "Manage Pricing"
     },
@@ -1220,14 +1206,14 @@
       "add_student": "Add Student",
       "grade": "Grade",
       "learning_goals": "Learning Goals",
-      "help_tutor_prepare": "Help the tutor prepare for the session",
+      "help_tutor_prepare": "Help the coach prepare for the session",
       "what_to_learn": "What do you want to learn?",
       "what_to_learn_placeholder": "e.g., Need help with algebra equations, preparing for SAT math...",
       "current_level": "Current level",
       "current_level_placeholder": "e.g., 8th grade, Beginner, Intermediate...",
       "additional_notes": "Additional notes (optional)",
-      "additional_notes_placeholder": "Anything else the tutor should know...",
-      "acknowledge_policy": "I acknowledge the tutor's cancellation policy ({hours}h notice required)",
+      "additional_notes_placeholder": "Anything else the coach should know...",
+      "acknowledge_policy": "I acknowledge the coach's cancellation policy ({hours}h notice required)",
       "continue_to_payment": "Continue to Payment",
       "payment_method": "Payment Method",
       "select_payment_method": "Select your preferred payment method",
@@ -1236,7 +1222,7 @@
       "total": "Total",
       "auto_payment": "Auto-Payment",
       "auto_payment_desc": "Your default payment method will be charged automatically. If the primary method fails, we'll try your other linked payment methods.",
-      "secure_payment": "Secure payment • 90% goes to tutor, 10% platform fee",
+      "secure_payment": "Secure payment • 90% goes to coach, 10% platform fee",
       "confirm_pay": "Confirm & Pay",
       "processing": "Processing...",
       "booking_confirmed": "Booking Confirmed!",
@@ -1332,7 +1318,7 @@
       "providers_name": "Provider's Name (optional)",
       "name_placeholder": "John Smith",
       "personal_message": "Personal Message (optional)",
-      "message_placeholder": "Hi! I'd love to have you as my tutor...",
+      "message_placeholder": "Hi! I'd love to have you as my coach...",
       "send_invite": "Send Invite",
       "invite_sent": "Invite Sent!",
       "invite_sent_title": "Invite Sent!",
@@ -1350,7 +1336,7 @@
       "title": "Booking Details",
       "date": "Date",
       "time": "Time",
-      "tutor": "TUTOR",
+      "tutor": "COACH",
       "student": "STUDENT",
       "kid_notifications": "KID NOTIFICATIONS",
       "not_enabled": "Not enabled",
@@ -1561,17 +1547,6 @@
     "reviews_count": "{count} reviews",
     "sessions_count": "{count} sessions",
     "rating": "rating"
-  },
-  "levels": {
-    "beginner": "Beginner",
-    "intermediate": "Intermediate",
-    "advanced": "Advanced",
-    "all_levels": "All Levels"
-  },
-  "modality": {
-    "online": "Online",
-    "in_person": "In-Person",
-    "hybrid": "Hybrid"
   },
   "modals": {
     "contact_us": {

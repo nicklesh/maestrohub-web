@@ -14,23 +14,14 @@
     "consumer": "माता-पिता"
   },
   "levels": {
-    "elementary": "प्राथमिक (K-5)",
-    "middle_school": "माध्यमिक स्कूल (6-8)",
-    "high_school": "हाई स्कूल (9-12)",
-    "college": "कॉलेज",
-    "adult": "वयस्क",
     "beginner": "शुरुआती",
     "intermediate": "मध्यवर्ती",
     "advanced": "उन्नत",
-    "professional": "पेशेवर",
-    "all_levels": "सभी स्तर",
-    "elementary_school": "प्राथमिक स्कूल",
-    "pre_school": "प्री-स्कूल",
-    "k_12": "K-12"
+    "all_levels": "सभी स्तर"
   },
   "modality": {
     "online": "ऑनलाइन",
-    "in_person": "व्यक्तिगत रूप से",
+    "in_person": "व्यक्तिगत",
     "hybrid": "हाइब्रिड"
   },
   "countries": {
@@ -444,7 +435,7 @@
       "name": "Enter your name",
       "phone": "Enter phone number",
       "search": "Search...",
-      "search_tutors": "Search for tutors...",
+      "search_tutors": "Search for coaches...",
       "search_subjects": "ट्यूटर, विषय खोजें...",
       "message": "Type your message...",
       "select_option": "Select an option",
@@ -602,7 +593,7 @@
     "pending": "लंबित",
     "sent": "भेजा गया",
     "accepted": "स्वीकृत",
-    "expired": "समाप्त",
+    "expired": "Expired",
     "completed": "पूर्ण",
     "cancelled": "रद्द",
     "in_progress": "In Progress",
@@ -618,7 +609,6 @@
     "refunded": "Refunded",
     "processing": "Processing",
     "scheduled": "Scheduled",
-    "expired": "Expired",
     "available": "Available",
     "unavailable": "Unavailable",
     "online": "Online",
@@ -629,11 +619,14 @@
   "pages": {
     "notifications": {
       "title": "सूचनाएं",
+      "no_notifications": "कोई सूचना नहीं",
+      "no_notifications_desc": "आपके सत्रों और भुगतानों के बारे में अपडेट यहां दिखाई देंगे",
       "just_now": "अभी",
       "hours_ago": "{{count}} घंटे पहले",
       "days_ago": "{{count}} दिन पहले",
-      "no_notifications": "कोई सूचना नहीं",
-      "no_notifications_desc": "आप अप टू डेट हैं!"
+      "mark_as_read": "पढ़ा हुआ चिह्नित करें",
+      "system_update": "सिस्टम अपडेट",
+      "platform_improvements": "प्लेटफ़ॉर्म सुधार सफलतापूर्वक तैनात"
     },
     "home": {
       "hero_title": "अपना परफेक्ट कोच खोजें",
@@ -744,13 +737,13 @@
       "add_review": "Add Review",
       "view_receipt": "View Receipt",
       "join_session": "Join Session",
-      "message_tutor": "Message Tutor",
+      "message_tutor": "Message Coach",
       "session_info": "सत्र जानकारी",
       "date_time": "दिनांक और समय",
       "duration": "Duration",
       "price": "Price",
       "status": "Status",
-      "tutor": "Tutor",
+      "tutor": "Coach",
       "student": "Student",
       "notes": "Notes",
       "no_notes": "No notes added",
@@ -1037,17 +1030,6 @@
       "all_methods_linked": "सभी उपलब्ध भुगतान विधियां लिंक हो चुकी हैं",
       "security_note": "मास्ट्रो हैबिटेट आपके भुगतान विवरण संग्रहीत नहीं करता है। सभी भुगतान आपके चयनित भुगतान प्रदाता के माध्यम से सुरक्षित रूप से संसाधित होते हैं।"
     },
-    "notifications": {
-      "title": "सूचनाएं",
-      "no_notifications": "कोई सूचना नहीं",
-      "no_notifications_desc": "आपके सत्रों और भुगतानों के बारे में अपडेट यहां दिखाई देंगे",
-      "just_now": "अभी",
-      "hours_ago": "{{count}} घंटे पहले",
-      "days_ago": "{{count}} दिन पहले",
-      "mark_as_read": "पढ़ा हुआ चिह्नित करें",
-      "system_update": "सिस्टम अपडेट",
-      "platform_improvements": "प्लेटफ़ॉर्म सुधार सफलतापूर्वक तैनात"
-    },
     "reviews": {
       "title": "समीक्षाएं",
       "pending": "लंबित",
@@ -1130,9 +1112,9 @@
       "total_bookings": "Total Bookings",
       "total_revenue": "Total Revenue",
       "pending_approvals": "Pending Approvals",
-      "active_tutors": "Active Tutors",
+      "active_tutors": "Active Coaches",
       "recent_activity": "Recent Activity",
-      "manage_tutors": "Manage Tutors",
+      "manage_tutors": "Manage Coaches",
       "manage_markets": "Manage Markets",
       "manage_pricing": "Manage Pricing"
     },
@@ -1570,17 +1552,6 @@
     "reviews_count": "{count} समीक्षाएं",
     "sessions_count": "{count} सत्र",
     "rating": "रेटिंग"
-  },
-  "levels": {
-    "beginner": "शुरुआती",
-    "intermediate": "मध्यवर्ती",
-    "advanced": "उन्नत",
-    "all_levels": "सभी स्तर"
-  },
-  "modality": {
-    "online": "ऑनलाइन",
-    "in_person": "व्यक्तिगत",
-    "hybrid": "हाइब्रिड"
   },
   "modals": {
     "contact_us": {
