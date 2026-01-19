@@ -224,7 +224,7 @@ export default function ReviewsScreen() {
                   <View style={styles.cardInfo}>
                     <Text style={[styles.tutorName, { color: colors.text }]}>{tutor.tutor_name}</Text>
                     <Text style={[styles.subjects, { color: colors.textMuted }]}>
-                      {tutor.subjects.slice(0, 2).join(', ')}
+                      {tutor.subjects.slice(0, 2).map(s => t(`subjects.${s.toLowerCase().replace(/\s+/g, '_')}`, s)).join(', ')}
                     </Text>
                   </View>
                 </View>
