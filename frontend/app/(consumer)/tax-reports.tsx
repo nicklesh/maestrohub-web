@@ -353,7 +353,7 @@ export default function TaxReportsScreen() {
         <View style={styles.infoContent}>
           <Text style={[styles.infoTitle, { color: colors.text }]}>
             {user?.role === 'provider' 
-              ? 'Provider Tax Documents'
+              ? t('pages.tax_reports.provider_tax_documents')
               : t('pages.tax_reports.payment_records')}
           </Text>
           <Text style={[styles.infoText, { color: colors.textSecondary }]}>
