@@ -753,6 +753,31 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     fontSize: 16,
     paddingVertical: 12,
   },
+  checkboxRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginTop: 16,
+    gap: 12,
+  },
+  checkboxTextContainer: {
+    flex: 1,
+  },
+  checkboxLabel: {
+    fontSize: 15,
+    fontWeight: '500',
+  },
+  checkboxDesc: {
+    fontSize: 13,
+    marginTop: 2,
+  },
+  hintText: {
+    fontSize: 12,
+    marginTop: 4,
+  },
+  errorText: {
+    fontSize: 12,
+    marginTop: 4,
+  },
   footer: {
     position: 'absolute',
     bottom: 0,
