@@ -811,6 +811,8 @@
       "message": "Message",
       "message_placeholder": "Describe your issue or question...",
       "send_message": "Send Message",
+      "send": "Send",
+      "fill_all_fields": "Please fill in all fields",
       "success_title": "Message Sent!",
       "success_message": "We'll respond within 24-48 hours."
     },
