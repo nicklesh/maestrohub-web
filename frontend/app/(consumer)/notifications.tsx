@@ -148,9 +148,9 @@ export default function NotificationsScreen() {
       {notifications.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Ionicons name="notifications-off-outline" size={64} color={colors.textMuted} />
-          <Text style={[styles.emptyTitle, { color: colors.text }]}>No notifications</Text>
+          <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('pages.notifications.no_notifications')}</Text>
           <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
-            You'll see updates about your sessions and payments here
+            {t('pages.notifications.no_notifications_desc')}
           </Text>
         </View>
       ) : (
