@@ -202,18 +202,18 @@ export default function TaxReportsScreen() {
         
         <View style={styles.reportStats}>
           <View style={styles.statItem}>
-            <Text style={[styles.statLabel, { color: colors.textMuted }]}>Transactions</Text>
+            <Text style={[styles.statLabel, { color: colors.textMuted }]}>{t('pages.tax_reports.transactions')}</Text>
             <Text style={[styles.statValue, { color: colors.text }]}>{report.transaction_count}</Text>
           </View>
           <View style={styles.statItem}>
-            <Text style={[styles.statLabel, { color: colors.textMuted }]}>Total Amount</Text>
+            <Text style={[styles.statLabel, { color: colors.textMuted }]}>{t('pages.tax_reports.total_amount')}</Text>
             <Text style={[styles.statValue, { color: colors.text }]}>
               {formatAmount(report.total_amount_cents)}
             </Text>
           </View>
           {report.user_type === 'provider' && report.total_payouts_cents !== undefined && (
             <View style={styles.statItem}>
-              <Text style={[styles.statLabel, { color: colors.textMuted }]}>Net Earnings</Text>
+              <Text style={[styles.statLabel, { color: colors.textMuted }]}>{t('pages.tax_reports.net_earnings')}</Text>
               <Text style={[styles.statValue, { color: colors.success }]}>
                 {formatAmount(report.total_payouts_cents)}
               </Text>
