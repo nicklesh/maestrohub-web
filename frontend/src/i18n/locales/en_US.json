@@ -850,7 +850,9 @@
       "free_sessions": "Free Sessions",
       "days_fee_waiver": "Days Fee Waiver",
       "code_copied": "Referral code copied to clipboard!",
-      "share_message_copied": "Message copied to clipboard! Paste it in your preferred messaging app to share."
+      "share_message_copied": "Message copied to clipboard! Paste it in your preferred messaging app to share.",
+      "code_applied_success": "Referral code applied successfully!",
+      "code_apply_failed": "Failed to apply referral code"
     },
     "settings": {
       "title": "Settings",
