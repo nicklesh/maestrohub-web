@@ -22,6 +22,9 @@ import zh_SG from './locales/zh_SG.json';
 import ja_JP from './locales/ja_JP.json';
 import ko_KR from './locales/ko_KR.json';
 import ru_RU from './locales/ru_RU.json';
+import bn_IN from './locales/bn_IN.json';
+import ur_PK from './locales/ur_PK.json';
+import pt_BR from './locales/pt_BR.json';
 
 // Supported locales with metadata
 export const SUPPORTED_LOCALES = {
@@ -29,8 +32,10 @@ export const SUPPORTED_LOCALES = {
   'es_ES': { name: 'Spanish (Spain)', nativeName: 'Español (España)', data: es_ES, rtl: false },
   'fr_FR': { name: 'French (France)', nativeName: 'Français (France)', data: fr_FR, rtl: false },
   'de_DE': { name: 'German (Germany)', nativeName: 'Deutsch (Deutschland)', data: de_DE, rtl: false },
+  'pt_BR': { name: 'Portuguese (Brazil)', nativeName: 'Português (Brasil)', data: pt_BR, rtl: false },
   'ru_RU': { name: 'Russian (Russia)', nativeName: 'Русский (Россия)', data: ru_RU, rtl: false },
   'hi_IN': { name: 'Hindi (India)', nativeName: 'हिन्दी (भारत)', data: hi_IN, rtl: false },
+  'bn_IN': { name: 'Bengali (India)', nativeName: 'বাংলা (ভারত)', data: bn_IN, rtl: false },
   'te_IN': { name: 'Telugu (India)', nativeName: 'తెలుగు (భారతదేశం)', data: te_IN, rtl: false },
   'ta_IN': { name: 'Tamil (India)', nativeName: 'தமிழ் (இந்தியா)', data: ta_IN, rtl: false },
   'mr_IN': { name: 'Marathi (India)', nativeName: 'मराठी (भारत)', data: mr_IN, rtl: false },
@@ -38,6 +43,7 @@ export const SUPPORTED_LOCALES = {
   'pa_IN': { name: 'Punjabi (India)', nativeName: 'ਪੰਜਾਬੀ (ਭਾਰਤ)', data: pa_IN, rtl: false },
   'kn_IN': { name: 'Kannada (India)', nativeName: 'ಕನ್ನಡ (ಭಾರತ)', data: kn_IN, rtl: false },
   'ml_IN': { name: 'Malayalam (India)', nativeName: 'മലയാളം (ഇന്ത്യ)', data: ml_IN, rtl: false },
+  'ur_PK': { name: 'Urdu (Pakistan)', nativeName: 'اردو (پاکستان)', data: ur_PK, rtl: true },
   'ar_SA': { name: 'Arabic (Saudi Arabia)', nativeName: 'العربية (السعودية)', data: ar_SA, rtl: true },
   'he_IL': { name: 'Hebrew (Israel)', nativeName: 'עברית (ישראל)', data: he_IL, rtl: true },
   'zh_CN': { name: 'Chinese (Simplified)', nativeName: '简体中文 (中国)', data: zh_CN, rtl: false },
