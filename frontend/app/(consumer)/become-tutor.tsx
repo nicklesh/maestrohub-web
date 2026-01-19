@@ -29,25 +29,25 @@ interface Category {
 }
 
 const LEVELS = [
-  { id: 'beginner', name: 'Beginner' },
-  { id: 'intermediate', name: 'Intermediate' },
-  { id: 'advanced', name: 'Advanced' },
-  { id: 'elementary', name: 'Elementary (K-5)' },
-  { id: 'middle_school', name: 'Middle School (6-8)' },
-  { id: 'high_school', name: 'High School (9-12)' },
-  { id: 'college', name: 'College' },
-  { id: 'adult', name: 'Adult' },
-  { id: 'professional', name: 'Professional' },
+  { id: 'beginner', key: 'levels.beginner' },
+  { id: 'intermediate', key: 'levels.intermediate' },
+  { id: 'advanced', key: 'levels.advanced' },
+  { id: 'elementary', key: 'levels.elementary' },
+  { id: 'middle_school', key: 'levels.middle_school' },
+  { id: 'high_school', key: 'levels.high_school' },
+  { id: 'college', key: 'levels.college' },
+  { id: 'adult', key: 'levels.adult' },
+  { id: 'professional', key: 'levels.professional' },
 ];
 
 const MODALITIES = [
-  { id: 'online', name: 'Online', icon: 'videocam' },
-  { id: 'in_person', name: 'In-Person', icon: 'location' },
-  { id: 'hybrid', name: 'Hybrid', icon: 'sync' },
+  { id: 'online', key: 'modality.online', icon: 'videocam' },
+  { id: 'in_person', key: 'modality.in_person', icon: 'location' },
+  { id: 'hybrid', key: 'modality.hybrid', icon: 'sync' },
 ];
 
 const PAYOUT_COUNTRIES = [
-  { id: 'US', name: 'United States', currency: 'USD', symbol: '$', flag: '🇺🇸' },
+  { id: 'US', key: 'countries.united_states', currency: 'USD', symbol: '$', flag: '🇺🇸' },
   { id: 'IN', name: 'India', currency: 'INR', symbol: '₹', flag: '🇮🇳' },
 ];
 
