@@ -215,17 +215,17 @@ export default function TutorSettings() {
               <View style={styles.cardHeader}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                   <Ionicons name="videocam" size={20} color={colors.primary} />
-                  <Text style={[styles.cardTitle, isDesktop && styles.cardTitleDesktop]}>Meeting Link</Text>
+                  <Text style={[styles.cardTitle, isDesktop && styles.cardTitleDesktop]}>{t('pages.tutor_settings.meeting_link')}</Text>
                 </View>
               </View>
               <Text style={[styles.meetingHint, { color: colors.textMuted }]}>
-                Add your Zoom or Google Meet link for online sessions. This will be shared with students when they book.
+                {t('pages.tutor_settings.meeting_link_desc')}
               </Text>
               <View style={[styles.meetingInputRow, { backgroundColor: colors.background, borderColor: colors.border }]}>
                 <Ionicons name="link" size={18} color={colors.textMuted} />
                 <TextInput
                   style={[styles.meetingInput, { color: colors.text }]}
-                  placeholder="https://zoom.us/j/... or https://meet.google.com/..."
+                  placeholder={t('pages.become_tutor.meeting_link_placeholder')}
                   placeholderTextColor={colors.textMuted}
                   value={profile.meeting_link || ''}
                   onChangeText={(text) => setProfile({ ...profile, meeting_link: text })}
@@ -233,20 +233,52 @@ export default function TutorSettings() {
                   keyboardType="url"
                 />
               </View>
+              <Text style={[styles.meetingHintSmall, { color: colors.textMuted }]}>
+                {t('pages.become_tutor.meeting_link_hint')}
+              </Text>
+              
+              {/* Waiting Room Toggle */}
               <TouchableOpacity
-                style={[styles.saveMeetingButton, { backgroundColor: colors.primary }]}
+                style={styles.waitingRoomRow}
+                onPress={() => setProfile({ ...profile, waiting_room_enabled: !profile.waiting_room_enabled })}
+              >
+                <Ionicons 
+                  name={profile.waiting_room_enabled !== false ? 'checkbox' : 'square-outline'} 
+                  size={24} 
+                  color={profile.waiting_room_enabled !== false ? colors.primary : colors.textMuted} 
+                />
+                <View style={styles.waitingRoomTextContainer}>
+                  <Text style={[styles.waitingRoomLabel, { color: colors.text }]}>{t('pages.become_tutor.waiting_room_enabled')}</Text>
+                  <Text style={[styles.waitingRoomDesc, { color: colors.textMuted }]}>{t('pages.become_tutor.waiting_room_desc')}</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.saveMeetingButton, { backgroundColor: colors.primary }, savingMeetingLink && { opacity: 0.7 }]}
                 onPress={async () => {
+                  setSavingMeetingLink(true);
                   try {
-                    await api.put('/tutors/profile', { meeting_link: profile.meeting_link }, {
+                    await api.put('/tutors/profile', { 
+                      meeting_link: profile.meeting_link,
+                      waiting_room_enabled: profile.waiting_room_enabled !== false
+                    }, {
                       headers: { Authorization: `Bearer ${token}` }
                     });
-                    showSuccess('Meeting link saved!');
-                  } catch (error) {
-                    showError('Failed to save meeting link');
+                    showSuccess(t('pages.tutor_settings.meeting_link_saved'));
+                  } catch (error: any) {
+                    const errorMsg = error.response?.data?.detail || t('pages.tutor_settings.meeting_link_save_failed');
+                    showError(errorMsg);
+                  } finally {
+                    setSavingMeetingLink(false);
                   }
                 }}
+                disabled={savingMeetingLink}
               >
-                <Text style={styles.saveMeetingButtonText}>Save Link</Text>
+                {savingMeetingLink ? (
+                  <ActivityIndicator size="small" color="#fff" />
+                ) : (
+                  <Text style={styles.saveMeetingButtonText}>{t('pages.tutor_settings.save_link')}</Text>
+                )}
               </TouchableOpacity>
             </View>
           )}
