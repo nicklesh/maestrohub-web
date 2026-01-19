@@ -48,7 +48,7 @@ const MODALITIES = [
 
 const PAYOUT_COUNTRIES = [
   { id: 'US', key: 'countries.united_states', currency: 'USD', symbol: '$', flag: '🇺🇸' },
-  { id: 'IN', name: 'India', currency: 'INR', symbol: '₹', flag: '🇮🇳' },
+  { id: 'IN', key: 'countries.india', currency: 'INR', symbol: '₹', flag: '🇮🇳' },
 ];
 
 export default function BecomeTutorScreen() {
