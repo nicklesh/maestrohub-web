@@ -323,7 +323,7 @@ export default function TaxReportsScreen() {
               <>
                 <Ionicons name="add" size={18} color={colors.primary} />
                 <Text style={[styles.generateMoreText, { color: colors.primary }]}>
-                  Generate Annual 1099
+                  {t('pages.tax_reports.generate_annual_1099')}
                 </Text>
               </>
             )}
