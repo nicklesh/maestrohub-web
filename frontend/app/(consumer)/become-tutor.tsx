@@ -331,7 +331,7 @@ export default function BecomeTutorScreen() {
     <View style={styles.stepContent}>
       <Text style={[styles.stepTitle, { color: colors.text }]}>{t('pages.become_tutor.your_expertise')}</Text>
       <Text style={[styles.stepDescription, { color: colors.textMuted }]}>
-        Select categories, subjects, and levels you can teach
+        {t('pages.become_tutor.expertise_desc')}
       </Text>
 
       <Text style={[styles.sectionLabel, { color: colors.text }]}>{t('pages.become_tutor.categories')}</Text>
@@ -414,7 +414,7 @@ export default function BecomeTutorScreen() {
     <View style={styles.stepContent}>
       <Text style={[styles.stepTitle, { color: colors.text }]}>{t('pages.become_tutor.pricing_availability')}</Text>
       <Text style={[styles.stepDescription, { color: colors.textMuted }]}>
-        Set your rates and how you'll deliver lessons
+        {t('pages.become_tutor.pricing_desc')}
       </Text>
 
       <Text style={[styles.sectionLabel, { color: colors.text }]}>{t('pages.become_tutor.modality')}</Text>
