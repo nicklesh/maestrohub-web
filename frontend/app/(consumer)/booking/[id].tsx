@@ -67,7 +67,7 @@ export default function BookingDetailScreen() {
   const { width } = useWindowDimensions();
   const { colors } = useTheme();
   const { token } = useAuth();
-  const { t } = useTranslation();
+  const { t, formatDate } = useTranslation();
   const [booking, setBooking] = useState<Booking | null>(null);
   const [loading, setLoading] = useState(true);
   const [canceling, setCanceling] = useState(false);
