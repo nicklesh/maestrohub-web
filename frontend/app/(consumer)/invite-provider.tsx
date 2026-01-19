@@ -125,13 +125,13 @@ export default function InviteProviderScreen() {
 
   const handleSendInvite = async () => {
     if (!inviteEmail.trim()) {
-      showError('Please enter an email address');
+      showError(t('forms.validation.enter_email_address'));
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(inviteEmail.trim())) {
-      showError('Please enter a valid email address');
+      showError(t('forms.validation.invalid_email'));
       return;
     }
 
@@ -145,15 +145,14 @@ export default function InviteProviderScreen() {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      showInfo(`Your invite includes a $${response.data.credit_amount} free session credit!`
-      , 'Invite Sent!');
+      showInfo(t('pages.invite_provider.invite_sent_success', { amount: response.data.credit_amount }), t('pages.invite_provider.invite_sent_title'));
       setShowInviteModal(false);
       setInviteEmail('');
       setInviteName('');
       setInviteMessage('');
       loadInvites();
     } catch (error: any) {
-      showError(error.response?.data?.detail || 'Failed to send invite');
+      showError(error.response?.data?.detail || t('pages.invite_provider.invite_failed'));
     } finally {
       setSending(false);
     }
