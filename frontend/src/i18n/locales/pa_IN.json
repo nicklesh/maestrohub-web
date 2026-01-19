@@ -884,20 +884,20 @@
       "security_note": "Maestro Habitat does not store your payment details. All payments are processed securely through your selected payment provider."
     },
     "notifications": {
-      "title": "Notifications",
-      "all": "All",
-      "unread": "Unread",
-      "mark_all_read": "Mark All as Read",
-      "clear_all": "Clear All",
-      "no_notifications": "No notifications",
-      "settings": "Notification Settings",
-      "no_notifications_desc": "You'll see updates about your sessions and payments here",
-      "just_now": "Just now",
-      "hours_ago": "{{count}}h ago",
-      "days_ago": "{{count}}d ago",
-      "mark_as_read": "Mark as read",
-      "system_update": "System Update",
-      "platform_improvements": "Platform improvements deployed successfully"
+      "title": "ਸੂਚਨਾਵਾਂ",
+      "all": "ਸਭ",
+      "unread": "ਨਹੀਂ ਪੜ੍ਹੀਆਂ",
+      "mark_all_read": "ਸਭ ਨੂੰ ਪੜ੍ਹਿਆ ਵਜੋਂ ਚਿੰਨ੍ਹਿਤ ਕਰੋ",
+      "clear_all": "ਸਭ ਸਾਫ਼ ਕਰੋ",
+      "no_notifications": "ਕੋਈ ਸੂਚਨਾ ਨਹੀਂ",
+      "settings": "ਸੂਚਨਾ ਸੈਟਿੰਗਾਂ",
+      "no_notifications_desc": "ਤੁਹਾਡੇ ਸੈਸ਼ਨਾਂ ਅਤੇ ਭੁਗਤਾਨਾਂ ਬਾਰੇ ਅੱਪਡੇਟ ਇੱਥੇ ਦਿਖਾਈ ਦੇਣਗੇ",
+      "just_now": "ਹੁਣੇ",
+      "hours_ago": "{{count}} ਘੰਟੇ ਪਹਿਲਾਂ",
+      "days_ago": "{{count}} ਦਿਨ ਪਹਿਲਾਂ",
+      "mark_as_read": "ਪੜ੍ਹਿਆ ਵਜੋਂ ਚਿੰਨ੍ਹਿਤ ਕਰੋ",
+      "system_update": "ਸਿਸਟਮ ਅੱਪਡੇਟ",
+      "platform_improvements": "ਪਲੇਟਫਾਰਮ ਸੁਧਾਰ ਸਫਲਤਾਪੂਰਵਕ ਲਾਗੂ ਕੀਤੇ ਗਏ"
     },
     "reviews": {
       "title": "Reviews",
@@ -1618,21 +1618,5 @@
       "message_placeholder": "Describe your issue or question...",
       "send": "Send Message"
     }
-  },
-  "notifications": {
-    "title": "ਸੂਚਨਾਵਾਂ",
-    "all": "ਸਭ",
-    "unread": "ਨਹੀਂ ਪੜ੍ਹੀਆਂ",
-    "mark_all_read": "ਸਭ ਨੂੰ ਪੜ੍ਹਿਆ ਵਜੋਂ ਚਿੰਨ੍ਹਿਤ ਕਰੋ",
-    "clear_all": "ਸਭ ਸਾਫ਼ ਕਰੋ",
-    "no_notifications": "ਕੋਈ ਸੂਚਨਾ ਨਹੀਂ",
-    "settings": "ਸੂਚਨਾ ਸੈਟਿੰਗਾਂ",
-    "no_notifications_desc": "ਤੁਹਾਡੇ ਸੈਸ਼ਨਾਂ ਅਤੇ ਭੁਗਤਾਨਾਂ ਬਾਰੇ ਅੱਪਡੇਟ ਇੱਥੇ ਦਿਖਾਈ ਦੇਣਗੇ",
-    "just_now": "ਹੁਣੇ",
-    "hours_ago": "{{count}} ਘੰਟੇ ਪਹਿਲਾਂ",
-    "days_ago": "{{count}} ਦਿਨ ਪਹਿਲਾਂ",
-    "mark_as_read": "ਪੜ੍ਹਿਆ ਵਜੋਂ ਚਿੰਨ੍ਹਿਤ ਕਰੋ",
-    "system_update": "ਸਿਸਟਮ ਅੱਪਡੇਟ",
-    "platform_improvements": "ਪਲੇਟਫਾਰਮ ਸੁਧਾਰ ਸਫਲਤਾਪੂਰਵਕ ਲਾਗੂ ਕੀਤੇ ਗਏ"
   }
 }

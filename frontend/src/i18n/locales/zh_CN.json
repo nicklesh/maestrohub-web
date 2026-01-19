@@ -884,20 +884,20 @@
       "security_note": "Maestro Habitat does not store your payment details. All payments are processed securely through your selected payment provider."
     },
     "notifications": {
-      "title": "Notifications",
-      "all": "All",
-      "unread": "Unread",
-      "mark_all_read": "Mark All as Read",
-      "clear_all": "Clear All",
-      "no_notifications": "No notifications",
-      "settings": "Notification Settings",
-      "no_notifications_desc": "You'll see updates about your sessions and payments here",
-      "just_now": "Just now",
-      "hours_ago": "{{count}}h ago",
-      "days_ago": "{{count}}d ago",
-      "mark_as_read": "Mark as read",
-      "system_update": "System Update",
-      "platform_improvements": "Platform improvements deployed successfully"
+      "title": "通知",
+      "all": "全部",
+      "unread": "未读",
+      "mark_all_read": "全部标记为已读",
+      "clear_all": "清除全部",
+      "no_notifications": "没有通知",
+      "settings": "通知设置",
+      "no_notifications_desc": "您将在此处看到有关课程和付款的更新",
+      "just_now": "刚刚",
+      "hours_ago": "{{count}}小时前",
+      "days_ago": "{{count}}天前",
+      "mark_as_read": "标记为已读",
+      "system_update": "系统更新",
+      "platform_improvements": "平台改进已成功部署"
     },
     "reviews": {
       "title": "Reviews",
@@ -1618,21 +1618,5 @@
       "message_placeholder": "Describe your issue or question...",
       "send": "Send Message"
     }
-  },
-  "notifications": {
-    "title": "通知",
-    "all": "全部",
-    "unread": "未读",
-    "mark_all_read": "全部标记为已读",
-    "clear_all": "清除全部",
-    "no_notifications": "没有通知",
-    "settings": "通知设置",
-    "no_notifications_desc": "您将在此处看到有关课程和付款的更新",
-    "just_now": "刚刚",
-    "hours_ago": "{{count}}小时前",
-    "days_ago": "{{count}}天前",
-    "mark_as_read": "标记为已读",
-    "system_update": "系统更新",
-    "platform_improvements": "平台改进已成功部署"
   }
 }

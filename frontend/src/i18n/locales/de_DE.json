@@ -884,20 +884,20 @@
       "security_note": "Maestro Habitat does not store your payment details. All payments are processed securely through your selected payment provider."
     },
     "notifications": {
-      "title": "Notifications",
-      "all": "All",
-      "unread": "Unread",
-      "mark_all_read": "Mark All as Read",
-      "clear_all": "Clear All",
-      "no_notifications": "No notifications",
-      "settings": "Notification Settings",
-      "no_notifications_desc": "You'll see updates about your sessions and payments here",
-      "just_now": "Just now",
-      "hours_ago": "{{count}}h ago",
-      "days_ago": "{{count}}d ago",
-      "mark_as_read": "Mark as read",
-      "system_update": "System Update",
-      "platform_improvements": "Platform improvements deployed successfully"
+      "title": "Benachrichtigungen",
+      "all": "Alle",
+      "unread": "Ungelesen",
+      "mark_all_read": "Alle als gelesen markieren",
+      "clear_all": "Alle löschen",
+      "no_notifications": "Keine Benachrichtigungen",
+      "settings": "Benachrichtigungseinstellungen",
+      "no_notifications_desc": "Hier sehen Sie Updates zu Ihren Sitzungen und Zahlungen",
+      "just_now": "Gerade eben",
+      "hours_ago": "vor {{count}} Std.",
+      "days_ago": "vor {{count}} Tagen",
+      "mark_as_read": "Als gelesen markieren",
+      "system_update": "Systemaktualisierung",
+      "platform_improvements": "Plattformverbesserungen erfolgreich implementiert"
     },
     "reviews": {
       "title": "Reviews",
@@ -1618,21 +1618,5 @@
       "message_placeholder": "Describe your issue or question...",
       "send": "Send Message"
     }
-  },
-  "notifications": {
-    "title": "Benachrichtigungen",
-    "all": "Alle",
-    "unread": "Ungelesen",
-    "mark_all_read": "Alle als gelesen markieren",
-    "clear_all": "Alle löschen",
-    "no_notifications": "Keine Benachrichtigungen",
-    "settings": "Benachrichtigungseinstellungen",
-    "no_notifications_desc": "Hier sehen Sie Updates zu Ihren Sitzungen und Zahlungen",
-    "just_now": "Gerade eben",
-    "hours_ago": "vor {{count}} Std.",
-    "days_ago": "vor {{count}} Tagen",
-    "mark_as_read": "Als gelesen markieren",
-    "system_update": "Systemaktualisierung",
-    "platform_improvements": "Plattformverbesserungen erfolgreich implementiert"
   }
 }

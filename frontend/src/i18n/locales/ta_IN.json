@@ -884,20 +884,20 @@
       "security_note": "Maestro Habitat does not store your payment details. All payments are processed securely through your selected payment provider."
     },
     "notifications": {
-      "title": "Notifications",
-      "all": "All",
-      "unread": "Unread",
-      "mark_all_read": "Mark All as Read",
-      "clear_all": "Clear All",
-      "no_notifications": "No notifications",
-      "settings": "Notification Settings",
-      "no_notifications_desc": "You'll see updates about your sessions and payments here",
-      "just_now": "Just now",
-      "hours_ago": "{{count}}h ago",
-      "days_ago": "{{count}}d ago",
-      "mark_as_read": "Mark as read",
-      "system_update": "System Update",
-      "platform_improvements": "Platform improvements deployed successfully"
+      "title": "அறிவிப்புகள்",
+      "all": "அனைத்தும்",
+      "unread": "படிக்கப்படாதவை",
+      "mark_all_read": "அனைத்தையும் படித்ததாக குறி",
+      "clear_all": "அனைத்தையும் அழி",
+      "no_notifications": "அறிவிப்புகள் இல்லை",
+      "settings": "அறிவிப்பு அமைப்புகள்",
+      "no_notifications_desc": "உங்கள் அமர்வுகள் மற்றும் கட்டணங்கள் பற்றிய புதுப்பிப்புகளை இங்கே காணலாம்",
+      "just_now": "இப்போது",
+      "hours_ago": "{{count}} மணி நேரம் முன்பு",
+      "days_ago": "{{count}} நாட்களுக்கு முன்பு",
+      "mark_as_read": "படித்ததாக குறி",
+      "system_update": "கணினி புதுப்பிப்பு",
+      "platform_improvements": "தளம் மேம்படுத்தல்கள் வெற்றிகரமாக பயன்படுத்தப்பட்டது"
     },
     "reviews": {
       "title": "Reviews",
@@ -1618,21 +1618,5 @@
       "message_placeholder": "Describe your issue or question...",
       "send": "Send Message"
     }
-  },
-  "notifications": {
-    "title": "அறிவிப்புகள்",
-    "all": "அனைத்தும்",
-    "unread": "படிக்கப்படாதவை",
-    "mark_all_read": "அனைத்தையும் படித்ததாக குறி",
-    "clear_all": "அனைத்தையும் அழி",
-    "no_notifications": "அறிவிப்புகள் இல்லை",
-    "settings": "அறிவிப்பு அமைப்புகள்",
-    "no_notifications_desc": "உங்கள் அமர்வுகள் மற்றும் கட்டணங்கள் பற்றிய புதுப்பிப்புகளை இங்கே காணலாம்",
-    "just_now": "இப்போது",
-    "hours_ago": "{{count}} மணி நேரம் முன்பு",
-    "days_ago": "{{count}} நாட்களுக்கு முன்பு",
-    "mark_as_read": "படித்ததாக குறி",
-    "system_update": "கணினி புதுப்பிப்பு",
-    "platform_improvements": "தளம் மேம்படுத்தல்கள் வெற்றிகரமாக பயன்படுத்தப்பட்டது"
   }
 }

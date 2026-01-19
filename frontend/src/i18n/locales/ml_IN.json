@@ -884,20 +884,20 @@
       "security_note": "Maestro Habitat does not store your payment details. All payments are processed securely through your selected payment provider."
     },
     "notifications": {
-      "title": "Notifications",
-      "all": "All",
-      "unread": "Unread",
-      "mark_all_read": "Mark All as Read",
-      "clear_all": "Clear All",
-      "no_notifications": "No notifications",
-      "settings": "Notification Settings",
-      "no_notifications_desc": "You'll see updates about your sessions and payments here",
-      "just_now": "Just now",
-      "hours_ago": "{{count}}h ago",
-      "days_ago": "{{count}}d ago",
-      "mark_as_read": "Mark as read",
-      "system_update": "System Update",
-      "platform_improvements": "Platform improvements deployed successfully"
+      "title": "അറിയിപ്പുകൾ",
+      "all": "എല്ലാം",
+      "unread": "വായിക്കാത്തവ",
+      "mark_all_read": "എല്ലാം വായിച്ചതായി അടയാളപ്പെടുത്തുക",
+      "clear_all": "എല്ലാം മായ്ക്കുക",
+      "no_notifications": "അറിയിപ്പുകളില്ല",
+      "settings": "അറിയിപ്പ് ക്രമീകരണങ്ങൾ",
+      "no_notifications_desc": "നിങ്ങളുടെ സെഷനുകളെയും പേയ്‌മെന്റുകളെയും കുറിച്ചുള്ള അപ്‌ഡേറ്റുകൾ ഇവിടെ കാണാം",
+      "just_now": "ഇപ്പോൾ",
+      "hours_ago": "{{count}} മണിക്കൂർ മുമ്പ്",
+      "days_ago": "{{count}} ദിവസം മുമ്പ്",
+      "mark_as_read": "വായിച്ചതായി അടയാളപ്പെടുത്തുക",
+      "system_update": "സിസ്റ്റം അപ്‌ഡേറ്റ്",
+      "platform_improvements": "പ്ലാറ്റ്‌ഫോം മെച്ചപ്പെടുത്തലുകൾ വിജയകരമായി വിന്യസിച്ചു"
     },
     "reviews": {
       "title": "Reviews",
@@ -1618,21 +1618,5 @@
       "message_placeholder": "Describe your issue or question...",
       "send": "Send Message"
     }
-  },
-  "notifications": {
-    "title": "അറിയിപ്പുകൾ",
-    "all": "എല്ലാം",
-    "unread": "വായിക്കാത്തവ",
-    "mark_all_read": "എല്ലാം വായിച്ചതായി അടയാളപ്പെടുത്തുക",
-    "clear_all": "എല്ലാം മായ്ക്കുക",
-    "no_notifications": "അറിയിപ്പുകളില്ല",
-    "settings": "അറിയിപ്പ് ക്രമീകരണങ്ങൾ",
-    "no_notifications_desc": "നിങ്ങളുടെ സെഷനുകളെയും പേയ്‌മെന്റുകളെയും കുറിച്ചുള്ള അപ്‌ഡേറ്റുകൾ ഇവിടെ കാണാം",
-    "just_now": "ഇപ്പോൾ",
-    "hours_ago": "{{count}} മണിക്കൂർ മുമ്പ്",
-    "days_ago": "{{count}} ദിവസം മുമ്പ്",
-    "mark_as_read": "വായിച്ചതായി അടയാളപ്പെടുത്തുക",
-    "system_update": "സിസ്റ്റം അപ്‌ഡേറ്റ്",
-    "platform_improvements": "പ്ലാറ്റ്‌ഫോം മെച്ചപ്പെടുത്തലുകൾ വിജയകരമായി വിന്യസിച്ചു"
   }
 }

@@ -884,20 +884,20 @@
       "security_note": "Maestro Habitat does not store your payment details. All payments are processed securely through your selected payment provider."
     },
     "notifications": {
-      "title": "Notifications",
-      "all": "All",
-      "unread": "Unread",
-      "mark_all_read": "Mark All as Read",
-      "clear_all": "Clear All",
-      "no_notifications": "No notifications",
-      "settings": "Notification Settings",
-      "no_notifications_desc": "You'll see updates about your sessions and payments here",
-      "just_now": "Just now",
-      "hours_ago": "{{count}}h ago",
-      "days_ago": "{{count}}d ago",
-      "mark_as_read": "Mark as read",
-      "system_update": "System Update",
-      "platform_improvements": "Platform improvements deployed successfully"
+      "title": "Notificações",
+      "all": "Todas",
+      "unread": "Não lidas",
+      "mark_all_read": "Marcar todas como lidas",
+      "clear_all": "Limpar tudo",
+      "no_notifications": "Sem notificações",
+      "settings": "Configurações de notificação",
+      "no_notifications_desc": "Você verá atualizações sobre suas sessões e pagamentos aqui",
+      "just_now": "Agora mesmo",
+      "hours_ago": "{{count}}h atrás",
+      "days_ago": "{{count}}d atrás",
+      "mark_as_read": "Marcar como lida",
+      "system_update": "Atualização do Sistema",
+      "platform_improvements": "Melhorias na plataforma implantadas com sucesso"
     },
     "reviews": {
       "title": "Reviews",
@@ -1625,21 +1625,5 @@
     "register": "Registrar",
     "email": "E-mail",
     "password": "Senha"
-  },
-  "notifications": {
-    "title": "Notificações",
-    "all": "Todas",
-    "unread": "Não lidas",
-    "mark_all_read": "Marcar todas como lidas",
-    "clear_all": "Limpar tudo",
-    "no_notifications": "Sem notificações",
-    "settings": "Configurações de notificação",
-    "no_notifications_desc": "Você verá atualizações sobre suas sessões e pagamentos aqui",
-    "just_now": "Agora mesmo",
-    "hours_ago": "{{count}}h atrás",
-    "days_ago": "{{count}}d atrás",
-    "mark_as_read": "Marcar como lida",
-    "system_update": "Atualização do Sistema",
-    "platform_improvements": "Melhorias na plataforma implantadas com sucesso"
   }
 }

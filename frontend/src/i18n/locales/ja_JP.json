@@ -884,20 +884,20 @@
       "security_note": "Maestro Habitat does not store your payment details. All payments are processed securely through your selected payment provider."
     },
     "notifications": {
-      "title": "Notifications",
-      "all": "All",
-      "unread": "Unread",
-      "mark_all_read": "Mark All as Read",
-      "clear_all": "Clear All",
-      "no_notifications": "No notifications",
-      "settings": "Notification Settings",
-      "no_notifications_desc": "You'll see updates about your sessions and payments here",
-      "just_now": "Just now",
-      "hours_ago": "{{count}}h ago",
-      "days_ago": "{{count}}d ago",
-      "mark_as_read": "Mark as read",
-      "system_update": "System Update",
-      "platform_improvements": "Platform improvements deployed successfully"
+      "title": "通知",
+      "all": "すべて",
+      "unread": "未読",
+      "mark_all_read": "すべて既読にする",
+      "clear_all": "すべてクリア",
+      "no_notifications": "通知はありません",
+      "settings": "通知設定",
+      "no_notifications_desc": "セッションと支払いに関する更新がここに表示されます",
+      "just_now": "たった今",
+      "hours_ago": "{{count}}時間前",
+      "days_ago": "{{count}}日前",
+      "mark_as_read": "既読にする",
+      "system_update": "システムアップデート",
+      "platform_improvements": "プラットフォームの改善が正常にデプロイされました"
     },
     "reviews": {
       "title": "Reviews",
@@ -1618,21 +1618,5 @@
       "message_placeholder": "Describe your issue or question...",
       "send": "Send Message"
     }
-  },
-  "notifications": {
-    "title": "通知",
-    "all": "すべて",
-    "unread": "未読",
-    "mark_all_read": "すべて既読にする",
-    "clear_all": "すべてクリア",
-    "no_notifications": "通知はありません",
-    "settings": "通知設定",
-    "no_notifications_desc": "セッションと支払いに関する更新がここに表示されます",
-    "just_now": "たった今",
-    "hours_ago": "{{count}}時間前",
-    "days_ago": "{{count}}日前",
-    "mark_as_read": "既読にする",
-    "system_update": "システムアップデート",
-    "platform_improvements": "プラットフォームの改善が正常にデプロイされました"
   }
 }

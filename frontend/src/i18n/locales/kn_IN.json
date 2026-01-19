@@ -884,20 +884,20 @@
       "security_note": "Maestro Habitat does not store your payment details. All payments are processed securely through your selected payment provider."
     },
     "notifications": {
-      "title": "Notifications",
-      "all": "All",
-      "unread": "Unread",
-      "mark_all_read": "Mark All as Read",
-      "clear_all": "Clear All",
-      "no_notifications": "No notifications",
-      "settings": "Notification Settings",
-      "no_notifications_desc": "You'll see updates about your sessions and payments here",
-      "just_now": "Just now",
-      "hours_ago": "{{count}}h ago",
-      "days_ago": "{{count}}d ago",
-      "mark_as_read": "Mark as read",
-      "system_update": "System Update",
-      "platform_improvements": "Platform improvements deployed successfully"
+      "title": "ಅಧಿಸೂಚನೆಗಳು",
+      "all": "ಎಲ್ಲಾ",
+      "unread": "ಓದಿಲ್ಲ",
+      "mark_all_read": "ಎಲ್ಲವನ್ನೂ ಓದಿದ ಎಂದು ಗುರುತಿಸಿ",
+      "clear_all": "ಎಲ್ಲವನ್ನೂ ತೆರವುಗೊಳಿಸಿ",
+      "no_notifications": "ಅಧಿಸೂಚನೆಗಳಿಲ್ಲ",
+      "settings": "ಅಧಿಸೂಚನೆ ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+      "no_notifications_desc": "ನಿಮ್ಮ ಸೆಷನ್‌ಗಳು ಮತ್ತು ಪಾವತಿಗಳ ಬಗ್ಗೆ ನವೀಕರಣಗಳನ್ನು ಇಲ್ಲಿ ನೋಡುತ್ತೀರಿ",
+      "just_now": "ಈಗಷ್ಟೇ",
+      "hours_ago": "{{count}} ಗಂಟೆಗಳ ಹಿಂದೆ",
+      "days_ago": "{{count}} ದಿನಗಳ ಹಿಂದೆ",
+      "mark_as_read": "ಓದಿದ ಎಂದು ಗುರುತಿಸಿ",
+      "system_update": "ಸಿಸ್ಟಮ್ ನವೀಕರಣ",
+      "platform_improvements": "ಪ್ಲಾಟ್‌ಫಾರ್ಮ್ ಸುಧಾರಣೆಗಳು ಯಶಸ್ವಿಯಾಗಿ ನಿಯೋಜಿಸಲಾಗಿದೆ"
     },
     "reviews": {
       "title": "Reviews",
@@ -1618,21 +1618,5 @@
       "message_placeholder": "Describe your issue or question...",
       "send": "Send Message"
     }
-  },
-  "notifications": {
-    "title": "ಅಧಿಸೂಚನೆಗಳು",
-    "all": "ಎಲ್ಲಾ",
-    "unread": "ಓದಿಲ್ಲ",
-    "mark_all_read": "ಎಲ್ಲವನ್ನೂ ಓದಿದ ಎಂದು ಗುರುತಿಸಿ",
-    "clear_all": "ಎಲ್ಲವನ್ನೂ ತೆರವುಗೊಳಿಸಿ",
-    "no_notifications": "ಅಧಿಸೂಚನೆಗಳಿಲ್ಲ",
-    "settings": "ಅಧಿಸೂಚನೆ ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
-    "no_notifications_desc": "ನಿಮ್ಮ ಸೆಷನ್‌ಗಳು ಮತ್ತು ಪಾವತಿಗಳ ಬಗ್ಗೆ ನವೀಕರಣಗಳನ್ನು ಇಲ್ಲಿ ನೋಡುತ್ತೀರಿ",
-    "just_now": "ಈಗಷ್ಟೇ",
-    "hours_ago": "{{count}} ಗಂಟೆಗಳ ಹಿಂದೆ",
-    "days_ago": "{{count}} ದಿನಗಳ ಹಿಂದೆ",
-    "mark_as_read": "ಓದಿದ ಎಂದು ಗುರುತಿಸಿ",
-    "system_update": "ಸಿಸ್ಟಮ್ ನವೀಕರಣ",
-    "platform_improvements": "ಪ್ಲಾಟ್‌ಫಾರ್ಮ್ ಸುಧಾರಣೆಗಳು ಯಶಸ್ವಿಯಾಗಿ ನಿಯೋಜಿಸಲಾಗಿದೆ"
   }
 }

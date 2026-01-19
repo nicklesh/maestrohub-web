@@ -884,20 +884,20 @@
       "security_note": "Maestro Habitat does not store your payment details. All payments are processed securely through your selected payment provider."
     },
     "notifications": {
-      "title": "Notifications",
-      "all": "All",
-      "unread": "Unread",
-      "mark_all_read": "Mark All as Read",
-      "clear_all": "Clear All",
-      "no_notifications": "No notifications",
-      "settings": "Notification Settings",
-      "no_notifications_desc": "You'll see updates about your sessions and payments here",
-      "just_now": "Just now",
-      "hours_ago": "{{count}}h ago",
-      "days_ago": "{{count}}d ago",
-      "mark_as_read": "Mark as read",
-      "system_update": "System Update",
-      "platform_improvements": "Platform improvements deployed successfully"
+      "title": "Уведомления",
+      "all": "Все",
+      "unread": "Непрочитанные",
+      "mark_all_read": "Отметить все как прочитанные",
+      "clear_all": "Очистить все",
+      "no_notifications": "Нет уведомлений",
+      "settings": "Настройки уведомлений",
+      "no_notifications_desc": "Здесь будут обновления о ваших занятиях и платежах",
+      "just_now": "Только что",
+      "hours_ago": "{{count}} ч назад",
+      "days_ago": "{{count}} д назад",
+      "mark_as_read": "Отметить как прочитанное",
+      "system_update": "Системное обновление",
+      "platform_improvements": "Улучшения платформы успешно внедрены"
     },
     "reviews": {
       "title": "Reviews",
@@ -1618,21 +1618,5 @@
       "message_placeholder": "Describe your issue or question...",
       "send": "Send Message"
     }
-  },
-  "notifications": {
-    "title": "Уведомления",
-    "all": "Все",
-    "unread": "Непрочитанные",
-    "mark_all_read": "Отметить все как прочитанные",
-    "clear_all": "Очистить все",
-    "no_notifications": "Нет уведомлений",
-    "settings": "Настройки уведомлений",
-    "no_notifications_desc": "Здесь будут обновления о ваших занятиях и платежах",
-    "just_now": "Только что",
-    "hours_ago": "{{count}} ч назад",
-    "days_ago": "{{count}} д назад",
-    "mark_as_read": "Отметить как прочитанное",
-    "system_update": "Системное обновление",
-    "platform_improvements": "Улучшения платформы успешно внедрены"
   }
 }

@@ -884,20 +884,20 @@
       "security_note": "Maestro Habitat does not store your payment details. All payments are processed securely through your selected payment provider."
     },
     "notifications": {
-      "title": "Notifications",
-      "all": "All",
-      "unread": "Unread",
-      "mark_all_read": "Mark All as Read",
-      "clear_all": "Clear All",
-      "no_notifications": "No notifications",
-      "settings": "Notification Settings",
-      "no_notifications_desc": "You'll see updates about your sessions and payments here",
-      "just_now": "Just now",
-      "hours_ago": "{{count}}h ago",
-      "days_ago": "{{count}}d ago",
-      "mark_as_read": "Mark as read",
-      "system_update": "System Update",
-      "platform_improvements": "Platform improvements deployed successfully"
+      "title": "התראות",
+      "all": "הכל",
+      "unread": "לא נקראו",
+      "mark_all_read": "סמן הכל כנקרא",
+      "clear_all": "נקה הכל",
+      "no_notifications": "אין התראות",
+      "settings": "הגדרות התראות",
+      "no_notifications_desc": "כאן תראה עדכונים על השיעורים והתשלומים שלך",
+      "just_now": "עכשיו",
+      "hours_ago": "לפני {{count}} שעות",
+      "days_ago": "לפני {{count}} ימים",
+      "mark_as_read": "סמן כנקרא",
+      "system_update": "עדכון מערכת",
+      "platform_improvements": "שיפורי הפלטפורמה נפרסו בהצלחה"
     },
     "reviews": {
       "title": "Reviews",
@@ -1618,21 +1618,5 @@
       "message_placeholder": "Describe your issue or question...",
       "send": "Send Message"
     }
-  },
-  "notifications": {
-    "title": "התראות",
-    "all": "הכל",
-    "unread": "לא נקראו",
-    "mark_all_read": "סמן הכל כנקרא",
-    "clear_all": "נקה הכל",
-    "no_notifications": "אין התראות",
-    "settings": "הגדרות התראות",
-    "no_notifications_desc": "כאן תראה עדכונים על השיעורים והתשלומים שלך",
-    "just_now": "עכשיו",
-    "hours_ago": "לפני {{count}} שעות",
-    "days_ago": "לפני {{count}} ימים",
-    "mark_as_read": "סמן כנקרא",
-    "system_update": "עדכון מערכת",
-    "platform_improvements": "שיפורי הפלטפורמה נפרסו בהצלחה"
   }
 }

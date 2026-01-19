@@ -884,20 +884,20 @@
       "security_note": "Maestro Habitat does not store your payment details. All payments are processed securely through your selected payment provider."
     },
     "notifications": {
-      "title": "Notifications",
-      "all": "All",
-      "unread": "Unread",
-      "mark_all_read": "Mark All as Read",
-      "clear_all": "Clear All",
-      "no_notifications": "No notifications",
-      "settings": "Notification Settings",
-      "no_notifications_desc": "You'll see updates about your sessions and payments here",
-      "just_now": "Just now",
-      "hours_ago": "{{count}}h ago",
-      "days_ago": "{{count}}d ago",
-      "mark_as_read": "Mark as read",
-      "system_update": "System Update",
-      "platform_improvements": "Platform improvements deployed successfully"
+      "title": "Notificaciones",
+      "all": "Todas",
+      "unread": "No leídas",
+      "mark_all_read": "Marcar todas como leídas",
+      "clear_all": "Borrar todo",
+      "no_notifications": "Sin notificaciones",
+      "settings": "Configuración de notificaciones",
+      "no_notifications_desc": "Aquí verás actualizaciones sobre tus sesiones y pagos",
+      "just_now": "Ahora mismo",
+      "hours_ago": "hace {{count}}h",
+      "days_ago": "hace {{count}}d",
+      "mark_as_read": "Marcar como leída",
+      "system_update": "Actualización del Sistema",
+      "platform_improvements": "Mejoras de la plataforma implementadas con éxito"
     },
     "reviews": {
       "title": "Reviews",
@@ -1618,21 +1618,5 @@
       "message_placeholder": "Describe your issue or question...",
       "send": "Send Message"
     }
-  },
-  "notifications": {
-    "title": "Notificaciones",
-    "all": "Todas",
-    "unread": "No leídas",
-    "mark_all_read": "Marcar todas como leídas",
-    "clear_all": "Borrar todo",
-    "no_notifications": "Sin notificaciones",
-    "settings": "Configuración de notificaciones",
-    "no_notifications_desc": "Aquí verás actualizaciones sobre tus sesiones y pagos",
-    "just_now": "Ahora mismo",
-    "hours_ago": "hace {{count}}h",
-    "days_ago": "hace {{count}}d",
-    "mark_as_read": "Marcar como leída",
-    "system_update": "Actualización del Sistema",
-    "platform_improvements": "Mejoras de la plataforma implementadas con éxito"
   }
 }

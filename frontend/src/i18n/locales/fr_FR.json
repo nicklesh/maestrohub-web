@@ -885,19 +885,19 @@
     },
     "notifications": {
       "title": "Notifications",
-      "all": "All",
-      "unread": "Unread",
-      "mark_all_read": "Mark All as Read",
-      "clear_all": "Clear All",
-      "no_notifications": "No notifications",
-      "settings": "Notification Settings",
-      "no_notifications_desc": "You'll see updates about your sessions and payments here",
-      "just_now": "Just now",
-      "hours_ago": "{{count}}h ago",
-      "days_ago": "{{count}}d ago",
-      "mark_as_read": "Mark as read",
-      "system_update": "System Update",
-      "platform_improvements": "Platform improvements deployed successfully"
+      "all": "Toutes",
+      "unread": "Non lues",
+      "mark_all_read": "Tout marquer comme lu",
+      "clear_all": "Tout effacer",
+      "no_notifications": "Aucune notification",
+      "settings": "Paramètres de notification",
+      "no_notifications_desc": "Vous verrez ici les mises à jour de vos sessions et paiements",
+      "just_now": "À l'instant",
+      "hours_ago": "il y a {{count}}h",
+      "days_ago": "il y a {{count}}j",
+      "mark_as_read": "Marquer comme lu",
+      "system_update": "Mise à jour système",
+      "platform_improvements": "Améliorations de la plateforme déployées avec succès"
     },
     "reviews": {
       "title": "Reviews",
@@ -1618,21 +1618,5 @@
       "message_placeholder": "Describe your issue or question...",
       "send": "Send Message"
     }
-  },
-  "notifications": {
-    "title": "Notifications",
-    "all": "Toutes",
-    "unread": "Non lues",
-    "mark_all_read": "Tout marquer comme lu",
-    "clear_all": "Tout effacer",
-    "no_notifications": "Aucune notification",
-    "settings": "Paramètres de notification",
-    "no_notifications_desc": "Vous verrez ici les mises à jour de vos sessions et paiements",
-    "just_now": "À l'instant",
-    "hours_ago": "il y a {{count}}h",
-    "days_ago": "il y a {{count}}j",
-    "mark_as_read": "Marquer comme lu",
-    "system_update": "Mise à jour système",
-    "platform_improvements": "Améliorations de la plateforme déployées avec succès"
   }
 }

@@ -884,20 +884,20 @@
       "security_note": "Maestro Habitat does not store your payment details. All payments are processed securely through your selected payment provider."
     },
     "notifications": {
-      "title": "Notifications",
-      "all": "All",
-      "unread": "Unread",
-      "mark_all_read": "Mark All as Read",
-      "clear_all": "Clear All",
-      "no_notifications": "No notifications",
-      "settings": "Notification Settings",
-      "no_notifications_desc": "You'll see updates about your sessions and payments here",
-      "just_now": "Just now",
-      "hours_ago": "{{count}}h ago",
-      "days_ago": "{{count}}d ago",
-      "mark_as_read": "Mark as read",
-      "system_update": "System Update",
-      "platform_improvements": "Platform improvements deployed successfully"
+      "title": "الإشعارات",
+      "all": "الكل",
+      "unread": "غير مقروءة",
+      "mark_all_read": "تحديد الكل كمقروء",
+      "clear_all": "مسح الكل",
+      "no_notifications": "لا توجد إشعارات",
+      "settings": "إعدادات الإشعارات",
+      "no_notifications_desc": "ستظهر هنا التحديثات حول جلساتك ومدفوعاتك",
+      "just_now": "الآن",
+      "hours_ago": "قبل {{count}} ساعة",
+      "days_ago": "قبل {{count}} يوم",
+      "mark_as_read": "تحديد كمقروء",
+      "system_update": "تحديث النظام",
+      "platform_improvements": "تم نشر تحسينات المنصة بنجاح"
     },
     "reviews": {
       "title": "Reviews",
@@ -1618,21 +1618,5 @@
       "message_placeholder": "Describe your issue or question...",
       "send": "Send Message"
     }
-  },
-  "notifications": {
-    "title": "الإشعارات",
-    "all": "الكل",
-    "unread": "غير مقروءة",
-    "mark_all_read": "تحديد الكل كمقروء",
-    "clear_all": "مسح الكل",
-    "no_notifications": "لا توجد إشعارات",
-    "settings": "إعدادات الإشعارات",
-    "no_notifications_desc": "ستظهر هنا التحديثات حول جلساتك ومدفوعاتك",
-    "just_now": "الآن",
-    "hours_ago": "قبل {{count}} ساعة",
-    "days_ago": "قبل {{count}} يوم",
-    "mark_as_read": "تحديد كمقروء",
-    "system_update": "تحديث النظام",
-    "platform_improvements": "تم نشر تحسينات المنصة بنجاح"
   }
 }

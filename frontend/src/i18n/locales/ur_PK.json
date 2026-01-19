@@ -884,20 +884,20 @@
       "security_note": "Maestro Habitat does not store your payment details. All payments are processed securely through your selected payment provider."
     },
     "notifications": {
-      "title": "Notifications",
-      "all": "All",
-      "unread": "Unread",
-      "mark_all_read": "Mark All as Read",
-      "clear_all": "Clear All",
-      "no_notifications": "No notifications",
-      "settings": "Notification Settings",
-      "no_notifications_desc": "You'll see updates about your sessions and payments here",
-      "just_now": "Just now",
-      "hours_ago": "{{count}}h ago",
-      "days_ago": "{{count}}d ago",
-      "mark_as_read": "Mark as read",
-      "system_update": "System Update",
-      "platform_improvements": "Platform improvements deployed successfully"
+      "title": "اطلاعات",
+      "all": "سب",
+      "unread": "نہیں پڑھا",
+      "mark_all_read": "سب پڑھا ہوا نشان زد کریں",
+      "clear_all": "سب صاف کریں",
+      "no_notifications": "کوئی اطلاع نہیں",
+      "settings": "اطلاع کی ترتیبات",
+      "no_notifications_desc": "یہاں آپ کے سیشنز اور ادائیگیوں کے بارے میں اپ ڈیٹس دیکھیں گے",
+      "just_now": "ابھی",
+      "hours_ago": "{{count}} گھنٹے پہلے",
+      "days_ago": "{{count}} دن پہلے",
+      "mark_as_read": "پڑھا ہوا نشان زد کریں",
+      "system_update": "سسٹم اپ ڈیٹ",
+      "platform_improvements": "پلیٹ فارم کی بہتری کامیابی سے لگائی گئی"
     },
     "reviews": {
       "title": "Reviews",
@@ -1625,21 +1625,5 @@
     "register": "رجسٹر",
     "email": "ای میل",
     "password": "پاس ورڈ"
-  },
-  "notifications": {
-    "title": "اطلاعات",
-    "all": "سب",
-    "unread": "نہیں پڑھا",
-    "mark_all_read": "سب پڑھا ہوا نشان زد کریں",
-    "clear_all": "سب صاف کریں",
-    "no_notifications": "کوئی اطلاع نہیں",
-    "settings": "اطلاع کی ترتیبات",
-    "no_notifications_desc": "یہاں آپ کے سیشنز اور ادائیگیوں کے بارے میں اپ ڈیٹس دیکھیں گے",
-    "just_now": "ابھی",
-    "hours_ago": "{{count}} گھنٹے پہلے",
-    "days_ago": "{{count}} دن پہلے",
-    "mark_as_read": "پڑھا ہوا نشان زد کریں",
-    "system_update": "سسٹم اپ ڈیٹ",
-    "platform_improvements": "پلیٹ فارم کی بہتری کامیابی سے لگائی گئی"
   }
 }
