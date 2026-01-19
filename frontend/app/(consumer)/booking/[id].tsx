@@ -48,6 +48,8 @@ interface Booking {
   price_snapshot: number;
   currency?: string;
   currency_symbol?: string;
+  meeting_link?: string;
+  waiting_room_enabled?: boolean;
   policy_snapshot: {
     cancel_window_hours: number;
     no_show_policy: string;
