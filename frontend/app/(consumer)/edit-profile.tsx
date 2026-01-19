@@ -23,7 +23,7 @@ import { api } from '@/src/services/api';
 export default function EditProfileScreen() {
   const { user, token, refreshUser } = useAuth();
   const { colors } = useTheme();
-  const { showSuccess, showError } = useToast();
+  const { showSuccess, showError, showInfo } = useToast();
   const { t } = useTranslation();
   const router = useRouter();
 
@@ -37,7 +37,7 @@ export default function EditProfileScreen() {
 
   const handleUpdateProfile = async () => {
     if (!name.trim()) {
-      showError('Name cannot be empty');
+      showError(t('pages.edit_profile.name_required'));
       return;
     }
 
@@ -51,9 +51,9 @@ export default function EditProfileScreen() {
       });
 
       await refreshUser();
-      showSuccess('Profile updated successfully');
+      showSuccess(t('pages.edit_profile.profile_updated'));
     } catch (error: any) {
-      showInfo(error.response?.data?.detail || 'Failed to update profile', 'Error');
+      showError(error.response?.data?.detail || t('pages.edit_profile.update_failed'));
     } finally {
       setSavingProfile(false);
     }
@@ -61,17 +61,17 @@ export default function EditProfileScreen() {
 
   const handleChangePassword = async () => {
     if (!currentPassword || !newPassword) {
-      showError('Please fill in all password fields');
+      showError(t('pages.edit_profile.fill_password_fields'));
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      showError('New passwords do not match');
+      showError(t('pages.edit_profile.passwords_not_match'));
       return;
     }
 
     if (newPassword.length < 6) {
-      showError('New password must be at least 6 characters');
+      showError(t('pages.edit_profile.password_min_length'));
       return;
     }
 
@@ -84,12 +84,12 @@ export default function EditProfileScreen() {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      showSuccess('Password changed successfully');
+      showSuccess(t('pages.edit_profile.password_changed'));
       setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
     } catch (error: any) {
-      showInfo(error.response?.data?.detail || 'Failed to change password', 'Error');
+      showError(error.response?.data?.detail || t('pages.edit_profile.password_change_failed'));
     } finally {
       setSavingPassword(false);
     }
@@ -106,29 +106,29 @@ export default function EditProfileScreen() {
         <ScrollView style={styles.content} contentContainerStyle={styles.scrollContent}>
           {/* Profile Info Section */}
           <View style={[styles.section, { backgroundColor: colors.surface }]}>
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>Profile Information</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.edit_profile.profile_info')}</Text>
 
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Name</Text>
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('forms.name')}</Text>
             <TextInput
               style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-              placeholder="Your name"
+              placeholder={t('pages.edit_profile.name_placeholder')}
               placeholderTextColor={colors.textMuted}
               value={name}
               onChangeText={setName}
             />
 
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Email</Text>
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('forms.email')}</Text>
             <TextInput
               style={[styles.input, styles.inputDisabled, { backgroundColor: colors.gray100, color: colors.textMuted, borderColor: colors.border }]}
               value={user?.email}
               editable={false}
             />
-            <Text style={[styles.helperText, { color: colors.textMuted }]}>Email cannot be changed</Text>
+            <Text style={[styles.helperText, { color: colors.textMuted }]}>{t('pages.edit_profile.email_cannot_change')}</Text>
 
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Phone Number</Text>
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('forms.phone')}</Text>
             <TextInput
               style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-              placeholder="+1 (555) 000-0000"
+              placeholder={t('pages.edit_profile.phone_placeholder')}
               placeholderTextColor={colors.textMuted}
               value={phone}
               onChangeText={setPhone}
@@ -143,39 +143,39 @@ export default function EditProfileScreen() {
               {savingProfile ? (
                 <ActivityIndicator color="#FFFFFF" />
               ) : (
-                <Text style={styles.saveButtonText}>Save Changes</Text>
+                <Text style={styles.saveButtonText}>{t('buttons.save_changes')}</Text>
               )}
             </TouchableOpacity>
           </View>
 
           {/* Change Password Section */}
           <View style={[styles.section, { backgroundColor: colors.surface }]}>
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>Change Password</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.edit_profile.change_password')}</Text>
 
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Current Password</Text>
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.edit_profile.current_password')}</Text>
             <TextInput
               style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-              placeholder="Enter current password"
+              placeholder={t('pages.edit_profile.current_password_placeholder')}
               placeholderTextColor={colors.textMuted}
               value={currentPassword}
               onChangeText={setCurrentPassword}
               secureTextEntry
             />
 
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>New Password</Text>
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.edit_profile.new_password')}</Text>
             <TextInput
               style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-              placeholder="Enter new password"
+              placeholder={t('pages.edit_profile.new_password_placeholder')}
               placeholderTextColor={colors.textMuted}
               value={newPassword}
               onChangeText={setNewPassword}
               secureTextEntry
             />
 
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Confirm New Password</Text>
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.edit_profile.confirm_password')}</Text>
             <TextInput
               style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-              placeholder="Confirm new password"
+              placeholder={t('pages.edit_profile.confirm_password_placeholder')}
               placeholderTextColor={colors.textMuted}
               value={confirmPassword}
               onChangeText={setConfirmPassword}
@@ -190,7 +190,7 @@ export default function EditProfileScreen() {
               {savingPassword ? (
                 <ActivityIndicator color="#FFFFFF" />
               ) : (
-                <Text style={styles.saveButtonText}>Change Password</Text>
+                <Text style={styles.saveButtonText}>{t('pages.edit_profile.change_password_btn')}</Text>
               )}
             </TouchableOpacity>
           </View>
