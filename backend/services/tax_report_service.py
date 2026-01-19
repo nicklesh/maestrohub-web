@@ -414,36 +414,36 @@ class TaxReportService:
         elements.append(Paragraph("Maestro Habitat", title_style))
         elements.append(Spacer(1, 12))
         if user_type == "provider":
-            elements.append(Paragraph(f"Form 1099-K Equivalent - Tax Year {year}", styles['Heading2']))
-            elements.append(Paragraph("Payment Card and Third Party Network Transactions", styles['Normal']))
+            elements.append(Paragraph(get_pdf_text("form_1099", lang, year=year), styles['Heading2']))
+            elements.append(Paragraph(get_pdf_text("payment_card_transactions", lang), styles['Normal']))
         else:
-            elements.append(Paragraph(f"Annual Payment Summary - Tax Year {year}", styles['Heading2']))
-            elements.append(Paragraph("Record of Educational Service Payments", styles['Normal']))
+            elements.append(Paragraph(get_pdf_text("annual_payment_summary", lang, year=year), styles['Heading2']))
+            elements.append(Paragraph(get_pdf_text("educational_payments", lang), styles['Normal']))
         elements.append(Spacer(1, 24))
         
         # Platform info
-        elements.append(Paragraph("<b>PAYER'S Information</b>", styles['Heading3']))
-        elements.append(Paragraph("Maestro Habitat Inc.", styles['Normal']))
-        elements.append(Paragraph("Platform for Educational Services", styles['Normal']))
+        elements.append(Paragraph(f"<b>{get_pdf_text('payer_info', lang)}</b>", styles['Heading3']))
+        elements.append(Paragraph(get_pdf_text("platform_name", lang), styles['Normal']))
+        elements.append(Paragraph(get_pdf_text("platform_desc", lang), styles['Normal']))
         elements.append(Spacer(1, 16))
         
         # Recipient info
-        elements.append(Paragraph(f"<b>{'PAYEE' if user_type == 'provider' else 'PAYER'}'S Information</b>", styles['Heading3']))
-        elements.append(Paragraph(f"Name: {user.get('name', 'N/A')}", styles['Normal']))
-        elements.append(Paragraph(f"Email: {user.get('email', 'N/A')}", styles['Normal']))
-        elements.append(Paragraph(f"Account ID: {user.get('user_id', 'N/A')}", styles['Normal']))
+        elements.append(Paragraph(f"<b>{get_pdf_text('payee_info', lang)}</b>", styles['Heading3']))
+        elements.append(Paragraph(f"{get_pdf_text('name', lang)}: {user.get('name', 'N/A')}", styles['Normal']))
+        elements.append(Paragraph(f"{get_pdf_text('email', lang)}: {user.get('email', 'N/A')}", styles['Normal']))
+        elements.append(Paragraph(f"{get_pdf_text('user_id', lang)}: {user.get('user_id', 'N/A')}", styles['Normal']))
         elements.append(Spacer(1, 24))
         
         # Annual Summary
-        elements.append(Paragraph("<b>Annual Summary</b>", styles['Heading3']))
+        elements.append(Paragraph(f"<b>{get_pdf_text('annual_summary', lang)}</b>", styles['Heading3']))
         summary_data = [
-            ['Box', 'Description', 'Amount'],
-            ['1a', 'Gross Amount of Payment Card/Third Party Network Transactions', f"{currency_symbol}{total_amount/100:,.2f}"],
+            [get_pdf_text('box', lang), get_pdf_text('description', lang), get_pdf_text('amount', lang)],
+            ['1a', get_pdf_text('gross_amount', lang), f"{currency_symbol}{total_amount/100:,.2f}"],
         ]
         if user_type == "provider":
-            summary_data.append(['1b', 'Platform Fees Deducted', f"{currency_symbol}{total_fees/100:,.2f}"])
-            summary_data.append(['', 'Net Payments to Provider', f"{currency_symbol}{total_payouts/100:,.2f}"])
-        summary_data.append(['5a', 'Number of Payment Transactions', str(transaction_count)])
+            summary_data.append(['1b', get_pdf_text('platform_fees_deducted', lang), f"{currency_symbol}{total_fees/100:,.2f}"])
+            summary_data.append(['', get_pdf_text('net_earnings', lang), f"{currency_symbol}{total_payouts/100:,.2f}"])
+        summary_data.append(['5a', get_pdf_text('total_transactions', lang), str(transaction_count)])
         
         summary_table = Table(summary_data, colWidths=[0.6*inch, 3.5*inch, 1.5*inch])
         summary_table.setStyle(TableStyle([
@@ -458,8 +458,8 @@ class TaxReportService:
         elements.append(Spacer(1, 24))
         
         # Monthly breakdown
-        elements.append(Paragraph("<b>Monthly Breakdown</b>", styles['Heading3']))
-        month_data = [['Month', 'Transactions', 'Amount', 'Fees']]
+        elements.append(Paragraph(f"<b>{get_pdf_text('monthly_breakdown', lang)}</b>", styles['Heading3']))
+        month_data = [[get_pdf_text('month', lang), get_pdf_text('transactions', lang), get_pdf_text('amount', lang), get_pdf_text('fees', lang)]]
         month_names = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
         for m in range(1, 13):
             if m in monthly_breakdown:
