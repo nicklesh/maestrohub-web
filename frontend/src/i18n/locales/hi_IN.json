@@ -699,7 +699,10 @@
       "with": "के साथ",
       "send_schedule": "शेड्यूल भेजें",
       "no_payments_yet": "अभी तक कोई भुगतान नहीं",
-      "schedule_sent_to": "{{email}} को शेड्यूल भेजा गया"
+      "schedule_sent_to": "{{email}} को शेड्यूल भेजा गया",
+      "add_email_first": "कृपया पहले इस बच्चे के लिए ईमेल पता जोड़ें",
+      "confirm_remove_title": "बच्चे को हटाएं?",
+      "confirm_remove_message": "क्या आप वाकई {{name}} को हटाना चाहते हैं? यह क्रिया पूर्ववत नहीं की जा सकती।"
     },
     "tax_reports": {
       "title": "कर रिपोर्ट",
