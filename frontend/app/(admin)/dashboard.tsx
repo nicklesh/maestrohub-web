@@ -65,8 +65,8 @@ export default function AdminDashboard() {
         <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
           {/* Header */}
           <View style={[styles.header, isTablet && styles.headerTablet]}>
-            <Text style={[styles.title, isDesktop && styles.titleDesktop]}>Admin Dashboard</Text>
-            <Text style={[styles.subtitle, isDesktop && styles.subtitleDesktop]}>Manage your marketplace</Text>
+            <Text style={[styles.title, isDesktop && styles.titleDesktop]}>{t('pages.admin.dashboard')}</Text>
+            <Text style={[styles.subtitle, isDesktop && styles.subtitleDesktop]}>{t('pages.admin.manage_marketplace')}</Text>
           </View>
 
           {/* Quick Stats */}
@@ -76,25 +76,25 @@ export default function AdminDashboard() {
             <View style={[styles.statsGrid, isTablet && styles.statsGridTablet]}>
               <View style={[styles.statCard, isTablet && styles.statCardTablet]}>
                 <Ionicons name="people" size={isTablet ? 28 : 24} color={colors.primary} />
-                <Text style={[styles.statValue, isDesktop && styles.statValueDesktop]}>{stats.tutors}</Text>
-                <Text style={styles.statLabel}>Tutors</Text>
+                <Text style={[styles.statValue, isDesktop && styles.statValueDesktop]}>{formatNumber(stats.tutors)}</Text>
+                <Text style={styles.statLabel}>{t('pages.admin.coaches')}</Text>
               </View>
               <View style={[styles.statCard, isTablet && styles.statCardTablet]}>
                 <Ionicons name="calendar" size={isTablet ? 28 : 24} color={colors.accent} />
-                <Text style={[styles.statValue, isDesktop && styles.statValueDesktop]}>{stats.bookings}</Text>
-                <Text style={styles.statLabel}>Bookings</Text>
+                <Text style={[styles.statValue, isDesktop && styles.statValueDesktop]}>{formatNumber(stats.bookings)}</Text>
+                <Text style={styles.statLabel}>{t('pages.admin.bookings')}</Text>
               </View>
               <View style={[styles.statCard, isTablet && styles.statCardTablet]}>
                 <Ionicons name="cash" size={isTablet ? 28 : 24} color={colors.success} />
-                <Text style={[styles.statValue, isDesktop && styles.statValueDesktop]}>${stats.revenue.toFixed(0)}</Text>
-                <Text style={styles.statLabel}>Revenue</Text>
+                <Text style={[styles.statValue, isDesktop && styles.statValueDesktop]}>{formatCurrency(stats.revenue)}</Text>
+                <Text style={styles.statLabel}>{t('pages.admin.revenue')}</Text>
               </View>
             </View>
           )}
 
           {/* Quick Actions */}
           <View style={[styles.section, isTablet && styles.sectionTablet]}>
-            <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>Quick Actions</Text>
+            <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>{t('pages.admin.quick_actions')}</Text>
             <TouchableOpacity
               style={[styles.actionCard, isTablet && styles.actionCardTablet]}
               onPress={() => router.push('/(admin)/tutors')}
@@ -103,8 +103,8 @@ export default function AdminDashboard() {
                 <Ionicons name="checkmark-circle" size={isTablet ? 28 : 24} color={colors.primary} />
               </View>
               <View style={styles.actionInfo}>
-                <Text style={[styles.actionTitle, isDesktop && styles.actionTitleDesktop]}>Review Coaches</Text>
-                <Text style={[styles.actionSubtitle, isDesktop && styles.actionSubtitleDesktop]}>Approve or suspend tutor profiles</Text>
+                <Text style={[styles.actionTitle, isDesktop && styles.actionTitleDesktop]}>{t('pages.admin.review_coaches')}</Text>
+                <Text style={[styles.actionSubtitle, isDesktop && styles.actionSubtitleDesktop]}>{t('pages.admin.review_coaches_desc')}</Text>
               </View>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
@@ -117,8 +117,8 @@ export default function AdminDashboard() {
                 <Ionicons name="mail" size={isTablet ? 28 : 24} color={colors.accent} />
               </View>
               <View style={styles.actionInfo}>
-                <Text style={[styles.actionTitle, isDesktop && styles.actionTitleDesktop]}>Inbox</Text>
-                <Text style={[styles.actionSubtitle, isDesktop && styles.actionSubtitleDesktop]}>View contact form submissions</Text>
+                <Text style={[styles.actionTitle, isDesktop && styles.actionTitleDesktop]}>{t('pages.admin.inbox')}</Text>
+                <Text style={[styles.actionSubtitle, isDesktop && styles.actionSubtitleDesktop]}>{t('pages.admin.inbox_desc')}</Text>
               </View>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
@@ -128,8 +128,8 @@ export default function AdminDashboard() {
           <View style={[styles.infoCard, isTablet && styles.infoCardTablet]}>
             <Ionicons name="information-circle" size={24} color={colors.primary} />
             <View style={styles.infoText}>
-              <Text style={[styles.infoTitle, isDesktop && styles.infoTitleDesktop]}>Admin Access</Text>
-              <Text style={styles.infoSubtitle}>You are logged in as {user?.email}</Text>
+              <Text style={[styles.infoTitle, isDesktop && styles.infoTitleDesktop]}>{t('pages.admin.admin_access')}</Text>
+              <Text style={styles.infoSubtitle}>{t('pages.admin.logged_in_as', { email: user?.email || '' })}</Text>
             </View>
           </View>
         </View>
