@@ -267,21 +267,21 @@ export default function TutorDashboard() {
           <View style={[styles.statsGrid, isTablet && styles.statsGridTablet]}>
             <View style={[styles.statCard, isTablet && styles.statCardTablet]}>
               <Text style={[styles.statValue, isDesktop && styles.statValueDesktop]}>{stats?.completed_lessons || 0}</Text>
-              <Text style={styles.statLabel}>Lessons</Text>
+              <Text style={styles.statLabel}>{t('pages.coach.dashboard.lessons')}</Text>
             </View>
             <View style={[styles.statCard, isTablet && styles.statCardTablet]}>
               <Text style={[styles.statValue, isDesktop && styles.statValueDesktop]}>${stats?.total_earnings || 0}</Text>
-              <Text style={styles.statLabel}>Earned</Text>
+              <Text style={styles.statLabel}>{t('pages.coach.dashboard.earned')}</Text>
             </View>
             <View style={[styles.statCard, isTablet && styles.statCardTablet]}>
               <View style={styles.ratingRow}>
                 <Ionicons name="star" size={16} color={colors.accent} />
                 <Text style={[styles.statValue, isDesktop && styles.statValueDesktop]}>
-                  {stats?.rating_avg ? stats.rating_avg.toFixed(1) : 'New'}
+                  {stats?.rating_avg ? stats.rating_avg.toFixed(1) : t('pages.coach.dashboard.new')}
                 </Text>
               </View>
               <Text style={styles.statLabel}>
-                {stats?.rating_count || 0} reviews
+                {stats?.rating_count || 0} {t('pages.coach.dashboard.reviews')}
               </Text>
             </View>
           </View>
@@ -289,23 +289,23 @@ export default function TutorDashboard() {
           {/* Upcoming Bookings */}
           <View style={[styles.section, isTablet && styles.sectionTablet]}>
             <View style={styles.sectionHeader}>
-              <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>Upcoming Lessons</Text>
+              <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>{t('pages.coach.dashboard.upcoming_lessons')}</Text>
               <TouchableOpacity onPress={() => router.push('/(tutor)/calendar')}>
-                <Text style={styles.seeAll}>See All</Text>
+                <Text style={styles.seeAll}>{t('pages.coach.dashboard.see_all')}</Text>
               </TouchableOpacity>
             </View>
 
             {upcomingBookings.length === 0 ? (
               <View style={[styles.emptyCard, isTablet && styles.emptyCardTablet]}>
                 <Ionicons name="calendar-outline" size={32} color={colors.textMuted} />
-                <Text style={styles.emptyText}>No upcoming lessons</Text>
+                <Text style={styles.emptyText}>{t('pages.coach.dashboard.no_upcoming_lessons')}</Text>
               </View>
             ) : (
               upcomingBookings.map((booking) => (
                 <View key={booking.booking_id} style={[styles.bookingCard, isTablet && styles.bookingCardTablet]}>
                   <View style={styles.bookingInfo}>
                     <Text style={[styles.bookingDate, isDesktop && styles.bookingDateDesktop]}>
-                      {formatDate(booking.start_at)}
+                      {formatDateLabel(booking.start_at)}
                     </Text>
                     <Text style={styles.bookingTime}>
                       {format(parseISO(booking.start_at), 'h:mm a')} -{' '}
