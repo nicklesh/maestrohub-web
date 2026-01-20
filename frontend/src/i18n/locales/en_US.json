@@ -1716,7 +1716,9 @@
         "privacy": "Privacy",
         "help_support": "Help & Support",
         "logout": "Logout",
-        "logout_confirm": "Are you sure you want to logout?"
+        "logout_confirm": "Are you sure you want to logout?",
+        "profile_summary": "Profile Summary",
+        "modality": "Modality"
       },
       "billing": {
         "title": "Billing",
@@ -2015,7 +2017,8 @@
     "per": "प्रति",
     "on": "चालू",
     "off": "बंद",
-    "hour_short": "hr"
+    "hour_short": "hr",
+    "not_set": "Not set"
   },
   "faq": {
     "consumer": [
