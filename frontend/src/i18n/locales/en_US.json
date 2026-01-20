@@ -1085,7 +1085,34 @@
         "status_legend": "Status Legend",
         "failed": "Failed",
         "pending": "Pending",
-        "never_run": "Never Run"
+        "never_run": "Never Run",
+        "jobs": {
+          "monthly_reports": {
+            "name": "Monthly Tax Reports",
+            "description": "Generate monthly payment summary reports for all users with transactions",
+            "schedule_display": "1st of every month at 2:00 AM"
+          },
+          "annual_1099_reports": {
+            "name": "Annual 1099 Reports",
+            "description": "Generate annual tax documents (1099 equivalent) for all providers",
+            "schedule_display": "January 1st at 3:00 AM"
+          },
+          "session_reminders": {
+            "name": "Session Reminders",
+            "description": "Send reminder notifications for upcoming sessions (24h and 1h before)",
+            "schedule_display": "Every hour"
+          },
+          "kid_notifications": {
+            "name": "Kid Activity Updates",
+            "description": "Send parents updates about their children's session activities",
+            "schedule_display": "Daily at 6:00 PM"
+          },
+          "referral_check": {
+            "name": "Referral Credit Processing",
+            "description": "Process pending referral credits and bonuses",
+            "schedule_display": "Daily at midnight"
+          }
+        }
       },
       "inbox_page": {
         "title": "Inbox",
