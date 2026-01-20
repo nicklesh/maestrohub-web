@@ -152,12 +152,12 @@ export default function AdminTutors() {
       <View style={styles.tagsContainer}>
         {(item.categories || []).slice(0, 2).map((cat) => (
           <View key={cat} style={styles.categoryPill}>
-            <Text style={styles.categoryPillText}>{truncateText(cat, 15)}</Text>
+            <Text style={styles.categoryPillText}>{truncateText(t(`categories.${cat.toLowerCase().replace(/\s+/g, '_')}`) || cat, 15)}</Text>
           </View>
         ))}
         {(item.subjects || []).slice(0, 2).map((subj) => (
           <View key={subj} style={styles.subjectPill}>
-            <Text style={styles.subjectPillText}>{truncateText(subj, 12)}</Text>
+            <Text style={styles.subjectPillText}>{truncateText(t(`categories.${subj.toLowerCase().replace(/\s+/g, '_')}`) || subj, 12)}</Text>
           </View>
         ))}
         {((item.categories?.length || 0) + (item.subjects?.length || 0)) > 4 && (
@@ -170,7 +170,7 @@ export default function AdminTutors() {
       </View>
 
       <View style={styles.priceRow}>
-        <Text style={styles.price}>{item.currency_symbol || '$'}{item.base_price}/hr</Text>
+        <Text style={styles.price}>{formatCurrency(item.base_price, item.currency_symbol || '$')}/{t('common.hour_short')}</Text>
         <Text style={styles.publishStatus}>
           {item.is_published ? `✓ ${t('pages.admin.coaches_page.published')}` : `○ ${t('pages.admin.coaches_page.unpublished')}`}
         </Text>
