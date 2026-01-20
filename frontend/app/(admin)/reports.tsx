@@ -236,7 +236,11 @@ export default function AdminReportsScreen() {
     </>
   );
 
-  const renderTrends = () => (
+  const renderTrends = () => {
+    const weeklyTrends = getWeeklyTrends();
+    const monthlyTrends = getMonthlyTrends();
+    
+    return (
     <>
       {/* Weekly Trends */}
       <View style={[styles.section, isTablet && styles.sectionTablet]}>
