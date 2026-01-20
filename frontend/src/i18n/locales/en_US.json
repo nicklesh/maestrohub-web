@@ -1238,23 +1238,16 @@
         "by_markets": "By Markets"
       },
       "settings_page": {
-        "title": "Settings",
-        "appearance": "Appearance",
+        "administrator": "Administrator",
         "dark_mode": "Dark Mode",
-        "light_mode": "Light Mode",
         "language": "Language",
+        "pricing_policies": "Pricing Policies",
+        "scheduled_jobs": "Scheduled Jobs",
         "notifications": "Notifications",
-        "email_notifications": "Email Notifications",
-        "push_notifications": "Push Notifications",
         "security": "Security",
-        "security_info": "Security Information",
-        "security_description": "Your account is protected with industry-standard security measures",
-        "security_feature_1": "All passwords are hashed using bcrypt with salt",
-        "security_feature_2": "JWT tokens with automatic expiration",
-        "security_feature_3": "Secure API communication over HTTPS",
-        "security_feature_4": "Role-based access control (RBAC)",
-        "change_password": "Change Password",
-        "logout": "Logout"
+        "logout_confirm": "Are you sure you want to logout?",
+        "logging_out": "Logging out...",
+        "coming_soon": "{feature} settings coming soon!"
       },
       "notifications_page": {
         "title": "Notification Settings",
