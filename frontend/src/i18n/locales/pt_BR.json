@@ -61,7 +61,8 @@
     "coach_invites": "Convites",
     "coach_sponsorship": "Patrocínio",
     "coach_reports": "Relatórios",
-    "coach_schedule": "Cronograma"
+    "coach_schedule": "Cronograma",
+    "coach_onboarding": "Integração"
   },
   "categories": {
     "academics": "Acadêmico",
@@ -1884,7 +1885,8 @@
         "bookings": "Reservas",
         "account": "Conta",
         "contact_support": "Contatar Suporte",
-        "still_need_help": "Ainda precisa de ajuda?"
+        "still_need_help": "Ainda precisa de ajuda?",
+        "title": "Perguntas Frequentes"
       },
       "notifications": {
         "title": "Notificações",
