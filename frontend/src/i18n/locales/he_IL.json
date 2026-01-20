@@ -1037,7 +1037,7 @@
       "different_email_required": "אנא השתמש בכתובת אימייל שונה מחשבון ההורה שלך"
     },
     "admin": {
-      "dashboard": "לוח מחוונים",
+      "dashboard": "לוח מחוונים למנהל",
       "total_users": "סך כל המשתמשים",
       "total_bookings": "סך כל ההזמנות",
       "total_revenue": "הכנסות כוללות",
@@ -1046,7 +1046,18 @@
       "recent_activity": "פעילות אחרונה",
       "manage_tutors": "ניהול מאמנים",
       "manage_markets": "ניהול שווקים",
-      "manage_pricing": "ניהול תמחור"
+      "manage_pricing": "ניהול תמחור",
+      "manage_marketplace": "ניהול השוק שלך",
+      "coaches": "מאמנים",
+      "bookings": "הזמנות",
+      "revenue": "הכנסות",
+      "quick_actions": "פעולות מהירות",
+      "review_coaches": "סקור מאמנים",
+      "review_coaches_desc": "אשר או השעה פרופילי מאמנים",
+      "inbox": "תיבת דואר נכנס",
+      "inbox_desc": "הצג הגשות טופס יצירת קשר",
+      "admin_access": "גישה למנהל",
+      "logged_in_as": "אתה מחובר כ־{email}"
     },
     "edit_profile": {
       "title": "ערוך פרופיל",

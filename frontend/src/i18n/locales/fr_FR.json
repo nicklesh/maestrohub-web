@@ -1037,7 +1037,7 @@
       "different_email_required": "Veuillez utiliser une adresse email différente de celle de votre compte parent"
     },
     "admin": {
-      "dashboard": "Tableau de bord",
+      "dashboard": "Tableau de bord administrateur",
       "total_users": "Utilisateurs totaux",
       "total_bookings": "Réservations totales",
       "total_revenue": "Revenu total",
@@ -1046,7 +1046,18 @@
       "recent_activity": "Activité récente",
       "manage_tutors": "Gérer les coachs",
       "manage_markets": "Gérer les marchés",
-      "manage_pricing": "Gérer les tarifs"
+      "manage_pricing": "Gérer les tarifs",
+      "manage_marketplace": "Gérez votre place de marché",
+      "coaches": "Coachs",
+      "bookings": "Réservations",
+      "revenue": "Revenu",
+      "quick_actions": "Actions rapides",
+      "review_coaches": "Examiner les coachs",
+      "review_coaches_desc": "Approuvez ou suspendez les profils des coachs",
+      "inbox": "Boîte de réception",
+      "inbox_desc": "Voir les soumissions du formulaire de contact",
+      "admin_access": "Accès administrateur",
+      "logged_in_as": "Vous êtes connecté en tant que {email}"
     },
     "edit_profile": {
       "title": "Modifier le profil",

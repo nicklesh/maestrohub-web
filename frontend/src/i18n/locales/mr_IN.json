@@ -1037,7 +1037,7 @@
       "different_email_required": "कृपया तुमच्या पालक खात्यापेक्षा वेगळा ईमेल पत्ता वापरा"
     },
     "admin": {
-      "dashboard": "डॅशबोर्ड",
+      "dashboard": "अॅडमिन डॅशबोर्ड",
       "total_users": "एकूण वापरकर्ते",
       "total_bookings": "एकूण बुकिंग",
       "total_revenue": "एकूण उत्पन्न",
@@ -1046,7 +1046,18 @@
       "recent_activity": "अलीकडील क्रियाकलाप",
       "manage_tutors": "कोच व्यवस्थापित करा",
       "manage_markets": "मार्केट्स व्यवस्थापित करा",
-      "manage_pricing": "किंमत व्यवस्थापित करा"
+      "manage_pricing": "किंमत व्यवस्थापित करा",
+      "manage_marketplace": "आपला मार्केटप्लेस व्यवस्थापित करा",
+      "coaches": "कोच",
+      "bookings": "बुकिंग",
+      "revenue": "उत्पन्न",
+      "quick_actions": "द्रुत क्रिया",
+      "review_coaches": "कोचचे पुनरावलोकन करा",
+      "review_coaches_desc": "कोच प्रोफाइल मान्य करा किंवा निलंबित करा",
+      "inbox": "इनबॉक्स",
+      "inbox_desc": "संपर्क फॉर्म सबमिशन पहा",
+      "admin_access": "अॅडमिन प्रवेश",
+      "logged_in_as": "आपण {email} म्हणून लॉग इन आहात"
     },
     "edit_profile": {
       "title": "प्रोफाइल संपादित करा",

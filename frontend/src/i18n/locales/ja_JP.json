@@ -1037,7 +1037,7 @@
       "different_email_required": "保護者アカウントとは異なるメールアドレスを使用してください"
     },
     "admin": {
-      "dashboard": "ダッシュボード",
+      "dashboard": "管理者ダッシュボード",
       "total_users": "総ユーザー数",
       "total_bookings": "総予約数",
       "total_revenue": "総収益",
@@ -1046,7 +1046,18 @@
       "recent_activity": "最近のアクティビティ",
       "manage_tutors": "コーチ管理",
       "manage_markets": "市場管理",
-      "manage_pricing": "価格設定管理"
+      "manage_pricing": "価格設定管理",
+      "manage_marketplace": "マーケットプレイスを管理する",
+      "coaches": "コーチ",
+      "bookings": "予約",
+      "revenue": "収益",
+      "quick_actions": "クイックアクション",
+      "review_coaches": "コーチをレビューする",
+      "review_coaches_desc": "コーチのプロフィールを承認または一時停止する",
+      "inbox": "受信トレイ",
+      "inbox_desc": "問い合わせフォームの送信を確認する",
+      "admin_access": "管理者アクセス",
+      "logged_in_as": "{email}としてログインしています"
     },
     "edit_profile": {
       "title": "プロフィールを編集",

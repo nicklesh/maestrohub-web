@@ -1037,7 +1037,7 @@
       "different_email_required": "Por favor, use um endereço de e-mail diferente do da sua conta de responsável"
     },
     "admin": {
-      "dashboard": "Painel",
+      "dashboard": "Painel do Administrador",
       "total_users": "Total de Usuários",
       "total_bookings": "Total de Reservas",
       "total_revenue": "Receita Total",
@@ -1046,7 +1046,18 @@
       "recent_activity": "Atividade Recente",
       "manage_tutors": "Gerenciar Treinadores",
       "manage_markets": "Gerenciar Mercados",
-      "manage_pricing": "Gerenciar Preços"
+      "manage_pricing": "Gerenciar Preços",
+      "manage_marketplace": "Gerencie seu Marketplace",
+      "coaches": "Treinadores",
+      "bookings": "Reservas",
+      "revenue": "Receita",
+      "quick_actions": "Ações Rápidas",
+      "review_coaches": "Avaliar Treinadores",
+      "review_coaches_desc": "Aprovar ou suspender perfis de treinadores",
+      "inbox": "Caixa de Entrada",
+      "inbox_desc": "Ver envios do formulário de contato",
+      "admin_access": "Acesso de Administrador",
+      "logged_in_as": "Você está logado como {email}"
     },
     "edit_profile": {
       "title": "Editar Perfil",

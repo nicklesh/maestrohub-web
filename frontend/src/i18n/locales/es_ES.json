@@ -1037,7 +1037,7 @@
       "different_email_required": "Por favor use una dirección de correo diferente a la de su cuenta de tutor"
     },
     "admin": {
-      "dashboard": "Panel",
+      "dashboard": "Panel de administrador",
       "total_users": "Usuarios totales",
       "total_bookings": "Reservas totales",
       "total_revenue": "Ingresos totales",
@@ -1046,7 +1046,18 @@
       "recent_activity": "Actividad reciente",
       "manage_tutors": "Gestionar coaches",
       "manage_markets": "Gestionar mercados",
-      "manage_pricing": "Gestionar precios"
+      "manage_pricing": "Gestionar precios",
+      "manage_marketplace": "Administrar tu mercado",
+      "coaches": "Entrenadores",
+      "bookings": "Reservas",
+      "revenue": "Ingresos",
+      "quick_actions": "Acciones rápidas",
+      "review_coaches": "Revisar entrenadores",
+      "review_coaches_desc": "Aprobar o suspender perfiles de entrenadores",
+      "inbox": "Bandeja de entrada",
+      "inbox_desc": "Ver envíos del formulario de contacto",
+      "admin_access": "Acceso de administrador",
+      "logged_in_as": "Has iniciado sesión como {email}"
     },
     "edit_profile": {
       "title": "Editar perfil",

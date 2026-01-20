@@ -1037,7 +1037,7 @@
       "different_email_required": "请使用与您的家长账户不同的电子邮件地址"
     },
     "admin": {
-      "dashboard": "仪表板",
+      "dashboard": "管理员仪表板",
       "total_users": "总用户数",
       "total_bookings": "总预约数",
       "total_revenue": "总收入",
@@ -1046,7 +1046,18 @@
       "recent_activity": "近期活动",
       "manage_tutors": "管理教练",
       "manage_markets": "管理市场",
-      "manage_pricing": "管理定价"
+      "manage_pricing": "管理定价",
+      "manage_marketplace": "管理您的市场",
+      "coaches": "教练",
+      "bookings": "预订",
+      "revenue": "收入",
+      "quick_actions": "快捷操作",
+      "review_coaches": "审核教练",
+      "review_coaches_desc": "批准或暂停教练资料",
+      "inbox": "收件箱",
+      "inbox_desc": "查看联系表单提交",
+      "admin_access": "管理员访问权限",
+      "logged_in_as": "您已作为 {email} 登录"
     },
     "edit_profile": {
       "title": "编辑个人资料",

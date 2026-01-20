@@ -1037,7 +1037,7 @@
       "different_email_required": "يرجى استخدام عنوان بريد إلكتروني مختلف عن حساب ولي الأمر الخاص بك"
     },
     "admin": {
-      "dashboard": "لوحة التحكم",
+      "dashboard": "لوحة تحكم المدير",
       "total_users": "إجمالي المستخدمين",
       "total_bookings": "إجمالي الحجوزات",
       "total_revenue": "إجمالي الإيرادات",
@@ -1046,7 +1046,18 @@
       "recent_activity": "النشاط الأخير",
       "manage_tutors": "إدارة المدربين",
       "manage_markets": "إدارة الأسواق",
-      "manage_pricing": "إدارة التسعير"
+      "manage_pricing": "إدارة التسعير",
+      "manage_marketplace": "إدارة السوق الخاص بك",
+      "coaches": "المدربون",
+      "bookings": "الحجوزات",
+      "revenue": "الإيرادات",
+      "quick_actions": "الإجراءات السريعة",
+      "review_coaches": "مراجعة المدربين",
+      "review_coaches_desc": "الموافقة أو تعليق ملفات المدربين",
+      "inbox": "الصندوق الوارد",
+      "inbox_desc": "عرض إرسال نماذج الاتصال",
+      "admin_access": "وصول المدير",
+      "logged_in_as": "لقد قمت بتسجيل الدخول كـ {email}"
     },
     "edit_profile": {
       "title": "تعديل الملف الشخصي",

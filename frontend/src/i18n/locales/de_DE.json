@@ -1037,7 +1037,7 @@
       "different_email_required": "Bitte verwenden Sie eine andere E-Mail-Adresse als die Ihres Elternkontos"
     },
     "admin": {
-      "dashboard": "Dashboard",
+      "dashboard": "Admin-Dashboard",
       "total_users": "Gesamtbenutzer",
       "total_bookings": "Gesamtbuchungen",
       "total_revenue": "Gesamteinnahmen",
@@ -1046,7 +1046,18 @@
       "recent_activity": "Letzte Aktivitäten",
       "manage_tutors": "Coaches verwalten",
       "manage_markets": "Märkte verwalten",
-      "manage_pricing": "Preisgestaltung verwalten"
+      "manage_pricing": "Preisgestaltung verwalten",
+      "manage_marketplace": "Verwalten Sie Ihren Marktplatz",
+      "coaches": "Coaches",
+      "bookings": "Buchungen",
+      "revenue": "Einnahmen",
+      "quick_actions": "Schnellaktionen",
+      "review_coaches": "Coaches überprüfen",
+      "review_coaches_desc": "Coach-Profile genehmigen oder sperren",
+      "inbox": "Posteingang",
+      "inbox_desc": "Kontaktformular-Einsendungen ansehen",
+      "admin_access": "Admin-Zugang",
+      "logged_in_as": "Sie sind angemeldet als {email}"
     },
     "edit_profile": {
       "title": "Profil bearbeiten",

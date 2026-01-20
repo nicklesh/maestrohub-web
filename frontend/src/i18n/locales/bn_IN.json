@@ -1037,7 +1037,7 @@
       "different_email_required": "অনুগ্রহ করে আপনার অভিভাবক অ্যাকাউন্ট থেকে ভিন্ন ইমেইল ঠিকানা ব্যবহার করুন"
     },
     "admin": {
-      "dashboard": "ড্যাশবোর্ড",
+      "dashboard": "অ্যাডমিন ড্যাশবোর্ড",
       "total_users": "মোট ব্যবহারকারী",
       "total_bookings": "মোট বুকিং",
       "total_revenue": "মোট আয়",
@@ -1046,7 +1046,18 @@
       "recent_activity": "সাম্প্রতিক কার্যকলাপ",
       "manage_tutors": "কোচ পরিচালনা করুন",
       "manage_markets": "মার্কেট পরিচালনা করুন",
-      "manage_pricing": "মূল্য নির্ধারণ পরিচালনা করুন"
+      "manage_pricing": "মূল্য নির্ধারণ পরিচালনা করুন",
+      "manage_marketplace": "আপনার মার্কেটপ্লেস পরিচালনা করুন",
+      "coaches": "কোচ",
+      "bookings": "বুকিং",
+      "revenue": "রাজস্ব",
+      "quick_actions": "দ্রুত কর্ম",
+      "review_coaches": "কোচ পর্যালোচনা করুন",
+      "review_coaches_desc": "কোচ প্রোফাইল অনুমোদন বা স্থগিত করুন",
+      "inbox": "ইনবক্স",
+      "inbox_desc": "যোগাযোগ ফর্ম জমা দেখুন",
+      "admin_access": "অ্যাডমিন এক্সেস",
+      "logged_in_as": "আপনি {email} হিসাবে লগ ইন করেছেন"
     },
     "edit_profile": {
       "title": "প্রোফাইল সম্পাদনা করুন",

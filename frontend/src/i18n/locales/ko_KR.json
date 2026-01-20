@@ -1037,7 +1037,7 @@
       "different_email_required": "보호자 계정과 다른 이메일 주소를 사용해 주세요"
     },
     "admin": {
-      "dashboard": "대시보드",
+      "dashboard": "관리자 대시보드",
       "total_users": "총 사용자",
       "total_bookings": "총 예약",
       "total_revenue": "총 수익",
@@ -1046,7 +1046,18 @@
       "recent_activity": "최근 활동",
       "manage_tutors": "코치 관리",
       "manage_markets": "시장 관리",
-      "manage_pricing": "가격 관리"
+      "manage_pricing": "가격 관리",
+      "manage_marketplace": "마켓플레이스 관리",
+      "coaches": "코치",
+      "bookings": "예약",
+      "revenue": "수익",
+      "quick_actions": "빠른 작업",
+      "review_coaches": "코치 검토",
+      "review_coaches_desc": "코치 프로필 승인 또는 정지",
+      "inbox": "받은 편지함",
+      "inbox_desc": "문의 양식 제출 보기",
+      "admin_access": "관리자 접근",
+      "logged_in_as": "{email}로 로그인하셨습니다"
     },
     "edit_profile": {
       "title": "프로필 편집",

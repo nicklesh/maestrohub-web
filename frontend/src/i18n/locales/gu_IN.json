@@ -1037,7 +1037,7 @@
       "different_email_required": "કૃપા કરીને તમારા કલ્યાણકારી એકાઉન્ટથી અલગ ઈમેલ સરનામું ઉપયોગ કરો"
     },
     "admin": {
-      "dashboard": "ડેશબોર્ડ",
+      "dashboard": "એડમિન ડેશબોર્ડ",
       "total_users": "કુલ વપરાશકર્તા",
       "total_bookings": "કુલ બુકિંગ્સ",
       "total_revenue": "કુલ આવક",
@@ -1046,7 +1046,18 @@
       "recent_activity": "તાજેતરના પ્રવૃત્તિ",
       "manage_tutors": "કોચોનું સંચાલન કરો",
       "manage_markets": "બજારોનું સંચાલન કરો",
-      "manage_pricing": "કિંમતનક્કી સંચાલન કરો"
+      "manage_pricing": "કિંમતનક્કી સંચાલન કરો",
+      "manage_marketplace": "તમારા માર્કેટપ્લેસનું સંચાલન કરો",
+      "coaches": "કોચ",
+      "bookings": "બુકિંગ્સ",
+      "revenue": "આવક",
+      "quick_actions": "ઝડપભર્યા કાર્યો",
+      "review_coaches": "કોચોની સમીક્ષા કરો",
+      "review_coaches_desc": "કોચ પ્રોફાઇલને સ્વીકૃત અથવા સસ્પેન્ડ કરો",
+      "inbox": "ઇનબોક્સ",
+      "inbox_desc": "સંપર્ક ફોર્મ સબમિશન જુઓ",
+      "admin_access": "એડમિન ઍક્સેસ",
+      "logged_in_as": "તમે {email} તરીકે લોકિન થયેલ છો"
     },
     "edit_profile": {
       "title": "પ્રોફાઇલ સંપાદિત કરો",

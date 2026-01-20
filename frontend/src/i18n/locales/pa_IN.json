@@ -1037,7 +1037,7 @@
       "different_email_required": "ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ अभिभावक ਖਾਤੇ ਤੋਂ ਵੱਖਰਾ ਈਮੇਲ ਪਤਾ ਵਰਤੋ"
     },
     "admin": {
-      "dashboard": "ਡੈਸ਼ਬੋਰਡ",
+      "dashboard": "ਐਡਮਿਨ ਡੈਸ਼ਬੋਰਡ",
       "total_users": "ਟੋਟਲ ਯੂਜ਼ਰ",
       "total_bookings": "ਟੋਟਲ ਬੁਕਿੰਗ",
       "total_revenue": "ਟੋਟਲ ਆਮਦਨੀ",
@@ -1046,7 +1046,18 @@
       "recent_activity": "ਹਾਲੀਆ ਸਰਗਰਮੀ",
       "manage_tutors": "ਕੋਚਾਂ ਨੂੰ ਸੰਭਾਲੋ",
       "manage_markets": "ਮਾਰਕੀਟਾਂ ਦਾ ਪ੍ਰਬੰਧਨ",
-      "manage_pricing": "ਕੀਮਤਾਂ ਦਾ ਪ੍ਰਬੰਧਨ"
+      "manage_pricing": "ਕੀਮਤਾਂ ਦਾ ਪ੍ਰਬੰਧਨ",
+      "manage_marketplace": "ਆਪਣਾ ਮਾਰਕੀਟਪਲੇਸ ਪ੍ਰਬੰਧਿਤ ਕਰੋ",
+      "coaches": "ਕੋਚ",
+      "bookings": "ਬੁਕਿੰਗ",
+      "revenue": "ਰਾਜਸਵ",
+      "quick_actions": "ਤੁਰੰਤ ਕਾਰਵਾਈਆਂ",
+      "review_coaches": "ਕੋਚਾਂ ਦੀ ਸਮੀਖਿਆ ਕਰੋ",
+      "review_coaches_desc": "ਕੋਚ ਪ੍ਰੋਫ਼ਾਈਲ ਨੂੰ ਮਨਜ਼ੂਰ ਜਾਂ ਨिलੰਬਿਤ ਕਰੋ",
+      "inbox": "ਇਨਬਾਕਸ",
+      "inbox_desc": "ਕੰਟੈਕਟ ਫਾਰਮ ਸਬਮਿਸ਼ਨ ਵੇਖੋ",
+      "admin_access": "ਐਡਮਿਨ ਐਕਸੈਸ",
+      "logged_in_as": "ਤੁਸੀਂ {email} ਵਜੋਂ ਲੌਗ ਇਨ ਹੋ"
     },
     "edit_profile": {
       "title": "ਪ੍ਰੋਫ਼ਾਈਲ ਸੋਧੋ",

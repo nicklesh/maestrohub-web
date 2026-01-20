@@ -1037,7 +1037,7 @@
       "different_email_required": "ದಯವಿಟ್ಟು ನಿಮ್ಮ ಪೋಷಕ ಖಾತೆ ಇಮೇಲ್ ವಿಳಾಸದಿಂದ ಬೇರೆ ಇಮೇಲ್ ಬಳಸಿ"
     },
     "admin": {
-      "dashboard": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
+      "dashboard": "ಅಡ್ಮಿನ್ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
       "total_users": "ಒಟ್ಟು ಬಳಕೆದಾರರು",
       "total_bookings": "ಒಟ್ಟು ಬುಕ್ಕಿಂಗ್‌ಗಳು",
       "total_revenue": "ಒಟ್ಟು ಆದಾಯ",
@@ -1046,7 +1046,18 @@
       "recent_activity": "ಇತ್ತೀಚಿನ ಕ್ರಿಯೆ",
       "manage_tutors": "ಕೋಚ್‌ಗಳನ್ನು ನಿರ್ವಹಿಸಿ",
       "manage_markets": "ಮಾರ್ಕೆಟ್‌ಗಳನ್ನು ನಿರ್ವಹಿಸಿ",
-      "manage_pricing": "ಮೌಲ್ಯ ನಿರ್ವಹಣೆ"
+      "manage_pricing": "ಮೌಲ್ಯ ನಿರ್ವಹಣೆ",
+      "manage_marketplace": "ನಿಮ್ಮ ಮಾರುಕಟ್ಟೆಯನ್ನು ನಿರ್ವಹಿಸಿ",
+      "coaches": "ಕೋಚಸ್",
+      "bookings": "ಬುಕಿಂಗ್ಸ್",
+      "revenue": "ಆದಾಯ",
+      "quick_actions": "ವೇಗವంత ಕಾರ್ಯಗಳು",
+      "review_coaches": "ಕೋಚಸ್‌ಗಳನ್ನು ವಿಮರ್ಶಿಸಿ",
+      "review_coaches_desc": "ಕೋಚಿನ ಪ್ರೊಫೈಲ್ ಅನ್ನು ಅಂಗೀಕರಿಸಿ ಅಥವಾ ಸ್ಥಗಿತಗೊಳಿಸಿ",
+      "inbox": "ಇನ್‌ಬಾಕ್ಸ್",
+      "inbox_desc": "ಸಂಪರ್ಕ ಫಾರ್ಮ್ ಸಲ್ಲಿಕೆಗಳನ್ನು ವೀಕ್ಷಿಸಿ",
+      "admin_access": "ಅಡ್ಮಿನ್ ಪ್ರವೇಶ",
+      "logged_in_as": "ನೀವು {email} ಆಗಿ ಲಾಗಿನ್ ಆಗಿದ್ದೀರಿ"
     },
     "edit_profile": {
       "title": "ಪ್ರೊಫೈಲ್ ಬದಲಿಸಿ",

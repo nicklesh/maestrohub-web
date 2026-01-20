@@ -1037,7 +1037,7 @@
       "different_email_required": "براہِ کرم اپنے سرپرست اکاؤنٹ سے مختلف ای میل پتہ استعمال کریں"
     },
     "admin": {
-      "dashboard": "ڈیش بورڈ",
+      "dashboard": "ایڈمن ڈیش بورڈ",
       "total_users": "کل صارفین",
       "total_bookings": "کل بکنگز",
       "total_revenue": "کل آمدنی",
@@ -1046,7 +1046,18 @@
       "recent_activity": "حال ہی کی سرگرمی",
       "manage_tutors": "کوچز کا انتظام کریں",
       "manage_markets": "مارکیٹس کا انتظام کریں",
-      "manage_pricing": "قیمتوں کا انتظام کریں"
+      "manage_pricing": "قیمتوں کا انتظام کریں",
+      "manage_marketplace": "اپنے مارکیٹ پلیس کو منظم کریں",
+      "coaches": "کوچز",
+      "bookings": "بکنگز",
+      "revenue": "آمدنی",
+      "quick_actions": "تازہ ترین اقدامات",
+      "review_coaches": "کوچز کا جائزہ لیں",
+      "review_coaches_desc": "کوچ پروفائل کی منظوری یا معطلی کریں",
+      "inbox": "ان باکس",
+      "inbox_desc": "رابطہ فارم کی جمع کرائی گئی معلومات دیکھیں",
+      "admin_access": "ایڈمن رسائی",
+      "logged_in_as": "آپ {email} کے طور پر لاگ ان ہیں"
     },
     "edit_profile": {
       "title": "پروفائل ترمیم کریں",
