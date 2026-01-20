@@ -152,7 +152,7 @@ export default function AdminPricingScreen() {
     setPolicies(prev =>
       prev.map(p => (p.id === id ? { ...p, isActive: !p.isActive } : p))
     );
-    showSuccess('Policy status updated');
+    showSuccess(t('pages.admin.pricing.status_updated'));
   };
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -160,7 +160,7 @@ export default function AdminPricingScreen() {
 
   const deletePolicy = (policy: PricingPolicy) => {
     if (policy.hasHistory) {
-      showError('Cannot delete policy with historical user associations');
+      showError(t('pages.admin.pricing.cannot_delete_history'));
       return;
     }
     setPolicyToDelete(policy);
@@ -170,7 +170,7 @@ export default function AdminPricingScreen() {
   const confirmDelete = () => {
     if (policyToDelete) {
       setPolicies(prev => prev.filter(p => p.id !== policyToDelete.id));
-      showSuccess('Policy deleted');
+      showSuccess(t('pages.admin.pricing.policy_deleted'));
     }
     setShowDeleteModal(false);
     setPolicyToDelete(null);
