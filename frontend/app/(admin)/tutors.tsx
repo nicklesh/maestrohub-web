@@ -90,10 +90,10 @@ export default function AdminTutors() {
       await api.post(`/admin/tutors/${tutorId}/approve`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      showSuccess('Tutor approved!');
+      showSuccess(t('pages.admin.coaches_page.coach_approved'));
       loadTutors();
     } catch (error) {
-      showError('Failed to approve tutor');
+      showError(t('pages.admin.coaches_page.approve_failed'));
     } finally {
       setActionLoading(null);
     }
@@ -105,10 +105,10 @@ export default function AdminTutors() {
       await api.post(`/admin/tutors/${tutorId}/suspend`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      showSuccess('Tutor suspended');
+      showSuccess(t('pages.admin.coaches_page.coach_suspended'));
       loadTutors();
     } catch (error) {
-      showError('Failed to suspend tutor');
+      showError(t('pages.admin.coaches_page.suspend_failed'));
     } finally {
       setActionLoading(null);
     }
