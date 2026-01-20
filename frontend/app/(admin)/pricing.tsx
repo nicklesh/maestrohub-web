@@ -409,6 +409,44 @@ export default function AdminPricingScreen() {
           </View>
         </View>
       </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        visible={showDeleteModal}
+        transparent
+        animationType="fade"
+        onRequestClose={cancelDelete}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
+            <Ionicons name="trash" size={48} color={colors.error} />
+            <Text style={[styles.modalTitle, { color: colors.text }]}>
+              {t('pages.admin.pricing.delete_policy')}
+            </Text>
+            <Text style={[styles.modalMessage, { color: colors.textMuted }]}>
+              {t('pages.admin.pricing.delete_confirm_message', { name: policyToDelete?.name || '' })}
+            </Text>
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.modalCancelButton, { borderColor: colors.border }]}
+                onPress={cancelDelete}
+              >
+                <Text style={[styles.modalButtonText, { color: colors.text }]}>
+                  {t('common.cancel')}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.modalConfirmButton, { backgroundColor: colors.error }]}
+                onPress={confirmDelete}
+              >
+                <Text style={[styles.modalButtonText, { color: colors.white }]}>
+                  {t('common.delete')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
