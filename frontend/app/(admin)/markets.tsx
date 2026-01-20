@@ -139,7 +139,7 @@ export default function AdminMarketsScreen() {
           <Text style={styles.flag}>{FLAG_EMOJI[market.country] || '🌍'}</Text>
           <View style={styles.marketInfo}>
             <Text style={[styles.marketName, isDesktop && styles.marketNameDesktop]}>
-              {COUNTRY_NAMES[market.country] || market.country}
+              {t(`countries.${market.country.toLowerCase()}`) || COUNTRY_NAMES[market.country] || market.country}
             </Text>
             <Text style={styles.marketMeta}>
               {market.currency_symbol} {market.currency} • {market.default_timezone}
@@ -147,7 +147,7 @@ export default function AdminMarketsScreen() {
           </View>
           <View style={[styles.statusBadge, market.is_enabled ? styles.statusEnabled : styles.statusDisabled]}>
             <Text style={[styles.statusText, { color: market.is_enabled ? colors.success : colors.error }]}>
-              {market.is_enabled ? 'Active' : 'Disabled'}
+              {market.is_enabled ? t('pages.admin.markets_page.active') : t('pages.admin.markets_page.inactive')}
             </Text>
           </View>
           <Ionicons name={isSelected ? 'chevron-up' : 'chevron-down'} size={20} color={colors.textMuted} />
@@ -157,67 +157,67 @@ export default function AdminMarketsScreen() {
         <View style={styles.statsRow}>
           <View style={styles.statItem}>
             <Text style={[styles.statValue, isDesktop && styles.statValueDesktop]}>
-              {market.stats?.published_tutors || 0}
+              {formatNumber(market.stats?.published_tutors || 0)}
             </Text>
-            <Text style={styles.statLabel}>Tutors</Text>
+            <Text style={styles.statLabel}>{t('pages.admin.markets_page.coaches')}</Text>
           </View>
           <View style={styles.statItem}>
             <Text style={[styles.statValue, isDesktop && styles.statValueDesktop]}>
-              {market.stats?.consumers || 0}
+              {formatNumber(market.stats?.consumers || 0)}
             </Text>
-            <Text style={styles.statLabel}>Consumers</Text>
+            <Text style={styles.statLabel}>{t('pages.admin.markets_page.consumers')}</Text>
           </View>
           <View style={styles.statItem}>
             <Text style={[styles.statValue, isDesktop && styles.statValueDesktop]}>
-              {market.stats?.total_bookings || 0}
+              {formatNumber(market.stats?.total_bookings || 0)}
             </Text>
-            <Text style={styles.statLabel}>Bookings</Text>
+            <Text style={styles.statLabel}>{t('pages.admin.markets_page.bookings')}</Text>
           </View>
           <View style={[styles.statItem, { borderRightWidth: 0 }]}>
             <Text style={[styles.statValue, isDesktop && styles.statValueDesktop]}>
               {market.currency_symbol}{(market.stats?.total_revenue || 0).toLocaleString()}
             </Text>
-            <Text style={styles.statLabel}>Revenue</Text>
+            <Text style={styles.statLabel}>{t('pages.admin.markets_page.revenue')}</Text>
           </View>
         </View>
 
         {/* Expanded Analytics */}
         {isSelected && marketAnalytics && (
           <View style={[styles.analyticsSection, isTablet && styles.analyticsSectionTablet]}>
-            <Text style={styles.analyticsSectionTitle}>Supply</Text>
+            <Text style={styles.analyticsSectionTitle}>{t('pages.admin.markets_page.supply')}</Text>
             <View style={styles.analyticsGrid}>
               <View style={styles.analyticsItem}>
                 <Ionicons name="checkmark-circle" size={18} color={colors.success} />
-                <Text style={styles.analyticsLabel}>Published</Text>
+                <Text style={styles.analyticsLabel}>{t('pages.admin.markets_page.published')}</Text>
                 <Text style={styles.analyticsValue}>{marketAnalytics.supply.published_tutors}</Text>
               </View>
               <View style={styles.analyticsItem}>
                 <Ionicons name="time" size={18} color={colors.accent} />
-                <Text style={styles.analyticsLabel}>Pending</Text>
+                <Text style={styles.analyticsLabel}>{t('pages.admin.markets_page.pending')}</Text>
                 <Text style={styles.analyticsValue}>{marketAnalytics.supply.pending_tutors}</Text>
               </View>
               <View style={styles.analyticsItem}>
                 <Ionicons name="calendar" size={18} color={colors.primary} />
-                <Text style={styles.analyticsLabel}>With Availability</Text>
+                <Text style={styles.analyticsLabel}>{t('pages.admin.markets_page.with_availability')}</Text>
                 <Text style={styles.analyticsValue}>{marketAnalytics.supply.active_tutors_with_availability}</Text>
               </View>
             </View>
 
-            <Text style={styles.analyticsSectionTitle}>Bookings</Text>
+            <Text style={styles.analyticsSectionTitle}>{t('pages.admin.markets_page.bookings')}</Text>
             <View style={styles.analyticsGrid}>
               <View style={styles.analyticsItem}>
                 <Ionicons name="checkmark-done" size={18} color={colors.success} />
-                <Text style={styles.analyticsLabel}>Completed</Text>
+                <Text style={styles.analyticsLabel}>{t('pages.admin.markets_page.completed')}</Text>
                 <Text style={styles.analyticsValue}>{marketAnalytics.bookings.completed}</Text>
               </View>
               <View style={styles.analyticsItem}>
                 <Ionicons name="close-circle" size={18} color={colors.error} />
-                <Text style={styles.analyticsLabel}>Canceled</Text>
+                <Text style={styles.analyticsLabel}>{t('pages.admin.markets_page.canceled')}</Text>
                 <Text style={styles.analyticsValue}>{marketAnalytics.bookings.canceled}</Text>
               </View>
               <View style={styles.analyticsItem}>
                 <Ionicons name="stats-chart" size={18} color={colors.primary} />
-                <Text style={styles.analyticsLabel}>Rate</Text>
+                <Text style={styles.analyticsLabel}>{t('pages.admin.markets_page.rate')}</Text>
                 <Text style={styles.analyticsValue}>{marketAnalytics.bookings.completion_rate}%</Text>
               </View>
             </View>
@@ -229,7 +229,9 @@ export default function AdminMarketsScreen() {
                 onPress={() => handleToggleMarket(market.market_id)}
               >
                 <Ionicons name={market.is_enabled ? 'pause' : 'play'} size={18} color={colors.primary} />
-                <Text style={styles.actionButtonText}>{market.is_enabled ? 'Disable' : 'Enable'}</Text>
+                <Text style={styles.actionButtonText}>
+                  {market.is_enabled ? t('pages.admin.markets_page.disable') : t('pages.admin.markets_page.enable')}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
