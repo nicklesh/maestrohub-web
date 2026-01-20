@@ -77,6 +77,7 @@ def translate_text(text, target_language):
     """Translate text using Emergent LLM"""
     try:
         from emergentintegrations.llm.chat import LlmChat
+        import uuid
         
         prompt = f"""Translate the following English text to {target_language}. 
 Only output the translation, nothing else.
@@ -87,9 +88,11 @@ Text to translate: {text}"""
         
         llm = LlmChat(
             api_key="sk-emergent-c02Bb9a237a3b6e673",
-            model="anthropic/claude-sonnet-4-20250514",
+            session_id=str(uuid.uuid4()),
+            system_message="You are a professional translator. Only output the translation, nothing else."
         )
-        response = llm.chat(prompt)
+        llm = llm.with_model("anthropic/claude-sonnet-4-20250514")
+        response = llm.send_message(prompt)
         return response.strip()
     except Exception as e:
         print(f"Translation error: {e}")
