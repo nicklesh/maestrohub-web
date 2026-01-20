@@ -9,6 +9,8 @@ import {
   ActivityIndicator,
   useWindowDimensions,
   Platform,
+  Alert,
+  Modal,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -25,6 +27,7 @@ interface PricingPolicy {
   minPrice: number;
   maxPrice: number;
   isActive: boolean;
+  hasHistory?: boolean; // If associated with users historically
 }
 
 const DEFAULT_POLICIES: PricingPolicy[] = [
@@ -36,6 +39,7 @@ const DEFAULT_POLICIES: PricingPolicy[] = [
     minPrice: 20,
     maxPrice: 500,
     isActive: true,
+    hasHistory: true,
   },
   {
     id: '2',
@@ -45,6 +49,7 @@ const DEFAULT_POLICIES: PricingPolicy[] = [
     minPrice: 50,
     maxPrice: 1000,
     isActive: true,
+    hasHistory: true,
   },
   {
     id: '3',
@@ -54,17 +59,21 @@ const DEFAULT_POLICIES: PricingPolicy[] = [
     minPrice: 15,
     maxPrice: 200,
     isActive: false,
+    hasHistory: false,
   },
 ];
 
 export default function AdminPricingScreen() {
   const { colors } = useTheme();
-  const { showSuccess, showError, showInfo } = useToast();
+  const { showSuccess, showError, showInfo, showWarning } = useToast();
   const { t } = useTranslation();
   const { width } = useWindowDimensions();
   const [policies, setPolicies] = useState<PricingPolicy[]>(DEFAULT_POLICIES);
   const [loading, setLoading] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState<PricingPolicy | null>(null);
+  const [showMaxWarning, setShowMaxWarning] = useState(false);
+  const [pendingMaxValue, setPendingMaxValue] = useState<number>(0);
 
   const isTablet = width >= 768;
   const isDesktop = width >= 1024;
@@ -72,12 +81,65 @@ export default function AdminPricingScreen() {
 
   const styles = getStyles(colors);
 
-  const showAlert = (title: string, message: string) => {
-    if (Platform.OS === 'web') {
-      showInfo(`${title}: ${message}`);
-    } else {
-      showInfo(message, title);
+  const MIN_PRICE_FLOOR = 15; // $15 minimum
+  const MIN_FEE_PERCENT = 5; // 5% minimum
+  const INDUSTRY_MAX = 250; // Industry standard max
+
+  const calculateMinPrice = (feePercent: number): number => {
+    // Min is lowest of $15 or 5% calculation
+    const feeBasedMin = feePercent > 0 ? Math.ceil(MIN_PRICE_FLOOR / (feePercent / 100)) : MIN_PRICE_FLOOR;
+    return Math.min(MIN_PRICE_FLOOR, feeBasedMin);
+  };
+
+  const startEditing = (policy: PricingPolicy) => {
+    setEditingId(policy.id);
+    setEditForm({ ...policy });
+  };
+
+  const cancelEditing = () => {
+    setEditingId(null);
+    setEditForm(null);
+  };
+
+  const savePolicy = () => {
+    if (!editForm) return;
+
+    // Validate minimum price
+    const calculatedMin = calculateMinPrice(editForm.platformFeePercent);
+    if (editForm.minPrice < calculatedMin) {
+      showError(`Minimum price must be at least $${calculatedMin}`);
+      return;
     }
+
+    // Check max price warning
+    if (editForm.maxPrice > INDUSTRY_MAX) {
+      setShowMaxWarning(true);
+      setPendingMaxValue(editForm.maxPrice);
+      return;
+    }
+
+    confirmSave();
+  };
+
+  const confirmSave = () => {
+    if (!editForm) return;
+    
+    setPolicies(prev =>
+      prev.map(p => (p.id === editForm.id ? { ...editForm } : p))
+    );
+    showSuccess('Policy saved successfully');
+    setEditingId(null);
+    setEditForm(null);
+    setShowMaxWarning(false);
+  };
+
+  const handleMaxWarningConfirm = () => {
+    confirmSave();
+  };
+
+  const handleMaxWarningCancel = () => {
+    setShowMaxWarning(false);
+    // Keep editing mode open
   };
 
   const togglePolicy = (id: string) => {
@@ -87,118 +149,270 @@ export default function AdminPricingScreen() {
     showSuccess('Policy status updated');
   };
 
-  const updateFee = (id: string, newFee: string) => {
-    const fee = parseFloat(newFee);
-    if (isNaN(fee) || fee < 0 || fee > 100) return;
-    setPolicies(prev =>
-      prev.map(p => (p.id === id ? { ...p, platformFeePercent: fee } : p))
+  const deletePolicy = (policy: PricingPolicy) => {
+    if (policy.hasHistory) {
+      showError('Cannot delete policy with historical user associations');
+      return;
+    }
+
+    if (Platform.OS === 'web') {
+      if (window.confirm('Are you sure you want to delete this policy?')) {
+        setPolicies(prev => prev.filter(p => p.id !== policy.id));
+        showSuccess('Policy deleted');
+      }
+    } else {
+      Alert.alert(
+        'Delete Policy',
+        'Are you sure you want to delete this policy?',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          {
+            text: 'Delete',
+            style: 'destructive',
+            onPress: () => {
+              setPolicies(prev => prev.filter(p => p.id !== policy.id));
+              showSuccess('Policy deleted');
+            },
+          },
+        ]
+      );
+    }
+  };
+
+  const addNewPolicy = () => {
+    const newPolicy: PricingPolicy = {
+      id: Date.now().toString(),
+      name: '',
+      description: '',
+      platformFeePercent: 15,
+      minPrice: 15,
+      maxPrice: 200,
+      isActive: false,
+      hasHistory: false,
+    };
+    setPolicies([...policies, newPolicy]);
+    startEditing(newPolicy);
+  };
+
+  const renderPolicyCard = (policy: PricingPolicy) => {
+    const isEditing = editingId === policy.id;
+    const form = isEditing && editForm ? editForm : policy;
+
+    return (
+      <View key={policy.id} style={[styles.policyCard, isTablet && styles.policyCardTablet]}>
+        <View style={styles.policyHeader}>
+          <View style={styles.policyInfo}>
+            {isEditing ? (
+              <>
+                <TextInput
+                  style={[styles.nameInput, { color: colors.text, borderColor: colors.border }]}
+                  value={form.name}
+                  onChangeText={(val) => setEditForm({ ...form, name: val })}
+                  placeholder="Policy Name"
+                  placeholderTextColor={colors.textMuted}
+                />
+                <TextInput
+                  style={[styles.descInput, { color: colors.textMuted, borderColor: colors.border }]}
+                  value={form.description}
+                  onChangeText={(val) => setEditForm({ ...form, description: val })}
+                  placeholder="Description"
+                  placeholderTextColor={colors.textMuted}
+                  multiline
+                />
+              </>
+            ) : (
+              <>
+                <Text style={[styles.policyName, isDesktop && styles.policyNameDesktop]}>{policy.name || 'Unnamed Policy'}</Text>
+                <Text style={styles.policyDescription}>{policy.description || 'No description'}</Text>
+              </>
+            )}
+          </View>
+          <TouchableOpacity
+            style={[styles.statusToggle, policy.isActive && styles.statusToggleActive]}
+            onPress={() => !isEditing && togglePolicy(policy.id)}
+            disabled={isEditing}
+          >
+            <Text style={[styles.statusToggleText, policy.isActive && styles.statusToggleTextActive]}>
+              {policy.isActive ? 'Active' : 'Inactive'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.policyDetails}>
+          <View style={styles.detailItem}>
+            <Text style={styles.detailLabel}>Platform Fee</Text>
+            {isEditing ? (
+              <View style={styles.feeInput}>
+                <TextInput
+                  style={[styles.feeInputField, { color: colors.text, borderColor: colors.border }]}
+                  value={form.platformFeePercent.toString()}
+                  onChangeText={(val) => {
+                    const num = parseFloat(val) || 0;
+                    setEditForm({ ...form, platformFeePercent: Math.min(100, Math.max(0, num)) });
+                  }}
+                  keyboardType="numeric"
+                />
+                <Text style={styles.feePercent}>%</Text>
+              </View>
+            ) : (
+              <Text style={styles.detailValue}>{policy.platformFeePercent}%</Text>
+            )}
+          </View>
+          <View style={styles.detailItem}>
+            <Text style={styles.detailLabel}>Min Price</Text>
+            {isEditing ? (
+              <View style={styles.feeInput}>
+                <Text style={styles.dollarSign}>$</Text>
+                <TextInput
+                  style={[styles.priceInputField, { color: colors.text, borderColor: colors.border }]}
+                  value={form.minPrice.toString()}
+                  onChangeText={(val) => {
+                    const num = parseFloat(val) || 0;
+                    setEditForm({ ...form, minPrice: Math.max(0, num) });
+                  }}
+                  keyboardType="numeric"
+                />
+              </View>
+            ) : (
+              <Text style={styles.detailValue}>${policy.minPrice}</Text>
+            )}
+          </View>
+          <View style={styles.detailItem}>
+            <Text style={styles.detailLabel}>Max Price</Text>
+            {isEditing ? (
+              <View style={styles.feeInput}>
+                <Text style={styles.dollarSign}>$</Text>
+                <TextInput
+                  style={[styles.priceInputField, { color: colors.text, borderColor: colors.border }]}
+                  value={form.maxPrice.toString()}
+                  onChangeText={(val) => {
+                    const num = parseFloat(val) || 0;
+                    setEditForm({ ...form, maxPrice: num });
+                  }}
+                  keyboardType="numeric"
+                />
+              </View>
+            ) : (
+              <Text style={styles.detailValue}>${policy.maxPrice}</Text>
+            )}
+          </View>
+        </View>
+
+        <View style={styles.actionButtons}>
+          {isEditing ? (
+            <>
+              <TouchableOpacity style={styles.saveButton} onPress={savePolicy}>
+                <Ionicons name="checkmark" size={16} color={colors.white} />
+                <Text style={styles.saveButtonText}>Save</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.cancelButton} onPress={cancelEditing}>
+                <Ionicons name="close" size={16} color={colors.error} />
+                <Text style={[styles.cancelButtonText, { color: colors.error }]}>Cancel</Text>
+              </TouchableOpacity>
+            </>
+          ) : (
+            <>
+              <TouchableOpacity style={styles.editButton} onPress={() => startEditing(policy)}>
+                <Ionicons name="pencil" size={16} color={colors.primary} />
+                <Text style={styles.editButtonText}>Edit</Text>
+              </TouchableOpacity>
+              {!policy.hasHistory && (
+                <TouchableOpacity style={styles.deleteButton} onPress={() => deletePolicy(policy)}>
+                  <Ionicons name="trash" size={16} color={colors.error} />
+                  <Text style={[styles.deleteButtonText, { color: colors.error }]}>Delete</Text>
+                </TouchableOpacity>
+              )}
+            </>
+          )}
+        </View>
+
+        {policy.hasHistory && !isEditing && (
+          <Text style={styles.historyNote}>* Has historical associations - cannot be deleted</Text>
+        )}
+      </View>
     );
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <AppHeader showBack title="Pricing Policies" />
+      <AppHeader showBack title={t('pages.admin.pricing.title')} />
       <ScrollView contentContainerStyle={[styles.scrollContent, isTablet && styles.scrollContentTablet]}>
         <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
           {/* Header */}
           <View style={styles.header}>
-            <Text style={[styles.title, isDesktop && styles.titleDesktop]}>Pricing Policies</Text>
-            <Text style={styles.subtitle}>Manage platform fees and pricing rules</Text>
+            <Text style={[styles.title, isDesktop && styles.titleDesktop]}>{t('pages.admin.pricing.title')}</Text>
+            <Text style={styles.subtitle}>{t('pages.admin.pricing.subtitle')}</Text>
           </View>
 
           {/* Summary Card */}
           <View style={[styles.summaryCard, isTablet && styles.summaryCardTablet]}>
             <View style={styles.summaryItem}>
-              <Text style={styles.summaryValue}>15%</Text>
-              <Text style={styles.summaryLabel}>Default Fee</Text>
+              <Text style={styles.summaryValue}>{policies.find(p => p.isActive)?.platformFeePercent || 0}%</Text>
+              <Text style={styles.summaryLabel}>{t('pages.admin.pricing.default_fee')}</Text>
             </View>
             <View style={styles.summaryDivider} />
             <View style={styles.summaryItem}>
-              <Text style={styles.summaryValue}>$20-500</Text>
-              <Text style={styles.summaryLabel}>Price Range</Text>
+              <Text style={styles.summaryValue}>${MIN_PRICE_FLOOR}+</Text>
+              <Text style={styles.summaryLabel}>{t('pages.admin.pricing.min_price')}</Text>
             </View>
             <View style={styles.summaryDivider} />
             <View style={styles.summaryItem}>
               <Text style={styles.summaryValue}>{policies.filter(p => p.isActive).length}</Text>
-              <Text style={styles.summaryLabel}>Active Policies</Text>
+              <Text style={styles.summaryLabel}>{t('pages.admin.pricing.active_policies')}</Text>
             </View>
           </View>
 
           {/* Policies List */}
-          {policies.map(policy => (
-            <View key={policy.id} style={[styles.policyCard, isTablet && styles.policyCardTablet]}>
-              <View style={styles.policyHeader}>
-                <View style={styles.policyInfo}>
-                  <Text style={[styles.policyName, isDesktop && styles.policyNameDesktop]}>{policy.name}</Text>
-                  <Text style={styles.policyDescription}>{policy.description}</Text>
-                </View>
-                <TouchableOpacity
-                  style={[styles.statusToggle, policy.isActive && styles.statusToggleActive]}
-                  onPress={() => togglePolicy(policy.id)}
-                >
-                  <Text style={[styles.statusToggleText, policy.isActive && styles.statusToggleTextActive]}>
-                    {policy.isActive ? 'Active' : 'Inactive'}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.policyDetails}>
-                <View style={styles.detailItem}>
-                  <Text style={styles.detailLabel}>Platform Fee</Text>
-                  <View style={styles.feeInput}>
-                    <TextInput
-                      style={styles.feeInputField}
-                      value={policy.platformFeePercent.toString()}
-                      onChangeText={(val) => updateFee(policy.id, val)}
-                      keyboardType="numeric"
-                      editable={editingId === policy.id}
-                    />
-                    <Text style={styles.feePercent}>%</Text>
-                  </View>
-                </View>
-                <View style={styles.detailItem}>
-                  <Text style={styles.detailLabel}>Min Price</Text>
-                  <Text style={styles.detailValue}>${policy.minPrice}</Text>
-                </View>
-                <View style={styles.detailItem}>
-                  <Text style={styles.detailLabel}>Max Price</Text>
-                  <Text style={styles.detailValue}>${policy.maxPrice}</Text>
-                </View>
-              </View>
-
-              <TouchableOpacity
-                style={styles.editButton}
-                onPress={() => setEditingId(editingId === policy.id ? null : policy.id)}
-              >
-                <Ionicons name={editingId === policy.id ? 'checkmark' : 'pencil'} size={16} color={colors.primary} />
-                <Text style={styles.editButtonText}>{editingId === policy.id ? 'Save' : 'Edit'}</Text>
-              </TouchableOpacity>
-            </View>
-          ))}
+          {policies.map(renderPolicyCard)}
 
           {/* Add Policy Button */}
           <TouchableOpacity 
             style={[styles.addButton, isTablet && styles.addButtonTablet]}
-            onPress={() => {
-              const newPolicy: PricingPolicy = {
-                id: Date.now().toString(),
-                name: 'New Policy',
-                description: 'Enter policy description',
-                platformFeePercent: 15,
-                minPrice: 20,
-                maxPrice: 500,
-                isActive: false,
-              };
-              setPolicies([...policies, newPolicy]);
-              setEditingId(newPolicy.id);
-              showSuccess('New policy added. Edit and save.');
-            }}
+            onPress={addNewPolicy}
           >
             <Ionicons name="add-circle" size={20} color={colors.primary} />
-            <Text style={styles.addButtonText}>Add New Policy</Text>
+            <Text style={styles.addButtonText}>{t('pages.admin.pricing.add_policy')}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
+
+      {/* Max Price Warning Modal */}
+      <Modal
+        visible={showMaxWarning}
+        transparent
+        animationType="fade"
+        onRequestClose={handleMaxWarningCancel}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
+            <Ionicons name="warning" size={48} color={colors.warning} />
+            <Text style={[styles.modalTitle, { color: colors.text }]}>
+              {t('pages.admin.pricing.max_warning_title')}
+            </Text>
+            <Text style={[styles.modalMessage, { color: colors.textMuted }]}>
+              {t('pages.admin.pricing.max_warning_message', { amount: pendingMaxValue, standard: INDUSTRY_MAX })}
+            </Text>
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.modalCancelButton, { borderColor: colors.border }]}
+                onPress={handleMaxWarningCancel}
+              >
+                <Text style={[styles.modalButtonText, { color: colors.text }]}>
+                  {t('common.cancel')}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.modalConfirmButton, { backgroundColor: colors.warning }]}
+                onPress={handleMaxWarningConfirm}
+              >
+                <Text style={[styles.modalButtonText, { color: colors.white }]}>
+                  {t('common.ok')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -215,31 +429,47 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   summaryCard: {
     flexDirection: 'row',
     backgroundColor: colors.surface,
-    borderRadius: 16,
-    padding: 20,
+    borderRadius: 12,
+    padding: 16,
     marginBottom: 24,
-    borderWidth: 1,
-    borderColor: colors.border,
   },
-  summaryCardTablet: { borderRadius: 20, padding: 24 },
+  summaryCardTablet: { padding: 24 },
   summaryItem: { flex: 1, alignItems: 'center' },
-  summaryValue: { fontSize: 20, fontWeight: 'bold', color: colors.primary },
+  summaryValue: { fontSize: 24, fontWeight: 'bold', color: colors.primary },
   summaryLabel: { fontSize: 12, color: colors.textMuted, marginTop: 4 },
-  summaryDivider: { width: 1, backgroundColor: colors.border },
+  summaryDivider: { width: 1, backgroundColor: colors.border, marginHorizontal: 16 },
   policyCard: {
     backgroundColor: colors.surface,
-    borderRadius: 16,
+    borderRadius: 12,
     padding: 16,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: colors.border,
+    marginBottom: 16,
   },
-  policyCardTablet: { borderRadius: 20, padding: 20 },
-  policyHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 },
+  policyCardTablet: { padding: 20 },
+  policyHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 16,
+  },
   policyInfo: { flex: 1, marginRight: 12 },
   policyName: { fontSize: 16, fontWeight: '600', color: colors.text },
   policyNameDesktop: { fontSize: 18 },
   policyDescription: { fontSize: 13, color: colors.textMuted, marginTop: 4 },
+  nameInput: {
+    fontSize: 16,
+    fontWeight: '600',
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 8,
+    marginBottom: 8,
+  },
+  descInput: {
+    fontSize: 13,
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 8,
+    minHeight: 60,
+  },
   statusToggle: {
     paddingHorizontal: 12,
     paddingVertical: 6,
@@ -247,47 +477,137 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     backgroundColor: colors.gray200,
   },
   statusToggleActive: { backgroundColor: colors.successLight },
-  statusToggleText: { fontSize: 12, fontWeight: '600', color: colors.textMuted },
+  statusToggleText: { fontSize: 12, fontWeight: '500', color: colors.gray600 },
   statusToggleTextActive: { color: colors.success },
-  policyDetails: { flexDirection: 'row', gap: 16, marginBottom: 12 },
-  detailItem: { flex: 1 },
+  policyDetails: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+  },
+  detailItem: { alignItems: 'center' },
   detailLabel: { fontSize: 12, color: colors.textMuted, marginBottom: 4 },
   detailValue: { fontSize: 16, fontWeight: '600', color: colors.text },
   feeInput: { flexDirection: 'row', alignItems: 'center' },
   feeInputField: {
     fontSize: 16,
     fontWeight: '600',
-    color: colors.text,
-    backgroundColor: colors.background,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+    borderWidth: 1,
     borderRadius: 6,
-    minWidth: 40,
+    padding: 6,
+    width: 50,
     textAlign: 'center',
   },
-  feePercent: { fontSize: 16, fontWeight: '600', color: colors.text, marginLeft: 2 },
+  priceInputField: {
+    fontSize: 16,
+    fontWeight: '600',
+    borderWidth: 1,
+    borderRadius: 6,
+    padding: 6,
+    width: 70,
+    textAlign: 'center',
+  },
+  feePercent: { fontSize: 14, color: colors.textMuted, marginLeft: 4 },
+  dollarSign: { fontSize: 14, color: colors.textMuted, marginRight: 4 },
+  actionButtons: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginTop: 16,
+    gap: 12,
+  },
   editButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    paddingVertical: 10,
-    backgroundColor: colors.primaryLight,
-    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
   },
-  editButtonText: { fontSize: 14, fontWeight: '600', color: colors.primary },
+  editButtonText: { fontSize: 14, color: colors.primary, marginLeft: 4 },
+  deleteButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  deleteButtonText: { fontSize: 14, marginLeft: 4 },
+  saveButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.primary,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  saveButtonText: { fontSize: 14, color: colors.white, marginLeft: 4 },
+  cancelButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  cancelButtonText: { fontSize: 14, marginLeft: 4 },
+  historyNote: {
+    fontSize: 11,
+    color: colors.textMuted,
+    fontStyle: 'italic',
+    marginTop: 8,
+  },
   addButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
-    paddingVertical: 16,
-    backgroundColor: colors.surface,
-    borderRadius: 16,
+    padding: 16,
+    borderRadius: 12,
     borderWidth: 2,
-    borderColor: colors.primary,
     borderStyle: 'dashed',
+    borderColor: colors.primary,
+    marginTop: 8,
   },
-  addButtonTablet: { borderRadius: 20, paddingVertical: 20 },
-  addButtonText: { fontSize: 15, fontWeight: '600', color: colors.primary },
+  addButtonTablet: { padding: 20 },
+  addButtonText: { fontSize: 14, color: colors.primary, marginLeft: 8, fontWeight: '500' },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalContent: {
+    borderRadius: 16,
+    padding: 24,
+    alignItems: 'center',
+    maxWidth: 400,
+    width: '100%',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  modalMessage: {
+    fontSize: 14,
+    textAlign: 'center',
+    marginBottom: 24,
+    lineHeight: 20,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  modalButton: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  modalCancelButton: {
+    borderWidth: 1,
+  },
+  modalConfirmButton: {},
+  modalButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
 });
