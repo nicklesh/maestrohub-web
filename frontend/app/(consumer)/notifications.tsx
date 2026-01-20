@@ -108,12 +108,15 @@ export default function NotificationsScreen() {
   // Translate notification content based on type
   const getTranslatedTitle = (item: Notification): string => {
     const typeToKey: { [key: string]: string } = {
+      'system_maintenance': 'pages.notifications.types.system_update',
       'system_update': 'pages.notifications.types.system_update',
       'platform_improvements': 'pages.notifications.types.platform_improvements',
       'schedule_sent': 'pages.notifications.types.schedule_sent',
+      'schedule_renewal': 'pages.notifications.types.schedule_sent',
       'contact_received': 'pages.notifications.types.contact_received',
       'invite_sent': 'pages.notifications.types.invite_sent',
       'invite_received': 'pages.notifications.types.invite_received',
+      'consumer_invite': 'pages.notifications.types.invite_received',
       'invite_accepted': 'pages.notifications.types.invite_accepted',
       'payment_completed': 'pages.notifications.types.payment_completed',
       'session_canceled': 'pages.notifications.types.session_canceled',
@@ -130,12 +133,15 @@ export default function NotificationsScreen() {
 
   const getTranslatedMessage = (item: Notification): string => {
     const typeToKey: { [key: string]: string } = {
+      'system_maintenance': 'pages.notifications.messages.system_update',
       'system_update': 'pages.notifications.messages.system_update',
       'platform_improvements': 'pages.notifications.messages.platform_improvements',
       'schedule_sent': 'pages.notifications.messages.schedule_sent',
+      'schedule_renewal': 'pages.notifications.messages.schedule_sent',
       'contact_received': 'pages.notifications.messages.contact_received',
       'invite_sent': 'pages.notifications.messages.invite_sent',
       'invite_received': 'pages.notifications.messages.invite_received',
+      'consumer_invite': 'pages.notifications.messages.invite_received',
       'invite_accepted': 'pages.notifications.messages.invite_accepted',
       'payment_completed': 'pages.notifications.messages.payment_completed',
       'session_canceled': 'pages.notifications.messages.session_canceled',
