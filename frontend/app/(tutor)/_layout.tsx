@@ -3,10 +3,12 @@ import { Platform, useWindowDimensions } from 'react-native';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '@/src/context/ThemeContext';
+import { useTranslation } from '@/src/i18n';
 
 export default function TutorLayout() {
   const { colors } = useTheme();
   const { width } = useWindowDimensions();
+  const { t } = useTranslation();
 
   return (
     <Tabs
@@ -35,7 +37,7 @@ export default function TutorLayout() {
       <Tabs.Screen
         name="dashboard"
         options={{
-          title: 'Dashboard',
+          title: t('pages.coach.dashboard.title'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home-outline" size={size} color={color} />
           ),
@@ -44,7 +46,7 @@ export default function TutorLayout() {
       <Tabs.Screen
         name="calendar"
         options={{
-          title: 'Availability',
+          title: t('pages.coach.calendar.availability'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="calendar-outline" size={size} color={color} />
           ),
@@ -53,7 +55,7 @@ export default function TutorLayout() {
       <Tabs.Screen
         name="invites"
         options={{
-          title: 'Invites',
+          title: t('pages.coach.invites.title'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="mail-outline" size={size} color={color} />
           ),
@@ -62,7 +64,7 @@ export default function TutorLayout() {
       <Tabs.Screen
         name="reports"
         options={{
-          title: 'Reports',
+          title: t('pages.coach.reports.title'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="bar-chart-outline" size={size} color={color} />
           ),
@@ -71,7 +73,7 @@ export default function TutorLayout() {
       <Tabs.Screen
         name="settings"
         options={{
-          title: 'Account',
+          title: t('navigation.account'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person-circle-outline" size={size} color={color} />
           ),
