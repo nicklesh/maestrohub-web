@@ -339,28 +339,28 @@ export default function TutorDashboard() {
 
           {/* Quick Actions */}
           <View style={[styles.section, isTablet && styles.sectionTablet]}>
-            <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>Quick Actions</Text>
+            <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>{t('pages.coach.dashboard.quick_actions')}</Text>
             <View style={[styles.actionsGrid, isDesktop && styles.actionsGridDesktop]}>
               <TouchableOpacity
                 style={[styles.actionCard, isTablet && styles.actionCardTablet]}
                 onPress={() => router.push('/(tutor)/calendar')}
               >
                 <Ionicons name="calendar" size={isTablet ? 28 : 24} color={colors.primary} />
-                <Text style={[styles.actionText, isDesktop && styles.actionTextDesktop]}>Availability</Text>
+                <Text style={[styles.actionText, isDesktop && styles.actionTextDesktop]}>{t('pages.coach.dashboard.availability')}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.actionCard, isTablet && styles.actionCardTablet]}
                 onPress={() => router.push('/(tutor)/settings')}
               >
                 <Ionicons name="person" size={isTablet ? 28 : 24} color={colors.primary} />
-                <Text style={[styles.actionText, isDesktop && styles.actionTextDesktop]}>Profile</Text>
+                <Text style={[styles.actionText, isDesktop && styles.actionTextDesktop]}>{t('pages.coach.dashboard.profile')}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.actionCard, isTablet && styles.actionCardTablet]}
                 onPress={() => router.push('/(tutor)/billing')}
               >
                 <Ionicons name="card" size={isTablet ? 28 : 24} color={colors.primary} />
-                <Text style={[styles.actionText, isDesktop && styles.actionTextDesktop]}>Billing</Text>
+                <Text style={[styles.actionText, isDesktop && styles.actionTextDesktop]}>{t('pages.coach.dashboard.billing')}</Text>
               </TouchableOpacity>
             </View>
           </View>
