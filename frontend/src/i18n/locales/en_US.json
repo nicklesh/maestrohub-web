@@ -1796,7 +1796,9 @@
         "per_month": "per month",
         "current_plan": "Current Plan",
         "upgrade": "Upgrade",
-        "cancel_sponsorship": "Cancel Sponsorship"
+        "cancel_sponsorship": "Cancel Sponsorship",
+        "more_views": "More Views",
+        "try_free": "Try Free"
       },
       "onboarding": {
         "title": "Complete Your Profile",
