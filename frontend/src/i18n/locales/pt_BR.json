@@ -1181,7 +1181,7 @@
         "delete": "Deletar",
         "general": "Geral",
         "message_details": "Detalhes da Mensagem",
-        "status": "Status",
+        "status": "Estado",
         "update_failed": "Falha ao atualizar o status",
         "close": "Fechar"
       },

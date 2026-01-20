@@ -1886,7 +1886,8 @@
         "bookings": "बुकिंग्स",
         "account": "खाता",
         "contact_support": "सहायता से संपर्क करें",
-        "still_need_help": "अभी भी मदद चाहिए?"
+        "still_need_help": "अभी भी मदद चाहिए?",
+        "title": "अक्सर पूछे जाने वाले प्रश्न"
       },
       "notifications": {
         "title": "सूचनाएं",

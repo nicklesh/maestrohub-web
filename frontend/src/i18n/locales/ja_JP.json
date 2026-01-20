@@ -1261,7 +1261,7 @@
         "wow": "WoW",
         "mom": "MoM",
         "qoq": "QoQ",
-        "yoy": "YoY",
+        "yoy": "前年同期比",
         "by_market": "市場別",
         "by_category": "カテゴリー別",
         "trends": "傾向",
@@ -1886,7 +1886,8 @@
         "bookings": "予約",
         "account": "アカウント",
         "contact_support": "サポートに連絡",
-        "still_need_help": "まだお困りですか？"
+        "still_need_help": "まだお困りですか？",
+        "title": "よくある質問"
       },
       "notifications": {
         "title": "通知",
