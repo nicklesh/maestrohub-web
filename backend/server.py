@@ -5414,7 +5414,7 @@ async def admin_get_inbox(request: Request, status: Optional[str] = None, limit:
     }
 
 @api_router.put("/admin/inbox/{contact_id}")
-async def admin_update_contact_status(contact_id: str, status: str, response_note: Optional[str] = None, request: Request = None):
+async def admin_update_contact_status(contact_id: str, status: str = Query(...), response_note: Optional[str] = Query(None), request: Request = None):
     """Update contact message status"""
     await require_admin(request)
     
