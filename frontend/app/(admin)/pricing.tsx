@@ -107,13 +107,13 @@ export default function AdminPricingScreen() {
     // Validate minimum price
     const calculatedMin = calculateMinPrice(editForm.platformFeePercent);
     if (editForm.minPrice < calculatedMin) {
-      showError(`Minimum price must be at least $${calculatedMin}`);
+      showError(t('pages.admin.pricing.min_price_error', { amount: calculatedMin }));
       return;
     }
 
     // Validate max >= min
     if (editForm.maxPrice < editForm.minPrice) {
-      showError('Maximum price must be equal to or greater than minimum price');
+      showError(t('pages.admin.pricing.max_less_than_min'));
       return;
     }
 
@@ -133,7 +133,7 @@ export default function AdminPricingScreen() {
     setPolicies(prev =>
       prev.map(p => (p.id === editForm.id ? { ...editForm } : p))
     );
-    showSuccess('Policy saved successfully');
+    showSuccess(t('pages.admin.pricing.policy_saved'));
     setEditingId(null);
     setEditForm(null);
     setShowMaxWarning(false);
