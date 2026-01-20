@@ -79,19 +79,25 @@ export default function AdminInboxScreen() {
 
   const handleStatusChange = async (contactId: string, newStatus: string) => {
     try {
-      await api.put(`/admin/inbox/${contactId}?status=${newStatus}`, {}, {
+      const response = await api.put(`/admin/inbox/${contactId}?status=${newStatus}`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
-      if (Platform.OS === 'web') {
-        showInfo(`Message marked as ${newStatus}`);
-      } else {
-        showInfo(`Message marked as ${newStatus}`, 'Success');
+      // Check if response indicates success
+      if (response.data?.success || response.status === 200) {
+        if (Platform.OS === 'web') {
+          showInfo(`Message marked as ${newStatus}`);
+        } else {
+          showInfo(`Message marked as ${newStatus}`, 'Success');
+        }
+        
+        loadMessages();
+        setSelectedMessage(null);
       }
-      
+    } catch (error: any) {
+      console.error('Status update error:', error);
+      // Even if there's an error, refresh to see if it actually worked
       loadMessages();
-      setSelectedMessage(null);
-    } catch (error) {
       if (Platform.OS === 'web') {
         showError('Failed to update status');
       } else {
