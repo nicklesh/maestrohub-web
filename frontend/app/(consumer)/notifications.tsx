@@ -101,8 +101,53 @@ export default function NotificationsScreen() {
     if (hours < 24) return t('pages.notifications.hours_ago', { count: hours });
     if (days < 7) return t('pages.notifications.days_ago', { count: days });
     // Use locale-aware date formatting
-    const localeCode = locale === 'hi_IN' ? 'hi-IN' : 'en-US';
+    const localeCode = locale === 'hi_IN' ? 'hi-IN' : locale === 'te_IN' ? 'te-IN' : locale?.replace('_', '-') || 'en-US';
     return date.toLocaleDateString(localeCode, { month: 'short', day: 'numeric' });
+  };
+
+  // Translate notification content based on type
+  const getTranslatedTitle = (item: Notification): string => {
+    const typeToKey: { [key: string]: string } = {
+      'system_update': 'pages.notifications.types.system_update',
+      'platform_improvements': 'pages.notifications.types.platform_improvements',
+      'schedule_sent': 'pages.notifications.types.schedule_sent',
+      'contact_received': 'pages.notifications.types.contact_received',
+      'invite_sent': 'pages.notifications.types.invite_sent',
+      'invite_received': 'pages.notifications.types.invite_received',
+      'invite_accepted': 'pages.notifications.types.invite_accepted',
+      'payment_completed': 'pages.notifications.types.payment_completed',
+      'session_canceled': 'pages.notifications.types.session_canceled',
+      'booking_confirmed': 'pages.notifications.types.booking_confirmed',
+      'reminder': 'pages.notifications.types.reminder',
+    };
+    const key = typeToKey[item.type];
+    if (key) {
+      const translated = t(key);
+      if (translated && translated !== key) return translated;
+    }
+    return item.title;
+  };
+
+  const getTranslatedMessage = (item: Notification): string => {
+    const typeToKey: { [key: string]: string } = {
+      'system_update': 'pages.notifications.messages.system_update',
+      'platform_improvements': 'pages.notifications.messages.platform_improvements',
+      'schedule_sent': 'pages.notifications.messages.schedule_sent',
+      'contact_received': 'pages.notifications.messages.contact_received',
+      'invite_sent': 'pages.notifications.messages.invite_sent',
+      'invite_received': 'pages.notifications.messages.invite_received',
+      'invite_accepted': 'pages.notifications.messages.invite_accepted',
+      'payment_completed': 'pages.notifications.messages.payment_completed',
+      'session_canceled': 'pages.notifications.messages.session_canceled',
+      'booking_confirmed': 'pages.notifications.messages.booking_confirmed',
+      'reminder': 'pages.notifications.messages.reminder',
+    };
+    const key = typeToKey[item.type];
+    if (key) {
+      const translated = t(key, item.data || {});
+      if (translated && translated !== key) return translated;
+    }
+    return item.message;
   };
 
   const renderNotification = ({ item }: { item: Notification }) => (
@@ -119,12 +164,12 @@ export default function NotificationsScreen() {
       </View>
       <View style={styles.notificationContent}>
         <View style={styles.notificationHeader}>
-          <Text style={[styles.notificationTitle, { color: colors.text }]}>{item.title}</Text>
+          <Text style={[styles.notificationTitle, { color: colors.text }]}>{getTranslatedTitle(item)}</Text>
           <Text style={[styles.notificationTime, { color: colors.textMuted }]}>
             {formatTime(item.created_at)}
           </Text>
         </View>
-        <Text style={[styles.notificationMessage, { color: colors.textMuted }]}>{item.message}</Text>
+        <Text style={[styles.notificationMessage, { color: colors.textMuted }]}>{getTranslatedMessage(item)}</Text>
         {!item.read && (
           <View style={[styles.unreadDot, { backgroundColor: colors.primary }]} />
         )}
