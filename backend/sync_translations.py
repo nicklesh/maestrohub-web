@@ -132,14 +132,14 @@ def main():
         
         print(f"  Found {len(missing)} missing/untranslated keys")
         
-        # Translate only admin-related keys for efficiency
-        admin_keys = {k: v for k, v in missing.items() if 'admin' in k.lower()}
+        # Translate admin and coach related keys
+        keys_to_translate = {k: v for k, v in missing.items() if 'admin' in k.lower() or 'coach' in k.lower()}
         
-        if not admin_keys:
-            print(f"  No admin keys to translate for {locale_code}")
+        if not keys_to_translate:
+            print(f"  No admin/coach keys to translate for {locale_code}")
             continue
         
-        print(f"  Translating {len(admin_keys)} admin keys...")
+        print(f"  Translating {len(keys_to_translate)} admin/coach keys...")
         
         # Translate
         target_flat = flatten_dict(target_data)
