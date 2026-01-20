@@ -110,6 +110,12 @@ export default function AdminLayout() {
           href: null,
         }}
       />
+      <Tabs.Screen
+        name="language"
+        options={{
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }
