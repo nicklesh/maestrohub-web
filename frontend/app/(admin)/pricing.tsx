@@ -305,23 +305,23 @@ export default function AdminPricingScreen() {
             <>
               <TouchableOpacity style={styles.saveButton} onPress={savePolicy}>
                 <Ionicons name="checkmark" size={16} color={colors.white} />
-                <Text style={styles.saveButtonText}>Save</Text>
+                <Text style={styles.saveButtonText}>{t('common.save')}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.cancelButton} onPress={cancelEditing}>
                 <Ionicons name="close" size={16} color={colors.error} />
-                <Text style={[styles.cancelButtonText, { color: colors.error }]}>Cancel</Text>
+                <Text style={[styles.cancelButtonText, { color: colors.error }]}>{t('common.cancel')}</Text>
               </TouchableOpacity>
             </>
           ) : (
             <>
               <TouchableOpacity style={styles.editButton} onPress={() => startEditing(policy)}>
                 <Ionicons name="pencil" size={16} color={colors.primary} />
-                <Text style={styles.editButtonText}>Edit</Text>
+                <Text style={styles.editButtonText}>{t('common.edit')}</Text>
               </TouchableOpacity>
               {!policy.hasHistory && (
                 <TouchableOpacity style={styles.deleteButton} onPress={() => deletePolicy(policy)}>
                   <Ionicons name="trash" size={16} color={colors.error} />
-                  <Text style={[styles.deleteButtonText, { color: colors.error }]}>Delete</Text>
+                  <Text style={[styles.deleteButtonText, { color: colors.error }]}>{t('common.delete')}</Text>
                 </TouchableOpacity>
               )}
             </>
@@ -329,7 +329,7 @@ export default function AdminPricingScreen() {
         </View>
 
         {policy.hasHistory && !isEditing && (
-          <Text style={styles.historyNote}>* Has historical associations - cannot be deleted</Text>
+          <Text style={styles.historyNote}>* {t('pages.admin.pricing.history_note')}</Text>
         )}
       </View>
     );
