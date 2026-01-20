@@ -133,7 +133,7 @@ export default function AdminInboxScreen() {
           </View>
           <View style={[styles.statusBadge, { backgroundColor: statusColors.bg }]}>
             <Text style={[styles.statusText, { color: statusColors.text }]}>
-              {item.status}
+              {t(`pages.admin.inbox_page.${item.status}`)}
             </Text>
           </View>
         </View>
