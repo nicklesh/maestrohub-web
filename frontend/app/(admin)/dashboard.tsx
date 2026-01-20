@@ -23,6 +23,7 @@ export default function AdminDashboard() {
   const { colors } = useTheme();
   const router = useRouter();
   const { width } = useWindowDimensions();
+  const { t, formatNumber, formatCurrency } = useTranslation();
   const [stats, setStats] = useState({ tutors: 0, bookings: 0, revenue: 0 });
   const [loading, setLoading] = useState(true);
 
