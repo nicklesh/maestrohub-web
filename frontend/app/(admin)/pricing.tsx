@@ -111,6 +111,12 @@ export default function AdminPricingScreen() {
       return;
     }
 
+    // Validate max >= min
+    if (editForm.maxPrice < editForm.minPrice) {
+      showError('Maximum price must be equal to or greater than minimum price');
+      return;
+    }
+
     // Check max price warning
     if (editForm.maxPrice > INDUSTRY_MAX) {
       setShowMaxWarning(true);
