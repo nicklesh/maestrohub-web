@@ -474,8 +474,8 @@ export default function AdminReportsScreen() {
         <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
           {/* Header */}
           <View style={styles.header}>
-            <Text style={[styles.title, isDesktop && styles.titleDesktop]}>Reports & Analytics</Text>
-            <Text style={styles.subtitle}>Platform performance and insights</Text>
+            <Text style={[styles.title, isDesktop && styles.titleDesktop]}>{t('pages.admin.reports_page.title')}</Text>
+            <Text style={styles.subtitle}>{t('pages.admin.reports_page.subtitle')}</Text>
           </View>
 
           {/* Tab Navigation */}
@@ -487,7 +487,7 @@ export default function AdminReportsScreen() {
                 onPress={() => setActiveTab(tab)}
               >
                 <Text style={[styles.tabText, activeTab === tab && styles.tabTextActive]}>
-                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                  {t(`pages.admin.reports_page.${tab}`)}
                 </Text>
               </TouchableOpacity>
             ))}
