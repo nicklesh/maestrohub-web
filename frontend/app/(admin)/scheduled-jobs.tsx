@@ -121,6 +121,7 @@ export default function ScheduledJobsScreen() {
   const { token } = useAuth();
   const { colors } = useTheme();
   const { showSuccess, showError, showInfo } = useToast();
+  const { t } = useTranslation();
   const { width } = useWindowDimensions();
   
   const [loading, setLoading] = useState(true);
