@@ -6672,8 +6672,8 @@ app.include_router(api_router)
 ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:8001",
-    "https://meetinglinker.preview.emergentagent.com",
-    "https://meetinglinker.preview.emergentagent.com",
+    "https://i18n-overhaul-4.preview.emergentagent.com",
+    "https://i18n-overhaul-4.preview.emergentagent.com",
 ]
 
 app.add_middleware(
