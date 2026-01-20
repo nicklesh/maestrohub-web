@@ -239,13 +239,13 @@ export default function AdminReportsScreen() {
     <>
       {/* Weekly Trends */}
       <View style={[styles.section, isTablet && styles.sectionTablet]}>
-        <Text style={styles.sectionTitle}>Week over Week (WoW)</Text>
+        <Text style={styles.sectionTitle}>{t('pages.admin.reports_page.week_over_week')}</Text>
         <View style={styles.trendTable}>
           <View style={styles.trendHeader}>
-            <Text style={[styles.trendHeaderCell, { flex: 1.5 }]}>Period</Text>
-            <Text style={styles.trendHeaderCell}>Tutors</Text>
-            <Text style={styles.trendHeaderCell}>Parents</Text>
-            <Text style={styles.trendHeaderCell}>Revenue</Text>
+            <Text style={[styles.trendHeaderCell, { flex: 1.5 }]}>{t('pages.admin.reports_page.period')}</Text>
+            <Text style={styles.trendHeaderCell}>{t('pages.admin.coaches_page.title')}</Text>
+            <Text style={styles.trendHeaderCell}>{t('pages.admin.reports_page.parents')}</Text>
+            <Text style={styles.trendHeaderCell}>{t('pages.admin.reports_page.revenue')}</Text>
           </View>
           {weeklyTrends.map((trend, index) => (
             <View key={trend.period} style={styles.trendRow}>
@@ -281,13 +281,13 @@ export default function AdminReportsScreen() {
 
       {/* Monthly Trends */}
       <View style={[styles.section, isTablet && styles.sectionTablet]}>
-        <Text style={styles.sectionTitle}>Month over Month (MoM)</Text>
+        <Text style={styles.sectionTitle}>{t('pages.admin.reports_page.month_over_month')}</Text>
         <View style={styles.trendTable}>
           <View style={styles.trendHeader}>
-            <Text style={[styles.trendHeaderCell, { flex: 1.5 }]}>Month</Text>
-            <Text style={styles.trendHeaderCell}>Tutors</Text>
-            <Text style={styles.trendHeaderCell}>Parents</Text>
-            <Text style={styles.trendHeaderCell}>Revenue</Text>
+            <Text style={[styles.trendHeaderCell, { flex: 1.5 }]}>{t('pages.admin.reports_page.month')}</Text>
+            <Text style={styles.trendHeaderCell}>{t('pages.admin.coaches_page.title')}</Text>
+            <Text style={styles.trendHeaderCell}>{t('pages.admin.reports_page.parents')}</Text>
+            <Text style={styles.trendHeaderCell}>{t('pages.admin.reports_page.revenue')}</Text>
           </View>
           {monthlyTrends.map((trend, index) => (
             <View key={trend.period} style={styles.trendRow}>
@@ -323,17 +323,17 @@ export default function AdminReportsScreen() {
 
       {/* Projections */}
       <View style={[styles.section, isTablet && styles.sectionTablet]}>
-        <Text style={styles.sectionTitle}>📊 Projections (QoQ & YoY)</Text>
+        <Text style={styles.sectionTitle}>📊 {t('pages.admin.reports_page.projections')}</Text>
         <View style={styles.projectionsGrid}>
           <View style={styles.projectionCard}>
-            <Text style={styles.projectionLabel}>Q1 2026 (Projected)</Text>
+            <Text style={styles.projectionLabel}>Q1 2026 {t('pages.admin.reports_page.projected')}</Text>
             <Text style={[styles.projectionValue, { color: colors.primary }]}>$45,000</Text>
-            <Text style={[styles.projectionGrowth, { color: colors.success }]}>+32% QoQ</Text>
+            <Text style={[styles.projectionGrowth, { color: colors.success }]}>+32% {t('pages.admin.reports_page.qoq')}</Text>
           </View>
           <View style={styles.projectionCard}>
-            <Text style={styles.projectionLabel}>2026 Annual (Est.)</Text>
+            <Text style={styles.projectionLabel}>2026 {t('pages.admin.reports_page.annual_est')}</Text>
             <Text style={[styles.projectionValue, { color: colors.success }]}>$180,000</Text>
-            <Text style={[styles.projectionGrowth, { color: colors.success }]}>+240% YoY</Text>
+            <Text style={[styles.projectionGrowth, { color: colors.success }]}>+240% {t('pages.admin.reports_page.yoy')}</Text>
           </View>
         </View>
       </View>
