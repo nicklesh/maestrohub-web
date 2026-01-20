@@ -904,10 +904,10 @@
     },
     "notifications": {
       "title": "सूचनाएं",
-      "all": "All",
-      "unread": "Unread",
-      "mark_all_read": "Mark All as Read",
-      "clear_all": "Clear All",
+      "all": "सभी",
+      "unread": "अपठित",
+      "mark_all_read": "सभी पढ़ा हुआ चिह्नित करें",
+      "clear_all": "सभी हटाएं",
       "no_notifications": "कोई सूचना नहीं",
       "settings": "सेटिंग्स",
       "no_notifications_desc": "आपके सत्रों और भुगतानों के बारे में अपडेट यहां दिखाई देंगे",
@@ -916,7 +916,33 @@
       "days_ago": "{{count}} दिन पहले",
       "mark_as_read": "पढ़ा हुआ चिह्नित करें",
       "system_update": "सिस्टम अपडेट",
-      "platform_improvements": "प्लेटफ़ॉर्म सुधार सफलतापूर्वक लागू किए गए"
+      "platform_improvements": "प्लेटफ़ॉर्म सुधार सफलतापूर्वक लागू किए गए",
+      "types": {
+        "system_update": "सिस्टम अपडेट",
+        "platform_improvements": "प्लेटफ़ॉर्म सुधार",
+        "schedule_sent": "शेड्यूल भेजा गया",
+        "contact_received": "संपर्क अनुरोध प्राप्त",
+        "invite_sent": "आमंत्रण भेजा गया",
+        "invite_received": "आमंत्रण प्राप्त हुआ",
+        "invite_accepted": "आमंत्रण स्वीकृत",
+        "payment_completed": "भुगतान पूर्ण",
+        "session_canceled": "सत्र रद्द",
+        "booking_confirmed": "बुकिंग की पुष्टि",
+        "reminder": "रिमाइंडर"
+      },
+      "messages": {
+        "system_update": "सिस्टम अपडेट उपलब्ध है",
+        "platform_improvements": "प्लेटफ़ॉर्म सुधार सफलतापूर्वक लागू किए गए",
+        "schedule_sent": "शेड्यूल सफलतापूर्वक भेजा गया",
+        "contact_received": "आपको एक नया संपर्क अनुरोध मिला है",
+        "invite_sent": "आमंत्रण सफलतापूर्वक भेजा गया",
+        "invite_received": "आपको एक आमंत्रण मिला है",
+        "invite_accepted": "आपका आमंत्रण स्वीकार किया गया",
+        "payment_completed": "भुगतान सफलतापूर्वक पूर्ण हुआ",
+        "session_canceled": "आपका सत्र रद्द कर दिया गया है",
+        "booking_confirmed": "आपकी बुकिंग की पुष्टि हो गई है",
+        "reminder": "आपका सत्र जल्द ही शुरू होने वाला है"
+      }
     },
     "reviews": {
       "title": "समीक्षाएं",
