@@ -99,8 +99,8 @@ export default function BillingScreen() {
       >
         <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
           <View style={styles.header}>
-            <Text style={[styles.title, isDesktop && styles.titleDesktop]}>Billing</Text>
-            <Text style={[styles.subtitle, isDesktop && styles.subtitleDesktop]}>Scheduling, enrollment, and payments for tutors.</Text>
+            <Text style={[styles.title, isDesktop && styles.titleDesktop]}>{t('pages.coach.billing.title')}</Text>
+            <Text style={[styles.subtitle, isDesktop && styles.subtitleDesktop]}>{t('pages.coach.billing.subtitle')}</Text>
           </View>
 
           {/* Trial Status */}
@@ -108,9 +108,9 @@ export default function BillingScreen() {
             <View style={[styles.trialCard, isTablet && styles.trialCardTablet]}>
               <Ionicons name="gift" size={isTablet ? 28 : 24} color={colors.success} />
               <View style={styles.trialInfo}>
-                <Text style={[styles.trialTitle, isDesktop && styles.trialTitleDesktop]}>Free Trial Active</Text>
+                <Text style={[styles.trialTitle, isDesktop && styles.trialTitleDesktop]}>{t('pages.coach.billing.free_trial')}</Text>
                 <Text style={styles.trialText}>
-                  {summary.trial_days_remaining} days remaining
+                  {t('pages.coach.billing.days_remaining', { count: summary.trial_days_remaining })}
                 </Text>
               </View>
             </View>
@@ -118,34 +118,34 @@ export default function BillingScreen() {
 
           {/* Earnings Summary */}
           <View style={[styles.earningsCard, isTablet && styles.earningsCardTablet]}>
-            <Text style={styles.cardTitle}>Total Earnings</Text>
-            <Text style={[styles.earningsAmount, isDesktop && styles.earningsAmountDesktop]}>{summary?.currency_symbol || '$'}{summary?.total_earnings || 0}</Text>
+            <Text style={styles.cardTitle}>{t('pages.coach.billing.total_earnings')}</Text>
+            <Text style={[styles.earningsAmount, isDesktop && styles.earningsAmountDesktop]}>{currencySymbol}{summary?.total_earnings || 0}</Text>
             <Text style={[styles.earningsSubtext, isDesktop && styles.earningsSubtextDesktop]}>
-              from {summary?.completed_lessons || 0} completed lessons
+              {t('pages.coach.billing.from_lessons', { count: summary?.completed_lessons || 0 })}
             </Text>
           </View>
 
           {/* Pending Fees */}
           <View style={[styles.card, isTablet && styles.cardTablet]}>
             <View style={styles.cardHeader}>
-              <Text style={[styles.cardTitleText, { marginBottom: 0 }]}>Platform Fees</Text>
+              <Text style={[styles.cardTitleText, { marginBottom: 0 }]}>{t('pages.coach.billing.platform_fees')}</Text>
             </View>
             <View style={styles.feeRow}>
-              <Text style={[styles.feeLabel, isDesktop && styles.feeLabelDesktop]}>Pending Fees</Text>
+              <Text style={[styles.feeLabel, isDesktop && styles.feeLabelDesktop]}>{t('pages.coach.billing.pending_fees')}</Text>
               <Text style={[styles.feeValue, isDesktop && styles.feeValueDesktop]}>
-                {summary?.currency_symbol || '$'}{((summary?.pending_fees_cents || 0) / 100).toFixed(2)}
+                {currencySymbol}{((summary?.pending_fees_cents || 0) / 100).toFixed(2)}
               </Text>
             </View>
             <Text style={styles.feeNote}>
-              Fees are automatically deducted from your payouts.
+              {t('pages.coach.billing.fees_note')}
             </Text>
           </View>
 
           {/* Fee Events */}
           <View style={[styles.card, isTablet && styles.cardTablet]}>
-            <Text style={[styles.cardTitleText, isDesktop && styles.cardTitleDesktop]}>Recent Fee Activity</Text>
+            <Text style={[styles.cardTitleText, isDesktop && styles.cardTitleDesktop]}>{t('pages.coach.billing.recent_activity')}</Text>
             {summary?.fee_events?.length === 0 ? (
-              <Text style={styles.emptyText}>No fee activity yet</Text>
+              <Text style={styles.emptyText}>{t('pages.coach.billing.no_activity')}</Text>
             ) : (
               summary?.fee_events?.map((event) => (
                 <View key={event.event_id} style={[styles.eventItem, isTablet && styles.eventItemTablet]}>
@@ -154,7 +154,7 @@ export default function BillingScreen() {
                     <Text style={styles.eventStatus}>{event.status}</Text>
                   </View>
                   <Text style={[styles.eventAmount, isDesktop && styles.eventAmountDesktop]}>
-                    {summary?.currency_symbol || '$'}{(event.amount_cents / 100).toFixed(2)}
+                    {currencySymbol}{(event.amount_cents / 100).toFixed(2)}
                   </Text>
                 </View>
               ))
@@ -164,14 +164,14 @@ export default function BillingScreen() {
           {/* Payment Methods */}
           <View style={[styles.card, isTablet && styles.cardTablet]}>
             <View style={styles.cardHeader}>
-              <Text style={[styles.cardTitleText, { marginBottom: 0 }]}>Payout Account</Text>
+              <Text style={[styles.cardTitleText, { marginBottom: 0 }]}>{t('pages.coach.billing.payout_account')}</Text>
             </View>
             <TouchableOpacity style={[styles.setupButton, isTablet && styles.setupButtonTablet]}>
               <Ionicons name="add-circle-outline" size={20} color={colors.primary} />
-              <Text style={[styles.setupButtonText, isTablet && styles.setupButtonTextTablet]}>Connect Stripe Account</Text>
+              <Text style={[styles.setupButtonText, isTablet && styles.setupButtonTextTablet]}>{t('pages.coach.billing.connect_stripe')}</Text>
             </TouchableOpacity>
             <Text style={styles.stripeNote}>
-              Stripe Connect integration coming soon. Payouts will be processed automatically.
+              {t('pages.coach.billing.stripe_note')}
             </Text>
           </View>
 
@@ -188,10 +188,10 @@ export default function BillingScreen() {
                 </View>
                 <View style={styles.sponsorPromoTextWrap}>
                   <Text style={[styles.sponsorPromoTitle, isTablet && styles.sponsorPromoTitleTablet]}>
-                    Want More Bookings?
+                    {t('pages.coach.billing.want_more_bookings')}
                   </Text>
                   <Text style={styles.sponsorPromoSubtitle}>
-                    Get featured at the top of search results
+                    {t('pages.coach.billing.get_featured')}
                   </Text>
                 </View>
                 <Ionicons name="chevron-forward" size={22} color="rgba(255,255,255,0.8)" />
@@ -199,15 +199,15 @@ export default function BillingScreen() {
               <View style={styles.sponsorPromoBenefits}>
                 <View style={styles.sponsorBenefit}>
                   <Ionicons name="trending-up" size={16} color="#FFD700" />
-                  <Text style={styles.sponsorBenefitText}>3x more visibility</Text>
+                  <Text style={styles.sponsorBenefitText}>{t('pages.coach.billing.more_visibility')}</Text>
                 </View>
                 <View style={styles.sponsorBenefit}>
                   <Ionicons name="eye" size={16} color="#FFD700" />
-                  <Text style={styles.sponsorBenefitText}>Top search placement</Text>
+                  <Text style={styles.sponsorBenefitText}>{t('pages.coach.billing.top_placement')}</Text>
                 </View>
                 <View style={styles.sponsorBenefit}>
                   <Ionicons name="pricetag" size={16} color="#FFD700" />
-                  <Text style={styles.sponsorBenefitText}>Just $15/week</Text>
+                  <Text style={styles.sponsorBenefitText}>{t('pages.coach.sponsorship.per_week')}</Text>
                 </View>
               </View>
             </View>
