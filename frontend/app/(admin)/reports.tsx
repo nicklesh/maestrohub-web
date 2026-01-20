@@ -344,6 +344,7 @@ export default function AdminReportsScreen() {
       </View>
     </>
   );
+  };
 
   const renderCategories = () => (
     <View style={[styles.section, isTablet && styles.sectionTablet]}>
