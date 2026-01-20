@@ -1054,7 +1054,11 @@
         "max_warning_message": "The maximum price ${amount} is above the industry standard of ${standard}. Are you sure you want to proceed?",
         "delete_policy": "Delete Policy",
         "delete_confirm_message": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
-        "max_must_be_greater": "Maximum price must be equal to or greater than minimum price"
+        "max_must_be_greater": "Maximum price must be equal to or greater than minimum price",
+        "history_note": "Has historical associations - cannot be deleted",
+        "min_price_error": "Minimum price must be at least ${amount}",
+        "max_less_than_min": "Maximum price must be equal to or greater than minimum price",
+        "status_updated": "Policy status updated"
       },
       "scheduled_jobs": {
         "title": "Scheduled Jobs",
