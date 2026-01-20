@@ -261,9 +261,9 @@ export default function AdminMarketsScreen() {
         <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
           {/* Header */}
           <View style={styles.header}>
-            <Text style={[styles.title, isDesktop && styles.titleDesktop]}>Markets</Text>
+            <Text style={[styles.title, isDesktop && styles.titleDesktop]}>{t('pages.admin.markets_page.title')}</Text>
             <Text style={[styles.subtitle, isDesktop && styles.subtitleDesktop]}>
-              Manage regions and view market analytics
+              {t('pages.admin.markets_page.subtitle')}
             </Text>
           </View>
 
@@ -271,11 +271,11 @@ export default function AdminMarketsScreen() {
           <View style={[styles.infoCard, isTablet && styles.infoCardTablet]}>
             <Ionicons name="information-circle" size={20} color={colors.primary} />
             <View style={styles.infoContent}>
-              <Text style={styles.infoTitle}>Market Rules</Text>
+              <Text style={styles.infoTitle}>{t('pages.admin.markets_page.market_rules')}</Text>
               <Text style={styles.infoText}>
-                • Consumers see tutors only from their selected market{'\n'}
-                • Providers are assigned to a market based on payout country{'\n'}
-                • Cross-market bookings are currently disabled
+                • {t('pages.admin.markets_page.rule_1')}{'\n'}
+                • {t('pages.admin.markets_page.rule_2')}{'\n'}
+                • {t('pages.admin.markets_page.rule_3')}
               </Text>
             </View>
           </View>
