@@ -22,6 +22,7 @@ export default function AdminSettings() {
   const { user, logout } = useAuth();
   const { colors, isDark, toggleTheme } = useTheme();
   const { showSuccess, showError, showInfo, showWarning } = useToast();
+  const { t } = useTranslation();
   const router = useRouter();
   const { width } = useWindowDimensions();
 
@@ -51,19 +52,19 @@ export default function AdminSettings() {
     };
 
     if (Platform.OS === 'web') {
-      const confirmed = window.confirm('Are you sure you want to logout?');
+      const confirmed = window.confirm(t('pages.admin.settings_page.logout_confirm'));
       if (confirmed) {
         await doLogout();
       }
     } else {
       // For native, use toast and proceed
-      showWarning('Logging out...');
+      showWarning(t('pages.admin.settings_page.logging_out'));
       await doLogout();
     }
   };
 
   const showComingSoon = (feature: string) => {
-    showInfo(`${feature} settings coming soon!`);
+    showInfo(t('pages.admin.settings_page.coming_soon', { feature }));
   };
 
   return (
