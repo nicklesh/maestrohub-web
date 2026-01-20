@@ -1760,7 +1760,9 @@
   },
   "countries": {
     "united_states": "United States",
-    "india": "India"
+    "india": "India",
+    "us": "United States",
+    "in": "India"
   },
   "subjects": {
     "mathematics": "Mathematics",
