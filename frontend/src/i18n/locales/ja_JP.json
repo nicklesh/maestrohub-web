@@ -1080,7 +1080,11 @@
         "max_warning_message": "最大価格 ${amount} は業界標準の ${standard} を超えています。本当に続行しますか？",
         "delete_policy": "ポリシーの削除",
         "delete_confirm_message": "\"{name}\" を削除してもよろしいですか？この操作は元に戻せません。",
-        "max_must_be_greater": "最大価格は最低価格以上でなければなりません"
+        "max_must_be_greater": "最大価格は最低価格以上でなければなりません",
+        "history_note": "履歴の関連付けがあります - 削除できません",
+        "min_price_error": "最低価格は少なくとも${amount}である必要があります",
+        "max_less_than_min": "最大価格は最小価格以上である必要があります",
+        "status_updated": "ポリシーステータスが更新されました"
       },
       "scheduled_jobs": {
         "title": "スケジュールジョブ",
@@ -1118,7 +1122,35 @@
         "cannot_trigger": "このジョブは手動で起動できません",
         "job_completed": "ジョブが正常に完了しました！",
         "job_failed": "ジョブの実行に失敗しました",
-        "status_legend": "ステータスの説明"
+        "status_legend": "ステータスの説明",
+        "never_run": "実行しない",
+        "jobs": {
+          "monthly_reports": {
+            "name": "月次税務報告書",
+            "description": "取引のあるすべてのユーザーの月次支払いサマリーレポートを生成する",
+            "schedule_display": "毎月1日午前2時"
+          },
+          "annual_1099_reports": {
+            "name": "年次1099レポート",
+            "description": "全プロバイダー向けの年次税務書類（1099相当）を生成する",
+            "schedule_display": "1月1日午前3時"
+          },
+          "session_reminders": {
+            "name": "セッションリマインダー",
+            "description": "今後のセッションのリマインダー通知を送信する（24時間前と1時間前）",
+            "schedule_display": "毎時間"
+          },
+          "kid_notifications": {
+            "name": "子どもの活動状況更新",
+            "description": "保護者に子どもたちのセッション活動についてのアップデートを送信する",
+            "schedule_display": "毎日午後6時"
+          },
+          "referral_check": {
+            "name": "紹介クレジット処理",
+            "description": "保留中の紹介クレジットとボーナスを処理する",
+            "schedule_display": "毎日深夜0時に"
+          }
+        }
       },
       "inbox_page": {
         "title": "受信トレイ",
@@ -1162,7 +1194,11 @@
         "confirm_suspend": "このコーチを停止してもよろしいですか？",
         "published": "公開済み",
         "unpublished": "非公開",
-        "sessions": "セッション"
+        "sessions": "セッション",
+        "coach_approved": "コーチが承認されました！",
+        "coach_suspended": "コーチが出場停止",
+        "approve_failed": "コーチの承認に失敗しました",
+        "suspend_failed": "コーチの停止に失敗しました"
       },
       "markets_page": {
         "title": "マーケット",
@@ -1186,7 +1222,18 @@
         "consumers": "消費者",
         "coaches": "コーチ",
         "bookings": "予約",
-        "revenue": "収益"
+        "revenue": "収益",
+        "supply": "供給",
+        "published": "公開済み",
+        "pending": "保留中",
+        "with_availability": "可用性あり",
+        "completed": "完了",
+        "canceled": "キャンセル済み",
+        "rate": "評価",
+        "enable": "有効にする",
+        "disable": "無効にする",
+        "toggle_info": "マーケット切り替えがログに記録されました。変更を適用するにはサーバーの再起動が必要です。",
+        "toggle_failed": "マーケットの切り替えに失敗しました"
       },
       "reports_page": {
         "title": "レポートと分析",
@@ -1247,7 +1294,14 @@
         "week_3": "第3週",
         "week_4": "第4週",
         "by_user": "ユーザー別",
-        "by_markets": "マーケット別"
+        "by_markets": "マーケット別",
+        "share": "共有",
+        "increase_conversion": "コーチコンバージョンを向上させる",
+        "increase_conversion_desc": "保留中のコーチの27%がプロフィールを完成させていません。完成率を向上させるためにリマインダーメールを送信してください。",
+        "promote_categories": "トップカテゴリーを宣伝",
+        "promote_categories_desc": "学習指導の需要が最も高いです。より多くのコーチを引きつけるためのマーケティングキャンペーンを検討してください。",
+        "freemium_conversion": "フリーミアムから有料への転換",
+        "freemium_conversion_desc": "73%のユーザーがfreemiumです。有料サブスクリプションに転換するため、期間限定割引を提供してください。"
       },
       "settings_page": {
         "title": "設定",
@@ -1266,7 +1320,13 @@
         "security_feature_1": "すべてのパスワードはbcryptおよびソルトを使用してハッシュ化されています",
         "security_feature_2": "自動期限切れ機能付きJWTトークン",
         "security_feature_3": "HTTPSによる安全なAPI通信",
-        "security_feature_4": "ロールベースアクセス制御（RBAC）"
+        "security_feature_4": "ロールベースアクセス制御（RBAC）",
+        "administrator": "管理者",
+        "pricing_policies": "価格設定ポリシー",
+        "scheduled_jobs": "スケジュールされたジョブ",
+        "logout_confirm": "ログアウトしてもよろしいですか？",
+        "logging_out": "ログアウト中...",
+        "coming_soon": "{feature}設定は近日公開予定です！"
       },
       "footer": {
         "dashboard": "ダッシュボード",
@@ -1291,6 +1351,56 @@
         "payment_desc": "支払いと返金に関するアラート",
         "save_preferences": "設定を保存",
         "preferences_saved": "通知設定が保存されました"
+      },
+      "security": {
+        "title": "セキュリティ設定",
+        "subtitle": "プラットフォームのセキュリティとアクセス制御を管理する",
+        "status_strong": "セキュリティステータス: 強固",
+        "all_active": "すべてのセキュリティ対策が有効です",
+        "authentication": "認証",
+        "two_factor": "二要素認証",
+        "two_factor_desc": "すべての管理者アカウントに2FAを必須とする",
+        "session_timeout": "セッションタイムアウト（分）",
+        "session_timeout_desc": "非アクティブセッションの自動ログアウト",
+        "password_expiry": "パスワード有効期限（日）",
+        "password_expiry_desc": "パスワードの強制リセット期間後",
+        "access_control": "アクセス制御",
+        "ip_whitelist": "IPホワイトリスト",
+        "ip_whitelist_desc": "特定のIPに管理者アクセスを制限する",
+        "audit_logging": "監査ログ",
+        "audit_logging_desc": "管理者のすべてのアクションをレビュー用にログ記録する",
+        "recent_activity": "最近のアクティビティ",
+        "save_settings": "設定を保存",
+        "settings_saved": "セキュリティ設定が保存されました！",
+        "activity": {
+          "admin_login": "管理者ログイン",
+          "tutor_approved": "コーチ承認済み",
+          "settings_changed": "設定が変更されました"
+        }
+      },
+      "notifications_settings": {
+        "title": "通知設定",
+        "subtitle": "管理者通知設定を構成する",
+        "email_notifications": "メール通知",
+        "push_notifications": "プッシュ通知",
+        "save_changes": "変更を保存",
+        "settings_saved": "通知設定が保存されました！",
+        "1": "新しいコーチ申請",
+        "1_desc": "新しいコーチが応募した時に通知する",
+        "2": "予約アラート",
+        "2_desc": "新規予約のアラート",
+        "3": "支払い通知",
+        "3_desc": "支払い確認と問題",
+        "4": "ユーザーレポート",
+        "4_desc": "ユーザーからの問題に関するレポート",
+        "5": "日次サマリー",
+        "5_desc": "プラットフォーム活動の日次サマリー",
+        "6": "週次レポート",
+        "6_desc": "週次分析レポート",
+        "7": "重要なアラート",
+        "7_desc": "システムエラーおよび重要な問題",
+        "8": "サポートリクエスト",
+        "8_desc": "新しいサポートチケット通知"
       }
     },
     "edit_profile": {

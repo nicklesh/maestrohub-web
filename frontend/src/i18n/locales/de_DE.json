@@ -1048,7 +1048,7 @@
       "manage_markets": "Märkte verwalten",
       "manage_pricing": "Preise verwalten",
       "manage_marketplace": "Verwalten Sie Ihren Marktplatz",
-      "coaches": "Coaches",
+      "coaches": "Trainer",
       "bookings": "Buchungen",
       "revenue": "Einnahmen",
       "quick_actions": "Schnellaktionen",
@@ -1080,7 +1080,11 @@
         "max_warning_message": "Der maximale Preis ${amount} liegt über dem Branchenstandard von ${standard}. Möchten Sie wirklich fortfahren?",
         "delete_policy": "Richtlinie löschen",
         "delete_confirm_message": "Möchten Sie \"{name}\" wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
-        "max_must_be_greater": "Der maximale Preis muss gleich oder größer als der Mindestpreis sein"
+        "max_must_be_greater": "Der maximale Preis muss gleich oder größer als der Mindestpreis sein",
+        "history_note": "Hat historische Verknüpfungen - kann nicht gelöscht werden",
+        "min_price_error": "Der Mindestpreis muss mindestens ${amount} betragen",
+        "max_less_than_min": "Der Höchstpreis muss gleich oder größer als der Mindestpreis sein",
+        "status_updated": "Richtlinienstatus aktualisiert"
       },
       "scheduled_jobs": {
         "title": "Geplante Jobs",
@@ -1118,7 +1122,35 @@
         "cannot_trigger": "Dieser Auftrag kann nicht manuell ausgelöst werden",
         "job_completed": "Auftrag erfolgreich abgeschlossen!",
         "job_failed": "Auftrag konnte nicht ausgeführt werden",
-        "status_legend": "Status Legende"
+        "status_legend": "Status Legende",
+        "never_run": "Niemals Laufen",
+        "jobs": {
+          "monthly_reports": {
+            "name": "Monatliche Steuerberichte",
+            "description": "Erstelle monatliche Zahlungsübersichtsberichte für alle Benutzer mit Transaktionen",
+            "schedule_display": "Am 1. jeden Monats um 2:00 Uhr"
+          },
+          "annual_1099_reports": {
+            "name": "Jährliche 1099-Berichte",
+            "description": "Erstellen Sie jährliche Steuerdokumente (1099-Äquivalent) für alle Anbieter",
+            "schedule_display": "1. Januar um 3:00 Uhr"
+          },
+          "session_reminders": {
+            "name": "Sitzungserinnerungen",
+            "description": "Erinnerungsbenachrichtigungen für bevorstehende Sitzungen senden (24h und 1h vorher)",
+            "schedule_display": "Jede Stunde"
+          },
+          "kid_notifications": {
+            "name": "Kinderaktivitäts-Updates",
+            "description": "Senden Sie Eltern Updates über die Aktivitäten ihrer Kinder in den Sitzungen",
+            "schedule_display": "Täglich um 18:00 Uhr"
+          },
+          "referral_check": {
+            "name": "Empfehlungskredit-Verarbeitung",
+            "description": "Ausstehende Empfehlungsguthaben und Boni verarbeiten",
+            "schedule_display": "Täglich um Mitternacht"
+          }
+        }
       },
       "inbox_page": {
         "title": "Posteingang",
@@ -1162,7 +1194,11 @@
         "confirm_suspend": "Sind Sie sicher, dass Sie diesen Coach aussetzen möchten?",
         "published": "Veröffentlicht",
         "unpublished": "Unveröffentlicht",
-        "sessions": "Sitzungen"
+        "sessions": "Sitzungen",
+        "coach_approved": "Trainer genehmigt!",
+        "coach_suspended": "Trainer suspendiert",
+        "approve_failed": "Fehler beim Genehmigen des Trainers",
+        "suspend_failed": "Fehler beim Pausieren des Coaches"
       },
       "markets_page": {
         "title": "Märkte",
@@ -1184,9 +1220,20 @@
         "rule_3": "Währung und Preise werden durch die Marktkonfiguration bestimmt",
         "country_code": "Ländercode",
         "consumers": "Verbraucher",
-        "coaches": "Coaches",
+        "coaches": "Trainer",
         "bookings": "Buchungen",
-        "revenue": "Einnahmen"
+        "revenue": "Einnahmen",
+        "supply": "Versorgung",
+        "published": "Veröffentlicht",
+        "pending": "Ausstehend",
+        "with_availability": "Mit Verfügbarkeit",
+        "completed": "Abgeschlossen",
+        "canceled": "Abgebrochen",
+        "rate": "Bewerten",
+        "enable": "Aktivieren",
+        "disable": "Deaktivieren",
+        "toggle_info": "Markt-Umschaltung protokolliert. Neustart des Servers erforderlich, um Änderungen anzuwenden.",
+        "toggle_failed": "Fehler beim Umschalten des Marktes"
       },
       "reports_page": {
         "title": "Berichte & Analysen",
@@ -1202,7 +1249,7 @@
         "wow": "WoW",
         "mom": "MoM",
         "qoq": "QoQ",
-        "yoy": "YoY",
+        "yoy": "JoJ",
         "by_market": "Nach Markt",
         "by_category": "Nach Kategorie",
         "trends": "Trends",
@@ -1247,7 +1294,14 @@
         "week_3": "Woche 3",
         "week_4": "Woche 4",
         "by_user": "Nach Benutzer",
-        "by_markets": "Nach Märkten"
+        "by_markets": "Nach Märkten",
+        "share": "teilen",
+        "increase_conversion": "Trainer-Conversion erhöhen",
+        "increase_conversion_desc": "27% der ausstehenden Coaches haben ihre Profile nicht vervollständigt. Senden Sie Erinnerungs-E-Mails, um die Abschlussrate zu erhöhen.",
+        "promote_categories": "Top-Kategorien bewerben",
+        "promote_categories_desc": "Akademisches Tutoring hat die höchste Nachfrage. Erwägen Sie Marketingkampagnen, um mehr Coaches anzuziehen.",
+        "freemium_conversion": "Freemium zu Bezahlt Conversion",
+        "freemium_conversion_desc": "73% der Nutzer sind Freemium. Bieten Sie zeitlich begrenzte Rabatte an, um sie zu kostenpflichtigen Abonnements zu konvertieren."
       },
       "settings_page": {
         "title": "Einstellungen",
@@ -1266,7 +1320,12 @@
         "security_feature_1": "Alle Passwörter werden mit bcrypt und Salt gehasht",
         "security_feature_2": "JWT-Token mit automatischem Ablauf",
         "security_feature_3": "Sichere API-Kommunikation über HTTPS",
-        "security_feature_4": "Rollengesteuerte Zugriffskontrolle (RBAC)"
+        "security_feature_4": "Rollengesteuerte Zugriffskontrolle (RBAC)",
+        "pricing_policies": "Preisrichtlinien",
+        "scheduled_jobs": "Geplante Aufträge",
+        "logout_confirm": "Sind Sie sicher, dass Sie sich abmelden möchten?",
+        "logging_out": "Abmelden...",
+        "coming_soon": "{feature} Einstellungen kommen bald!"
       },
       "footer": {
         "dashboard": "Dashboard",
@@ -1291,6 +1350,56 @@
         "payment_desc": "Benachrichtigungen über Zahlungen und Rückerstattungen",
         "save_preferences": "Einstellungen speichern",
         "preferences_saved": "Benachrichtigungseinstellungen gespeichert"
+      },
+      "security": {
+        "title": "Sicherheitseinstellungen",
+        "subtitle": "Plattform-Sicherheit und Zugriffskontrollen verwalten",
+        "status_strong": "Sicherheitsstatus: Stark",
+        "all_active": "Alle Sicherheitsmaßnahmen sind aktiv",
+        "authentication": "Authentifizierung",
+        "two_factor": "Zwei-Faktor-Authentifizierung",
+        "two_factor_desc": "Erfordern Sie 2FA für alle Admin-Konten",
+        "session_timeout": "Sitzungszeitüberschreitung (Minuten)",
+        "session_timeout_desc": "Automatische Abmeldung inaktiver Sitzungen",
+        "password_expiry": "Passwort-Ablauf (Tage)",
+        "password_expiry_desc": "Passwort-Zurücksetzung nach Zeitraum erzwingen",
+        "access_control": "Zugriffskontrolle",
+        "ip_whitelist": "IP-Whitelist",
+        "ip_whitelist_desc": "Administratorzugriff auf bestimmte IPs beschränken",
+        "audit_logging": "Audit-Protokollierung",
+        "audit_logging_desc": "Alle Admin-Aktionen zur Überprüfung protokollieren",
+        "recent_activity": "Neueste Aktivität",
+        "save_settings": "Einstellungen speichern",
+        "settings_saved": "Sicherheitseinstellungen gespeichert!",
+        "activity": {
+          "admin_login": "Admin-Anmeldung",
+          "tutor_approved": "Trainer genehmigt",
+          "settings_changed": "Einstellungen geändert"
+        }
+      },
+      "notifications_settings": {
+        "title": "Benachrichtigungseinstellungen",
+        "subtitle": "Benachrichtigungseinstellungen für Administratoren konfigurieren",
+        "email_notifications": "E-Mail-Benachrichtigungen",
+        "push_notifications": "Push-Benachrichtigungen",
+        "save_changes": "Änderungen speichern",
+        "settings_saved": "Benachrichtigungseinstellungen gespeichert!",
+        "1": "Neue Trainer-Bewerbungen",
+        "1_desc": "Benachrichtigen, wenn sich neue Coaches bewerben",
+        "2": "Buchungsbenachrichtigungen",
+        "2_desc": "Benachrichtigungen für neue Buchungen",
+        "3": "Zahlungsbenachrichtigungen",
+        "3_desc": "Zahlungsbestätigungen und Probleme",
+        "4": "Benutzerberichte",
+        "4_desc": "Berichte von Benutzern über Probleme",
+        "5": "Tägliche Zusammenfassung",
+        "5_desc": "Tägliche Zusammenfassung der Plattformaktivität",
+        "6": "Wöchentliche Berichte",
+        "6_desc": "Wöchentlicher Analytics-Bericht",
+        "7": "Kritische Warnmeldungen",
+        "7_desc": "Systemfehler und kritische Probleme",
+        "8": "Support-Anfragen",
+        "8_desc": "Neue Support-Ticket-Benachrichtigungen"
       }
     },
     "edit_profile": {

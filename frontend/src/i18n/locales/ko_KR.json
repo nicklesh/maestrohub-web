@@ -1080,7 +1080,11 @@
         "max_warning_message": "최대 가격 ${amount}가 업계 표준 ${standard}를 초과했습니다. 계속 진행하시겠습니까?",
         "delete_policy": "정책 삭제",
         "delete_confirm_message": "\"{name}\"을(를) 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.",
-        "max_must_be_greater": "최대 가격은 최소 가격 이상이어야 합니다"
+        "max_must_be_greater": "최대 가격은 최소 가격 이상이어야 합니다",
+        "history_note": "기록 연관성이 있음 - 삭제할 수 없음",
+        "min_price_error": "최소 가격은 최소 ${amount} 이상이어야 합니다",
+        "max_less_than_min": "최대 가격은 최소 가격보다 크거나 같아야 합니다",
+        "status_updated": "정책 상태가 업데이트되었습니다"
       },
       "scheduled_jobs": {
         "title": "예약된 작업",
@@ -1118,7 +1122,35 @@
         "cannot_trigger": "이 작업은 수동으로 실행할 수 없습니다",
         "job_completed": "작업이 성공적으로 완료되었습니다!",
         "job_failed": "작업 실행에 실패했습니다",
-        "status_legend": "상태 설명"
+        "status_legend": "상태 설명",
+        "never_run": "절대 실행하지 않음",
+        "jobs": {
+          "monthly_reports": {
+            "name": "월별 세무 보고서",
+            "description": "거래가 있는 모든 사용자에 대한 월별 결제 요약 보고서 생성",
+            "schedule_display": "매월 1일 오전 2:00"
+          },
+          "annual_1099_reports": {
+            "name": "연간 1099 보고서",
+            "description": "모든 공급업체에 대한 연간 세금 문서(1099 상당) 생성",
+            "schedule_display": "1월 1일 오전 3시"
+          },
+          "session_reminders": {
+            "name": "세션 알림",
+            "description": "다가오는 세션에 대한 알림 알림 전송 (24시간 및 1시간 전)",
+            "schedule_display": "매시간"
+          },
+          "kid_notifications": {
+            "name": "아이 활동 업데이트",
+            "description": "자녀의 세션 활동에 대한 업데이트를 부모에게 보내기",
+            "schedule_display": "매일 오후 6시"
+          },
+          "referral_check": {
+            "name": "추천 크레딧 처리",
+            "description": "대기 중인 추천 크레딧 및 보너스 처리",
+            "schedule_display": "매일 자정에"
+          }
+        }
       },
       "inbox_page": {
         "title": "받은 편지함",
@@ -1162,7 +1194,11 @@
         "confirm_suspend": "이 코치를 정지하시겠습니까?",
         "published": "게시됨",
         "unpublished": "비게시됨",
-        "sessions": "세션"
+        "sessions": "세션",
+        "coach_approved": "코치 승인됨!",
+        "coach_suspended": "코치 자격 정지",
+        "approve_failed": "코치 승인에 실패했습니다",
+        "suspend_failed": "코치 정지에 실패했습니다"
       },
       "markets_page": {
         "title": "시장",
@@ -1186,7 +1222,18 @@
         "consumers": "소비자",
         "coaches": "코치",
         "bookings": "예약",
-        "revenue": "수익"
+        "revenue": "수익",
+        "supply": "공급",
+        "published": "게시됨",
+        "pending": "대기 중",
+        "with_availability": "가용성과 함께",
+        "completed": "완료됨",
+        "canceled": "취소됨",
+        "rate": "평가",
+        "enable": "활성화",
+        "disable": "비활성화",
+        "toggle_info": "마켓 토글이 기록되었습니다. 변경사항을 적용하려면 서버 재시작이 필요합니다.",
+        "toggle_failed": "마켓 전환에 실패했습니다"
       },
       "reports_page": {
         "title": "보고서 및 분석",
@@ -1199,10 +1246,10 @@
         "this_month": "이번 달",
         "this_quarter": "이번 분기",
         "this_year": "올해",
-        "wow": "WoW",
-        "mom": "MoM",
+        "wow": "와우",
+        "mom": "전월 대비",
         "qoq": "QoQ",
-        "yoy": "YoY",
+        "yoy": "전년 대비",
         "by_market": "시장별",
         "by_category": "카테고리별",
         "trends": "추세",
@@ -1247,7 +1294,14 @@
         "week_3": "3주차",
         "week_4": "4주차",
         "by_user": "사용자별",
-        "by_markets": "시장별"
+        "by_markets": "시장별",
+        "share": "공유",
+        "increase_conversion": "코치 전환율 증가",
+        "increase_conversion_desc": "대기 중인 코치의 27%가 프로필을 완성하지 않았습니다. 완성률을 높이기 위해 리마인더 이메일을 보내세요.",
+        "promote_categories": "상위 카테고리 홍보",
+        "promote_categories_desc": "학업 과외가 가장 높은 수요를 보입니다. 더 많은 코치를 유치하기 위한 마케팅 캠페인을 고려하세요.",
+        "freemium_conversion": "프리미엄에서 유료 전환",
+        "freemium_conversion_desc": "73%의 사용자가 프리미엄 사용자입니다. 유료 구독으로 전환하기 위해 기간 한정 할인을 제공하세요."
       },
       "settings_page": {
         "title": "설정",
@@ -1266,7 +1320,13 @@
         "security_feature_1": "모든 비밀번호는 salt와 함께 bcrypt로 해싱됩니다",
         "security_feature_2": "자동 만료가 설정된 JWT 토큰",
         "security_feature_3": "HTTPS를 통한 안전한 API 통신",
-        "security_feature_4": "역할 기반 접근 제어(RBAC)"
+        "security_feature_4": "역할 기반 접근 제어(RBAC)",
+        "administrator": "관리자",
+        "pricing_policies": "가격 정책",
+        "scheduled_jobs": "예약된 작업",
+        "logout_confirm": "정말로 로그아웃하시겠습니까?",
+        "logging_out": "로그아웃 중...",
+        "coming_soon": "{feature} 설정이 곧 출시됩니다!"
       },
       "footer": {
         "dashboard": "대시보드",
@@ -1291,6 +1351,56 @@
         "payment_desc": "결제 및 환불에 대한 알림",
         "save_preferences": "환경 설정 저장",
         "preferences_saved": "알림 환경 설정이 저장되었습니다"
+      },
+      "security": {
+        "title": "보안 설정",
+        "subtitle": "플랫폼 보안 및 액세스 제어 관리",
+        "status_strong": "보안 상태: 강력함",
+        "all_active": "모든 보안 조치가 활성화되었습니다",
+        "authentication": "인증",
+        "two_factor": "이중 인증",
+        "two_factor_desc": "모든 관리자 계정에 대해 2FA 필수",
+        "session_timeout": "세션 타임아웃 (분)",
+        "session_timeout_desc": "비활성 세션 자동 로그아웃",
+        "password_expiry": "비밀번호 만료 (일)",
+        "password_expiry_desc": "일정 기간 후 비밀번호 재설정 강제",
+        "access_control": "접근 제어",
+        "ip_whitelist": "IP 화이트리스트",
+        "ip_whitelist_desc": "특정 IP에 대한 관리자 접근 제한",
+        "audit_logging": "감사 로깅",
+        "audit_logging_desc": "검토를 위해 모든 관리자 작업을 기록",
+        "recent_activity": "최근 활동",
+        "save_settings": "설정 저장",
+        "settings_saved": "보안 설정이 저장되었습니다!",
+        "activity": {
+          "admin_login": "관리자 로그인",
+          "tutor_approved": "코치 승인됨",
+          "settings_changed": "설정이 변경되었습니다"
+        }
+      },
+      "notifications_settings": {
+        "title": "알림 설정",
+        "subtitle": "관리자 알림 설정 구성",
+        "email_notifications": "이메일 알림",
+        "push_notifications": "푸시 알림",
+        "save_changes": "변경 사항 저장",
+        "settings_saved": "알림 설정이 저장되었습니다!",
+        "1": "새로운 코치 지원서",
+        "1_desc": "새로운 코치가 지원할 때 알림",
+        "2": "예약 알림",
+        "2_desc": "새 예약에 대한 알림",
+        "3": "결제 알림",
+        "3_desc": "결제 확인 및 문제",
+        "4": "사용자 신고",
+        "4_desc": "사용자들이 보고한 문제들에 대한 리포트",
+        "5": "일일 요약",
+        "5_desc": "플랫폼 활동의 일일 요약",
+        "6": "주간 보고서",
+        "6_desc": "주간 분석 보고서",
+        "7": "중요 알림",
+        "7_desc": "시스템 오류 및 중대한 문제",
+        "8": "지원 요청",
+        "8_desc": "새 지원 티켓 알림"
       }
     },
     "edit_profile": {

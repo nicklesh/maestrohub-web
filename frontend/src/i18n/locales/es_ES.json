@@ -1080,7 +1080,11 @@
         "max_warning_message": "El precio máximo ${amount} está por encima del estándar de la industria de ${standard}. ¿Está seguro que desea continuar?",
         "delete_policy": "Eliminar Política",
         "delete_confirm_message": "¿Está seguro que desea eliminar \"{name}\"? Esta acción no se puede deshacer.",
-        "max_must_be_greater": "El precio máximo debe ser igual o mayor que el precio mínimo"
+        "max_must_be_greater": "El precio máximo debe ser igual o mayor que el precio mínimo",
+        "history_note": "Tiene asociaciones históricas - no se puede eliminar",
+        "min_price_error": "El precio mínimo debe ser al menos ${amount}",
+        "max_less_than_min": "El precio máximo debe ser igual o mayor que el precio mínimo",
+        "status_updated": "Estado de la póliza actualizado"
       },
       "scheduled_jobs": {
         "title": "Trabajos Programados",
@@ -1118,7 +1122,35 @@
         "cannot_trigger": "Este trabajo no puede ser activado manualmente",
         "job_completed": "¡Trabajo completado con éxito!",
         "job_failed": "Error al ejecutar el trabajo",
-        "status_legend": "Leyenda de estado"
+        "status_legend": "Leyenda de estado",
+        "never_run": "Nunca Ejecutar",
+        "jobs": {
+          "monthly_reports": {
+            "name": "Informes de Impuestos Mensuales",
+            "description": "Generar informes de resumen de pagos mensuales para todos los usuarios con transacciones",
+            "schedule_display": "1 de cada mes a las 2:00 AM"
+          },
+          "annual_1099_reports": {
+            "name": "Informes Anuales 1099",
+            "description": "Generar documentos fiscales anuales (equivalente a 1099) para todos los proveedores",
+            "schedule_display": "1 de enero a las 3:00 AM"
+          },
+          "session_reminders": {
+            "name": "Recordatorios de Sesión",
+            "description": "Enviar notificaciones de recordatorio para las sesiones próximas (24h y 1h antes)",
+            "schedule_display": "Cada hora"
+          },
+          "kid_notifications": {
+            "name": "Actualizaciones de Actividades Infantiles",
+            "description": "Envía a los padres actualizaciones sobre las actividades de las sesiones de sus hijos",
+            "schedule_display": "Diariamente a las 6:00 PM"
+          },
+          "referral_check": {
+            "name": "Procesamiento de Crédito por Referencia",
+            "description": "Procesar créditos de referidos y bonos pendientes",
+            "schedule_display": "Diariamente a medianoche"
+          }
+        }
       },
       "inbox_page": {
         "title": "Bandeja de entrada",
@@ -1162,7 +1194,11 @@
         "confirm_suspend": "¿Está seguro de que desea suspender a este entrenador?",
         "published": "Publicados",
         "unpublished": "No publicados",
-        "sessions": "sesiones"
+        "sessions": "sesiones",
+        "coach_approved": "¡Entrenador aprobado!",
+        "coach_suspended": "Entrenador suspendido",
+        "approve_failed": "No se pudo aprobar el entrenador",
+        "suspend_failed": "No se pudo suspender el entrenador"
       },
       "markets_page": {
         "title": "Mercados",
@@ -1186,7 +1222,18 @@
         "consumers": "Consumidores",
         "coaches": "Entrenadores",
         "bookings": "Reservas",
-        "revenue": "Ingresos"
+        "revenue": "Ingresos",
+        "supply": "Suministro",
+        "published": "Publicado",
+        "pending": "Pendiente",
+        "with_availability": "Con Disponibilidad",
+        "completed": "Completado",
+        "canceled": "Cancelado",
+        "rate": "Tarifa",
+        "enable": "Habilitar",
+        "disable": "Desactivar",
+        "toggle_info": "Alternar mercado registrado. Se requiere reinicio del servidor para aplicar los cambios.",
+        "toggle_failed": "Error al alternar mercado"
       },
       "reports_page": {
         "title": "Informes y Análisis",
@@ -1247,7 +1294,14 @@
         "week_3": "Semana 3",
         "week_4": "Semana 4",
         "by_user": "Por Usuario",
-        "by_markets": "Por Mercados"
+        "by_markets": "Por Mercados",
+        "share": "compartir",
+        "increase_conversion": "Aumentar la Conversión de Coach",
+        "increase_conversion_desc": "El 27% de los coaches pendientes no han completado sus perfiles. Envía correos electrónicos de recordatorio para aumentar la tasa de finalización.",
+        "promote_categories": "Promocionar Categorías Principales",
+        "promote_categories_desc": "La tutoría académica tiene la mayor demanda. Considera campañas de marketing para atraer más tutores.",
+        "freemium_conversion": "Conversión de Freemium a Pago",
+        "freemium_conversion_desc": "El 73% de los usuarios son freemium. Ofrece descuentos por tiempo limitado para convertirlos a suscripciones de pago."
       },
       "settings_page": {
         "title": "Configuración",
@@ -1266,7 +1320,13 @@
         "security_feature_1": "Todas las contraseñas se cifran usando bcrypt con sal",
         "security_feature_2": "Tokens JWT con expiración automática",
         "security_feature_3": "Comunicación segura de API mediante HTTPS",
-        "security_feature_4": "Control de acceso basado en roles (RBAC)"
+        "security_feature_4": "Control de acceso basado en roles (RBAC)",
+        "administrator": "Administrador",
+        "pricing_policies": "Políticas de Precios",
+        "scheduled_jobs": "Trabajos Programados",
+        "logout_confirm": "¿Estás seguro de que quieres cerrar sesión?",
+        "logging_out": "Cerrando sesión...",
+        "coming_soon": "¡Configuración de {feature} próximamente!"
       },
       "footer": {
         "dashboard": "Panel",
@@ -1291,6 +1351,56 @@
         "payment_desc": "Alertas sobre pagos y reembolsos",
         "save_preferences": "Guardar preferencias",
         "preferences_saved": "Preferencias de notificación guardadas"
+      },
+      "security": {
+        "title": "Configuración de Seguridad",
+        "subtitle": "Gestionar la seguridad de la plataforma y los controles de acceso",
+        "status_strong": "Estado de Seguridad: Fuerte",
+        "all_active": "Todas las medidas de seguridad están activas",
+        "authentication": "Autenticación",
+        "two_factor": "Autenticación de Dos Factores",
+        "two_factor_desc": "Requerir 2FA para todas las cuentas de administrador",
+        "session_timeout": "Tiempo de Espera de Sesión (minutos)",
+        "session_timeout_desc": "Cerrar sesión automáticamente en sesiones inactivas",
+        "password_expiry": "Vencimiento de Contraseña (días)",
+        "password_expiry_desc": "Forzar restablecimiento de contraseña después de un período",
+        "access_control": "Control de Acceso",
+        "ip_whitelist": "Lista Blanca de IP",
+        "ip_whitelist_desc": "Restringir el acceso de administrador a IPs específicas",
+        "audit_logging": "Registro de Auditoría",
+        "audit_logging_desc": "Registrar todas las acciones de administrador para revisión",
+        "recent_activity": "Actividad Reciente",
+        "save_settings": "Guardar Configuración",
+        "settings_saved": "¡Configuraciones de seguridad guardadas!",
+        "activity": {
+          "admin_login": "Inicio de sesión de administrador",
+          "tutor_approved": "Entrenador aprobado",
+          "settings_changed": "Configuración modificada"
+        }
+      },
+      "notifications_settings": {
+        "title": "Configuración de Notificaciones",
+        "subtitle": "Configurar preferencias de notificación del administrador",
+        "email_notifications": "Notificaciones por Correo Electrónico",
+        "push_notifications": "Notificaciones Push",
+        "save_changes": "Guardar Cambios",
+        "settings_saved": "¡Configuración de notificaciones guardada!",
+        "1": "Solicitudes de Nuevos Entrenadores",
+        "1_desc": "Notificar cuando se postulen nuevos coaches",
+        "2": "Alertas de Reserva",
+        "2_desc": "Alertas para nuevas reservas",
+        "3": "Notificaciones de Pago",
+        "3_desc": "Confirmaciones de pago y problemas",
+        "4": "Reportes de Usuario",
+        "4_desc": "Reportes de usuarios sobre problemas",
+        "5": "Resumen Diario",
+        "5_desc": "Resumen diario de actividad de la plataforma",
+        "6": "Reportes Semanales",
+        "6_desc": "Reporte de análisis semanal",
+        "7": "Alertas Críticas",
+        "7_desc": "Errores del sistema y problemas críticos",
+        "8": "Solicitudes de Soporte",
+        "8_desc": "Notificaciones de nuevos tickets de soporte"
       }
     },
     "edit_profile": {
