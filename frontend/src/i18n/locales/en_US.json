@@ -1728,6 +1728,7 @@
       },
       "billing": {
         "title": "Billing",
+        "subtitle": "Scheduling, enrollment, and payments for coaches",
         "earnings_summary": "Earnings Summary",
         "total_earnings": "Total Earnings",
         "pending_payout": "Pending Payout",
@@ -1742,7 +1743,22 @@
         "paypal": "PayPal",
         "this_month": "This Month",
         "last_month": "Last Month",
-        "all_time": "All Time"
+        "all_time": "All Time",
+        "free_trial": "Free Trial Active",
+        "days_remaining": "{{count}} days remaining",
+        "from_lessons": "from {{count}} completed lessons",
+        "platform_fees": "Platform Fees",
+        "pending_fees": "Pending Fees",
+        "fees_note": "Fees are automatically deducted from your payouts.",
+        "recent_activity": "Recent Fee Activity",
+        "no_activity": "No fee activity yet",
+        "payout_account": "Payout Account",
+        "connect_stripe": "Connect Stripe Account",
+        "stripe_note": "Stripe Connect integration coming soon. Payouts will be processed automatically.",
+        "want_more_bookings": "Want More Bookings?",
+        "get_featured": "Get featured at the top of search results",
+        "more_visibility": "3x more visibility",
+        "top_placement": "Top search placement"
       },
       "reviews": {
         "title": "Reviews",
