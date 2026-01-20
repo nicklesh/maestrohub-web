@@ -76,7 +76,7 @@ def find_missing_keys(en_data, target_data):
 def translate_text(text, target_language):
     """Translate text using Emergent LLM"""
     try:
-        from emergentintegrations.llm.chat import LlmChat
+        from emergentintegrations.llm.chat import LlmChat, UserMessage
         import uuid
         import asyncio
         
@@ -88,13 +88,14 @@ Keep technical terms if they don't have a common translation.
 
 Text to translate: {text}"""
             
-            llm = LlmChat(
+            chat = LlmChat(
                 api_key="sk-emergent-c02Bb9a237a3b6e673",
                 session_id=str(uuid.uuid4()),
                 system_message="You are a professional translator. Only output the translation, nothing else."
-            )
-            llm = llm.with_model("anthropic", "claude-sonnet-4-20250514")
-            response = await llm.send_message(prompt)
+            ).with_model("anthropic", "claude-4-sonnet-20250514")
+            
+            user_message = UserMessage(text=prompt)
+            response = await chat.send_message(user_message)
             return response.strip()
         
         return asyncio.run(do_translate())
