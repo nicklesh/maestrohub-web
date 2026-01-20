@@ -325,7 +325,7 @@ export default function TutorSettings() {
                   color={colors.primary} 
                 />
                 <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>
-                  Dark Mode
+                  {t('pages.settings.dark_mode')}
                 </Text>
               </View>
               <Switch
@@ -335,6 +335,14 @@ export default function TutorSettings() {
                 thumbColor={isDark ? colors.white : colors.white}
               />
             </View>
+            <TouchableOpacity 
+              style={[styles.menuItem, isTablet && styles.menuItemTablet, { borderBottomWidth: 0, marginTop: 8 }]}
+              onPress={() => router.push('/(tutor)/language')}
+            >
+              <Ionicons name="language" size={isTablet ? 24 : 22} color={colors.primary} />
+              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>{t('pages.settings.language')}</Text>
+              <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
           </View>
 
           {/* Grow Your Business Section */}
