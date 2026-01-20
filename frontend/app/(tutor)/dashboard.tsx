@@ -170,10 +170,10 @@ export default function TutorDashboard() {
     (b) => ['booked', 'confirmed'].includes(b.status)
   ).slice(0, 5);
 
-  const formatDate = (dateStr: string) => {
+  const formatDateLabel = (dateStr: string) => {
     const date = parseISO(dateStr);
-    if (isToday(date)) return 'Today';
-    if (isTomorrow(date)) return 'Tomorrow';
+    if (isToday(date)) return t('pages.coach.dashboard.today');
+    if (isTomorrow(date)) return t('pages.coach.dashboard.tomorrow');
     return format(date, 'EEE, MMM d');
   };
 
