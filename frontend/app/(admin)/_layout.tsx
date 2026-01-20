@@ -37,7 +37,7 @@ export default function AdminLayout() {
       <Tabs.Screen
         name="dashboard"
         options={{
-          title: 'Dashboard',
+          title: t('navigation.dashboard'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="speedometer-outline" size={size} color={color} />
           ),
@@ -46,7 +46,7 @@ export default function AdminLayout() {
       <Tabs.Screen
         name="inbox"
         options={{
-          title: 'Inbox',
+          title: t('navigation.inbox'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="mail-outline" size={size} color={color} />
           ),
@@ -55,7 +55,7 @@ export default function AdminLayout() {
       <Tabs.Screen
         name="tutors"
         options={{
-          title: 'Coaches',
+          title: t('navigation.tutors'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="people-outline" size={size} color={color} />
           ),
@@ -64,7 +64,7 @@ export default function AdminLayout() {
       <Tabs.Screen
         name="markets"
         options={{
-          title: 'Markets',
+          title: t('navigation.markets'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="globe-outline" size={size} color={color} />
           ),
@@ -73,7 +73,7 @@ export default function AdminLayout() {
       <Tabs.Screen
         name="reports"
         options={{
-          title: 'Reports',
+          title: t('navigation.reports'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="bar-chart-outline" size={size} color={color} />
           ),
@@ -82,7 +82,7 @@ export default function AdminLayout() {
       <Tabs.Screen
         name="settings"
         options={{
-          title: 'Settings',
+          title: t('navigation.settings'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="settings-outline" size={size} color={color} />
           ),
