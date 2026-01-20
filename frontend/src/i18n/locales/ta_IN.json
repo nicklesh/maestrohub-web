@@ -1795,7 +1795,8 @@
     "max": "அதிகபட்சம்",
     "per": "தொடர்பில்",
     "on": "இயக்கு",
-    "off": "முடக்கு"
+    "off": "முடக்கு",
+    "hour_short": "hr"
   },
   "faq": {
     "consumer": [
@@ -1853,8 +1854,43 @@
     "hybrid": "கூட்டு"
   },
   "countries": {
-    "united_states": "அமெரிக்கா",
-    "india": "இந்தியா"
+    "US": "United States",
+    "IN": "India",
+    "GB": "United Kingdom",
+    "CA": "Canada",
+    "AU": "Australia",
+    "DE": "Germany",
+    "FR": "France",
+    "ES": "Spain",
+    "IT": "Italy",
+    "BR": "Brazil",
+    "MX": "Mexico",
+    "JP": "Japan",
+    "CN": "China",
+    "KR": "South Korea",
+    "SG": "Singapore",
+    "NL": "Netherlands",
+    "SE": "Sweden",
+    "NO": "Norway",
+    "DK": "Denmark",
+    "FI": "Finland",
+    "CH": "Switzerland",
+    "AT": "Austria",
+    "BE": "Belgium",
+    "PL": "Poland",
+    "PT": "Portugal",
+    "IE": "Ireland",
+    "NZ": "New Zealand",
+    "AE": "United Arab Emirates",
+    "SA": "Saudi Arabia",
+    "ZA": "South Africa",
+    "TH": "Thailand",
+    "MY": "Malaysia",
+    "ID": "Indonesia",
+    "PH": "Philippines",
+    "VN": "Vietnam",
+    "HK": "Hong Kong",
+    "TW": "Taiwan"
   },
   "subjects": {
     "mathematics": "கணிதம்",
@@ -2027,5 +2063,19 @@
       "message_placeholder": "உங்கள் பிரச்சனை அல்லது கேள்வியை விவரிக்கவும்...",
       "send": "செய்தி அனுப்பு"
     }
+  },
+  "months": {
+    "jan": "Jan",
+    "feb": "Feb",
+    "mar": "Mar",
+    "apr": "Apr",
+    "may": "May",
+    "jun": "Jun",
+    "jul": "Jul",
+    "aug": "Aug",
+    "sep": "Sep",
+    "oct": "Oct",
+    "nov": "Nov",
+    "dec": "Dec"
   }
 }

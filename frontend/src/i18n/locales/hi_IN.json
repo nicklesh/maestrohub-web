@@ -1795,7 +1795,8 @@
     "max": "अधिकतम",
     "per": "प्रति",
     "on": "चालू",
-    "off": "बंद"
+    "off": "बंद",
+    "hour_short": "hr"
   },
   "faq": {
     "consumer": [
@@ -1853,8 +1854,43 @@
     "hybrid": "हाइब्रिड"
   },
   "countries": {
-    "united_states": "संयुक्त राज्य अमेरिका",
-    "india": "भारत"
+    "US": "United States",
+    "IN": "India",
+    "GB": "United Kingdom",
+    "CA": "Canada",
+    "AU": "Australia",
+    "DE": "Germany",
+    "FR": "France",
+    "ES": "Spain",
+    "IT": "Italy",
+    "BR": "Brazil",
+    "MX": "Mexico",
+    "JP": "Japan",
+    "CN": "China",
+    "KR": "South Korea",
+    "SG": "Singapore",
+    "NL": "Netherlands",
+    "SE": "Sweden",
+    "NO": "Norway",
+    "DK": "Denmark",
+    "FI": "Finland",
+    "CH": "Switzerland",
+    "AT": "Austria",
+    "BE": "Belgium",
+    "PL": "Poland",
+    "PT": "Portugal",
+    "IE": "Ireland",
+    "NZ": "New Zealand",
+    "AE": "United Arab Emirates",
+    "SA": "Saudi Arabia",
+    "ZA": "South Africa",
+    "TH": "Thailand",
+    "MY": "Malaysia",
+    "ID": "Indonesia",
+    "PH": "Philippines",
+    "VN": "Vietnam",
+    "HK": "Hong Kong",
+    "TW": "Taiwan"
   },
   "subjects": {
     "mathematics": "गणित",
@@ -2027,5 +2063,19 @@
       "message_placeholder": "अपनी समस्या या प्रश्न का वर्णन करें...",
       "send": "संदेश भेजें"
     }
+  },
+  "months": {
+    "jan": "Jan",
+    "feb": "Feb",
+    "mar": "Mar",
+    "apr": "Apr",
+    "may": "May",
+    "jun": "Jun",
+    "jul": "Jul",
+    "aug": "Aug",
+    "sep": "Sep",
+    "oct": "Oct",
+    "nov": "Nov",
+    "dec": "Dec"
   }
 }
