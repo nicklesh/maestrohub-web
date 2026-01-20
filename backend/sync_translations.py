@@ -145,7 +145,7 @@ def main():
         target_flat = flatten_dict(target_data)
         translated_count = 0
         
-        for key, value in admin_keys.items():
+        for key, value in keys_to_translate.items():
             if isinstance(value, str) and len(value) > 2:
                 translated = translate_text(value, language)
                 if translated != value:
