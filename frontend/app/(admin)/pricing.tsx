@@ -261,7 +261,7 @@ export default function AdminPricingScreen() {
             )}
           </View>
           <View style={styles.detailItem}>
-            <Text style={styles.detailLabel}>Min Price</Text>
+            <Text style={styles.detailLabel}>{t('pages.admin.pricing.min_price')}</Text>
             {isEditing ? (
               <View style={styles.feeInput}>
                 <Text style={styles.dollarSign}>$</Text>
