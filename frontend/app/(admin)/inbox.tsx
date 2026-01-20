@@ -86,24 +86,14 @@ export default function AdminInboxScreen() {
       
       // Check if response indicates success
       if (response.data?.success || response.status === 200) {
-        if (Platform.OS === 'web') {
-          showInfo(`Message marked as ${newStatus}`);
-        } else {
-          showInfo(`Message marked as ${newStatus}`, 'Success');
-        }
-        
+        const statusText = t(`pages.admin.inbox_page.${newStatus}`);
+        showSuccess(t('pages.admin.inbox_page.status_updated', { status: statusText }));
         loadMessages();
         setSelectedMessage(null);
       }
     } catch (error: any) {
       console.error('Status update error:', error);
-      // Even if there's an error, refresh to see if it actually worked
-      loadMessages();
-      if (Platform.OS === 'web') {
-        showError('Failed to update status');
-      } else {
-        showError('Failed to update status');
-      }
+      showError(t('pages.admin.inbox_page.update_failed'));
     }
   };
 
