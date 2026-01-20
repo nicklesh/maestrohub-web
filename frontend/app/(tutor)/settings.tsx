@@ -183,28 +183,28 @@ export default function TutorSettings() {
           {profile && (
             <View style={[styles.card, isTablet && styles.cardTablet]}>
               <View style={styles.cardHeader}>
-                <Text style={[styles.cardTitle, isDesktop && styles.cardTitleDesktop]}>Profile Summary</Text>
+                <Text style={[styles.cardTitle, isDesktop && styles.cardTitleDesktop]}>{t('pages.coach.settings.profile_summary')}</Text>
                 <TouchableOpacity onPress={() => router.push('/(tutor)/onboarding')}>
-                  <Text style={styles.editLink}>{t('buttons.edit')}</Text>
+                  <Text style={styles.editLink}>{t('common.edit')}</Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.infoRow}>
-                <Text style={[styles.infoLabel, isDesktop && styles.infoLabelDesktop]}>Categories</Text>
-                <Text style={[styles.infoValue, isDesktop && styles.infoValueDesktop]}>{profile.categories?.join(', ') || 'Not set'}</Text>
+                <Text style={[styles.infoLabel, isDesktop && styles.infoLabelDesktop]}>{t('pages.coach.onboarding.categories')}</Text>
+                <Text style={[styles.infoValue, isDesktop && styles.infoValueDesktop]}>{profile.categories?.join(', ') || t('common.not_set')}</Text>
               </View>
               <View style={styles.infoRow}>
-                <Text style={[styles.infoLabel, isDesktop && styles.infoLabelDesktop]}>Subjects</Text>
-                <Text style={[styles.infoValue, isDesktop && styles.infoValueDesktop]}>{profile.subjects?.join(', ') || 'Not set'}</Text>
+                <Text style={[styles.infoLabel, isDesktop && styles.infoLabelDesktop]}>{t('pages.coach.settings.subjects')}</Text>
+                <Text style={[styles.infoValue, isDesktop && styles.infoValueDesktop]}>{profile.subjects?.join(', ') || t('common.not_set')}</Text>
               </View>
               <View style={styles.infoRow}>
-                <Text style={[styles.infoLabel, isDesktop && styles.infoLabelDesktop]}>Rate</Text>
+                <Text style={[styles.infoLabel, isDesktop && styles.infoLabelDesktop]}>{t('pages.coach.settings.hourly_rate')}</Text>
                 <Text style={[styles.infoValue, isDesktop && styles.infoValueDesktop]}>
                   ${profile.base_price}/{profile.duration_minutes}min
                 </Text>
               </View>
               <View style={styles.infoRow}>
-                <Text style={[styles.infoLabel, isDesktop && styles.infoLabelDesktop]}>Modality</Text>
-                <Text style={[styles.infoValue, isDesktop && styles.infoValueDesktop]}>{profile.modality?.join(', ') || 'Not set'}</Text>
+                <Text style={[styles.infoLabel, isDesktop && styles.infoLabelDesktop]}>{t('pages.coach.settings.modality')}</Text>
+                <Text style={[styles.infoValue, isDesktop && styles.infoValueDesktop]}>{profile.modality?.join(', ') || t('common.not_set')}</Text>
               </View>
             </View>
           )}
