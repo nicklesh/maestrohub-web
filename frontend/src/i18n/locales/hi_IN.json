@@ -1459,12 +1459,12 @@
     "intermediate": "मध्यवर्ती",
     "advanced": "उन्नत",
     "all_levels": "सभी स्तर",
-    "elementary": "Начальный (K-5)",
-    "middle_school": "Средняя школа (6-8)",
-    "high_school": "Старшая школа (9-12)",
-    "college": "Колледж",
-    "adult": "Взрослый",
-    "professional": "Профессиональный"
+    "elementary": "प्राथमिक (K-5)",
+    "middle_school": "मिडिल स्कूल (6-8)",
+    "high_school": "हाई स्कूल (9-12)",
+    "college": "कॉलेज",
+    "adult": "वयस्क",
+    "professional": "पेशेवर"
   },
   "modality": {
     "online": "ऑनलाइन",
