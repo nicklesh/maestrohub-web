@@ -91,7 +91,7 @@ Text to translate: {text}"""
             session_id=str(uuid.uuid4()),
             system_message="You are a professional translator. Only output the translation, nothing else."
         )
-        llm = llm.with_model("anthropic/claude-sonnet-4-20250514")
+        llm = llm.with_model("anthropic", "claude-sonnet-4-20250514")
         response = llm.send_message(prompt)
         return response.strip()
     except Exception as e:
