@@ -118,18 +118,10 @@ export default function AdminMarketsScreen() {
   const handleToggleMarket = async (marketId: string) => {
     try {
       await api.post(`/admin/markets/${marketId}/toggle`, {}, { headers: { Authorization: `Bearer ${token}` } });
-      if (Platform.OS === 'web') {
-        showError('Market toggle logged. Server restart required to apply changes.');
-      } else {
-        showInfo('Market toggle logged. Server restart required to apply changes.', 'Market Toggle');
-      }
+      showInfo(t('pages.admin.markets_page.toggle_info'));
       loadData();
     } catch (error) {
-      if (Platform.OS === 'web') {
-        showError('Failed to toggle market');
-      } else {
-        showError('Failed to toggle market');
-      }
+      showError(t('pages.admin.markets_page.toggle_failed'));
     }
   };
 
