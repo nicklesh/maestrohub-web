@@ -51,7 +51,19 @@
     "payments": "Payments",
     "view_schedule_payments": "View Schedule & Payments",
     "support": "Поддержка",
-    "my_kids": "मेरे बच्चे"
+    "my_kids": "मेरे बच्चे",
+    "coach_dashboard": "Dashboard",
+    "coach_calendar": "Calendar",
+    "coach_billing": "Billing",
+    "coach_reviews": "Reviews",
+    "coach_settings": "Settings",
+    "coach_packages": "Packages",
+    "coach_invites": "Invites",
+    "coach_sponsorship": "Sponsorship",
+    "coach_reports": "Reports",
+    "coach_faq": "FAQ",
+    "coach_schedule": "Schedule",
+    "coach_onboarding": "Onboarding"
   },
   "categories": {
     "academics": "Academics",
