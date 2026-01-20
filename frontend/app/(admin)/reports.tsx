@@ -35,6 +35,7 @@ interface CategoryBreakdown {
 export default function AdminReportsScreen() {
   const { colors } = useTheme();
   const { token } = useAuth();
+  const { t, formatNumber, formatCurrency } = useTranslation();
   const { width } = useWindowDimensions();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
