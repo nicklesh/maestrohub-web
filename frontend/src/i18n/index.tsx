@@ -85,13 +85,18 @@ const getNestedValue = (obj: any, path: string): string => {
   return typeof value === 'string' ? value : path;
 };
 
-// Helper to replace placeholders like {name} with values
+// Helper to replace placeholders like {name} or {{name}} with values
 const interpolate = (text: string, params?: Record<string, string | number>): string => {
   if (!params) return text;
   
-  return text.replace(/\{(\w+)\}/g, (match, key) => {
-    return params[key]?.toString() ?? match;
-  });
+  // Handle both {name} and {{name}} placeholder formats
+  return text
+    .replace(/\{\{(\w+)\}\}/g, (match, key) => {
+      return params[key]?.toString() ?? match;
+    })
+    .replace(/\{(\w+)\}/g, (match, key) => {
+      return params[key]?.toString() ?? match;
+    });
 };
 
 interface I18nContextType {
