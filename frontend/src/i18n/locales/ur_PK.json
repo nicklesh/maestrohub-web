@@ -905,8 +905,8 @@
     "notifications": {
       "title": "اطلاعات",
       "all": "تمام",
-      "unread": "غیر پڑھا ہوا",
-      "mark_all_read": "تمام کو پڑھا نشان زد کریں",
+      "unread": "نا پڑھا ہوا",
+      "mark_all_read": "تمام کو پڑھا ہوا نشان زد کریں",
       "clear_all": "تمام صاف کریں",
       "no_notifications": "کوئی اطلاع نہیں",
       "settings": "سیٹنگز",
@@ -916,7 +916,33 @@
       "days_ago": "{{count}} دن پہلے",
       "mark_as_read": "پڑھا ہوا نشان زد کریں",
       "system_update": "سسٹم اپ ڈیٹ",
-      "platform_improvements": "پلیٹ فارم کی بہتریاں کامیابی سے لاگو ہو چکی ہیں"
+      "platform_improvements": "پلیٹ فارم کی بہتریاں کامیابی سے لاگو ہو چکی ہیں",
+      "types": {
+        "system_update": "سسٹم اپ ڈیٹ",
+        "platform_improvements": "پلیٹ فارم کی بہتری",
+        "schedule_sent": "شیڈول بھیجا گیا",
+        "contact_received": "رابطہ کی درخواست موصول ہوئی",
+        "invite_sent": "دعوت بھیجی گئی",
+        "invite_received": "دعوت موصول ہوئی",
+        "invite_accepted": "دعوت قبول کی گئی",
+        "payment_completed": "ادائیگی مکمل",
+        "session_canceled": "سیشن منسوخ",
+        "booking_confirmed": "بکنگ کی تصدیق",
+        "reminder": "یاد دہانی"
+      },
+      "messages": {
+        "system_update": "سسٹم اپ ڈیٹ دستیاب ہے",
+        "platform_improvements": "پلیٹ فارم کی بہتری کامیابی سے نافذ کردی گئی",
+        "schedule_sent": "شیڈول کامیابی سے بھیجا گیا",
+        "contact_received": "آپ کو ایک نئی رابطہ کی درخواست موصول ہوئی ہے",
+        "invite_sent": "دعوت کامیابی سے بھیجی گئی",
+        "invite_received": "آپ کو ایک دعوت موصول ہوئی ہے",
+        "invite_accepted": "آپ کی دعوت قبول کی گئی",
+        "payment_completed": "ادائیگی کامیابی سے مکمل ہوئی",
+        "session_canceled": "آپ کا سیشن منسوخ کر دیا گیا ہے",
+        "booking_confirmed": "آپ کی بکنگ کی تصدیق ہو گئی ہے",
+        "reminder": "آپ کا سیشن جلد ہی شروع ہونے والا ہے"
+      }
     },
     "reviews": {
       "title": "جائزے",

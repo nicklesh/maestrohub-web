@@ -905,7 +905,7 @@
     "notifications": {
       "title": "התראות",
       "all": "הכל",
-      "unread": "לא נקרא",
+      "unread": "לא נקראו",
       "mark_all_read": "סמן הכל כנקרא",
       "clear_all": "נקה הכל",
       "no_notifications": "אין התראות",
@@ -916,7 +916,33 @@
       "days_ago": "לפני {{count}} ימים",
       "mark_as_read": "סמן כנקרא",
       "system_update": "עדכון מערכת",
-      "platform_improvements": "שיפורים בפלטפורמה יושמו בהצלחה"
+      "platform_improvements": "שיפורים בפלטפורמה יושמו בהצלחה",
+      "types": {
+        "system_update": "עדכון מערכת",
+        "platform_improvements": "שיפורי פלטפורמה",
+        "schedule_sent": "לוח זמנים נשלח",
+        "contact_received": "בקשת קשר התקבלה",
+        "invite_sent": "הזמנה נשלחה",
+        "invite_received": "הזמנה התקבלה",
+        "invite_accepted": "הזמנה התקבלה",
+        "payment_completed": "תשלום הושלם",
+        "session_canceled": "הפגישה בוטלה",
+        "booking_confirmed": "הזמנה אושרה",
+        "reminder": "תזכורת"
+      },
+      "messages": {
+        "system_update": "עדכון מערכת זמין",
+        "platform_improvements": "שיפורי פלטפורמה הוחלו בהצלחה",
+        "schedule_sent": "לוח הזמנים נשלח בהצלחה",
+        "contact_received": "קיבלת בקשת קשר חדשה",
+        "invite_sent": "ההזמנה נשלחה בהצלחה",
+        "invite_received": "קיבלת הזמנה",
+        "invite_accepted": "ההזמנה שלך התקבלה",
+        "payment_completed": "התשלום הושלם בהצלחה",
+        "session_canceled": "הפגישה שלך בוטלה",
+        "booking_confirmed": "ההזמנה שלך אושרה",
+        "reminder": "הפגישה שלך תתחיל בקרוב"
+      }
     },
     "reviews": {
       "title": "ביקורות",

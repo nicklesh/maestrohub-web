@@ -904,10 +904,10 @@
     },
     "notifications": {
       "title": "Notificações",
-      "all": "Todas",
-      "unread": "Não lidas",
-      "mark_all_read": "Marcar todas como lidas",
-      "clear_all": "Limpar todas",
+      "all": "Todos",
+      "unread": "Não lidos",
+      "mark_all_read": "Marcar todos como lidos",
+      "clear_all": "Limpar todos",
       "no_notifications": "Nenhuma notificação",
       "settings": "Configurações",
       "no_notifications_desc": "Atualizações sobre suas sessões e pagamentos aparecerão aqui",
@@ -916,7 +916,33 @@
       "days_ago": "Há {{count}} dias",
       "mark_as_read": "Marcar como lida",
       "system_update": "Atualização do sistema",
-      "platform_improvements": "Melhorias na plataforma aplicadas com sucesso"
+      "platform_improvements": "Melhorias na plataforma aplicadas com sucesso",
+      "types": {
+        "system_update": "Atualização do sistema",
+        "platform_improvements": "Melhorias na plataforma",
+        "schedule_sent": "Cronograma enviado",
+        "contact_received": "Solicitação de contato recebida",
+        "invite_sent": "Convite enviado",
+        "invite_received": "Convite recebido",
+        "invite_accepted": "Convite aceito",
+        "payment_completed": "Pagamento concluído",
+        "session_canceled": "Sessão cancelada",
+        "booking_confirmed": "Reserva confirmada",
+        "reminder": "Lembrete"
+      },
+      "messages": {
+        "system_update": "Atualização do sistema disponível",
+        "platform_improvements": "Melhorias na plataforma aplicadas com sucesso",
+        "schedule_sent": "Cronograma enviado com sucesso",
+        "contact_received": "Você recebeu uma nova solicitação de contato",
+        "invite_sent": "Convite enviado com sucesso",
+        "invite_received": "Você recebeu um convite",
+        "invite_accepted": "Seu convite foi aceito",
+        "payment_completed": "Pagamento concluído com sucesso",
+        "session_canceled": "Sua sessão foi cancelada",
+        "booking_confirmed": "Sua reserva foi confirmada",
+        "reminder": "Sua sessão começará em breve"
+      }
     },
     "reviews": {
       "title": "Avaliações",

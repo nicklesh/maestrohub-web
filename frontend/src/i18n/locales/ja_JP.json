@@ -916,7 +916,33 @@
       "days_ago": "{{count}}日前",
       "mark_as_read": "既読にする",
       "system_update": "システム更新",
-      "platform_improvements": "プラットフォームの改善が正常に適用されました"
+      "platform_improvements": "プラットフォームの改善が正常に適用されました",
+      "types": {
+        "system_update": "システムアップデート",
+        "platform_improvements": "プラットフォームの改善",
+        "schedule_sent": "スケジュール送信済み",
+        "contact_received": "連絡先リクエスト受信",
+        "invite_sent": "招待送信済み",
+        "invite_received": "招待を受け取りました",
+        "invite_accepted": "招待承認済み",
+        "payment_completed": "支払い完了",
+        "session_canceled": "セッションキャンセル",
+        "booking_confirmed": "予約確認済み",
+        "reminder": "リマインダー"
+      },
+      "messages": {
+        "system_update": "システムアップデートが利用可能です",
+        "platform_improvements": "プラットフォームの改善が正常に適用されました",
+        "schedule_sent": "スケジュールが正常に送信されました",
+        "contact_received": "新しい連絡先リクエストがあります",
+        "invite_sent": "招待が正常に送信されました",
+        "invite_received": "あなたに招待が届いています",
+        "invite_accepted": "あなたの招待が承認されました",
+        "payment_completed": "支払いが正常に完了しました",
+        "session_canceled": "あなたのセッションはキャンセルされました",
+        "booking_confirmed": "あなたの予約が確認されました",
+        "reminder": "あなたのセッションはまもなく始まります"
+      }
     },
     "reviews": {
       "title": "レビュー",

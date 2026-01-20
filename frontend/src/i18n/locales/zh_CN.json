@@ -906,7 +906,7 @@
       "title": "通知",
       "all": "全部",
       "unread": "未读",
-      "mark_all_read": "全部标为已读",
+      "mark_all_read": "全部标记为已读",
       "clear_all": "全部清除",
       "no_notifications": "暂无通知",
       "settings": "设置",
@@ -916,7 +916,33 @@
       "days_ago": "{{count}}天前",
       "mark_as_read": "标记为已读",
       "system_update": "系统更新",
-      "platform_improvements": "平台改进已成功应用"
+      "platform_improvements": "平台改进已成功应用",
+      "types": {
+        "system_update": "系统更新",
+        "platform_improvements": "平台改进",
+        "schedule_sent": "计划已发送",
+        "contact_received": "收到联系人请求",
+        "invite_sent": "邀请已发送",
+        "invite_received": "收到邀请",
+        "invite_accepted": "邀请已接受",
+        "payment_completed": "付款完成",
+        "session_canceled": "会议已取消",
+        "booking_confirmed": "预订已确认",
+        "reminder": "提醒"
+      },
+      "messages": {
+        "system_update": "系统更新可用",
+        "platform_improvements": "平台改进已成功实施",
+        "schedule_sent": "计划已成功发送",
+        "contact_received": "您收到一个新的联系人请求",
+        "invite_sent": "邀请已成功发送",
+        "invite_received": "您收到一个邀请",
+        "invite_accepted": "您的邀请已被接受",
+        "payment_completed": "付款已成功完成",
+        "session_canceled": "您的会议已被取消",
+        "booking_confirmed": "您的预订已确认",
+        "reminder": "您的会议即将开始"
+      }
     },
     "reviews": {
       "title": "评论",

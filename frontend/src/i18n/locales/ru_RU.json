@@ -906,8 +906,8 @@
       "title": "Уведомления",
       "all": "Все",
       "unread": "Непрочитанные",
-      "mark_all_read": "Отметить все как прочитанные",
-      "clear_all": "Очистить все",
+      "mark_all_read": "Отметить все как прочитанное",
+      "clear_all": "Удалить все",
       "no_notifications": "Нет уведомлений",
       "settings": "Настройки",
       "no_notifications_desc": "Обновления о ваших сессиях и платежах появятся здесь",
@@ -916,7 +916,33 @@
       "days_ago": "{{count}} дней назад",
       "mark_as_read": "Отметить как прочитанное",
       "system_update": "Обновление системы",
-      "platform_improvements": "Улучшения платформы успешно применены"
+      "platform_improvements": "Улучшения платформы успешно применены",
+      "types": {
+        "system_update": "Обновление системы",
+        "platform_improvements": "Улучшения платформы",
+        "schedule_sent": "Расписание отправлено",
+        "contact_received": "Получен запрос на контакт",
+        "invite_sent": "Приглашение отправлено",
+        "invite_received": "Приглашение получено",
+        "invite_accepted": "Приглашение принято",
+        "payment_completed": "Платеж завершен",
+        "session_canceled": "Сессия отменена",
+        "booking_confirmed": "Бронирование подтверждено",
+        "reminder": "Напоминание"
+      },
+      "messages": {
+        "system_update": "Доступно обновление системы",
+        "platform_improvements": "Улучшения платформы успешно применены",
+        "schedule_sent": "Расписание успешно отправлено",
+        "contact_received": "У вас новый запрос на контакт",
+        "invite_sent": "Приглашение успешно отправлено",
+        "invite_received": "Вы получили приглашение",
+        "invite_accepted": "Ваше приглашение принято",
+        "payment_completed": "Платеж успешно завершен",
+        "session_canceled": "Ваша сессия была отменена",
+        "booking_confirmed": "Ваше бронирование подтверждено",
+        "reminder": "Ваша сессия скоро начнется"
+      }
     },
     "reviews": {
       "title": "Отзывы",

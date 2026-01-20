@@ -904,10 +904,10 @@
     },
     "notifications": {
       "title": "Notificaciones",
-      "all": "Todas",
-      "unread": "No leídas",
-      "mark_all_read": "Marcar todas como leídas",
-      "clear_all": "Borrar todo",
+      "all": "Todos",
+      "unread": "No leído",
+      "mark_all_read": "Marcar todos como leídos",
+      "clear_all": "Borrar todos",
       "no_notifications": "No hay notificaciones",
       "settings": "Configuración",
       "no_notifications_desc": "Aquí verás actualizaciones sobre tus sesiones y pagos",
@@ -916,7 +916,33 @@
       "days_ago": "Hace {{count}} días",
       "mark_as_read": "Marcar como leído",
       "system_update": "Actualización del sistema",
-      "platform_improvements": "Mejoras en la plataforma aplicadas con éxito"
+      "platform_improvements": "Mejoras en la plataforma aplicadas con éxito",
+      "types": {
+        "system_update": "Actualización del sistema",
+        "platform_improvements": "Mejoras de la plataforma",
+        "schedule_sent": "Horario enviado",
+        "contact_received": "Solicitud de contacto recibida",
+        "invite_sent": "Invitación enviada",
+        "invite_received": "Invitación recibida",
+        "invite_accepted": "Invitación aceptada",
+        "payment_completed": "Pago completado",
+        "session_canceled": "Sesión cancelada",
+        "booking_confirmed": "Reserva confirmada",
+        "reminder": "Recordatorio"
+      },
+      "messages": {
+        "system_update": "Actualización del sistema disponible",
+        "platform_improvements": "Mejoras de la plataforma aplicadas con éxito",
+        "schedule_sent": "Horario enviado con éxito",
+        "contact_received": "Has recibido una nueva solicitud de contacto",
+        "invite_sent": "Invitación enviada con éxito",
+        "invite_received": "Has recibido una invitación",
+        "invite_accepted": "Tu invitación ha sido aceptada",
+        "payment_completed": "Pago completado con éxito",
+        "session_canceled": "Tu sesión ha sido cancelada",
+        "booking_confirmed": "Tu reserva ha sido confirmada",
+        "reminder": "Tu sesión está a punto de empezar"
+      }
     },
     "reviews": {
       "title": "Reseñas",

@@ -904,9 +904,9 @@
     },
     "notifications": {
       "title": "Notifications",
-      "all": "Toutes",
-      "unread": "Non lues",
-      "mark_all_read": "Tout marquer comme lu",
+      "all": "Tous",
+      "unread": "Non lu",
+      "mark_all_read": "Marquer tout comme lu",
       "clear_all": "Tout effacer",
       "no_notifications": "Aucune notification",
       "settings": "Paramètres",
@@ -916,7 +916,33 @@
       "days_ago": "Il y a {{count}} jours",
       "mark_as_read": "Marquer comme lu",
       "system_update": "Mise à jour du système",
-      "platform_improvements": "Améliorations de la plateforme appliquées avec succès"
+      "platform_improvements": "Améliorations de la plateforme appliquées avec succès",
+      "types": {
+        "system_update": "Mise à jour du système",
+        "platform_improvements": "Améliorations de la plateforme",
+        "schedule_sent": "Programme envoyé",
+        "contact_received": "Demande de contact reçue",
+        "invite_sent": "Invitation envoyée",
+        "invite_received": "Invitation reçue",
+        "invite_accepted": "Invitation acceptée",
+        "payment_completed": "Paiement terminé",
+        "session_canceled": "Session annulée",
+        "booking_confirmed": "Réservation confirmée",
+        "reminder": "Rappel"
+      },
+      "messages": {
+        "system_update": "Mise à jour du système disponible",
+        "platform_improvements": "Améliorations de la plateforme appliquées avec succès",
+        "schedule_sent": "Programme envoyé avec succès",
+        "contact_received": "Vous avez reçu une nouvelle demande de contact",
+        "invite_sent": "Invitation envoyée avec succès",
+        "invite_received": "Vous avez reçu une invitation",
+        "invite_accepted": "Votre invitation a été acceptée",
+        "payment_completed": "Paiement effectué avec succès",
+        "session_canceled": "Votre session a été annulée",
+        "booking_confirmed": "Votre réservation a été confirmée",
+        "reminder": "Votre session va bientôt commencer"
+      }
     },
     "reviews": {
       "title": "Avis",

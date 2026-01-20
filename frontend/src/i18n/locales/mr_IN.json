@@ -905,8 +905,8 @@
     "notifications": {
       "title": "सूचना",
       "all": "सर्व",
-      "unread": "न वाचलेले",
-      "mark_all_read": "सर्व वाचलेले करा",
+      "unread": "वाचलेले नाही",
+      "mark_all_read": "सर्व वाचलेले म्हणून चिन्हांकित करा",
       "clear_all": "सर्व साफ करा",
       "no_notifications": "कोणतीही सूचना नाही",
       "settings": "सेटिंग्ज",
@@ -916,7 +916,33 @@
       "days_ago": "{{count}} दिवसांपूर्वी",
       "mark_as_read": "वाचलेले म्हणून नमूद करा",
       "system_update": "सिस्टम अपडेट",
-      "platform_improvements": "प्लॅटफॉर्म सुधारणा यशस्वीरित्या अंमलात आणल्या"
+      "platform_improvements": "प्लॅटफॉर्म सुधारणा यशस्वीरित्या अंमलात आणल्या",
+      "types": {
+        "system_update": "सिस्टम अद्यतन",
+        "platform_improvements": "प्लेटफॉर्म सुधार",
+        "schedule_sent": "वेळापत्रक पाठवले गेले",
+        "contact_received": "संपर्क विनंती प्राप्त",
+        "invite_sent": "आमंत्रण पाठवले",
+        "invite_received": "आमंत्रण प्राप्त झाले",
+        "invite_accepted": "आमंत्रण स्वीकारले",
+        "payment_completed": "देयक पूर्ण झाले",
+        "session_canceled": "सत्र रद्द केले",
+        "booking_confirmed": "बुकिंग यशस्वी",
+        "reminder": "स्मरणपत्र"
+      },
+      "messages": {
+        "system_update": "सिस्टम अद्यतन उपलब्ध आहे",
+        "platform_improvements": "प्लेटफॉर्म सुधार यशस्वीपणे लागू झाले",
+        "schedule_sent": "वेळापत्रक यशस्वीरित्या पाठवले गेले",
+        "contact_received": "तुम्हाला एक नवीन संपर्क विनंती मिळाली आहे",
+        "invite_sent": "आमंत्रण यशस्वीरित्या पाठवले गेले",
+        "invite_received": "तुम्हाला एक आमंत्रण मिळाले आहे",
+        "invite_accepted": "तुमचे आमंत्रण स्वीकारले गेले आहे",
+        "payment_completed": "देयक यशस्वीपणे पूर्ण झाले",
+        "session_canceled": "तुमचे सत्र रद्द केले गेले आहे",
+        "booking_confirmed": "तुमची बुकिंग यशस्वीपणे निश्चित झाली आहे",
+        "reminder": "तुमचे सत्र लवकरच सुरू होणार आहे"
+      }
     },
     "reviews": {
       "title": "समीक्षा",

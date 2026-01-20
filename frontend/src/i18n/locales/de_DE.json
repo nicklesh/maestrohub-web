@@ -916,7 +916,33 @@
       "days_ago": "Vor {{count}} Tagen",
       "mark_as_read": "Als gelesen markieren",
       "system_update": "Systemupdate",
-      "platform_improvements": "Plattformverbesserungen erfolgreich umgesetzt"
+      "platform_improvements": "Plattformverbesserungen erfolgreich umgesetzt",
+      "types": {
+        "system_update": "System-Update",
+        "platform_improvements": "Plattformverbesserungen",
+        "schedule_sent": "Zeitplan gesendet",
+        "contact_received": "Kontaktanfrage erhalten",
+        "invite_sent": "Einladung gesendet",
+        "invite_received": "Einladung erhalten",
+        "invite_accepted": "Einladung akzeptiert",
+        "payment_completed": "Zahlung abgeschlossen",
+        "session_canceled": "Sitzung abgesagt",
+        "booking_confirmed": "Buchung bestätigt",
+        "reminder": "Erinnerung"
+      },
+      "messages": {
+        "system_update": "Systemupdate verfügbar",
+        "platform_improvements": "Plattformverbesserungen erfolgreich umgesetzt",
+        "schedule_sent": "Zeitplan erfolgreich gesendet",
+        "contact_received": "Sie haben eine neue Kontaktanfrage erhalten",
+        "invite_sent": "Einladung erfolgreich gesendet",
+        "invite_received": "Sie haben eine Einladung erhalten",
+        "invite_accepted": "Ihre Einladung wurde angenommen",
+        "payment_completed": "Zahlung erfolgreich abgeschlossen",
+        "session_canceled": "Ihre Sitzung wurde abgesagt",
+        "booking_confirmed": "Ihre Buchung wurde bestätigt",
+        "reminder": "Ihre Sitzung beginnt in Kürze"
+      }
     },
     "reviews": {
       "title": "Bewertungen",

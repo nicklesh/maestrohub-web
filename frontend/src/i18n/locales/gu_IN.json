@@ -905,9 +905,9 @@
     "notifications": {
       "title": "સૂચનાઓ",
       "all": "બધા",
-      "unread": "અપાઠિત",
-      "mark_all_read": "બધાને વાંચેલું સ્થિતિમાં રૂપાંતર કરો",
-      "clear_all": "બધું સાફ કરો",
+      "unread": "અનપઠિત",
+      "mark_all_read": "બધાને વાંચાયેલા તરીકે નિશાન લગાવો",
+      "clear_all": "બધા સાફ કરો",
       "no_notifications": "કોઈ સૂચના નથી",
       "settings": "સેટિંગ્સ",
       "no_notifications_desc": "તમારા સત્રો અને ચુકવણીઓ અંગે અપડેટ અહીં બતાવાશે",
@@ -916,7 +916,33 @@
       "days_ago": "{{count}} દિવસ પહેલાં",
       "mark_as_read": "વાંચેલું તરીકે ચિહ્નિત કરો",
       "system_update": "સિસ્ટમ અપડેટ",
-      "platform_improvements": "પ્લેટફોર્મ સુધારાઓ સફળતાપૂર્વક લાગુ કરાયા"
+      "platform_improvements": "પ્લેટફોર્મ સુધારાઓ સફળતાપૂર્વક લાગુ કરાયા",
+      "types": {
+        "system_update": "સિસ્ટમ અપડેટ",
+        "platform_improvements": "પ્લેટફોર્મ સુધારાઓ",
+        "schedule_sent": "શિડ્યૂલ મોકલાયું",
+        "contact_received": "સંપર્ક વિનંતિ મળી",
+        "invite_sent": "આમંત્રણ મોકલાયું",
+        "invite_received": "આમંત્રણ મળ્યું",
+        "invite_accepted": "આમંત્રણ સ્વીકાર્યું",
+        "payment_completed": "ચુકવણી પૂર્ણ",
+        "session_canceled": "સત્ર રદ થયું",
+        "booking_confirmed": "બુકિંગ પુષ્ટિ થઈ",
+        "reminder": "સ्मરણ કરાવવું"
+      },
+      "messages": {
+        "system_update": "સિસ્ટમ અપડેટ ઉપલબ્ધ છે",
+        "platform_improvements": "પ્લેટફોર્મ સુધારાઓ સફળતાપૂર્વક લાગુ કરવામાં આવ્યા",
+        "schedule_sent": "શિડ્યૂલ સફળતાપૂર્વક મોકલાયું",
+        "contact_received": "તમને એક નવી સંપર્ક વિનંતિ મળી છે",
+        "invite_sent": "આમંત્રણ સફળતાપૂર્વક મોકલાયું",
+        "invite_received": "તમને એક આમંત્રણ મળ્યું છે",
+        "invite_accepted": "તમારું આમંત્રણ સ્વીકારાયું",
+        "payment_completed": "ચુકવણીઓ સફળતાપૂર્વક પૂર્ણ થઈ",
+        "session_canceled": "તમારું સત્ર રદ કરવામાં આવ્યું છે",
+        "booking_confirmed": "તમારી બુકિંગ પુષ્ટિ થઈ છે",
+        "reminder": "તમારું સત્ર જલ્દી શરૂ થવાનું છે"
+      }
     },
     "reviews": {
       "title": "સમીક્ષાઓ",

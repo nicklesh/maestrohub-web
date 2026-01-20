@@ -905,9 +905,9 @@
     "notifications": {
       "title": "ಅಧಿಸೂಚನೆಗಳು",
       "all": "ಎಲ್ಲಾ",
-      "unread": "ಓದದಿರಲಿ",
-      "mark_all_read": "ಎಲ್ಲವನ್ನು ಓದಿದಂತೆ ಗುರುತಿಸಿ",
-      "clear_all": "ಎಲ್ಲವನ್ನು ತೆರವುಗೊಳಿಸಿ",
+      "unread": "ನೋಡದದ್ದು",
+      "mark_all_read": "ಎಲ್ಲಾ ಓದಿದಂತೆ ಗುರುತಿಸಿ",
+      "clear_all": "ಎಲ್ಲಾ ತೆರವು ಮಾಡು",
       "no_notifications": "ಯಾವುದೇ ಅಧಿಸೂಚನೆಗಳು ಇಲ್ಲ",
       "settings": "ಸೆಟ್ಟಿಂಗ್ಗಳು",
       "no_notifications_desc": "ನಿಮ್ಮ ಸೆಶನ್‌ಗಳು ಮತ್ತು ಪಾವತಿಗಳ ಕುರಿತು ಅಪ್‌ಡೇಟ್ಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ",
@@ -916,7 +916,33 @@
       "days_ago": "{{count}} ದಿನಗಳ ಹಿಂದೆ",
       "mark_as_read": "ಓದಿದ ಹಾಗೆ ಗುರುತಿಸಿ",
       "system_update": "ಪ್ರಣಾಳಿ ನವೀಕರಣ",
-      "platform_improvements": "ಮಂಚ ಸುಧಾರಣೆಗಳು ಯಶಸ್ವಿಯಾಗಿ ಜಾರಿಗೆ ಬಂತು"
+      "platform_improvements": "ಮಂಚ ಸುಧಾರಣೆಗಳು ಯಶಸ್ವಿಯಾಗಿ ಜಾರಿಗೆ ಬಂತು",
+      "types": {
+        "system_update": "ಸಿಸ್ಟಮ್ ಅಪ್‌ಡೇಟು",
+        "platform_improvements": "ಮಂಚ ಸುಧಾರಣೆಗಳು",
+        "schedule_sent": " ಸಮಯಪಟ್ಟಿ ಕಳುಹಿಸಲಾಗಿದೆ",
+        "contact_received": "ಸಂಪರ್ಕ ವಿನಂತಿ ಪಡೆದುಕೊಂಡಿದೆ",
+        "invite_sent": "ಆಮಂತ್ರಣ ಕಳುಹಿಸಲಾಗಿದೆ",
+        "invite_received": "ಆಮಂತ್ರಣ ಪಡೆದಿದೆ",
+        "invite_accepted": "ಆಮಂತ್ರಣ ಅಂಗೀಕಾರಗೊಂಡಿದೆ",
+        "payment_completed": "ಪಾವತಿ ಪೂರ್ಣಗೊಂಡಿದೆ",
+        "session_canceled": "ಸೆಷನ್ ರದ್ದುಪಡಿಸಲಾಗಿದೆ",
+        "booking_confirmed": "ಬುಕಿಂಗ್ ದೃಢೀಕರಿಸಲಾಗಿದೆ",
+        "reminder": "ಸ्मರಣಿಕೆ"
+      },
+      "messages": {
+        "system_update": "ಸಿಸ್ಟಮ್ ಅಪ್‌ಡೇಟು ಲಭ್ಯವಿದೆ",
+        "platform_improvements": "ಮಂಚ ಸುಧಾರಣೆಗಳನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಅನುಷ್ಠಾನಗೊಳಿಸಲಾಗಿದೆ",
+        "schedule_sent": "ಸಮಯಪಟ್ಟಿ ಯಶಸ್ವಿಯಾಗಿ ಕಳುಹಿಸಲಾಗಿದೆ",
+        "contact_received": "ನಿಮಗೆ ಹೊಸ ಸಂಪರ್ಕ ವಿನಂತಿ ಬಂದಿದೆ",
+        "invite_sent": "ಆಮಂತ್ರಣ ಯಶಸ್ವಿಯಾಗಿ ಕಳುಹಿಸಲಾಗಿದೆ",
+        "invite_received": "ನೀವು ಒಂದು ಆಮಂತ್ರಣ ಪಡೆದಿದ್ದೀರಿ",
+        "invite_accepted": "ನಿಮ್ಮ ಆಮಂತ್ರಣ ಸ್ವೀಕರಿಸಲಾಗಿದೆ",
+        "payment_completed": "ಪಾವತಿ ಯಶಸ್ವಿಯಾಗಿ ಪೂರ್ಣಗೊಂಡಿದೆ",
+        "session_canceled": "ನಿಮ್ಮ ಸೆಷನ್ ರದ್ದುಮಾಡಲಾಗಿದೆ",
+        "booking_confirmed": "ನಿಮ್ಮ ಬುಕಿಂಗ್ ದೃಢೀಕರಿಸಲಾಗಿದೆ",
+        "reminder": "ನಿಮ್ಮ ಸೆಷನ್ ಸೀಘ್ರದಲ್ಲೇ ಪ್ರಾರಂಭವಾಗಲಿದೆ"
+      }
     },
     "reviews": {
       "title": "ಸಮೀಕ್ಷೆಗಳು",

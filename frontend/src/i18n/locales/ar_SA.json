@@ -905,8 +905,8 @@
     "notifications": {
       "title": "الإشعارات",
       "all": "الكل",
-      "unread": "غير مقروءة",
-      "mark_all_read": "وضع الكل كمقروء",
+      "unread": "غير مقروء",
+      "mark_all_read": "وضع علامة كُلها كمقروءة",
       "clear_all": "مسح الكل",
       "no_notifications": "لا توجد إشعارات",
       "settings": "الإعدادات",
@@ -916,7 +916,33 @@
       "days_ago": "منذ {{count}} يوم",
       "mark_as_read": "وضع كمقروء",
       "system_update": "تحديث النظام",
-      "platform_improvements": "تم تطبيق تحسينات المنصة بنجاح"
+      "platform_improvements": "تم تطبيق تحسينات المنصة بنجاح",
+      "types": {
+        "system_update": "تحديث النظام",
+        "platform_improvements": "تحسينات المنصة",
+        "schedule_sent": "تم إرسال الجدول",
+        "contact_received": "تم استلام طلب الاتصال",
+        "invite_sent": "تم إرسال الدعوة",
+        "invite_received": "تم استلام الدعوة",
+        "invite_accepted": "تم قبول الدعوة",
+        "payment_completed": "اكتمل الدفع",
+        "session_canceled": "تم إلغاء الجلسة",
+        "booking_confirmed": "تم تأكيد الحجز",
+        "reminder": "تذكير"
+      },
+      "messages": {
+        "system_update": "تحديث النظام متاح",
+        "platform_improvements": "تم تطبيق تحسينات المنصة بنجاح",
+        "schedule_sent": "تم إرسال الجدول بنجاح",
+        "contact_received": "لديك طلب اتصال جديد",
+        "invite_sent": "تم إرسال الدعوة بنجاح",
+        "invite_received": "لديك دعوة",
+        "invite_accepted": "تم قبول دعوتك",
+        "payment_completed": "تم إتمام الدفع بنجاح",
+        "session_canceled": "تم إلغاء جلستك",
+        "booking_confirmed": "تم تأكيد حجزك",
+        "reminder": "ستبدأ جلستك قريبًا"
+      }
     },
     "reviews": {
       "title": "التقييمات",

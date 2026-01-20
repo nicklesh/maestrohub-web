@@ -906,8 +906,8 @@
       "title": "通知",
       "all": "全部",
       "unread": "未读",
-      "mark_all_read": "全部标为已读",
-      "clear_all": "全部清除",
+      "mark_all_read": "标记全部为已读",
+      "clear_all": "清除全部",
       "no_notifications": "没有通知",
       "settings": "设置",
       "no_notifications_desc": "您的课程和付款更新将显示在这里",
@@ -916,7 +916,33 @@
       "days_ago": "{{count}} 天前",
       "mark_as_read": "标为已读",
       "system_update": "系统更新",
-      "platform_improvements": "平台改进已成功实施"
+      "platform_improvements": "平台改进已成功实施",
+      "types": {
+        "system_update": "系统更新",
+        "platform_improvements": "平台改进",
+        "schedule_sent": "日程已发送",
+        "contact_received": "收到联系人请求",
+        "invite_sent": "邀请已发送",
+        "invite_received": "收到邀请",
+        "invite_accepted": "邀请已接受",
+        "payment_completed": "付款完成",
+        "session_canceled": "会话已取消",
+        "booking_confirmed": "预订已确认",
+        "reminder": "提醒"
+      },
+      "messages": {
+        "system_update": "系统更新可用",
+        "platform_improvements": "平台改进已成功应用",
+        "schedule_sent": "日程已成功发送",
+        "contact_received": "您收到新的联系人请求",
+        "invite_sent": "邀请已成功发送",
+        "invite_received": "您收到一个邀请",
+        "invite_accepted": "您的邀请已被接受",
+        "payment_completed": "付款已成功完成",
+        "session_canceled": "您的会话已取消",
+        "booking_confirmed": "您的预订已确认",
+        "reminder": "您的会话即将开始"
+      }
     },
     "reviews": {
       "title": "评价",

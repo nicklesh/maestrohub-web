@@ -906,8 +906,8 @@
       "title": "বিজ্ঞপ্তি",
       "all": "সব",
       "unread": "অপঠিত",
-      "mark_all_read": "সবকে পড়া চিহ্নিত করুন",
-      "clear_all": "সব মুছে ফেলুন",
+      "mark_all_read": "সব গুলো পড়া চিহ্নিত করুন",
+      "clear_all": "সব গুলো মুছে ফেলুন",
       "no_notifications": "কোনও বিজ্ঞপ্তি নেই",
       "settings": "সেটিংস",
       "no_notifications_desc": "আপনার সেশন এবং অর্থপ্রদানের আপডেটগুলো এখানে দেখা যাবে",
@@ -916,7 +916,33 @@
       "days_ago": "{{count}} দিন আগে",
       "mark_as_read": "পড়া হিসাবে চিহ্নিত করুন",
       "system_update": "সিস্টেম আপডেট",
-      "platform_improvements": "প্ল্যাটফর্ম উন্নতিসমূহ সফলভাবে প্রয়োগ করা হয়েছে"
+      "platform_improvements": "প্ল্যাটফর্ম উন্নতিসমূহ সফলভাবে প্রয়োগ করা হয়েছে",
+      "types": {
+        "system_update": "সিস্টেম আপডেট",
+        "platform_improvements": "প্ল্যাটফর্ম উন্নতি",
+        "schedule_sent": "সময়সূচী পাঠানো হয়েছে",
+        "contact_received": "যোগাযোগ অনুরোধ প্রাপ্ত",
+        "invite_sent": "আমন্ত্রণ পাঠানো হয়েছে",
+        "invite_received": "আমন্ত্রণ প্রাপ্ত হয়েছে",
+        "invite_accepted": "আমন্ত্রণ গৃহীত",
+        "payment_completed": "পেমেন্ট সম্পন্ন",
+        "session_canceled": "সেশন বাতিল",
+        "booking_confirmed": "বুকিং নিশ্চিত",
+        "reminder": "স্মরণিকা"
+      },
+      "messages": {
+        "system_update": "সিস্টেম আপডেট উপলব্ধ",
+        "platform_improvements": "প্ল্যাটফর্ম উন্নতি সফলভাবে প্রয়োগ করা হয়েছে",
+        "schedule_sent": "সময়সূচী সফলভাবে পাঠানো হয়েছে",
+        "contact_received": "আপনি একটি নতুন যোগাযোগ অনুরোধ পেয়েছেন",
+        "invite_sent": "আমন্ত্রণ সফলভাবে পাঠানো হয়েছে",
+        "invite_received": "আপনি একটি আমন্ত্রণ পেয়েছেন",
+        "invite_accepted": "আপনার আমন্ত্রণ গৃহীত হয়েছে",
+        "payment_completed": "পেমেন্ট সফলভাবে সম্পন্ন হয়েছে",
+        "session_canceled": "আপনার সেশন বাতিল করা হয়েছে",
+        "booking_confirmed": "আপনার বুকিং নিশ্চিত হয়েছে",
+        "reminder": "আপনার সেশন শীঘ্রই শুরু হবে"
+      }
     },
     "reviews": {
       "title": "সমালোচনা",
