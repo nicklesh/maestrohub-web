@@ -53,7 +53,7 @@ export default function BillingScreen() {
   const isDesktop = width >= 1024;
   const contentMaxWidth = isDesktop ? 720 : isTablet ? 600 : undefined;
 
-  const styles = getStyles(colors);
+  const currencySymbol = market?.currency_symbol || summary?.currency_symbol || '$';
 
   useEffect(() => {
     loadBilling();
