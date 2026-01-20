@@ -17,6 +17,7 @@ import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 import { useToast } from '@/src/context/ToastContext';
 import { useTranslation } from '@/src/i18n';
 import AppHeader from '@/src/components/AppHeader';
+import { useMarket } from '@/src/context/MarketContext';
 
 interface BillingSummary {
   trial_status: string;
