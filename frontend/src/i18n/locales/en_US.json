@@ -1718,7 +1718,13 @@
         "logout": "Logout",
         "logout_confirm": "Are you sure you want to logout?",
         "profile_summary": "Profile Summary",
-        "modality": "Modality"
+        "modality": "Modality",
+        "listing_status": "Listing Status",
+        "profile_visible": "Your profile is visible to students",
+        "profile_hidden": "Your profile is hidden",
+        "published": "Published",
+        "publish": "Publish",
+        "grow_business": "Grow Your Business"
       },
       "billing": {
         "title": "Billing",
