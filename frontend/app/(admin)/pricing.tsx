@@ -177,7 +177,23 @@ export default function AdminPricingScreen() {
           ))}
 
           {/* Add Policy Button */}
-          <TouchableOpacity style={[styles.addButton, isTablet && styles.addButtonTablet]}>
+          <TouchableOpacity 
+            style={[styles.addButton, isTablet && styles.addButtonTablet]}
+            onPress={() => {
+              const newPolicy: PricingPolicy = {
+                id: Date.now().toString(),
+                name: 'New Policy',
+                description: 'Enter policy description',
+                platformFeePercent: 15,
+                minPrice: 20,
+                maxPrice: 500,
+                isActive: false,
+              };
+              setPolicies([...policies, newPolicy]);
+              setEditingId(newPolicy.id);
+              showSuccess('New policy added. Edit and save.');
+            }}
+          >
             <Ionicons name="add-circle" size={20} color={colors.primary} />
             <Text style={styles.addButtonText}>Add New Policy</Text>
           </TouchableOpacity>
