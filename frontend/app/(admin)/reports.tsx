@@ -61,19 +61,20 @@ export default function AdminReportsScreen() {
     pendingPayouts: 3240,
   });
 
-  const [weeklyTrends] = useState<TrendData[]>([
-    { period: 'Week 1', tutors: 18, parents: 95, revenue: 2100 },
-    { period: 'Week 2', tutors: 20, parents: 108, revenue: 2890 },
-    { period: 'Week 3', tutors: 24, parents: 118, revenue: 3450 },
-    { period: 'Week 4', tutors: 28, parents: 128, revenue: 4010 },
-  ]);
+  // Use t() function to get translated labels dynamically
+  const getWeeklyTrends = () => [
+    { period: `${t('pages.admin.reports_page.week')} 1`, tutors: 18, parents: 95, revenue: 2100 },
+    { period: `${t('pages.admin.reports_page.week')} 2`, tutors: 20, parents: 108, revenue: 2890 },
+    { period: `${t('pages.admin.reports_page.week')} 3`, tutors: 24, parents: 118, revenue: 3450 },
+    { period: `${t('pages.admin.reports_page.week')} 4`, tutors: 28, parents: 128, revenue: 4010 },
+  ];
 
-  const [monthlyTrends] = useState<TrendData[]>([
-    { period: 'Oct', tutors: 12, parents: 65, revenue: 5200 },
-    { period: 'Nov', tutors: 18, parents: 89, revenue: 7800 },
-    { period: 'Dec', tutors: 24, parents: 112, revenue: 9600 },
-    { period: 'Jan', tutors: 28, parents: 128, revenue: 12450 },
-  ]);
+  const getMonthlyTrends = () => [
+    { period: t('months.oct'), tutors: 12, parents: 65, revenue: 5200 },
+    { period: t('months.nov'), tutors: 18, parents: 89, revenue: 7800 },
+    { period: t('months.dec'), tutors: 24, parents: 112, revenue: 9600 },
+    { period: t('months.jan'), tutors: 28, parents: 128, revenue: 12450 },
+  ];
 
   const [categoryBreakdown] = useState<CategoryBreakdown[]>([
     { category: 'Academic', tutors: 12, parents: 85, bookings: 156 },
