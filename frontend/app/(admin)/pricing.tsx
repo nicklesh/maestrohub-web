@@ -149,34 +149,30 @@ export default function AdminPricingScreen() {
     showSuccess('Policy status updated');
   };
 
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [policyToDelete, setPolicyToDelete] = useState<PricingPolicy | null>(null);
+
   const deletePolicy = (policy: PricingPolicy) => {
     if (policy.hasHistory) {
       showError('Cannot delete policy with historical user associations');
       return;
     }
+    setPolicyToDelete(policy);
+    setShowDeleteModal(true);
+  };
 
-    if (Platform.OS === 'web') {
-      if (window.confirm('Are you sure you want to delete this policy?')) {
-        setPolicies(prev => prev.filter(p => p.id !== policy.id));
-        showSuccess('Policy deleted');
-      }
-    } else {
-      Alert.alert(
-        'Delete Policy',
-        'Are you sure you want to delete this policy?',
-        [
-          { text: 'Cancel', style: 'cancel' },
-          {
-            text: 'Delete',
-            style: 'destructive',
-            onPress: () => {
-              setPolicies(prev => prev.filter(p => p.id !== policy.id));
-              showSuccess('Policy deleted');
-            },
-          },
-        ]
-      );
+  const confirmDelete = () => {
+    if (policyToDelete) {
+      setPolicies(prev => prev.filter(p => p.id !== policyToDelete.id));
+      showSuccess('Policy deleted');
     }
+    setShowDeleteModal(false);
+    setPolicyToDelete(null);
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteModal(false);
+    setPolicyToDelete(null);
   };
 
   const addNewPolicy = () => {
