@@ -342,30 +342,30 @@ export default function AdminReportsScreen() {
 
   const renderCategories = () => (
     <View style={[styles.section, isTablet && styles.sectionTablet]}>
-      <Text style={styles.sectionTitle}>Category Breakdown</Text>
+      <Text style={styles.sectionTitle}>{t('pages.admin.reports_page.category_breakdown')}</Text>
       {categoryBreakdown.map((cat) => (
         <View key={cat.category} style={styles.categoryRow}>
           <View style={styles.categoryHeader}>
             <Text style={styles.categoryName}>{cat.category}</Text>
-            <Text style={styles.categoryBookings}>{cat.bookings} bookings</Text>
+            <Text style={styles.categoryBookings}>{cat.bookings} {t('pages.admin.markets_page.bookings').toLowerCase()}</Text>
           </View>
           <View style={styles.categoryStats}>
             <View style={styles.categoryStat}>
               <Ionicons name="school" size={14} color={colors.primary} />
               <Text style={styles.categoryStatValue}>{cat.tutors}</Text>
-              <Text style={styles.categoryStatLabel}>tutors</Text>
+              <Text style={styles.categoryStatLabel}>{t('pages.admin.markets_page.coaches').toLowerCase()}</Text>
             </View>
             <View style={styles.categoryStat}>
               <Ionicons name="people" size={14} color={colors.accent} />
               <Text style={styles.categoryStatValue}>{cat.parents}</Text>
-              <Text style={styles.categoryStatLabel}>parents</Text>
+              <Text style={styles.categoryStatLabel}>{t('pages.admin.reports_page.parents').toLowerCase()}</Text>
             </View>
             <View style={styles.categoryStat}>
               <Ionicons name="trending-up" size={14} color={colors.success} />
               <Text style={styles.categoryStatValue}>
                 {((cat.bookings / categoryBreakdown.reduce((sum, c) => sum + c.bookings, 0)) * 100).toFixed(0)}%
               </Text>
-              <Text style={styles.categoryStatLabel}>share</Text>
+              <Text style={styles.categoryStatLabel}>{t('pages.admin.reports_page.share')}</Text>
             </View>
           </View>
           <View style={styles.categoryBar}>
