@@ -220,27 +220,28 @@ export default function AdminTutors() {
       <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
         {/* Header */}
         <View style={[styles.header, isTablet && styles.headerTablet]}>
-          <Text style={[styles.title, isDesktop && styles.titleDesktop]}>Manage Coaches</Text>
+          <Text style={[styles.title, isDesktop && styles.titleDesktop]}>{t('pages.admin.coaches_page.title')}</Text>
+          <Text style={[styles.subtitle, isDesktop && styles.subtitleDesktop]}>{t('pages.admin.coaches_page.subtitle')}</Text>
         </View>
 
         {/* Filter Tabs */}
         <View style={[styles.filterRow, isTablet && styles.filterRowTablet]}>
-          {STATUS_FILTER.map((f) => (
+          {(['all', 'pending', 'approved', 'suspended'] as const).map((f) => (
             <TouchableOpacity
-              key={f.id}
+              key={f}
               style={[
                 styles.filterChip,
-                filter === f.id && styles.filterChipActive,
+                filter === f && styles.filterChipActive,
               ]}
-              onPress={() => setFilter(f.id)}
+              onPress={() => setFilter(f)}
             >
               <Text
                 style={[
                   styles.filterChipText,
-                  filter === f.id && styles.filterChipTextActive,
+                  filter === f && styles.filterChipTextActive,
                 ]}
               >
-                {f.name}
+                {t(`pages.admin.coaches_page.${f}`)}
               </Text>
             </TouchableOpacity>
           ))}
@@ -263,7 +264,7 @@ export default function AdminTutors() {
             ListEmptyComponent={
               <View style={styles.emptyContainer}>
                 <Ionicons name="people-outline" size={64} color={colors.textMuted} />
-                <Text style={styles.emptyText}>No tutors found</Text>
+                <Text style={styles.emptyText}>{t('pages.admin.coaches_page.no_coaches')}</Text>
               </View>
             }
           />
