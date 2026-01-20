@@ -185,7 +185,7 @@ export default function AdminInboxScreen() {
       <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
         <View style={styles.header}>
           <View style={styles.titleRow}>
-            <Text style={[styles.title, { color: colors.text }]}>Inbox</Text>
+            <Text style={[styles.title, { color: colors.text }]}>{t('pages.admin.inbox_page.title')}</Text>
             {pendingCount > 0 && (
               <View style={[styles.pendingBadge, { backgroundColor: colors.error }]}>
                 <Text style={styles.pendingText}>{pendingCount}</Text>
@@ -193,7 +193,7 @@ export default function AdminInboxScreen() {
             )}
           </View>
           <Text style={[styles.subtitle, { color: colors.textMuted }]}>
-            Contact messages from users
+            {t('pages.admin.inbox_page.subtitle')}
           </Text>
         </View>
 
@@ -215,7 +215,7 @@ export default function AdminInboxScreen() {
                 styles.tabText,
                 { color: filter === f ? '#FFFFFF' : colors.text }
               ]}>
-                {f.charAt(0).toUpperCase() + f.slice(1)}
+                {t(`pages.admin.inbox_page.${f}`)}
               </Text>
             </TouchableOpacity>
           ))}
@@ -225,7 +225,7 @@ export default function AdminInboxScreen() {
           <View style={styles.emptyContainer}>
             <Ionicons name="mail-outline" size={64} color={colors.textMuted} />
             <Text style={[styles.emptyText, { color: colors.textMuted }]}>
-              No {filter !== 'all' ? filter : ''} messages
+              {t('pages.admin.inbox_page.no_messages')}
             </Text>
           </View>
         ) : (
@@ -246,7 +246,7 @@ export default function AdminInboxScreen() {
         <View style={[styles.modalOverlay, { backgroundColor: 'rgba(0,0,0,0.5)' }]}>
           <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
             <View style={styles.modalHeader}>
-              <Text style={[styles.modalTitle, { color: colors.text }]}>Message Details</Text>
+              <Text style={[styles.modalTitle, { color: colors.text }]}>{t('pages.admin.inbox_page.message_details')}</Text>
               <TouchableOpacity onPress={() => setSelectedMessage(null)}>
                 <Ionicons name="close" size={24} color={colors.text} />
               </TouchableOpacity>
@@ -255,28 +255,28 @@ export default function AdminInboxScreen() {
             {selectedMessage && (
               <View style={styles.modalBody}>
                 <View style={styles.detailRow}>
-                  <Text style={[styles.detailLabel, { color: colors.textMuted }]}>From:</Text>
+                  <Text style={[styles.detailLabel, { color: colors.textMuted }]}>{t('pages.admin.inbox_page.from')}:</Text>
                   <Text style={[styles.detailValue, { color: colors.text }]}>
                     {selectedMessage.user_name} ({selectedMessage.user_email})
                   </Text>
                 </View>
                 
                 <View style={styles.detailRow}>
-                  <Text style={[styles.detailLabel, { color: colors.textMuted }]}>Subject:</Text>
+                  <Text style={[styles.detailLabel, { color: colors.textMuted }]}>{t('pages.admin.inbox_page.subject')}:</Text>
                   <Text style={[styles.detailValue, { color: colors.text }]}>
                     {selectedMessage.subject}
                   </Text>
                 </View>
                 
                 <View style={styles.detailRow}>
-                  <Text style={[styles.detailLabel, { color: colors.textMuted }]}>Message:</Text>
+                  <Text style={[styles.detailLabel, { color: colors.textMuted }]}>{t('pages.admin.inbox_page.message')}:</Text>
                 </View>
                 <Text style={[styles.fullMessage, { color: colors.text, backgroundColor: colors.background }]}>
                   {selectedMessage.message}
                 </Text>
                 
                 <View style={styles.detailRow}>
-                  <Text style={[styles.detailLabel, { color: colors.textMuted }]}>Status:</Text>
+                  <Text style={[styles.detailLabel, { color: colors.textMuted }]}>{t('pages.admin.inbox_page.status')}:</Text>
                   <View style={[styles.statusBadge, { backgroundColor: getStatusColor(selectedMessage.status).bg }]}>
                     <Text style={[styles.statusText, { color: getStatusColor(selectedMessage.status).text }]}>
                       {selectedMessage.status}
