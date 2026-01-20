@@ -1690,7 +1690,8 @@
         "create_profile": "Profil erstellen",
         "boost_visibility": "Steigern Sie Ihre Sichtbarkeit!",
         "sponsor_desc": "Werde oben in den Suchergebnissen angezeigt und ziehe mehr Studenten an.",
-        "learn_more": "Mehr erfahren"
+        "learn_more": "Mehr erfahren",
+        "title": "Dashboard"
       },
       "calendar": {
         "title": "Kalender",
