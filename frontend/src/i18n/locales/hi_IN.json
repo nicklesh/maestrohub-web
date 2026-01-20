@@ -1080,7 +1080,11 @@
         "max_warning_message": "अधिकतम मूल्य ${amount} उद्योग मानक ${standard} से अधिक है। क्या आप आगे बढ़ना सुनिश्चित करना चाहते हैं?",
         "delete_policy": "नीति हटाएं",
         "delete_confirm_message": "क्या आप वाकई \"{name}\" को हटाना चाहते हैं? इस कार्रवाई को पूर्ववत नहीं किया जा सकता।",
-        "max_must_be_greater": "अधिकतम मूल्य न्यूनतम मूल्य के बराबर या उससे अधिक होना चाहिए"
+        "max_must_be_greater": "अधिकतम मूल्य न्यूनतम मूल्य के बराबर या उससे अधिक होना चाहिए",
+        "history_note": "ऐतिहासिक संबंध हैं - हटाया नहीं जा सकता",
+        "min_price_error": "न्यूनतम मूल्य कम से कम ${amount} होना चाहिए",
+        "max_less_than_min": "अधिकतम मूल्य न्यूनतम मूल्य के बराबर या उससे अधिक होना चाहिए",
+        "status_updated": "नीति स्थिति अपडेट की गई"
       },
       "scheduled_jobs": {
         "title": "निर्धारित नौकरियाँ",
@@ -1118,7 +1122,35 @@
         "cannot_trigger": "यह कार्य मैन्युअल रूप से ट्रिगर नहीं किया जा सकता",
         "job_completed": "कार्य सफलतापूर्वक पूरा हुआ!",
         "job_failed": "कार्य चलाने में विफल",
-        "status_legend": "स्थिति लीजेंड"
+        "status_legend": "स्थिति लीजेंड",
+        "never_run": "कभी न दौड़ें",
+        "jobs": {
+          "monthly_reports": {
+            "name": "मासिक कर रिपोर्ट",
+            "description": "सभी उपयोगकर्ताओं के लिए transactions के साथ मासिक payment summary reports उत्पन्न करें",
+            "schedule_display": "हर महीने की 1 तारीख को सुबह 2:00 बजे"
+          },
+          "annual_1099_reports": {
+            "name": "वार्षिक 1099 रिपोर्ट्स",
+            "description": "सभी प्रदाताओं के लिए वार्षिक कर दस्तावेज (1099 equivalent) जेनरेट करें",
+            "schedule_display": "1 जनवरी को सुबह 3:00 बजे"
+          },
+          "session_reminders": {
+            "name": "सत्र अनुस्मारक",
+            "description": "आगामी सेशन के लिए रिमाइंडर नोटिफिकेशन भेजें (24 घंटे और 1 घंटे पहले)",
+            "schedule_display": "हर घंटे"
+          },
+          "kid_notifications": {
+            "name": "बच्चों की गतिविधि अपडेट",
+            "description": "माता-पिता को उनके बच्चों की session गतिविधियों के बारे में अपडेट भेजें",
+            "schedule_display": "प्रतिदिन शाम 6:00 बजे"
+          },
+          "referral_check": {
+            "name": "रेफरल क्रेडिट प्रोसेसिंग",
+            "description": "लंबित रेफरल क्रेडिट और बोनस को प्रोसेस करें",
+            "schedule_display": "दैनिक आधी रात को"
+          }
+        }
       },
       "inbox_page": {
         "title": "इनबॉक्स",
@@ -1162,7 +1194,11 @@
         "confirm_suspend": "क्या आप वाकई इस कोच को स्थगित करना चाहते हैं?",
         "published": "प्रकाशित",
         "unpublished": "अप्रकाशित",
-        "sessions": "सत्र"
+        "sessions": "सत्र",
+        "coach_approved": "कोच अनुमोदित!",
+        "coach_suspended": "कोच निलंबित",
+        "approve_failed": "कोच को अप्रूव करने में विफल",
+        "suspend_failed": "कोच को निलंबित करने में विफल"
       },
       "markets_page": {
         "title": "बाजार",
@@ -1186,7 +1222,18 @@
         "consumers": "उपभोक्ता",
         "coaches": "कोच",
         "bookings": "बुकिंग",
-        "revenue": "आय"
+        "revenue": "आय",
+        "supply": "आपूर्ति",
+        "published": "प्रकाशित",
+        "pending": "लंबित",
+        "with_availability": "उपलब्धता के साथ",
+        "completed": "पूर्ण",
+        "canceled": "रद्द किया गया",
+        "rate": "दर",
+        "enable": "सक्षम करें",
+        "disable": "अक्षम करें",
+        "toggle_info": "मार्केट टॉगल लॉग हो गया। परिवर्तन लागू करने के लिए सर्वर रीस्टार्ट आवश्यक है।",
+        "toggle_failed": "बाज़ार टॉगल करने में असफल"
       },
       "reports_page": {
         "title": "रिपोर्ट्स और विश्लेषण",
@@ -1199,7 +1246,7 @@
         "this_month": "इस महीने",
         "this_quarter": "इस तिमाही",
         "this_year": "इस वर्ष",
-        "wow": "WoW",
+        "wow": "वाह",
         "mom": "MoM",
         "qoq": "QoQ",
         "yoy": "YoY",
@@ -1247,7 +1294,14 @@
         "week_3": "सप्ताह 3",
         "week_4": "सप्ताह 4",
         "by_user": "उपयोगकर्ता द्वारा",
-        "by_markets": "बाज़ारों द्वारा"
+        "by_markets": "बाज़ारों द्वारा",
+        "share": "साझा करें",
+        "increase_conversion": "कोच कन्वर्जन बढ़ाएं",
+        "increase_conversion_desc": "27% लंबित कोच अपनी प्रोफाइल पूरी नहीं की हैं। पूर्णता दर बढ़ाने के लिए अनुस्मारक ईमेल भेजें।",
+        "promote_categories": "शीर्ष श्रेणियों को बढ़ावा दें",
+        "promote_categories_desc": "शैक्षणिक शिक्षण की सबसे अधिक मांग है। अधिक कोच आकर्षित करने के लिए मार्केटिंग अभियानों पर विचार करें।",
+        "freemium_conversion": "Freemium से Paid Conversion",
+        "freemium_conversion_desc": "73% उपयोगकर्ता freemium हैं। पेड subscription में convert करने के लिए सीमित समय के discount ऑफर करें।"
       },
       "settings_page": {
         "title": "सेटिंग्स",
@@ -1266,7 +1320,13 @@
         "security_feature_1": "सभी पासवर्ड bcrypt के साथ नमक का उपयोग करके हैश किए जाते हैं",
         "security_feature_2": "स्वचालित समाप्ति के साथ JWT टोकन",
         "security_feature_3": "HTTPS पर सुरक्षित API संचार",
-        "security_feature_4": "भूमिका-आधारित एक्सेस नियंत्रण (RBAC)"
+        "security_feature_4": "भूमिका-आधारित एक्सेस नियंत्रण (RBAC)",
+        "administrator": "प्रशासक",
+        "pricing_policies": "मूल्य निर्धारण नीतियां",
+        "scheduled_jobs": "निर्धारित कार्य",
+        "logout_confirm": "क्या आप वाकई लॉगआउट करना चाहते हैं?",
+        "logging_out": "लॉग आउट हो रहा है...",
+        "coming_soon": "{feature} सेटिंग्स जल्द आ रही हैं!"
       },
       "footer": {
         "dashboard": "डैशबोर्ड",
@@ -1291,6 +1351,56 @@
         "payment_desc": "भुगतान और रिफंड के बारे में अलर्ट",
         "save_preferences": "प्राथमिकताएँ सहेजें",
         "preferences_saved": "सूचना प्राथमिकताएँ सहेज ली गईं"
+      },
+      "security": {
+        "title": "सुरक्षा सेटिंग्स",
+        "subtitle": "प्लेटफॉर्म सुरक्षा और पहुंच नियंत्रण का प्रबंधन करें",
+        "status_strong": "सुरक्षा स्थिति: मजबूत",
+        "all_active": "सभी सुरक्षा उपाय सक्रिय हैं",
+        "authentication": "प्रमाणीकरण",
+        "two_factor": "द्विकारक प्रमाणीकरण",
+        "two_factor_desc": "सभी admin खातों के लिए 2FA आवश्यक करें",
+        "session_timeout": "सेशन टाइमआउट (मिनट)",
+        "session_timeout_desc": "निष्क्रिय सत्रों को ऑटो-लॉगआउट करें",
+        "password_expiry": "पासवर्ड समाप्ति (दिन)",
+        "password_expiry_desc": "अवधि के बाद पासवर्ड रीसेट को बाध्यकारी बनाएं",
+        "access_control": "पहुंच नियंत्रण",
+        "ip_whitelist": "IP व्हाइटलिस्ट",
+        "ip_whitelist_desc": "विशिष्ट IPs पर admin पहुंच को सीमित करें",
+        "audit_logging": "ऑडिट लॉगिंग",
+        "audit_logging_desc": "सभी admin कार्यों को समीक्षा के लिए log करें",
+        "recent_activity": "हाल की गतिविधि",
+        "save_settings": "सेटिंग्स सहेजें",
+        "settings_saved": "सुरक्षा सेटिंग्स सहेजी गईं!",
+        "activity": {
+          "admin_login": "व्यवस्थापक लॉगिन",
+          "tutor_approved": "कोच द्वारा अनुमोदित",
+          "settings_changed": "सेटिंग्स बदल गई"
+        }
+      },
+      "notifications_settings": {
+        "title": "अधिसूचना सेटिंग्स",
+        "subtitle": "व्यवस्थापक अधिसूचना प्राथमिकताएं कॉन्फ़िगर करें",
+        "email_notifications": "ईमेल सूचनाएं",
+        "push_notifications": "पुश नोटिफिकेशन",
+        "save_changes": "परिवर्तन सहेजें",
+        "settings_saved": "सूचना सेटिंग्स सहेजी गईं!",
+        "1": "नए कोच आवेदन",
+        "1_desc": "नए कोच आवेदन करने पर सूचित करें",
+        "2": "बुकिंग अलर्ट",
+        "2_desc": "नई बुकिंग के लिए अलर्ट",
+        "3": "भुगतान सूचनाएं",
+        "3_desc": "भुगतान पुष्टिकरण और समस्याएं",
+        "4": "उपयोगकर्ता रिपोर्ट",
+        "4_desc": "उपयोगकर्ताओं से समस्याओं के बारे में रिपोर्ट",
+        "5": "दैनिक सारांश",
+        "5_desc": "प्लेटफ़ॉर्म गतिविधि का दैनिक सारांश",
+        "6": "साप्ताहिक रिपोर्ट",
+        "6_desc": "साप्ताहिक विश्लेषण रिपोर्ट",
+        "7": "गंभीर चेतावनियां",
+        "7_desc": "सिस्टम त्रुटियां और गंभीर समस्याएं",
+        "8": "सहायता अनुरोध",
+        "8_desc": "नई सपोर्ट टिकट सूचनाएं"
       }
     },
     "edit_profile": {
