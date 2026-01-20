@@ -399,7 +399,7 @@ export default function TutorDashboard() {
                 <View style={styles.sponsorStatDivider} />
                 <View style={styles.sponsorStat}>
                   <Text style={styles.sponsorStatValue}>Top</Text>
-                  <Text style={styles.sponsorStatLabel}>Placement</Text>
+                  <Text style={styles.sponsorStatLabel}>{t('pages.coach.sponsorship.featured_placement')}</Text>
                 </View>
               </View>
             </View>
