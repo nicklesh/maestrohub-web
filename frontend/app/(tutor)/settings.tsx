@@ -369,20 +369,20 @@ export default function TutorSettings() {
               onPress={() => router.push('/(tutor)/sponsorship')}
             >
               <Ionicons name="megaphone-outline" size={isTablet ? 24 : 22} color={colors.warning} />
-              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Become Sponsored</Text>
+              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>{t('pages.coach.sponsorship.title')}</Text>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
           </View>
 
           {/* Account Settings Section */}
           <View style={[styles.menu, isTablet && styles.menuTablet]}>
-            <Text style={[styles.sectionLabel, { color: colors.textMuted }]}>Settings</Text>
+            <Text style={[styles.sectionLabel, { color: colors.textMuted }]}>{t('pages.coach.settings.title')}</Text>
             <TouchableOpacity 
               style={[styles.menuItem, isTablet && styles.menuItemTablet]}
               onPress={() => router.push('/(tutor)/billing')}
             >
               <Ionicons name="wallet-outline" size={isTablet ? 24 : 22} color={colors.primary} />
-              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Billing & Payouts</Text>
+              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>{t('pages.coach.billing.title')}</Text>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
             <TouchableOpacity 
@@ -390,7 +390,7 @@ export default function TutorSettings() {
               onPress={() => router.push('/(tutor)/notifications')}
             >
               <Ionicons name="notifications-outline" size={isTablet ? 24 : 22} color={colors.primary} />
-              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Notifications</Text>
+              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>{t('pages.coach.notifications.title')}</Text>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
             <TouchableOpacity 
@@ -398,7 +398,7 @@ export default function TutorSettings() {
               onPress={() => router.push('/(tutor)/faq')}
             >
               <Ionicons name="help-circle-outline" size={isTablet ? 24 : 22} color={colors.primary} />
-              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Help & Support</Text>
+              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>{t('pages.coach.settings.help_support')}</Text>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
           </View>
@@ -406,7 +406,7 @@ export default function TutorSettings() {
           {/* Logout */}
           <TouchableOpacity style={[styles.logoutButton, isTablet && styles.logoutButtonTablet]} onPress={handleLogout}>
             <Ionicons name="log-out-outline" size={22} color={colors.error} />
-            <Text style={styles.logoutText}>Logout</Text>
+            <Text style={styles.logoutText}>{t('pages.coach.settings.logout')}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
