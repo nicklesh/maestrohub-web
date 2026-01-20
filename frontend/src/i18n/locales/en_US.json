@@ -1136,7 +1136,11 @@
         "no_coaches": "No coaches found",
         "confirm_approve": "Are you sure you want to approve this coach?",
         "confirm_suspend": "Are you sure you want to suspend this coach?",
-        "sessions": "sessions"
+        "sessions": "sessions",
+        "coach_approved": "Coach approved!",
+        "coach_suspended": "Coach suspended",
+        "approve_failed": "Failed to approve coach",
+        "suspend_failed": "Failed to suspend coach"
       },
       "markets_page": {
         "title": "Markets",
