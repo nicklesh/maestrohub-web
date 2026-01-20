@@ -298,6 +298,14 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   titleDesktop: {
     fontSize: 28,
   },
+  subtitle: {
+    fontSize: 14,
+    color: colors.textMuted,
+    marginTop: 4,
+  },
+  subtitleDesktop: {
+    fontSize: 16,
+  },
   filterRow: {
     flexDirection: 'row',
     paddingHorizontal: 16,
