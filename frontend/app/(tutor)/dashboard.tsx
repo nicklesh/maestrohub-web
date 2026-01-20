@@ -238,15 +238,15 @@ export default function TutorDashboard() {
         <AppHeader />
         <View style={[styles.onboardingPrompt, contentMaxWidth ? { maxWidth: contentMaxWidth } : undefined]}>
           <Ionicons name="school-outline" size={isTablet ? 80 : 64} color={colors.primary} />
-          <Text style={[styles.onboardingTitle, isDesktop && styles.onboardingTitleDesktop]}>Complete Your Profile</Text>
+          <Text style={[styles.onboardingTitle, isDesktop && styles.onboardingTitleDesktop]}>{t('pages.coach.dashboard.complete_profile')}</Text>
           <Text style={[styles.onboardingText, isDesktop && styles.onboardingTextDesktop]}>
-            Create your tutor profile to start receiving bookings.
+            {t('pages.coach.dashboard.create_profile_desc')}
           </Text>
           <TouchableOpacity
             style={[styles.primaryButton, isTablet && styles.primaryButtonTablet]}
             onPress={() => router.push('/(tutor)/onboarding')}
           >
-            <Text style={[styles.primaryButtonText, isTablet && styles.primaryButtonTextTablet]}>Create Profile</Text>
+            <Text style={[styles.primaryButtonText, isTablet && styles.primaryButtonTextTablet]}>{t('pages.coach.dashboard.create_profile')}</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
