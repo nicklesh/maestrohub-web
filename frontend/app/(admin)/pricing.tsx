@@ -235,14 +235,14 @@ export default function AdminPricingScreen() {
             disabled={isEditing}
           >
             <Text style={[styles.statusToggleText, policy.isActive && styles.statusToggleTextActive]}>
-              {policy.isActive ? 'Active' : 'Inactive'}
+              {policy.isActive ? t('pages.admin.markets_page.active') : t('pages.admin.markets_page.inactive')}
             </Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.policyDetails}>
           <View style={styles.detailItem}>
-            <Text style={styles.detailLabel}>Platform Fee</Text>
+            <Text style={styles.detailLabel}>{t('pages.admin.pricing.platform_fee')}</Text>
             {isEditing ? (
               <View style={styles.feeInput}>
                 <TextInput
