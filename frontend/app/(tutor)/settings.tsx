@@ -39,7 +39,7 @@ interface TutorProfile {
 export default function TutorSettings() {
   const { user, logout, token } = useAuth();
   const { colors, isDark, toggleTheme } = useTheme();
-  const { showSuccess, showError } = useToast();
+  const { showSuccess, showError, showInfo } = useToast();
   const router = useRouter();
   const { width } = useWindowDimensions();
   const { t } = useTranslation();
