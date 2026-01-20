@@ -75,7 +75,8 @@ const COUNTRY_NAMES: Record<string, string> = {
 export default function AdminMarketsScreen() {
   const { width } = useWindowDimensions();
   const { colors } = useTheme();
-  const { showSuccess, showError } = useToast();
+  const { showSuccess, showError, showInfo } = useToast();
+  const { t, formatCurrency, formatNumber } = useTranslation();
   const { token } = useAuth();
   const [markets, setMarkets] = useState<Market[]>([]);
   const [analytics, setAnalytics] = useState<Record<string, MarketAnalytics>>({});
