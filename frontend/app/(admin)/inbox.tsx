@@ -279,7 +279,7 @@ export default function AdminInboxScreen() {
                   <Text style={[styles.detailLabel, { color: colors.textMuted }]}>{t('pages.admin.inbox_page.status')}:</Text>
                   <View style={[styles.statusBadge, { backgroundColor: getStatusColor(selectedMessage.status).bg }]}>
                     <Text style={[styles.statusText, { color: getStatusColor(selectedMessage.status).text }]}>
-                      {selectedMessage.status}
+                      {t(`pages.admin.inbox_page.${selectedMessage.status}`)}
                     </Text>
                   </View>
                 </View>
@@ -291,7 +291,7 @@ export default function AdminInboxScreen() {
                       onPress={() => handleStatusChange(selectedMessage.contact_id, 'resolved')}
                     >
                       <Ionicons name="checkmark" size={18} color="#FFFFFF" />
-                      <Text style={styles.actionButtonText}>Mark Resolved</Text>
+                      <Text style={styles.actionButtonText}>{t('pages.admin.inbox_page.mark_resolved')}</Text>
                     </TouchableOpacity>
                   )}
                   {selectedMessage.status === 'resolved' && (
@@ -300,7 +300,7 @@ export default function AdminInboxScreen() {
                       onPress={() => handleStatusChange(selectedMessage.contact_id, 'pending')}
                     >
                       <Ionicons name="refresh" size={18} color="#FFFFFF" />
-                      <Text style={styles.actionButtonText}>Reopen</Text>
+                      <Text style={styles.actionButtonText}>{t('pages.admin.inbox_page.reopen')}</Text>
                     </TouchableOpacity>
                   )}
                 </View>
