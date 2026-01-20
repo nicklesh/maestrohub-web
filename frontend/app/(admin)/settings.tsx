@@ -113,6 +113,14 @@ export default function AdminSettings() {
                 thumbColor={isDark ? colors.white : colors.white}
               />
             </View>
+            <TouchableOpacity 
+              style={[styles.menuItem, isTablet && styles.menuItemTablet, { borderBottomWidth: 0, marginTop: 8 }]}
+              onPress={() => router.push('/(admin)/language')}
+            >
+              <Ionicons name="language" size={isTablet ? 24 : 22} color={colors.primary} />
+              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Language</Text>
+              <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
           </View>
 
           {/* Admin Menu */}
