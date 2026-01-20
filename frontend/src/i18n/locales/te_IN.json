@@ -916,7 +916,33 @@
       "days_ago": "{{count}} రోజుల క్రితం",
       "mark_as_read": "చదివినట్లు గుర్తించు",
       "system_update": "సిస్టమ్ నవీకరణ",
-      "platform_improvements": "ప్లాట్‌ఫాం మెరుగుదలలు విజయవంతంగా అమల్లో ఉన్నాయి"
+      "platform_improvements": "ప్లాట్‌ఫాం మెరుగుదలలు విజయవంతంగా అమల్లో ఉన్నాయి",
+      "types": {
+        "system_update": "సిస్టమ్ నవీకరణ",
+        "platform_improvements": "ప్లాట్‌ఫాం మెరుగుదలలు",
+        "schedule_sent": "షెడ్యూల్ పంపబడింది",
+        "contact_received": "సంప్రదింపు అభ్యర్థన అందింది",
+        "invite_sent": "ఆహ్వానం పంపబడింది",
+        "invite_received": "ఆహ్వానం అందింది",
+        "invite_accepted": "ఆహ్వానం అంగీకరించబడింది",
+        "payment_completed": "చెల్లింపు పూర్తయింది",
+        "session_canceled": "సెషన్ రద్దు చేయబడింది",
+        "booking_confirmed": "బుకింగ్ నిర్ధారించబడింది",
+        "reminder": "రిమైండర్"
+      },
+      "messages": {
+        "system_update": "సిస్టమ్ నవీకరణ అందుబాటులో ఉంది",
+        "platform_improvements": "ప్లాట్‌ఫాం మెరుగుదలలు విజయవంతంగా అమల్లో ఉన్నాయి",
+        "schedule_sent": "షెడ్యూల్ విజయవంతంగా పంపబడింది",
+        "contact_received": "మీకు కొత్త సంప్రదింపు అభ్యర్థన అందింది",
+        "invite_sent": "ఆహ్వానం విజయవంతంగా పంపబడింది",
+        "invite_received": "మీకు ఆహ్వానం అందింది",
+        "invite_accepted": "మీ ఆహ్వానం అంగీకరించబడింది",
+        "payment_completed": "చెల్లింపు విజయవంతంగా పూర్తయింది",
+        "session_canceled": "మీ సెషన్ రద్దు చేయబడింది",
+        "booking_confirmed": "మీ బుకింగ్ నిర్ధారించబడింది",
+        "reminder": "మీ సెషన్ త్వరలో ప్రారంభం కానుంది"
+      }
     },
     "reviews": {
       "title": "సమీక్షలు",
