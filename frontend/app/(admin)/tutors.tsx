@@ -33,17 +33,11 @@ interface Tutor {
   market_id?: string;
 }
 
-const STATUS_FILTER = [
-  { id: 'all', name: 'All' },
-  { id: 'pending', name: 'Pending' },
-  { id: 'approved', name: 'Approved' },
-  { id: 'suspended', name: 'Suspended' },
-];
-
 export default function AdminTutors() {
   const { width } = useWindowDimensions();
   const { colors } = useTheme();
-  const { showSuccess, showError } = useToast();
+  const { showSuccess, showError, showInfo } = useToast();
+  const { t, formatCurrency } = useTranslation();
   const { token } = useAuth();
   const [tutors, setTutors] = useState<Tutor[]>([]);
   const [loading, setLoading] = useState(true);
