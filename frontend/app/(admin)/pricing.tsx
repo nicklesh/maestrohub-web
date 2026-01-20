@@ -59,7 +59,8 @@ const DEFAULT_POLICIES: PricingPolicy[] = [
 
 export default function AdminPricingScreen() {
   const { colors } = useTheme();
-  const { showSuccess, showError } = useToast();
+  const { showSuccess, showError, showInfo } = useToast();
+  const { t } = useTranslation();
   const { width } = useWindowDimensions();
   const [policies, setPolicies] = useState<PricingPolicy[]>(DEFAULT_POLICIES);
   const [loading, setLoading] = useState(false);
