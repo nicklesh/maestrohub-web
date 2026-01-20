@@ -74,7 +74,7 @@ export default function AdminSettings() {
         <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
           {/* Header */}
           <View style={styles.header}>
-            <Text style={[styles.title, isDesktop && styles.titleDesktop]}>Settings</Text>
+            <Text style={[styles.title, isDesktop && styles.titleDesktop]}>{t('navigation.settings')}</Text>
           </View>
 
           {/* Profile */}
@@ -88,14 +88,14 @@ export default function AdminSettings() {
               <Text style={[styles.profileName, isDesktop && styles.profileNameDesktop]}>{user?.name}</Text>
               <Text style={[styles.profileEmail, isDesktop && styles.profileEmailDesktop]}>{user?.email}</Text>
               <View style={styles.roleBadge}>
-                <Text style={styles.roleText}>Administrator</Text>
+                <Text style={styles.roleText}>{t('pages.admin.settings_page.administrator')}</Text>
               </View>
             </View>
           </View>
 
           {/* Appearance Section */}
           <View style={[styles.card, isTablet && styles.cardTablet]}>
-            <Text style={[styles.cardTitle, isDesktop && styles.cardTitleDesktop]}>Appearance</Text>
+            <Text style={[styles.cardTitle, isDesktop && styles.cardTitleDesktop]}>{t('navigation.appearance')}</Text>
             <View style={styles.themeRow}>
               <View style={styles.themeLeft}>
                 <Ionicons 
@@ -104,7 +104,7 @@ export default function AdminSettings() {
                   color={colors.primary} 
                 />
                 <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>
-                  Dark Mode
+                  {t('pages.admin.settings_page.dark_mode')}
                 </Text>
               </View>
               <Switch
@@ -119,7 +119,7 @@ export default function AdminSettings() {
               onPress={() => router.push('/(admin)/language')}
             >
               <Ionicons name="language" size={isTablet ? 24 : 22} color={colors.primary} />
-              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Language</Text>
+              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>{t('pages.admin.settings_page.language')}</Text>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
           </View>
@@ -131,7 +131,7 @@ export default function AdminSettings() {
               onPress={() => router.push('/(admin)/pricing')}
             >
               <Ionicons name="pricetag-outline" size={isTablet ? 24 : 22} color={colors.primary} />
-              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Pricing Policies</Text>
+              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>{t('pages.admin.settings_page.pricing_policies')}</Text>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
             <TouchableOpacity 
@@ -139,7 +139,7 @@ export default function AdminSettings() {
               onPress={() => router.push('/(admin)/scheduled-jobs')}
             >
               <Ionicons name="time-outline" size={isTablet ? 24 : 22} color={colors.primary} />
-              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Scheduled Jobs</Text>
+              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>{t('pages.admin.settings_page.scheduled_jobs')}</Text>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
             <TouchableOpacity 
@@ -147,7 +147,7 @@ export default function AdminSettings() {
               onPress={() => router.push('/(admin)/notifications-settings')}
             >
               <Ionicons name="notifications-outline" size={isTablet ? 24 : 22} color={colors.primary} />
-              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Notifications</Text>
+              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>{t('pages.admin.settings_page.notifications')}</Text>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
             <TouchableOpacity 
@@ -155,7 +155,7 @@ export default function AdminSettings() {
               onPress={() => router.push('/(admin)/security')}
             >
               <Ionicons name="shield-outline" size={isTablet ? 24 : 22} color={colors.primary} />
-              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Security</Text>
+              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>{t('pages.admin.settings_page.security')}</Text>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
           </View>
@@ -163,7 +163,7 @@ export default function AdminSettings() {
           {/* Logout */}
           <TouchableOpacity style={[styles.logoutButton, isTablet && styles.logoutButtonTablet]} onPress={handleLogout}>
             <Ionicons name="log-out-outline" size={22} color={colors.error} />
-            <Text style={styles.logoutText}>Logout</Text>
+            <Text style={styles.logoutText}>{t('navigation.logout')}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
