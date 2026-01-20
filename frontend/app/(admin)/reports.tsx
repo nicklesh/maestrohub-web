@@ -133,18 +133,18 @@ export default function AdminReportsScreen() {
     <>
       {/* User Distribution */}
       <View style={[styles.section, isTablet && styles.sectionTablet]}>
-        <Text style={styles.sectionTitle}>User Distribution</Text>
+        <Text style={styles.sectionTitle}>{t('pages.admin.reports_page.user_distribution')}</Text>
         <View style={styles.distributionRow}>
           <View style={[styles.distributionCard, { backgroundColor: colors.successLight }]}>
             <Text style={[styles.distributionValue, { color: colors.success }]}>{stats.paidUsers}</Text>
-            <Text style={styles.distributionLabel}>Paid Users</Text>
+            <Text style={styles.distributionLabel}>{t('pages.admin.reports_page.paid_users')}</Text>
             <Text style={styles.distributionPercent}>
               {((stats.paidUsers / stats.totalUsers) * 100).toFixed(1)}%
             </Text>
           </View>
           <View style={[styles.distributionCard, { backgroundColor: colors.primaryLight }]}>
             <Text style={[styles.distributionValue, { color: colors.primary }]}>{stats.freemiumUsers}</Text>
-            <Text style={styles.distributionLabel}>Freemium Users</Text>
+            <Text style={styles.distributionLabel}>{t('pages.admin.reports_page.freemium_users')}</Text>
             <Text style={styles.distributionPercent}>
               {((stats.freemiumUsers / stats.totalUsers) * 100).toFixed(1)}%
             </Text>
@@ -157,45 +157,45 @@ export default function AdminReportsScreen() {
         <View style={styles.statCard}>
           <Ionicons name="people" size={24} color={colors.primary} />
           <Text style={styles.statValue}>{stats.totalTutors}</Text>
-          <Text style={styles.statLabel}>Total Coaches</Text>
-          <Text style={[styles.statGrowth, { color: colors.success }]}>+16.7% WoW</Text>
+          <Text style={styles.statLabel}>{t('pages.admin.reports_page.total_coaches')}</Text>
+          <Text style={[styles.statGrowth, { color: colors.success }]}>+16.7% {t('pages.admin.reports_page.wow')}</Text>
         </View>
         <View style={styles.statCard}>
           <Ionicons name="checkmark-circle" size={24} color={colors.success} />
           <Text style={styles.statValue}>{stats.approvedTutors}</Text>
-          <Text style={styles.statLabel}>Approved</Text>
-          <Text style={[styles.statGrowth, { color: colors.success }]}>+20% WoW</Text>
+          <Text style={styles.statLabel}>{t('pages.admin.reports_page.approved')}</Text>
+          <Text style={[styles.statGrowth, { color: colors.success }]}>+20% {t('pages.admin.reports_page.wow')}</Text>
         </View>
         <View style={styles.statCard}>
           <Ionicons name="person" size={24} color={colors.accent} />
           <Text style={styles.statValue}>{stats.totalParents}</Text>
-          <Text style={styles.statLabel}>Parents</Text>
-          <Text style={[styles.statGrowth, { color: colors.success }]}>+8.5% WoW</Text>
+          <Text style={styles.statLabel}>{t('pages.admin.reports_page.parents')}</Text>
+          <Text style={[styles.statGrowth, { color: colors.success }]}>+8.5% {t('pages.admin.reports_page.wow')}</Text>
         </View>
         <View style={styles.statCard}>
           <Ionicons name="heart" size={24} color={colors.error} />
           <Text style={styles.statValue}>{stats.activeParents}</Text>
-          <Text style={styles.statLabel}>Active</Text>
-          <Text style={[styles.statGrowth, { color: colors.success }]}>+12.3% WoW</Text>
+          <Text style={styles.statLabel}>{t('pages.admin.reports_page.active')}</Text>
+          <Text style={[styles.statGrowth, { color: colors.success }]}>+12.3% {t('pages.admin.reports_page.wow')}</Text>
         </View>
       </View>
 
       {/* Revenue Summary */}
       <View style={[styles.section, isTablet && styles.sectionTablet]}>
-        <Text style={styles.sectionTitle}>Revenue Summary</Text>
+        <Text style={styles.sectionTitle}>{t('pages.admin.reports_page.revenue_summary')}</Text>
         <View style={styles.revenueRow}>
           <View style={styles.revenueItem}>
-            <Text style={styles.revenueLabel}>Total Revenue</Text>
+            <Text style={styles.revenueLabel}>{t('pages.admin.reports_page.total_revenue')}</Text>
             <Text style={[styles.revenueValue, { color: colors.success }]}>${stats.totalRevenue.toLocaleString()}</Text>
           </View>
           <View style={styles.revenueDivider} />
           <View style={styles.revenueItem}>
-            <Text style={styles.revenueLabel}>Platform Fees (15%)</Text>
+            <Text style={styles.revenueLabel}>{t('pages.admin.reports_page.platform_fees')}</Text>
             <Text style={[styles.revenueValue, { color: colors.primary }]}>${stats.platformFees.toLocaleString()}</Text>
           </View>
           <View style={styles.revenueDivider} />
           <View style={styles.revenueItem}>
-            <Text style={styles.revenueLabel}>Pending Payouts</Text>
+            <Text style={styles.revenueLabel}>{t('pages.admin.reports_page.pending_payouts')}</Text>
             <Text style={[styles.revenueValue, { color: colors.accent }]}>${stats.pendingPayouts.toLocaleString()}</Text>
           </View>
         </View>
@@ -203,31 +203,31 @@ export default function AdminReportsScreen() {
 
       {/* Recommendations */}
       <View style={[styles.section, isTablet && styles.sectionTablet]}>
-        <Text style={styles.sectionTitle}>💡 Recommendations</Text>
+        <Text style={styles.sectionTitle}>💡 {t('pages.admin.reports_page.recommendations')}</Text>
         <View style={styles.recommendationCard}>
           <Ionicons name="trending-up" size={20} color={colors.success} />
           <View style={styles.recommendationContent}>
-            <Text style={styles.recommendationTitle}>Increase Coach Conversion</Text>
+            <Text style={styles.recommendationTitle}>{t('pages.admin.reports_page.increase_conversion')}</Text>
             <Text style={styles.recommendationText}>
-              27% of pending tutors haven't completed profiles. Send reminder emails to boost completion rate.
+              {t('pages.admin.reports_page.increase_conversion_desc')}
             </Text>
           </View>
         </View>
         <View style={styles.recommendationCard}>
           <Ionicons name="star" size={20} color={colors.accent} />
           <View style={styles.recommendationContent}>
-            <Text style={styles.recommendationTitle}>Promote Top Categories</Text>
+            <Text style={styles.recommendationTitle}>{t('pages.admin.reports_page.promote_categories')}</Text>
             <Text style={styles.recommendationText}>
-              Academic tutoring has highest demand. Consider marketing campaigns to attract more tutors.
+              {t('pages.admin.reports_page.promote_categories_desc')}
             </Text>
           </View>
         </View>
         <View style={styles.recommendationCard}>
           <Ionicons name="cash" size={20} color={colors.primary} />
           <View style={styles.recommendationContent}>
-            <Text style={styles.recommendationTitle}>Freemium to Paid Conversion</Text>
+            <Text style={styles.recommendationTitle}>{t('pages.admin.reports_page.freemium_conversion')}</Text>
             <Text style={styles.recommendationText}>
-              73% users are freemium. Offer limited-time discounts to convert to paid subscriptions.
+              {t('pages.admin.reports_page.freemium_conversion_desc')}
             </Text>
           </View>
         </View>
