@@ -143,7 +143,7 @@ export default function AdminTutors() {
           ]}
         >
           <Text style={styles.statusText}>
-            {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
+            {t(`pages.admin.coaches_page.${item.status}`)}
           </Text>
         </View>
       </View>
@@ -172,7 +172,7 @@ export default function AdminTutors() {
       <View style={styles.priceRow}>
         <Text style={styles.price}>{item.currency_symbol || '$'}{item.base_price}/hr</Text>
         <Text style={styles.publishStatus}>
-          {item.is_published ? '✓ Published' : '○ Unpublished'}
+          {item.is_published ? `✓ ${t('pages.admin.coaches_page.published')}` : `○ ${t('pages.admin.coaches_page.unpublished')}`}
         </Text>
       </View>
 
@@ -189,7 +189,7 @@ export default function AdminTutors() {
             ) : (
               <>
                 <Ionicons name="checkmark" size={16} color="#fff" />
-                <Text style={styles.actionBtnText}>Approve</Text>
+                <Text style={styles.actionBtnText}>{t('pages.admin.coaches_page.approve')}</Text>
               </>
             )}
           </TouchableOpacity>
@@ -205,7 +205,7 @@ export default function AdminTutors() {
             ) : (
               <>
                 <Ionicons name="close" size={16} color="#fff" />
-                <Text style={styles.actionBtnText}>Suspend</Text>
+                <Text style={styles.actionBtnText}>{t('pages.admin.coaches_page.suspend')}</Text>
               </>
             )}
           </TouchableOpacity>
