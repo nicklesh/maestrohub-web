@@ -387,14 +387,14 @@ export default function AdminReportsScreen() {
   const renderRevenue = () => (
     <>
       <View style={[styles.section, isTablet && styles.sectionTablet]}>
-        <Text style={styles.sectionTitle}>Revenue Breakdown</Text>
+        <Text style={styles.sectionTitle}>{t('pages.admin.reports_page.revenue_breakdown')}</Text>
         <View style={styles.revenueBreakdown}>
           <View style={styles.revenueBreakdownItem}>
             <View style={[styles.revenueIcon, { backgroundColor: colors.successLight }]}>
               <Ionicons name="arrow-down" size={20} color={colors.success} />
             </View>
             <View style={styles.revenueBreakdownInfo}>
-              <Text style={styles.revenueBreakdownLabel}>Total Received</Text>
+              <Text style={styles.revenueBreakdownLabel}>{t('pages.admin.reports_page.total_received')}</Text>
               <Text style={[styles.revenueBreakdownValue, { color: colors.success }]}>$12,450</Text>
             </View>
           </View>
@@ -403,7 +403,7 @@ export default function AdminReportsScreen() {
               <Ionicons name="business" size={20} color={colors.primary} />
             </View>
             <View style={styles.revenueBreakdownInfo}>
-              <Text style={styles.revenueBreakdownLabel}>Platform Commission</Text>
+              <Text style={styles.revenueBreakdownLabel}>{t('pages.admin.reports_page.platform_commission')}</Text>
               <Text style={[styles.revenueBreakdownValue, { color: colors.primary }]}>$1,867</Text>
             </View>
           </View>
@@ -412,7 +412,7 @@ export default function AdminReportsScreen() {
               <Ionicons name="arrow-up" size={20} color={colors.accent} />
             </View>
             <View style={styles.revenueBreakdownInfo}>
-              <Text style={styles.revenueBreakdownLabel}>Coach Payouts</Text>
+              <Text style={styles.revenueBreakdownLabel}>{t('pages.admin.reports_page.coach_payouts')}</Text>
               <Text style={[styles.revenueBreakdownValue, { color: colors.accent }]}>$10,583</Text>
             </View>
           </View>
@@ -421,7 +421,7 @@ export default function AdminReportsScreen() {
               <Ionicons name="time" size={20} color={colors.error} />
             </View>
             <View style={styles.revenueBreakdownInfo}>
-              <Text style={styles.revenueBreakdownLabel}>Pending Payouts</Text>
+              <Text style={styles.revenueBreakdownLabel}>{t('pages.admin.reports_page.pending_payouts')}</Text>
               <Text style={[styles.revenueBreakdownValue, { color: colors.error }]}>$3,240</Text>
             </View>
           </View>
@@ -429,7 +429,7 @@ export default function AdminReportsScreen() {
       </View>
 
       <View style={[styles.section, isTablet && styles.sectionTablet]}>
-        <Text style={styles.sectionTitle}>Top Earning Coaches</Text>
+        <Text style={styles.sectionTitle}>{t('pages.admin.reports_page.top_earning_coaches')}</Text>
         {[
           { name: 'Emily T.', earnings: 2450, sessions: 42 },
           { name: 'Michael S.', earnings: 1890, sessions: 35 },
@@ -444,7 +444,7 @@ export default function AdminReportsScreen() {
             </View>
             <View style={styles.topTutorInfo}>
               <Text style={styles.topTutorName}>{tutor.name}</Text>
-              <Text style={styles.topTutorSessions}>{tutor.sessions} sessions</Text>
+              <Text style={styles.topTutorSessions}>{tutor.sessions} {t('pages.admin.coaches_page.sessions')}</Text>
             </View>
             <Text style={styles.topTutorEarnings}>${tutor.earnings.toLocaleString()}</Text>
           </View>
