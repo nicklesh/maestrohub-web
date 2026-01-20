@@ -139,7 +139,7 @@ export default function AdminMarketsScreen() {
           <Text style={styles.flag}>{FLAG_EMOJI[market.country] || '🌍'}</Text>
           <View style={styles.marketInfo}>
             <Text style={[styles.marketName, isDesktop && styles.marketNameDesktop]}>
-              {t(`countries.${market.country.toLowerCase()}`) || COUNTRY_NAMES[market.country] || market.country}
+              {t(`countries.${market.country}`) || COUNTRY_NAMES[market.country] || market.country}
             </Text>
             <Text style={styles.marketMeta}>
               {market.currency_symbol} {market.currency} • {market.default_timezone}
