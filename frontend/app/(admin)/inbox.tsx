@@ -37,7 +37,8 @@ interface ContactMessage {
 export default function AdminInboxScreen() {
   const { token } = useAuth();
   const { colors } = useTheme();
-  const { showSuccess, showError } = useToast();
+  const { showSuccess, showError, showInfo } = useToast();
+  const { t, formatDate } = useTranslation();
   const { width } = useWindowDimensions();
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [loading, setLoading] = useState(true);
