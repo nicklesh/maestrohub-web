@@ -78,22 +78,26 @@ def translate_text(text, target_language):
     try:
         from emergentintegrations.llm.chat import LlmChat
         import uuid
+        import asyncio
         
-        prompt = f"""Translate the following English text to {target_language}. 
+        async def do_translate():
+            prompt = f"""Translate the following English text to {target_language}. 
 Only output the translation, nothing else.
 Keep any placeholders like {{{{variable}}}} or {{variable}} unchanged.
 Keep technical terms if they don't have a common translation.
 
 Text to translate: {text}"""
+            
+            llm = LlmChat(
+                api_key="sk-emergent-c02Bb9a237a3b6e673",
+                session_id=str(uuid.uuid4()),
+                system_message="You are a professional translator. Only output the translation, nothing else."
+            )
+            llm = llm.with_model("anthropic", "claude-sonnet-4-20250514")
+            response = await llm.send_message(prompt)
+            return response.strip()
         
-        llm = LlmChat(
-            api_key="sk-emergent-c02Bb9a237a3b6e673",
-            session_id=str(uuid.uuid4()),
-            system_message="You are a professional translator. Only output the translation, nothing else."
-        )
-        llm = llm.with_model("anthropic", "claude-sonnet-4-20250514")
-        response = llm.send_message(prompt)
-        return response.strip()
+        return asyncio.run(do_translate())
     except Exception as e:
         print(f"Translation error: {e}")
         return text
