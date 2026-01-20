@@ -151,7 +151,7 @@ export default function AdminInboxScreen() {
             <Text style={[styles.categoryText, { color: colors.textMuted }]}>{item.category}</Text>
           </View>
           <Text style={[styles.dateText, { color: colors.textMuted }]}>
-            {format(createdDate, 'MMM d, yyyy h:mm a')}
+            {formatDate(createdDate, 'PPp')}
           </Text>
         </View>
       </TouchableOpacity>
