@@ -20,6 +20,7 @@ import AppHeader from '@/src/components/AppHeader';
 export default function AdminSecurityScreen() {
   const { colors } = useTheme();
   const { showSuccess, showError } = useToast();
+  const { t } = useTranslation();
   const { width } = useWindowDimensions();
   
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(true);
@@ -35,25 +36,25 @@ export default function AdminSecurityScreen() {
   const styles = getStyles(colors);
 
   const saveSettings = () => {
-    showSuccess('Security settings saved!');
+    showSuccess(t('pages.admin.security.settings_saved'));
   };
 
   const recentActivity = [
-    { id: '1', action: 'Admin login', user: 'admin@maestrohabitat.com', time: '2 mins ago', ip: '192.168.1.1' },
-    { id: '2', action: 'Tutor approved', user: 'admin@maestrohabitat.com', time: '15 mins ago', ip: '192.168.1.1' },
-    { id: '3', action: 'Settings changed', user: 'admin@maestrohabitat.com', time: '1 hour ago', ip: '192.168.1.1' },
-    { id: '4', action: 'Admin login', user: 'admin@maestrohabitat.com', time: '3 hours ago', ip: '192.168.1.2' },
+    { id: '1', action: t('pages.admin.security.activity.admin_login'), user: 'admin@maestrohabitat.com', time: '2 mins ago', ip: '192.168.1.1' },
+    { id: '2', action: t('pages.admin.security.activity.tutor_approved'), user: 'admin@maestrohabitat.com', time: '15 mins ago', ip: '192.168.1.1' },
+    { id: '3', action: t('pages.admin.security.activity.settings_changed'), user: 'admin@maestrohabitat.com', time: '1 hour ago', ip: '192.168.1.1' },
+    { id: '4', action: t('pages.admin.security.activity.admin_login'), user: 'admin@maestrohabitat.com', time: '3 hours ago', ip: '192.168.1.2' },
   ];
 
   return (
     <SafeAreaView style={styles.container}>
-      <AppHeader showBack title="Security" />
+      <AppHeader showBack title={t('pages.admin.security.title')} />
       <ScrollView contentContainerStyle={[styles.scrollContent, isTablet && styles.scrollContentTablet]}>
         <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
           {/* Header */}
           <View style={styles.header}>
-            <Text style={[styles.title, isDesktop && styles.titleDesktop]}>Security Settings</Text>
-            <Text style={styles.subtitle}>Manage platform security and access controls</Text>
+            <Text style={[styles.title, isDesktop && styles.titleDesktop]}>{t('pages.admin.security.title')}</Text>
+            <Text style={styles.subtitle}>{t('pages.admin.security.subtitle')}</Text>
           </View>
 
           {/* Security Status */}
@@ -62,19 +63,19 @@ export default function AdminSecurityScreen() {
               <Ionicons name="shield-checkmark" size={32} color={colors.success} />
             </View>
             <View style={styles.statusInfo}>
-              <Text style={styles.statusTitle}>Security Status: Strong</Text>
-              <Text style={styles.statusSubtitle}>All security measures are active</Text>
+              <Text style={styles.statusTitle}>{t('pages.admin.security.status_strong')}</Text>
+              <Text style={styles.statusSubtitle}>{t('pages.admin.security.all_active')}</Text>
             </View>
           </View>
 
           {/* Authentication Settings */}
           <View style={[styles.section, isTablet && styles.sectionTablet]}>
-            <Text style={styles.sectionTitle}>Authentication</Text>
+            <Text style={styles.sectionTitle}>{t('pages.admin.security.authentication')}</Text>
             
             <View style={styles.settingRow}>
               <View style={styles.settingInfo}>
-                <Text style={styles.settingTitle}>Two-Factor Authentication</Text>
-                <Text style={styles.settingDescription}>Require 2FA for all admin accounts</Text>
+                <Text style={styles.settingTitle}>{t('pages.admin.security.two_factor')}</Text>
+                <Text style={styles.settingDescription}>{t('pages.admin.security.two_factor_desc')}</Text>
               </View>
               <Switch
                 value={twoFactorEnabled}
@@ -86,8 +87,8 @@ export default function AdminSecurityScreen() {
 
             <View style={styles.settingRow}>
               <View style={styles.settingInfo}>
-                <Text style={styles.settingTitle}>Session Timeout (minutes)</Text>
-                <Text style={styles.settingDescription}>Auto-logout inactive sessions</Text>
+                <Text style={styles.settingTitle}>{t('pages.admin.security.session_timeout')}</Text>
+                <Text style={styles.settingDescription}>{t('pages.admin.security.session_timeout_desc')}</Text>
               </View>
               <TextInput
                 style={styles.timeoutInput}
@@ -99,8 +100,8 @@ export default function AdminSecurityScreen() {
 
             <View style={styles.settingRow}>
               <View style={styles.settingInfo}>
-                <Text style={styles.settingTitle}>Password Expiry (days)</Text>
-                <Text style={styles.settingDescription}>Force password reset after period</Text>
+                <Text style={styles.settingTitle}>{t('pages.admin.security.password_expiry')}</Text>
+                <Text style={styles.settingDescription}>{t('pages.admin.security.password_expiry_desc')}</Text>
               </View>
               <TextInput
                 style={styles.timeoutInput}
@@ -113,12 +114,12 @@ export default function AdminSecurityScreen() {
 
           {/* Access Control */}
           <View style={[styles.section, isTablet && styles.sectionTablet]}>
-            <Text style={styles.sectionTitle}>Access Control</Text>
+            <Text style={styles.sectionTitle}>{t('pages.admin.security.access_control')}</Text>
             
             <View style={styles.settingRow}>
               <View style={styles.settingInfo}>
-                <Text style={styles.settingTitle}>IP Whitelist</Text>
-                <Text style={styles.settingDescription}>Restrict admin access to specific IPs</Text>
+                <Text style={styles.settingTitle}>{t('pages.admin.security.ip_whitelist')}</Text>
+                <Text style={styles.settingDescription}>{t('pages.admin.security.ip_whitelist_desc')}</Text>
               </View>
               <Switch
                 value={ipWhitelist}
@@ -130,8 +131,8 @@ export default function AdminSecurityScreen() {
 
             <View style={[styles.settingRow, { borderBottomWidth: 0 }]}>
               <View style={styles.settingInfo}>
-                <Text style={styles.settingTitle}>Audit Logging</Text>
-                <Text style={styles.settingDescription}>Log all admin actions for review</Text>
+                <Text style={styles.settingTitle}>{t('pages.admin.security.audit_logging')}</Text>
+                <Text style={styles.settingDescription}>{t('pages.admin.security.audit_logging_desc')}</Text>
               </View>
               <Switch
                 value={auditLogs}
@@ -144,7 +145,7 @@ export default function AdminSecurityScreen() {
 
           {/* Recent Activity */}
           <View style={[styles.section, isTablet && styles.sectionTablet]}>
-            <Text style={styles.sectionTitle}>Recent Activity</Text>
+            <Text style={styles.sectionTitle}>{t('pages.admin.security.recent_activity')}</Text>
             {recentActivity.map((activity, index) => (
               <View key={activity.id} style={[styles.activityRow, index === recentActivity.length - 1 && { borderBottomWidth: 0 }]}>
                 <View style={styles.activityIcon}>
@@ -161,7 +162,7 @@ export default function AdminSecurityScreen() {
 
           {/* Save Button */}
           <TouchableOpacity style={[styles.saveButton, isTablet && styles.saveButtonTablet]} onPress={saveSettings}>
-            <Text style={styles.saveButtonText}>Save Settings</Text>
+            <Text style={styles.saveButtonText}>{t('pages.admin.security.save_settings')}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
