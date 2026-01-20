@@ -1813,7 +1813,8 @@
         "per_month": "par mois",
         "current_plan": "Plan Actuel",
         "upgrade": "Mettre à niveau",
-        "cancel_sponsorship": "Annuler le parrainage"
+        "cancel_sponsorship": "Annuler le parrainage",
+        "plans": "Forfaits"
       },
       "onboarding": {
         "title": "Complétez votre profil",
@@ -1868,7 +1869,8 @@
         "save_schedule": "Enregistrer le planning",
         "schedule_saved": "Horaire enregistré avec succès",
         "clear_all": "Tout effacer",
-        "reset": "Réinitialiser"
+        "reset": "Réinitialiser",
+        "sat": "Sam"
       },
       "faq": {
         "frequently_asked": "Questions fréquemment posées",
