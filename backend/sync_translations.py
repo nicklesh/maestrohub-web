@@ -76,7 +76,7 @@ def find_missing_keys(en_data, target_data):
 def translate_text(text, target_language):
     """Translate text using Emergent LLM"""
     try:
-        from emergentintegrations.llm.chat import chat, UserMessage
+        from emergentintegrations.llm.chat import LlmChat
         
         prompt = f"""Translate the following English text to {target_language}. 
 Only output the translation, nothing else.
@@ -85,11 +85,11 @@ Keep technical terms if they don't have a common translation.
 
 Text to translate: {text}"""
         
-        response = chat(
+        llm = LlmChat(
             api_key="sk-emergent-c02Bb9a237a3b6e673",
             model="anthropic/claude-sonnet-4-20250514",
-            messages=[UserMessage(content=prompt)],
         )
+        response = llm.chat(prompt)
         return response.strip()
     except Exception as e:
         print(f"Translation error: {e}")
