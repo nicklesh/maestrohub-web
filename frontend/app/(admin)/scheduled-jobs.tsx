@@ -340,7 +340,7 @@ export default function ScheduledJobsScreen() {
         <View style={styles.jobHeader}>
           <View style={styles.jobTitleRow}>
             <View style={[styles.statusDot, { backgroundColor: getStatusColor(job.last_status) }]} />
-            <Text style={styles.jobName}>{job.name}</Text>
+            <Text style={styles.jobName}>{t(`pages.admin.scheduled_jobs.jobs.${job.id}.name`) || job.name}</Text>
           </View>
           <Switch
             value={job.enabled}
@@ -350,12 +350,12 @@ export default function ScheduledJobsScreen() {
           />
         </View>
         
-        <Text style={styles.jobDescription}>{job.description}</Text>
+        <Text style={styles.jobDescription}>{t(`pages.admin.scheduled_jobs.jobs.${job.id}.description`) || job.description}</Text>
         
         <View style={styles.jobMeta}>
           <View style={styles.metaItem}>
             <Ionicons name="time-outline" size={14} color={colors.textMuted} />
-            <Text style={styles.metaText}>{job.schedule_display}</Text>
+            <Text style={styles.metaText}>{t(`pages.admin.scheduled_jobs.jobs.${job.id}.schedule_display`) || job.schedule_display}</Text>
           </View>
           <View style={styles.metaItem}>
             <Ionicons name={getStatusIcon(job.last_status)} size={14} color={getStatusColor(job.last_status)} />
