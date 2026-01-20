@@ -37,7 +37,8 @@ const DEFAULT_SETTINGS: NotificationSetting[] = [
 
 export default function AdminNotificationsSettingsScreen() {
   const { colors } = useTheme();
-  const { showSuccess, showError } = useToast();
+  const { showSuccess, showError, showInfo } = useToast();
+  const { t } = useTranslation();
   const { width } = useWindowDimensions();
   const [settings, setSettings] = useState<NotificationSetting[]>(DEFAULT_SETTINGS);
 
@@ -53,16 +54,8 @@ export default function AdminNotificationsSettingsScreen() {
     );
   };
 
-  const showAlert = (title: string, message: string) => {
-    if (Platform.OS === 'web') {
-      showInfo(`${title}: ${message}`);
-    } else {
-      showInfo(message, title);
-    }
-  };
-
   const saveSettings = () => {
-    showSuccess('Notification settings saved!');
+    showSuccess(t('pages.admin.notifications_settings.settings_saved'));
   };
 
   const emailSettings = settings.filter(s => s.category === 'email');
@@ -70,26 +63,26 @@ export default function AdminNotificationsSettingsScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <AppHeader showBack title="Notifications" />
+      <AppHeader showBack title={t('pages.admin.notifications_settings.title')} />
       <ScrollView contentContainerStyle={[styles.scrollContent, isTablet && styles.scrollContentTablet]}>
         <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
           {/* Header */}
           <View style={styles.header}>
-            <Text style={[styles.title, isDesktop && styles.titleDesktop]}>Notification Settings</Text>
-            <Text style={styles.subtitle}>Configure admin notification preferences</Text>
+            <Text style={[styles.title, isDesktop && styles.titleDesktop]}>{t('pages.admin.notifications_settings.title')}</Text>
+            <Text style={styles.subtitle}>{t('pages.admin.notifications_settings.subtitle')}</Text>
           </View>
 
           {/* Email Notifications */}
           <View style={[styles.section, isTablet && styles.sectionTablet]}>
             <View style={styles.sectionHeader}>
               <Ionicons name="mail" size={20} color={colors.primary} />
-              <Text style={styles.sectionTitle}>Email Notifications</Text>
+              <Text style={styles.sectionTitle}>{t('pages.admin.notifications_settings.email_notifications')}</Text>
             </View>
             {emailSettings.map(setting => (
               <View key={setting.id} style={styles.settingRow}>
                 <View style={styles.settingInfo}>
-                  <Text style={styles.settingTitle}>{setting.title}</Text>
-                  <Text style={styles.settingDescription}>{setting.description}</Text>
+                  <Text style={styles.settingTitle}>{t(`pages.admin.notifications_settings.${setting.id}`)}</Text>
+                  <Text style={styles.settingDescription}>{t(`pages.admin.notifications_settings.${setting.id}_desc`)}</Text>
                 </View>
                 <Switch
                   value={setting.enabled}
@@ -105,13 +98,13 @@ export default function AdminNotificationsSettingsScreen() {
           <View style={[styles.section, isTablet && styles.sectionTablet]}>
             <View style={styles.sectionHeader}>
               <Ionicons name="notifications" size={20} color={colors.accent} />
-              <Text style={styles.sectionTitle}>Push Notifications</Text>
+              <Text style={styles.sectionTitle}>{t('pages.admin.notifications_settings.push_notifications')}</Text>
             </View>
             {pushSettings.map(setting => (
               <View key={setting.id} style={styles.settingRow}>
                 <View style={styles.settingInfo}>
-                  <Text style={styles.settingTitle}>{setting.title}</Text>
-                  <Text style={styles.settingDescription}>{setting.description}</Text>
+                  <Text style={styles.settingTitle}>{t(`pages.admin.notifications_settings.${setting.id}`)}</Text>
+                  <Text style={styles.settingDescription}>{t(`pages.admin.notifications_settings.${setting.id}_desc`)}</Text>
                 </View>
                 <Switch
                   value={setting.enabled}
@@ -125,7 +118,7 @@ export default function AdminNotificationsSettingsScreen() {
 
           {/* Save Button */}
           <TouchableOpacity style={[styles.saveButton, isTablet && styles.saveButtonTablet]} onPress={saveSettings}>
-            <Text style={styles.saveButtonText}>Save Changes</Text>
+            <Text style={styles.saveButtonText}>{t('pages.admin.notifications_settings.save_changes')}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
