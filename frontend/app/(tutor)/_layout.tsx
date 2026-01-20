@@ -125,6 +125,12 @@ export default function TutorLayout() {
           href: null,
         }}
       />
+      <Tabs.Screen
+        name="language"
+        options={{
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }
