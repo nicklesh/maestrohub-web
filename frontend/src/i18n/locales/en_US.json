@@ -1164,7 +1164,18 @@
         "consumers": "Consumers",
         "coaches": "Coaches",
         "bookings": "Bookings",
-        "revenue": "Revenue"
+        "revenue": "Revenue",
+        "supply": "Supply",
+        "published": "Published",
+        "pending": "Pending",
+        "with_availability": "With Availability",
+        "completed": "Completed",
+        "canceled": "Canceled",
+        "rate": "Rate",
+        "enable": "Enable",
+        "disable": "Disable",
+        "toggle_info": "Market toggle logged. Server restart required to apply changes.",
+        "toggle_failed": "Failed to toggle market"
       },
       "reports_page": {
         "title": "Reports & Analytics",
