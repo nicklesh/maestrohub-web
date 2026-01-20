@@ -378,10 +378,10 @@ export default function TutorDashboard() {
                 </View>
                 <View style={styles.sponsorBannerText}>
                   <Text style={[styles.sponsorBannerTitle, isTablet && styles.sponsorBannerTitleTablet]}>
-                    Boost Your Visibility
+                    {t('pages.coach.dashboard.boost_visibility')}
                   </Text>
                   <Text style={styles.sponsorBannerSubtitle}>
-                    Get featured at the top of search results • Reach more students
+                    {t('pages.coach.dashboard.sponsor_desc')}
                   </Text>
                 </View>
                 <Ionicons name="chevron-forward" size={24} color="#fff" />
@@ -389,12 +389,12 @@ export default function TutorDashboard() {
               <View style={styles.sponsorBannerStats}>
                 <View style={styles.sponsorStat}>
                   <Text style={styles.sponsorStatValue}>3x</Text>
-                  <Text style={styles.sponsorStatLabel}>More Views</Text>
+                  <Text style={styles.sponsorStatLabel}>{t('pages.coach.sponsorship.more_views')}</Text>
                 </View>
                 <View style={styles.sponsorStatDivider} />
                 <View style={styles.sponsorStat}>
                   <Text style={styles.sponsorStatValue}>$15</Text>
-                  <Text style={styles.sponsorStatLabel}>Per Week</Text>
+                  <Text style={styles.sponsorStatLabel}>{t('pages.coach.sponsorship.per_week')}</Text>
                 </View>
                 <View style={styles.sponsorStatDivider} />
                 <View style={styles.sponsorStat}>
