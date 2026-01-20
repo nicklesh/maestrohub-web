@@ -288,9 +288,9 @@ export default function TutorSettings() {
             <View style={[styles.card, isTablet && styles.cardTablet]}>
               <View style={styles.publishRow}>
                 <View>
-                  <Text style={[styles.publishTitle, isDesktop && styles.publishTitleDesktop]}>Listing Status</Text>
+                  <Text style={[styles.publishTitle, isDesktop && styles.publishTitleDesktop]}>{t('pages.coach.settings.listing_status')}</Text>
                   <Text style={styles.publishSubtitle}>
-                    {profile.is_published ? 'Your profile is visible to students' : 'Your profile is hidden'}
+                    {profile.is_published ? t('pages.coach.settings.profile_visible') : t('pages.coach.settings.profile_hidden')}
                   </Text>
                 </View>
                 <TouchableOpacity
@@ -306,7 +306,7 @@ export default function TutorSettings() {
                     <ActivityIndicator size="small" color="#fff" />
                   ) : (
                     <Text style={styles.publishToggleText}>
-                      {profile.is_published ? 'Published' : 'Publish'}
+                      {profile.is_published ? t('pages.coach.settings.published') : t('pages.coach.settings.publish')}
                     </Text>
                   )}
                 </TouchableOpacity>
@@ -316,7 +316,7 @@ export default function TutorSettings() {
 
           {/* Appearance Section */}
           <View style={[styles.card, isTablet && styles.cardTablet]}>
-            <Text style={[styles.cardTitle, isDesktop && styles.cardTitleDesktop, { marginBottom: 16 }]}>Appearance</Text>
+            <Text style={[styles.cardTitle, isDesktop && styles.cardTitleDesktop, { marginBottom: 16 }]}>{t('navigation.appearance')}</Text>
             <View style={styles.themeRow}>
               <View style={styles.themeLeft}>
                 <Ionicons 
@@ -325,7 +325,7 @@ export default function TutorSettings() {
                   color={colors.primary} 
                 />
                 <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>
-                  {t('pages.settings.dark_mode')}
+                  {t('pages.coach.settings.dark_mode')}
                 </Text>
               </View>
               <Switch
@@ -340,20 +340,20 @@ export default function TutorSettings() {
               onPress={() => router.push('/(tutor)/language')}
             >
               <Ionicons name="language" size={isTablet ? 24 : 22} color={colors.primary} />
-              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>{t('pages.settings.language')}</Text>
+              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>{t('pages.coach.settings.language')}</Text>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
           </View>
 
           {/* Grow Your Business Section */}
           <View style={[styles.menu, isTablet && styles.menuTablet]}>
-            <Text style={[styles.sectionLabel, { color: colors.textMuted }]}>Grow Your Business</Text>
+            <Text style={[styles.sectionLabel, { color: colors.textMuted }]}>{t('pages.coach.settings.grow_business')}</Text>
             <TouchableOpacity 
               style={[styles.menuItem, isTablet && styles.menuItemTablet]}
               onPress={() => router.push('/(tutor)/reviews')}
             >
               <Ionicons name="star-outline" size={isTablet ? 24 : 22} color={colors.primary} />
-              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>My Reviews</Text>
+              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>{t('pages.coach.reviews.title')}</Text>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
             <TouchableOpacity 
@@ -361,7 +361,7 @@ export default function TutorSettings() {
               onPress={() => router.push('/(tutor)/packages')}
             >
               <Ionicons name="pricetags-outline" size={isTablet ? 24 : 22} color={colors.primary} />
-              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Session Packages</Text>
+              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>{t('pages.coach.packages.title')}</Text>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
             <TouchableOpacity 
