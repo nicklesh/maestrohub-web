@@ -1076,10 +1076,42 @@ export default function AdminReportsScreen() {
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
         <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
-          {/* Header */}
+          {/* Header with auto-refresh toggle */}
           <View style={styles.header}>
-            <Text style={[styles.title, isDesktop && styles.titleDesktop]}>{t('pages.admin.reports_page.title')}</Text>
-            <Text style={styles.subtitle}>{t('pages.admin.reports_page.subtitle')}</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <View style={{ flex: 1 }}>
+                <Text style={[styles.title, isDesktop && styles.titleDesktop]}>{t('pages.admin.reports_page.title')}</Text>
+                <Text style={styles.subtitle}>{t('pages.admin.reports_page.subtitle')}</Text>
+              </View>
+              <View style={{ alignItems: 'flex-end' }}>
+                <TouchableOpacity 
+                  onPress={toggleAutoRefresh}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    backgroundColor: autoRefreshEnabled ? colors.successLight : colors.gray200,
+                    paddingHorizontal: 12,
+                    paddingVertical: 6,
+                    borderRadius: 16,
+                    gap: 6,
+                  }}
+                >
+                  <Ionicons 
+                    name={autoRefreshEnabled ? 'sync' : 'sync-outline'} 
+                    size={14} 
+                    color={autoRefreshEnabled ? colors.success : colors.textMuted} 
+                  />
+                  <Text style={{ fontSize: 12, color: autoRefreshEnabled ? colors.success : colors.textMuted, fontWeight: '500' }}>
+                    {autoRefreshEnabled ? t('common.auto') || 'Auto' : t('common.manual') || 'Manual'}
+                  </Text>
+                </TouchableOpacity>
+                {lastUpdated && (
+                  <Text style={{ fontSize: 10, color: colors.textMuted, marginTop: 4 }}>
+                    {t('common.updated') || 'Updated'}: {formatLastUpdated()}
+                  </Text>
+                )}
+              </View>
+            </View>
           </View>
 
           {/* Tab Navigation */}
