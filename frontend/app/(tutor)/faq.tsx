@@ -226,10 +226,10 @@ export default function TutorFAQScreen() {
               <View style={styles.categoryHeader}>
                 <Ionicons
                   name={
-                    category === 'Getting Started' ? 'rocket-outline' :
-                    category === 'Managing Availability' ? 'calendar-outline' :
-                    category === 'Bookings & Sessions' ? 'book-outline' :
-                    category === 'Payments & Earnings' ? 'cash-outline' :
+                    category.includes('Getting Started') || category.includes(t('pages.coach.faq.categories.getting_started') || '') ? 'rocket-outline' :
+                    category.includes('Availability') || category.includes(t('pages.coach.faq.categories.managing_availability') || '') ? 'calendar-outline' :
+                    category.includes('Bookings') || category.includes(t('pages.coach.faq.categories.bookings_sessions') || '') ? 'book-outline' :
+                    category.includes('Payments') || category.includes(t('pages.coach.faq.categories.payments_earnings') || '') ? 'cash-outline' :
                     'help-circle-outline'
                   }
                   size={24}
@@ -237,10 +237,10 @@ export default function TutorFAQScreen() {
                 />
                 <Text style={[styles.categoryTitle, { color: colors.text }]}>{category}</Text>
               </View>
-              {faqData
+              {translatedFaqData
                 .filter(item => item.category === category)
                 .map((item, index) => {
-                  const globalIndex = faqData.findIndex(
+                  const globalIndex = translatedFaqData.findIndex(
                     f => f.question === item.question && f.category === item.category
                   );
                   return renderFAQItem(item, globalIndex);
