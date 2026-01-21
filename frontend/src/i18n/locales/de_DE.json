@@ -787,7 +787,11 @@
         "when_get_paid": "Wann und wie werde ich bezahlt?",
         "app_not_working": "Die App funktioniert nicht richtig. Was soll ich tun?",
         "update_profile": "Wie aktualisiere ich meine Profilinformationen?",
-        "contact_support": "Wie kontaktiere ich den Support?"
+        "contact_support": "Wie kontaktiere ich den Support?",
+        "how_become_coach": {
+          "question": "Wie werde ich ein Coach?",
+          "answer": "Melden Sie sich als Coach an, vervollständigen Sie Ihr Profil, legen Sie Ihre Preise fest und lassen Sie sich verifizieren."
+        }
       },
       "answers": {
         "how_create_account": "Um ein Konto zu erstellen, tippen Sie auf dem Anmeldebildschirm auf 'Registrieren'. Sie können sich mit Ihrer E-Mail-Adresse anmelden oder über Google anmelden. Wählen Sie aus, ob Sie als Eltern/Schüler (um einen Coach zu finden) oder als Coach/Tutor (um Ihre Dienste anzubieten) teilnehmen möchten.",
@@ -1181,7 +1185,13 @@
         "message_details": "Nachrichtendetails",
         "status": "Status",
         "update_failed": "Status konnte nicht aktualisiert werden",
-        "close": "Schließen"
+        "close": "Schließen",
+        "categories": {
+          "general": "Allgemein",
+          "billing": "Abrechnung",
+          "technical": "Technisch",
+          "other": "Andere"
+        }
       },
       "coaches_page": {
         "title": "Trainer verwalten",
@@ -1320,7 +1330,23 @@
         "revenue_trend": "Umsatztrend",
         "gross_revenue": "Bruttoumsatz",
         "net_to_coaches": "Netto an Trainer",
-        "bookings_count": "Buchungen"
+        "bookings_count": "Buchungen",
+        "auto_refresh_on": "Auto-Refresh aktiviert",
+        "auto_refresh_off": "Auto-Aktualisierung deaktiviert",
+        "growth_visualization": "Wachstumsvisualisierung",
+        "new_coaches_trend": "Neue Trainer-Trend",
+        "new_consumers_trend": "Neuer Verbrauchertrend",
+        "top_categories": "Top-Kategorien nach Coaches",
+        "performance_arts": "Leistung & Kreative Künste",
+        "academics": "Akademiker",
+        "activities_hobbies": "Aktivitäten & Hobbys",
+        "fitness_nutrition": "Fitness & Ernährung",
+        "health_mindfulness": "Gesundheit, Achtsamkeit & Wohlbefinden",
+        "business_communication": "Geschäft, Kommunikation & Führung",
+        "finance_legal": "Finanzen, Recht & Verhandlung",
+        "coaching_personal": "Coaching & Persönliche Entwicklung",
+        "relationships_family": "Beziehungen & Familie",
+        "culture_inclusion": "Kultur, Inklusion & Erfahrungen"
       },
       "settings_page": {
         "title": "Einstellungen",
@@ -1438,6 +1464,10 @@
         "policy_updated": "Preisrichtlinie erfolgreich aktualisiert",
         "no_policies": "Keine Preisrichtlinien",
         "no_policies_description": "Keine Preisrichtlinien für irgendeinen Markt gefunden"
+      },
+      "marketplace": {
+        "all_countries": "Alle Länder",
+        "filter_by_country": "Nach Land filtern"
       }
     },
     "edit_profile": {
@@ -1773,7 +1803,20 @@
         "profile_hidden": "Ihr Profil ist ausgeblendet",
         "published": "Veröffentlicht",
         "publish": "Veröffentlichen",
-        "grow_business": "Lassen Sie Ihr Unternehmen wachsen"
+        "grow_business": "Lassen Sie Ihr Unternehmen wachsen",
+        "save_link": "Link speichern",
+        "zoom_link": "Zoom-Link",
+        "zoom_link_placeholder": "Geben Sie Ihren Zoom-Link ein",
+        "meeting_link": "Besprechungslink",
+        "video_call_link": "Video-Anruf-Link",
+        "category": "Kategorie",
+        "subcategory": "Unterkategorie",
+        "teaching_medium": "Unterrichtsmedium",
+        "select_category": "Kategorie auswählen",
+        "select_subcategory": "Unterkategorie auswählen",
+        "select_medium": "Medium auswählen",
+        "add_stripe_account": "Stripe-Konto hinzufügen",
+        "stripe_not_connected": "Stripe Nicht Verbunden"
       },
       "billing": {
         "title": "Abrechnung",
@@ -1832,7 +1875,10 @@
         "write_response": "Antwort schreiben",
         "respond_to_review": "Auf Bewertung antworten",
         "response_placeholder": "Danken Sie dem Gutachter und gehen Sie auf jedes Feedback professionell ein...",
-        "response_tip": "Tipp: Bedanken Sie sich beim Kunden, würdigen Sie das Feedback und betonen Sie Ihr Engagement für Qualität."
+        "response_tip": "Tipp: Bedanken Sie sich beim Kunden, würdigen Sie das Feedback und betonen Sie Ihr Engagement für Qualität.",
+        "no_reviews_text": "Sie haben noch keine Bewertungen erhalten",
+        "average_rating": "Durchschnittliche Bewertung",
+        "rating_breakdown": "Bewertungsaufschlüsselung"
       },
       "packages": {
         "title": "Pakete",
@@ -1871,7 +1917,16 @@
         "preview": "Paket-Vorschau",
         "regular_price": "Regulärer Preis",
         "package_price": "Paketpreis",
-        "client_saves": "Client speichert"
+        "client_saves": "Client speichert",
+        "delete_package": "Paket löschen",
+        "package_description": "Beschreibung",
+        "sessions_count": "Anzahl der Sitzungen",
+        "set_available_times": "Verfügbare Zeiten festlegen",
+        "select_category": "Kategorie auswählen",
+        "select_subcategory": "Unterkategorie auswählen",
+        "no_packages_text": "Sie haben noch keine Pakete erstellt",
+        "publish": "Veröffentlichen",
+        "unpublish": "Veröffentlichung rückgängig machen"
       },
       "invites": {
         "title": "Einladungen",
@@ -2054,7 +2109,22 @@
         "start_time": "Startzeit",
         "end_time": "Endzeit",
         "enabled": "Aktiviert",
-        "disabled": "Deaktiviert"
+        "disabled": "Deaktiviert",
+        "vacation_mode": "Urlaubsmodus",
+        "set_vacation_days": "Urlaubstage festlegen",
+        "available": "Verfügbar",
+        "unavailable": "Nicht verfügbar",
+        "vacation": "Urlaub",
+        "set_recurring_schedule": "Wiederkehrenden Zeitplan festlegen",
+        "quick_actions": "Schnellaktionen",
+        "tap_calendar_hint": "Tippen Sie auf ein beliebiges Datum im Kalender, um Ihre Verfügbarkeit festzulegen",
+        "add_time_slot": "Zeitfenster hinzufügen",
+        "remove_time_slot": "Zeitfenster entfernen",
+        "daily": "Täglich",
+        "weekly": "Wöchentlich",
+        "monthly": "Monatlich",
+        "calendar": "Kalender",
+        "availability": "Verfügbarkeit"
       },
       "faq": {
         "frequently_asked": "Häufig gestellte Fragen",
@@ -2066,7 +2136,15 @@
         "still_need_help": "Brauchen Sie noch Hilfe?",
         "help_center": "Hilfezentrum",
         "subtitle": "Finden Sie Antworten auf häufige Fragen zum Coaching auf Maestro Habitat",
-        "still_have_questions": "Haben Sie noch Fragen?"
+        "still_have_questions": "Haben Sie noch Fragen?",
+        "title": "Häufig gestellte Fragen",
+        "categories": {
+          "getting_started": "Erste Schritte",
+          "managing_availability": "Verfügbarkeit verwalten",
+          "bookings_sessions": "Buchungen & Sessions",
+          "payments_earnings": "Zahlungen & Einnahmen",
+          "account_support": "Konto & Support"
+        }
       },
       "notifications": {
         "title": "Benachrichtigungen",
@@ -2077,7 +2155,14 @@
         "new_booking": "Neue Buchung",
         "booking_cancelled": "Buchung storniert",
         "review_received": "Bewertung erhalten",
-        "payout_completed": "Auszahlung abgeschlossen"
+        "payout_completed": "Auszahlung abgeschlossen",
+        "no_notifications_text": "Sie haben keine neuen Benachrichtigungen",
+        "clear_all": "Alle löschen",
+        "booking_confirmed": "Buchung bestätigt",
+        "new_message": "Neue Nachricht",
+        "payment_received": "Zahlung erhalten",
+        "profile_approved": "Profil genehmigt",
+        "profile_update": "Profilaktualisierung erforderlich"
       },
       "every_week": "Jede Woche",
       "select_days": "Tage auswählen",

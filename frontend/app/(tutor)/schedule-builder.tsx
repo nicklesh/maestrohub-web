@@ -176,18 +176,26 @@ export default function ScheduleBuilderScreen() {
 
   const getDurationLabel = () => {
     switch (duration) {
-      case 'month': return '1 Month';
-      case 'quarter': return '3 Months (Quarter)';
-      case 'year': return '1 Year';
-      case 'custom': return `${customMonths} Months`;
+      case 'month': return t('pages.coach.schedule_builder.duration_month') || '1 Month';
+      case 'quarter': return t('pages.coach.schedule_builder.duration_quarter') || '3 Months (Quarter)';
+      case 'year': return t('pages.coach.schedule_builder.duration_year') || '1 Year';
+      case 'custom': return `${customMonths} ${t('pages.coach.schedule_builder.months') || 'Months'}`;
     }
+  };
+
+  // Translated day names
+  const getTranslatedDayName = (dayIndex: number, short = false) => {
+    const dayKeys = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    const key = short ? `calendar.days_short.${dayKeys[dayIndex].slice(0, 3)}` : `calendar.days.${dayKeys[dayIndex]}`;
+    const fallback = short ? DAYS_SHORT[dayIndex] : DAYS_OF_WEEK[dayIndex];
+    return t(key) || fallback;
   };
 
   const renderWeeklySchedule = () => (
     <View style={styles.scheduleContainer}>
       {/* Duration Selection */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>{t('pages.coach.schedule_builder.schedule_duration')}</Text>
+        <Text style={styles.sectionTitle}>{t('pages.coach.schedule_builder.schedule_duration') || 'Schedule Duration'}</Text>
         <TouchableOpacity 
           style={styles.durationSelector}
           onPress={() => setShowDurationModal(true)}
@@ -198,7 +206,7 @@ export default function ScheduleBuilderScreen() {
         </TouchableOpacity>
         
         <Text style={styles.durationHint}>
-          Schedule active until: {calculateEndDate()}
+          {t('pages.coach.schedule_builder.schedule_active_until') || 'Schedule active until'}: {calculateEndDate()}
         </Text>
       </View>
 
@@ -206,9 +214,9 @@ export default function ScheduleBuilderScreen() {
       <View style={styles.section}>
         <View style={styles.autoRenewRow}>
           <View style={styles.autoRenewInfo}>
-            <Text style={styles.sectionTitle}>Auto-Renewal</Text>
+            <Text style={styles.sectionTitle}>{t('pages.coach.schedule_builder.auto_renewal') || 'Auto-Renewal'}</Text>
             <Text style={styles.autoRenewHint}>
-              Automatically renew when schedule expires
+              {t('pages.coach.schedule_builder.auto_renewal_hint') || 'Automatically renew when schedule expires'}
             </Text>
           </View>
           <Switch
@@ -221,7 +229,7 @@ export default function ScheduleBuilderScreen() {
         
         {autoRenew && (
           <View style={styles.reminderRow}>
-            <Text style={styles.reminderLabel}>Reminder before expiry:</Text>
+            <Text style={styles.reminderLabel}>{t('pages.coach.schedule_builder.reminder_before_expiry') || 'Reminder before expiry'}:</Text>
             <View style={styles.reminderOptions}>
               {[7, 14, 30].map(days => (
                 <TouchableOpacity
@@ -236,7 +244,7 @@ export default function ScheduleBuilderScreen() {
                     styles.reminderChipText,
                     reminderDays === days && styles.reminderChipTextActive
                   ]}>
-                    {days} days
+                    {days} {t('pages.coach.schedule_builder.days') || 'days'}
                   </Text>
                 </TouchableOpacity>
               ))}
@@ -248,7 +256,7 @@ export default function ScheduleBuilderScreen() {
       {/* Weekly Hours */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Weekly Hours</Text>
+          <Text style={styles.sectionTitle}>{t('pages.coach.schedule_builder.weekly_hours') || 'Weekly Hours'}</Text>
           <TouchableOpacity 
             style={styles.applyAllBtn}
             onPress={() => {
