@@ -231,13 +231,324 @@ const SparkLine = ({
   );
 };
 
+// Enhanced Line Chart with labels and grid
+const LineChart = ({
+  data,
+  valueKey,
+  labelKey,
+  color,
+  height = 160,
+  width: chartWidth,
+  formatValue = (v: number) => String(v),
+  colors: themeColors,
+  showGrid = true,
+  showDots = true,
+  fillArea = false,
+}: {
+  data: any[];
+  valueKey: string;
+  labelKey: string;
+  color: string;
+  height?: number;
+  width?: number;
+  formatValue?: (v: number) => string;
+  colors: ThemeColors;
+  showGrid?: boolean;
+  showDots?: boolean;
+  fillArea?: boolean;
+}) => {
+  if (data.length < 2) return null;
+  
+  const values = data.map(d => d[valueKey]);
+  const maxVal = Math.max(...values, 1);
+  const minVal = Math.min(...values, 0);
+  const range = maxVal - minVal || 1;
+  
+  const chartHeight = height - 40; // Reserve space for labels
+  const effectiveWidth = chartWidth || 300;
+  const pointSpacing = (effectiveWidth - 40) / (data.length - 1);
+  
+  const points = data.map((item, i) => ({
+    x: 20 + i * pointSpacing,
+    y: 10 + chartHeight - ((item[valueKey] - minVal) / range) * chartHeight,
+    value: item[valueKey],
+    label: item[labelKey],
+  }));
+  
+  // Grid lines (3 horizontal)
+  const gridLines = showGrid ? [0.25, 0.5, 0.75].map(pct => ({
+    y: 10 + chartHeight * (1 - pct),
+    value: minVal + range * pct,
+  })) : [];
+  
+  return (
+    <View style={{ height, width: effectiveWidth, position: 'relative' }}>
+      {/* Grid lines */}
+      {gridLines.map((line, i) => (
+        <View key={`grid-${i}`} style={{ position: 'absolute', left: 0, right: 0, top: line.y, flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{ flex: 1, height: 1, backgroundColor: themeColors.border, opacity: 0.5 }} />
+        </View>
+      ))}
+      
+      {/* Area fill */}
+      {fillArea && points.length > 1 && (
+        <View style={{
+          position: 'absolute',
+          left: points[0].x,
+          top: Math.min(...points.map(p => p.y)),
+          width: points[points.length - 1].x - points[0].x,
+          height: chartHeight + 10 - Math.min(...points.map(p => p.y)),
+          backgroundColor: color,
+          opacity: 0.15,
+          borderTopLeftRadius: 4,
+          borderTopRightRadius: 4,
+        }} />
+      )}
+      
+      {/* Lines connecting points */}
+      {points.slice(0, -1).map((point, i) => {
+        const nextPoint = points[i + 1];
+        const lineLength = Math.sqrt(Math.pow(nextPoint.x - point.x, 2) + Math.pow(nextPoint.y - point.y, 2));
+        const angle = Math.atan2(nextPoint.y - point.y, nextPoint.x - point.x) * 180 / Math.PI;
+        return (
+          <View
+            key={`line-${i}`}
+            style={{
+              position: 'absolute',
+              left: point.x,
+              top: point.y,
+              width: lineLength,
+              height: 2,
+              backgroundColor: color,
+              transform: [{ rotate: `${angle}deg` }],
+              transformOrigin: 'left center',
+            }}
+          />
+        );
+      })}
+      
+      {/* Data points */}
+      {showDots && points.map((point, i) => (
+        <View
+          key={`dot-${i}`}
+          style={{
+            position: 'absolute',
+            left: point.x - 5,
+            top: point.y - 5,
+            width: 10,
+            height: 10,
+            borderRadius: 5,
+            backgroundColor: color,
+            borderWidth: 2,
+            borderColor: themeColors.surface,
+          }}
+        />
+      ))}
+      
+      {/* Value labels on top of dots */}
+      {showDots && points.map((point, i) => (
+        <Text
+          key={`val-${i}`}
+          style={{
+            position: 'absolute',
+            left: point.x - 25,
+            top: point.y - 22,
+            width: 50,
+            fontSize: 9,
+            fontWeight: '600',
+            color: themeColors.text,
+            textAlign: 'center',
+          }}
+        >
+          {formatValue(point.value)}
+        </Text>
+      ))}
+      
+      {/* X-axis labels */}
+      {points.map((point, i) => (
+        <Text
+          key={`label-${i}`}
+          style={{
+            position: 'absolute',
+            left: point.x - 20,
+            bottom: 0,
+            width: 40,
+            fontSize: 9,
+            color: themeColors.textMuted,
+            textAlign: 'center',
+          }}
+        >
+          {point.label}
+        </Text>
+      ))}
+    </View>
+  );
+};
+
+// Area Chart Component
+const AreaChart = ({
+  data,
+  valueKey,
+  labelKey,
+  color,
+  height = 120,
+  colors: themeColors,
+  formatValue = (v: number) => String(v),
+}: {
+  data: any[];
+  valueKey: string;
+  labelKey: string;
+  color: string;
+  height?: number;
+  colors: ThemeColors;
+  formatValue?: (v: number) => string;
+}) => {
+  if (data.length === 0) return null;
+  
+  const values = data.map(d => d[valueKey]);
+  const maxVal = Math.max(...values, 1);
+  const chartHeight = height - 30;
+  
+  return (
+    <View style={{ height }}>
+      {/* Bars with gradient effect */}
+      <View style={{ flexDirection: 'row', alignItems: 'flex-end', height: chartHeight, paddingHorizontal: 4 }}>
+        {data.map((item, index) => {
+          const barHeight = (item[valueKey] / maxVal) * chartHeight;
+          return (
+            <View key={index} style={{ flex: 1, alignItems: 'center', marginHorizontal: 2 }}>
+              {/* Value label */}
+              <Text style={{ fontSize: 8, color: themeColors.text, fontWeight: '600', marginBottom: 2 }}>
+                {formatValue(item[valueKey])}
+              </Text>
+              {/* Bar with gradient simulation */}
+              <View style={{ width: '100%', height: Math.max(barHeight, 2), borderRadius: 4, overflow: 'hidden' }}>
+                <View style={{ flex: 1, backgroundColor: color, opacity: 0.3 }} />
+                <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '60%', backgroundColor: color, opacity: 0.6, borderRadius: 4 }} />
+                <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '30%', backgroundColor: color, borderRadius: 4 }} />
+              </View>
+            </View>
+          );
+        })}
+      </View>
+      {/* X-axis labels */}
+      <View style={{ flexDirection: 'row', paddingHorizontal: 4, marginTop: 4 }}>
+        {data.map((item, index) => (
+          <View key={index} style={{ flex: 1, alignItems: 'center', marginHorizontal: 2 }}>
+            <Text style={{ fontSize: 8, color: themeColors.textMuted, textAlign: 'center' }}>
+              {item[labelKey]}
+            </Text>
+          </View>
+        ))}
+      </View>
+    </View>
+  );
+};
+
+// Horizontal Bar Chart for category comparison
+const HorizontalBarChart = ({
+  data,
+  valueKey,
+  labelKey,
+  color,
+  colors: themeColors,
+  maxItems = 5,
+}: {
+  data: any[];
+  valueKey: string;
+  labelKey: string;
+  color: string;
+  colors: ThemeColors;
+  maxItems?: number;
+}) => {
+  const displayData = data.slice(0, maxItems);
+  const maxVal = Math.max(...displayData.map(d => d[valueKey]), 1);
+  
+  return (
+    <View style={{ gap: 8 }}>
+      {displayData.map((item, index) => (
+        <View key={index}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}>
+            <Text style={{ fontSize: 12, color: themeColors.text, fontWeight: '500', flex: 1 }} numberOfLines={1}>
+              {item[labelKey]}
+            </Text>
+            <Text style={{ fontSize: 12, color: themeColors.textMuted, fontWeight: '600' }}>
+              {item[valueKey]}
+            </Text>
+          </View>
+          <View style={{ height: 8, backgroundColor: themeColors.border, borderRadius: 4, overflow: 'hidden' }}>
+            <View
+              style={{
+                width: `${(item[valueKey] / maxVal) * 100}%`,
+                height: '100%',
+                backgroundColor: color,
+                borderRadius: 4,
+              }}
+            />
+          </View>
+        </View>
+      ))}
+    </View>
+  );
+};
+
+// Mini Stat Card with sparkline
+const MiniStatCard = ({
+  icon,
+  iconColor,
+  label,
+  value,
+  trend,
+  trendData,
+  colors: themeColors,
+}: {
+  icon: keyof typeof Ionicons.glyphMap;
+  iconColor: string;
+  label: string;
+  value: string | number;
+  trend?: string;
+  trendData?: number[];
+  colors: ThemeColors;
+}) => (
+  <View style={{
+    flex: 1,
+    backgroundColor: themeColors.surface,
+    borderRadius: 12,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: themeColors.border,
+    minWidth: 140,
+  }}>
+    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      <View style={{ backgroundColor: iconColor + '20', padding: 8, borderRadius: 8 }}>
+        <Ionicons name={icon} size={18} color={iconColor} />
+      </View>
+      {trendData && trendData.length > 1 && (
+        <SparkLine data={trendData} width={50} height={20} color={iconColor} />
+      )}
+    </View>
+    <Text style={{ fontSize: 20, fontWeight: 'bold', color: themeColors.text, marginTop: 8 }}>{value}</Text>
+    <Text style={{ fontSize: 11, color: themeColors.textMuted, marginTop: 2 }}>{label}</Text>
+    {trend && (
+      <Text style={{ fontSize: 10, color: trend.startsWith('+') ? themeColors.success : themeColors.error, marginTop: 4, fontWeight: '600' }}>
+        {trend}
+      </Text>
+    )}
+  </View>
+);
+
 export default function AdminReportsScreen() {
   const { colors } = useTheme();
   const { token } = useAuth();
+  const { showToast } = useToast();
   const { t, formatNumber, formatCurrency } = useTranslation();
   const { width } = useWindowDimensions();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const refreshIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const appStateRef = useRef(AppState.currentState);
   const [activeTab, setActiveTab] = useState<'overview' | 'trends' | 'categories' | 'revenue'>('overview');
 
   const isTablet = width >= 768;
