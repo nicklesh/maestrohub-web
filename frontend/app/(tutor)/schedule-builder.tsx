@@ -187,7 +187,7 @@ export default function ScheduleBuilderScreen() {
     <View style={styles.scheduleContainer}>
       {/* Duration Selection */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Schedule Duration</Text>
+        <Text style={styles.sectionTitle}>{t('pages.coach.schedule_builder.schedule_duration')}</Text>
         <TouchableOpacity 
           style={styles.durationSelector}
           onPress={() => setShowDurationModal(true)}
