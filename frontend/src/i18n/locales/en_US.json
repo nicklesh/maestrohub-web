@@ -1247,25 +1247,24 @@
         "gross_revenue": "Gross Revenue",
         "net_to_coaches": "Net to Coaches",
         "bookings_count": "Bookings",
-        "increase_conversion": "Increase Conversion Rate",
-        "increase_conversion_desc": "Consider offering promotions to convert freemium users to paid.",
+        "increase_conversion": "Increase Coach Conversion",
+        "increase_conversion_desc": "27% of pending coaches have not completed profiles. Send reminder emails to boost completion rate.",
         "promote_categories": "Promote Top Categories",
-        "promote_categories_desc": "STEM and Academic categories are growing - consider featuring them.",
-        "freemium_conversion": "Freemium Conversion",
-        "freemium_conversion_desc": "Target freemium users with limited-time offers to boost conversions.",
+        "promote_categories_desc": "Academic tutoring has highest demand. Consider marketing campaigns to attract more coaches.",
+        "freemium_conversion": "Freemium to Paid Conversion",
+        "freemium_conversion_desc": "73% users are freemium. Offer limited-time discounts to convert to paid subscriptions.",
         "week_1": "Week 1",
         "week_2": "Week 2",
         "week_3": "Week 3",
         "week_4": "Week 4",
         "by_user": "By User",
         "by_markets": "By Markets",
-        "share": "share",
-        "increase_conversion": "Increase Coach Conversion",
-        "increase_conversion_desc": "27% of pending coaches have not completed profiles. Send reminder emails to boost completion rate.",
-        "promote_categories": "Promote Top Categories",
-        "promote_categories_desc": "Academic tutoring has highest demand. Consider marketing campaigns to attract more coaches.",
-        "freemium_conversion": "Freemium to Paid Conversion",
-        "freemium_conversion_desc": "73% users are freemium. Offer limited-time discounts to convert to paid subscriptions."
+        "auto_refresh_on": "Auto-refresh enabled",
+        "auto_refresh_off": "Auto-refresh disabled",
+        "growth_visualization": "Growth Visualization",
+        "new_coaches_trend": "New Coaches Trend",
+        "new_consumers_trend": "New Consumers Trend",
+        "top_categories": "Top Categories by Coaches"
       },
       "settings_page": {
         "administrator": "Administrator",
@@ -2016,5 +2015,12 @@
       "clear_all": "Clear All",
       "reset": "Reset"
     }
+  },
+  "common": {
+    "auto": "Auto",
+    "manual": "Manual",
+    "updated": "Updated",
+    "just_now": "Just now",
+    "ago": "ago"
   }
 }
