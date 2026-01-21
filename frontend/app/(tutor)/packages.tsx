@@ -53,6 +53,15 @@ export default function PackagesScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [packages, setPackages] = useState<SessionPackage[]>([]);
+
+  // Translated validity options
+  const validityOptions = [
+    { value: 30, label: t('pages.coach.packages.validity_1_month') || '1 month' },
+    { value: 60, label: t('pages.coach.packages.validity_2_months') || '2 months' },
+    { value: 90, label: t('pages.coach.packages.validity_3_months') || '3 months' },
+    { value: 180, label: t('pages.coach.packages.validity_6_months') || '6 months' },
+    { value: 365, label: t('pages.coach.packages.validity_1_year') || '1 year' },
+  ];
   const [basePrice, setBasePrice] = useState(0);
   
   // Create modal state
