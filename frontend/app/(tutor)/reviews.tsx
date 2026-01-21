@@ -137,7 +137,7 @@ export default function CoachReviewsScreen() {
   if (loading) {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-        <AppHeader showBack title="My Reviews" />
+        <AppHeader showBack title={t('pages.coach.reviews.title')} />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -147,7 +147,7 @@ export default function CoachReviewsScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <AppHeader showBack title="My Reviews" />
+      <AppHeader showBack title={t('pages.coach.reviews.title')} />
 
       <ScrollView
         style={styles.content}
@@ -162,18 +162,18 @@ export default function CoachReviewsScreen() {
             <Text style={[styles.statValue, { color: colors.primary }]}>{stats.avgRating}</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
               <Ionicons name="star" size={14} color="#FFB800" />
-              <Text style={[styles.statLabel, { color: colors.textMuted }]}>Rating</Text>
+              <Text style={[styles.statLabel, { color: colors.textMuted }]}>{t('pages.coach.reviews.rating')}</Text>
             </View>
           </View>
           <View style={[styles.statDivider, { backgroundColor: colors.border }]} />
           <View style={styles.statItem}>
             <Text style={[styles.statValue, { color: colors.success }]}>{stats.recommendPct}%</Text>
-            <Text style={[styles.statLabel, { color: colors.textMuted }]}>Recommend</Text>
+            <Text style={[styles.statLabel, { color: colors.textMuted }]}>{t('pages.coach.reviews.recommend')}</Text>
           </View>
           <View style={[styles.statDivider, { backgroundColor: colors.border }]} />
           <View style={styles.statItem}>
             <Text style={[styles.statValue, { color: colors.text }]}>{reviews.length}</Text>
-            <Text style={[styles.statLabel, { color: colors.textMuted }]}>Reviews</Text>
+            <Text style={[styles.statLabel, { color: colors.textMuted }]}>{t('pages.coach.reviews.reviews')}</Text>
           </View>
         </View>
 
@@ -182,7 +182,7 @@ export default function CoachReviewsScreen() {
           <View style={[styles.alertCard, { backgroundColor: colors.warning + '20' }]}>
             <Ionicons name="chatbubble-ellipses" size={20} color={colors.warning} />
             <Text style={[styles.alertText, { color: colors.warning }]}>
-              {stats.needsResponse} review{stats.needsResponse > 1 ? 's' : ''} awaiting your response
+              {t('pages.coach.reviews.awaiting_response', { count: stats.needsResponse })}
             </Text>
           </View>
         )}
@@ -191,9 +191,9 @@ export default function CoachReviewsScreen() {
         {reviews.length === 0 ? (
           <View style={styles.emptyState}>
             <Ionicons name="star-outline" size={64} color={colors.textMuted} />
-            <Text style={[styles.emptyTitle, { color: colors.text }]}>No Reviews Yet</Text>
+            <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('pages.coach.reviews.no_reviews')}</Text>
             <Text style={[styles.emptyText, { color: colors.textMuted }]}>
-              Reviews from your clients will appear here
+              {t('pages.coach.reviews.no_reviews_description')}
             </Text>
           </View>
         ) : (
