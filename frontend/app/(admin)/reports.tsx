@@ -826,7 +826,6 @@ export default function AdminReportsScreen() {
             { label: t('pages.admin.reports_page.paid_users'), value: stats.paidUsers, color: colors.success },
           ]}
           size={140}
-          colors={chartColors}
           themeColors={colors}
         />
       </View>
