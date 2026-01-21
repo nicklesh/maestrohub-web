@@ -1821,11 +1821,12 @@
         "no_activity": "No fee activity yet",
         "payout_account": "Payout Account",
         "connect_stripe": "Connect Stripe Account",
-        "stripe_note": "Stripe Connect integration coming soon. Payouts will be processed automatically.",
+        "stripe_note": "Connect your Stripe account to receive payouts directly to your bank.",
         "want_more_bookings": "Want More Bookings?",
-        "get_featured": "Get featured at the top of search results",
+        "get_featured": "Get featured in search results",
         "more_visibility": "3x more visibility",
-        "top_placement": "Top search placement"
+        "top_placement": "Top search placement",
+        "stripe_coming_soon": "Stripe integration coming soon. Contact support for manual payout setup."
       },
       "reviews": {
         "title": "My Reviews",
