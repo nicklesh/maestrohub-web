@@ -278,7 +278,7 @@ export default function TutorOnboarding() {
 
       {availableSubjects.length > 0 && (
         <>
-          <Text style={[styles.sectionLabel, { color: colors.text, marginTop: 20 }]}>Subjects/Skills</Text>
+          <Text style={[styles.sectionLabel, { color: colors.text, marginTop: 20 }]}>{t('pages.coach.onboarding.subjects_skills')}</Text>
           <View style={styles.chipGrid}>
             {availableSubjects.map((subject) => (
               <TouchableOpacity
@@ -305,8 +305,8 @@ export default function TutorOnboarding() {
 
   const renderStep3 = () => (
     <View style={styles.stepContent}>
-      <Text style={[styles.stepTitle, isDesktop && styles.stepTitleDesktop]}>Who do you teach?</Text>
-      <Text style={[styles.stepSubtitle, isDesktop && styles.stepSubtitleDesktop]}>Select the levels you can teach</Text>
+      <Text style={[styles.stepTitle, isDesktop && styles.stepTitleDesktop]}>{t('pages.coach.onboarding.who_teach')}</Text>
+      <Text style={[styles.stepSubtitle, isDesktop && styles.stepSubtitleDesktop]}>{t('pages.coach.onboarding.select_levels')}</Text>
 
       <View style={styles.chipGrid}>
         {LEVELS.map((level) => (
@@ -332,10 +332,10 @@ export default function TutorOnboarding() {
 
   const renderStep4 = () => (
     <View style={styles.stepContent}>
-      <Text style={[styles.stepTitle, isDesktop && styles.stepTitleDesktop]}>Set your rates</Text>
-      <Text style={[styles.stepSubtitle, isDesktop && styles.stepSubtitleDesktop]}>Choose how you teach and your pricing</Text>
+      <Text style={[styles.stepTitle, isDesktop && styles.stepTitleDesktop]}>{t('pages.coach.onboarding.set_rates')}</Text>
+      <Text style={[styles.stepSubtitle, isDesktop && styles.stepSubtitleDesktop]}>{t('pages.coach.onboarding.choose_pricing')}</Text>
 
-      <Text style={[styles.sectionLabel, { color: colors.text }]}>Modality</Text>
+      <Text style={[styles.sectionLabel, { color: colors.text }]}>{t('pages.coach.onboarding.modality')}</Text>
       <View style={styles.chipGrid}>
         {MODALITIES.map((mod) => (
           <TouchableOpacity
@@ -361,7 +361,7 @@ export default function TutorOnboarding() {
         ))}
       </View>
 
-      <Text style={[styles.sectionLabel, { color: colors.text, marginTop: 20 }]}>Payout Country</Text>
+      <Text style={[styles.sectionLabel, { color: colors.text, marginTop: 20 }]}>{t('pages.coach.onboarding.payout_country')}</Text>
       <View style={styles.chipGrid}>
         {PAYOUT_COUNTRIES.map((country) => (
           <TouchableOpacity
