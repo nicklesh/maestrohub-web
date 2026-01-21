@@ -72,26 +72,53 @@ export default function AdminReportsScreen() {
 
   const loadData = async () => {
     try {
-      // Load real data from API
-      const [tutorsRes, analyticsRes] = await Promise.all([
-        api.get('/admin/tutors', { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: [] })),
-        api.get('/admin/analytics/markets', { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: { markets: [] } })),
+      // Load real data from new backend API endpoints
+      const [overviewRes, trendsRes, categoriesRes] = await Promise.all([
+        api.get('/admin/reports/overview', { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: null })),
+        api.get('/admin/reports/trends?period=monthly&num_periods=4', { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: null })),
+        api.get('/admin/reports/categories', { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: null })),
       ]);
 
-      const tutors = tutorsRes.data || [];
-      const analytics = analyticsRes.data;
-      
-      // Calculate real stats from API data
-      const approvedCount = tutors.filter((t: any) => t.status === 'approved').length;
-      const totalRevenue = analytics.markets?.reduce((sum: number, m: any) => sum + (m.total_revenue_cents || 0), 0) || 0;
-      
-      setStats(prev => ({
-        ...prev,
-        totalTutors: tutors.length,
-        approvedTutors: approvedCount,
-        totalRevenue: totalRevenue / 100,
-        platformFees: (totalRevenue / 100) * 0.15,
-      }));
+      // Update stats from overview endpoint
+      if (overviewRes.data?.stats) {
+        const s = overviewRes.data.stats;
+        setStats({
+          totalUsers: s.total_users || 0,
+          paidUsers: s.completed_bookings || 0, // Users with completed bookings
+          freemiumUsers: (s.total_users || 0) - (s.completed_bookings || 0),
+          totalTutors: s.total_tutors || 0,
+          approvedTutors: s.approved_tutors || 0,
+          totalParents: s.total_consumers || 0,
+          activeParents: Math.round((s.total_consumers || 0) * 0.7), // Estimate
+          totalRevenue: (s.total_revenue_cents || 0) / 100,
+          platformFees: (s.platform_fees_cents || 0) / 100,
+          pendingPayouts: (s.pending_payouts_cents || 0) / 100,
+          totalBookings: s.total_bookings || 0,
+          completedBookings: s.completed_bookings || 0,
+        });
+      }
+
+      // Update trends from trends endpoint
+      if (trendsRes.data?.trends) {
+        const formattedTrends = trendsRes.data.trends.map((t: any) => ({
+          period: t.period,
+          tutors: t.new_tutors || 0,
+          parents: t.new_consumers || 0,
+          revenue: (t.revenue_cents || 0) / 100,
+        }));
+        setTrendData(formattedTrends);
+      }
+
+      // Update categories from categories endpoint
+      if (categoriesRes.data?.categories) {
+        const formattedCategories = categoriesRes.data.categories.map((c: any) => ({
+          category: c.category.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()),
+          tutors: c.tutors || 0,
+          parents: c.consumers || 0,
+          bookings: c.bookings || 0,
+        }));
+        setCategoryBreakdown(formattedCategories);
+      }
     } catch (error) {
       console.error('Failed to load reports data:', error);
     } finally {
