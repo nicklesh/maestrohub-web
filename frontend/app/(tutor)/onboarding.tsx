@@ -384,7 +384,7 @@ export default function TutorOnboarding() {
 
       <View style={styles.priceRow}>
         <View style={styles.priceInput}>
-          <Text style={[styles.sectionLabel, { color: colors.text }]}>Price per Hour</Text>
+          <Text style={[styles.sectionLabel, { color: colors.text }]}>{t('pages.coach.onboarding.price_per_hour')}</Text>
           <View style={[styles.inputWithPrefix, { backgroundColor: colors.surface, borderColor: colors.border }]}>
             <Text style={[styles.prefix, { color: colors.textMuted }]}>{currencySymbol}</Text>
             <TextInput
@@ -397,7 +397,7 @@ export default function TutorOnboarding() {
         </View>
 
         <View style={styles.priceInput}>
-          <Text style={[styles.sectionLabel, { color: colors.text }]}>Session Length</Text>
+          <Text style={[styles.sectionLabel, { color: colors.text }]}>{t('pages.coach.onboarding.session_length')}</Text>
           <View style={[styles.inputWithPrefix, { backgroundColor: colors.surface, borderColor: colors.border }]}>
             <TextInput
               style={[styles.priceTextInput, { color: colors.text }]}
@@ -405,7 +405,7 @@ export default function TutorOnboarding() {
               onChangeText={setDuration}
               keyboardType="numeric"
             />
-            <Text style={[styles.suffix, { color: colors.textMuted }]}>min</Text>
+            <Text style={[styles.suffix, { color: colors.textMuted }]}>{t('pages.coach.onboarding.min')}</Text>
           </View>
         </View>
       </View>
@@ -415,7 +415,7 @@ export default function TutorOnboarding() {
   if (checkingProfile) {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-        <AppHeader title={hasExistingProfile ? "Edit Profile" : "Complete Profile"} showBack />
+        <AppHeader title={hasExistingProfile ? t('pages.coach.onboarding.edit_profile') : t('pages.coach.onboarding.title')} showBack />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -425,7 +425,7 @@ export default function TutorOnboarding() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <AppHeader title={hasExistingProfile ? "Edit Profile" : "Complete Profile"} showBack />
+      <AppHeader title={hasExistingProfile ? t('pages.coach.onboarding.edit_profile') : t('pages.coach.onboarding.title')} showBack />
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardView}
@@ -443,7 +443,7 @@ export default function TutorOnboarding() {
               />
             ))}
           </View>
-          <Text style={[styles.progressText, { color: colors.textMuted }]}>Step {step} of 4</Text>
+          <Text style={[styles.progressText, { color: colors.textMuted }]}>{t('pages.coach.onboarding.step')} {step} {t('pages.coach.onboarding.of')} 4</Text>
 
           {step === 1 && renderStep1()}
           {step === 2 && renderStep2()}
@@ -459,7 +459,7 @@ export default function TutorOnboarding() {
                 onPress={() => setStep(step - 1)}
               >
                 <Ionicons name="arrow-back" size={20} color={colors.text} />
-                <Text style={[styles.backButtonText, { color: colors.text }]}>{t('buttons.back')}</Text>
+                <Text style={[styles.backButtonText, { color: colors.text }]}>{t('pages.coach.onboarding.back')}</Text>
               </TouchableOpacity>
             )}
             {step < 4 ? (
@@ -467,7 +467,7 @@ export default function TutorOnboarding() {
                 style={[styles.nextButton, { backgroundColor: colors.primary }, step === 1 && { flex: 1 }]}
                 onPress={() => setStep(step + 1)}
               >
-                <Text style={styles.nextButtonText}>{t('buttons.continue')}</Text>
+                <Text style={styles.nextButtonText}>{t('pages.coach.onboarding.next')}</Text>
                 <Ionicons name="arrow-forward" size={20} color="#FFFFFF" />
               </TouchableOpacity>
             ) : (
