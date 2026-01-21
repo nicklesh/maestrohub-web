@@ -73,6 +73,7 @@ export default function TutorOnboarding() {
   const { colors } = useTheme();
   const { showSuccess, showError } = useToast();
   const { token } = useAuth();
+  const { t } = useTranslation();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
