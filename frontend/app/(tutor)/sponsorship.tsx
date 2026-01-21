@@ -51,7 +51,8 @@ const CATEGORIES = [
 export default function SponsorshipScreen() {
   const { token } = useAuth();
   const { colors } = useTheme();
-  const { showSuccess, showError } = useToast();
+  const { showSuccess, showError, showInfo } = useToast();
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [plans, setPlans] = useState<SponsorshipPlan[]>([]);
@@ -135,7 +136,7 @@ export default function SponsorshipScreen() {
   const handlePurchase = async () => {
     if (!selectedPlan) return;
     if (selectedCategories.length === 0) {
-      showInfo('Please select at least one category', 'Required');
+      showInfo(t('pages.coach.sponsorship.select_category'));
       return;
     }
     
@@ -150,14 +151,14 @@ export default function SponsorshipScreen() {
       });
       
       if (response.data.success) {
-        showSuccess(`Your sponsorship is now active! Total charged: ${response.data.total_charged}`);
+        showSuccess(t('pages.coach.sponsorship.purchase_success', { amount: response.data.total_charged }));
         setShowPurchaseModal(false);
         loadData();
       } else if (response.data.redirect_to_billing) {
-        showError(response.data.message, 'Payment Method Required');
+        showError(response.data.message);
       }
     } catch (error: any) {
-      showError(error.response?.data?.detail || 'Failed to purchase sponsorship');
+      showError(error.response?.data?.detail || t('pages.coach.sponsorship.purchase_failed'));
     } finally {
       setPurchasing(false);
     }
