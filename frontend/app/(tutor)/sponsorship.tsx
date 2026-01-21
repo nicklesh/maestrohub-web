@@ -297,9 +297,9 @@ export default function SponsorshipScreen() {
 
         {/* Available Plans */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>Available Plans</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.coach.sponsorship.available_plans')}</Text>
           <Text style={[styles.pricingInfo, { color: colors.textMuted }]}>
-            {currencySymbol === '₹' ? '₹1,200/week • ₹800/week from week 13' : '$15/week • $10/week from week 13'}
+            {t('pages.coach.sponsorship.per_week')} • {t('pages.coach.sponsorship.week_13_discount')}
           </Text>
           {plans.map((plan) => (
             <TouchableOpacity
@@ -310,7 +310,7 @@ export default function SponsorshipScreen() {
               <View style={styles.planHeader}>
                 <Text style={[styles.planName, { color: colors.text }]}>{plan.name}</Text>
                 <View style={[styles.durationBadge, { backgroundColor: colors.primary + '20' }]}>
-                  <Text style={[styles.durationText, { color: colors.primary }]}>{plan.weeks} {plan.weeks === 1 ? 'week' : 'weeks'}</Text>
+                  <Text style={[styles.durationText, { color: colors.primary }]}>{plan.weeks} {plan.weeks === 1 ? t('pages.coach.sponsorship.week') : t('pages.coach.sponsorship.weeks')}</Text>
                 </View>
               </View>
               <Text style={[styles.planDescription, { color: colors.textMuted }]}>{plan.description}</Text>
@@ -318,7 +318,7 @@ export default function SponsorshipScreen() {
                 <Text style={[styles.planPrice, { color: colors.primary }]}>{formatPrice(plan.price_cents)}</Text>
                 {plan.weeks > 1 && (
                   <Text style={[styles.planPriceNote, { color: colors.textMuted }]}>
-                    ({currencySymbol}{(plan.price_cents / 100 / plan.weeks).toFixed(0)}/week avg)
+                    ({currencySymbol}{(plan.price_cents / 100 / plan.weeks).toFixed(0)}/{t('pages.coach.sponsorship.week')} avg)
                   </Text>
                 )}
               </View>
@@ -329,7 +329,7 @@ export default function SponsorshipScreen() {
         {/* Past Sponsorships */}
         {pastSponsorships.length > 0 && (
           <View style={styles.section}>
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>Past Sponsorships</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.coach.sponsorship.past_sponsorships')}</Text>
             {pastSponsorships.map((sponsorship) => (
               <View key={sponsorship.sponsorship_id} style={[styles.pastCard, { backgroundColor: colors.surface }]}>
                 <View style={styles.pastHeader}>
@@ -337,7 +337,7 @@ export default function SponsorshipScreen() {
                   <Text style={[styles.pastStatus, { color: colors.textMuted }]}>{sponsorship.status}</Text>
                 </View>
                 <Text style={[styles.pastDate, { color: colors.textMuted }]}>
-                  Ended: {formatDate(sponsorship.expires_at)}
+                  {t('pages.coach.sponsorship.ended')}: {formatDate(sponsorship.expires_at)}
                 </Text>
               </View>
             ))}
@@ -359,9 +359,9 @@ export default function SponsorshipScreen() {
             </View>
 
             <ScrollView style={styles.modalBody} showsVerticalScrollIndicator={false}>
-              <Text style={[styles.inputLabel, { color: colors.text }]}>Select Categories to Sponsor</Text>
+              <Text style={[styles.inputLabel, { color: colors.text }]}>{t('pages.coach.sponsorship.select_categories')}</Text>
               <Text style={[styles.inputHint, { color: colors.textMuted }]}>
-                Your profile will appear at the top of these category searches
+                {t('pages.coach.sponsorship.categories_hint')}
               </Text>
               
               <View style={styles.categoriesGrid}>
@@ -390,9 +390,9 @@ export default function SponsorshipScreen() {
 
               <View style={[styles.autoRenewRow, { borderColor: colors.border }]}>
                 <View>
-                  <Text style={[styles.autoRenewTitle, { color: colors.text }]}>Auto-Renew</Text>
+                  <Text style={[styles.autoRenewTitle, { color: colors.text }]}>{t('pages.coach.sponsorship.auto_renew')}</Text>
                   <Text style={[styles.autoRenewDesc, { color: colors.textMuted }]}>
-                    Automatically renew when period ends
+                    {t('pages.coach.sponsorship.auto_renew_desc')}
                   </Text>
                 </View>
                 <Switch
