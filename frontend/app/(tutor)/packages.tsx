@@ -47,7 +47,8 @@ const VALIDITY_OPTIONS = [
 export default function PackagesScreen() {
   const { token } = useAuth();
   const { colors } = useTheme();
-  const { showSuccess, showError } = useToast();
+  const { showSuccess, showError, showInfo } = useToast();
+  const { t } = useTranslation();
   const { market } = useMarket();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -100,7 +101,7 @@ export default function PackagesScreen() {
 
   const handleCreatePackage = async () => {
     if (!newPackage.name.trim()) {
-      showInfo('Please enter a package name', 'Required');
+      showInfo(t('pages.coach.packages.name_required'));
       return;
     }
     
@@ -109,7 +110,7 @@ export default function PackagesScreen() {
       await api.post('/tutor/packages', newPackage, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      showSuccess('Package created successfully!');
+      showSuccess(t('pages.coach.packages.package_saved'));
       setShowCreateModal(false);
       setNewPackage({
         name: '',
@@ -120,7 +121,7 @@ export default function PackagesScreen() {
       });
       loadData();
     } catch (error: any) {
-      showInfo(error.response?.data?.detail || 'Failed to create package', 'Error');
+      showError(error.response?.data?.detail || t('pages.coach.packages.create_failed'));
     } finally {
       setCreating(false);
     }
