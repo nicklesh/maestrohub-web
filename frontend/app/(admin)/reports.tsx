@@ -1159,12 +1159,12 @@ export default function AdminReportsScreen() {
                     color={autoRefreshEnabled ? colors.success : colors.textMuted} 
                   />
                   <Text style={{ fontSize: 12, color: autoRefreshEnabled ? colors.success : colors.textMuted, fontWeight: '500' }}>
-                    {autoRefreshEnabled ? t('common.auto') || 'Auto' : t('common.manual') || 'Manual'}
+                    {autoRefreshEnabled ? (typeof t('common.auto') === 'string' ? t('common.auto') : 'Auto') : (typeof t('common.manual') === 'string' ? t('common.manual') : 'Manual')}
                   </Text>
                 </TouchableOpacity>
                 {lastUpdated && (
                   <Text style={{ fontSize: 10, color: colors.textMuted, marginTop: 4 }}>
-                    {t('common.updated') || 'Updated'}: {formatLastUpdated()}
+                    {typeof t('common.updated') === 'string' ? t('common.updated') : 'Updated'}: {formatLastUpdated()}
                   </Text>
                 )}
               </View>
