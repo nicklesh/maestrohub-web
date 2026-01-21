@@ -35,50 +35,31 @@ interface PricingPolicy {
   isActive?: boolean;
 }
 
-const DEFAULT_POLICIES: PricingPolicy[] = [
-  {
-    id: '1',
-    name: 'Standard Commission',
-    description: 'Default platform fee for all bookings',
-    platformFeePercent: 15,
-    minPrice: 20,
-    maxPrice: 500,
-    isActive: true,
-    hasHistory: true,
-  },
-  {
-    id: '2',
-    name: 'Premium Coaches',
-    description: 'Reduced fee for top-rated tutors',
-    platformFeePercent: 10,
-    minPrice: 50,
-    maxPrice: 1000,
-    isActive: true,
-    hasHistory: true,
-  },
-  {
-    id: '3',
-    name: 'Promotional Rate',
-    description: 'Special promotional pricing',
-    platformFeePercent: 5,
-    minPrice: 15,
-    maxPrice: 200,
-    isActive: false,
-    hasHistory: false,
-  },
-];
+// Market names mapping
+const MARKET_NAMES: Record<string, string> = {
+  'US_USD': 'United States (USD)',
+  'CA_CAD': 'Canada (CAD)',
+  'GB_GBP': 'United Kingdom (GBP)',
+  'AU_AUD': 'Australia (AUD)',
+  'DE_EUR': 'Germany (EUR)',
+  'FR_EUR': 'France (EUR)',
+  'IN_INR': 'India (INR)',
+  'SG_SGD': 'Singapore (SGD)',
+  'AE_AED': 'UAE (AED)',
+};
 
 export default function AdminPricingScreen() {
   const { colors } = useTheme();
   const { showSuccess, showError, showInfo, showWarning } = useToast();
+  const { token } = useAuth();
   const { t } = useTranslation();
   const { width } = useWindowDimensions();
-  const [policies, setPolicies] = useState<PricingPolicy[]>(DEFAULT_POLICIES);
-  const [loading, setLoading] = useState(false);
+  const [policies, setPolicies] = useState<PricingPolicy[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<PricingPolicy | null>(null);
-  const [showMaxWarning, setShowMaxWarning] = useState(false);
-  const [pendingMaxValue, setPendingMaxValue] = useState<number>(0);
+  const [saving, setSaving] = useState(false);
 
   const isTablet = width >= 768;
   const isDesktop = width >= 1024;
@@ -86,23 +67,76 @@ export default function AdminPricingScreen() {
 
   const styles = getStyles(colors);
 
-  const MIN_PRICE_FLOOR = 15; // $15 minimum
-  const MIN_FEE_PERCENT = 5; // 5% minimum
-  const INDUSTRY_MAX = 250; // Industry standard max
+  const loadPolicies = async () => {
+    try {
+      const response = await api.get('/pricing-policies', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      const policiesData = response.data?.policies || [];
+      
+      // Add market names to policies
+      const enrichedPolicies = policiesData.map((policy: PricingPolicy) => ({
+        ...policy,
+        market_name: MARKET_NAMES[policy.market_id] || policy.market_id,
+        isActive: true, // All policies from DB are active
+      }));
+      
+      setPolicies(enrichedPolicies);
+    } catch (error) {
+      console.error('Failed to load pricing policies:', error);
+      showError(t('pages.admin.pricing_page.load_failed'));
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
 
-  const calculateMinPrice = (feePercent: number): number => {
-    // Min is lowest of $15 or 5% calculation
-    const feeBasedMin = feePercent > 0 ? Math.ceil(MIN_PRICE_FLOOR / (feePercent / 100)) : MIN_PRICE_FLOOR;
-    return Math.min(MIN_PRICE_FLOOR, feeBasedMin);
+  useEffect(() => {
+    loadPolicies();
+  }, []);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    loadPolicies();
   };
 
   const startEditing = (policy: PricingPolicy) => {
-    setEditingId(policy.id);
+    setEditingId(policy.policy_id);
     setEditForm({ ...policy });
   };
 
   const cancelEditing = () => {
     setEditingId(null);
+    setEditForm(null);
+  };
+
+  const savePolicy = async () => {
+    if (!editForm) return;
+    
+    setSaving(true);
+    try {
+      await api.post(`/admin/pricing-policies/${editForm.market_id}`, {
+        trial_days: editForm.trial_days,
+        trial_free_until_first_booking: editForm.trial_free_until_first_booking,
+        nsf_amount_cents: editForm.nsf_amount_cents,
+        provider_fee_percent: editForm.provider_fee_percent,
+        consumer_fee_percent: editForm.consumer_fee_percent,
+        pro_subscription_price_cents: editForm.pro_subscription_price_cents,
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      showSuccess(t('pages.admin.pricing_page.policy_updated'));
+      setEditingId(null);
+      setEditForm(null);
+      loadPolicies();
+    } catch (error: any) {
+      showError(error.response?.data?.detail || t('pages.admin.pricing_page.save_failed'));
+    } finally {
+      setSaving(false);
+    }
+  };
     setEditForm(null);
   };
 
