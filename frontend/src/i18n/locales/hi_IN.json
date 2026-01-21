@@ -1949,7 +1949,31 @@
         "select_subjects": "विषय चुनें",
         "set_hourly_rate": "अपनी प्रति घंटा दर निर्धारित करें",
         "profile_complete": "प्रोफाइल पूर्ण!",
-        "start_teaching": "शिक्षण शुरू करें"
+        "start_teaching": "शिक्षण शुरू करें",
+        "edit_profile": "प्रोफ़ाइल संपादित करें",
+        "about_yourself": "अपने बारे में बताएं",
+        "write_bio": "छात्रों से अपना परिचय कराने वाला एक bio लिखें",
+        "bio_placeholder": "नमस्ते! मैं एक जुनूनी शिक्षक हूँ जिसके पास अनुभव है...",
+        "characters": "पात्र",
+        "what_teach": "आप क्या पढ़ाते हैं?",
+        "select_categories": "अपनी श्रेणियां और विषय चुनें",
+        "subjects_skills": "विषय/कौशल",
+        "who_teach": "आप किसे पढ़ाते हैं?",
+        "select_levels": "उन स्तरों का चयन करें जिन्हें आप पढ़ा सकते हैं",
+        "set_rates": "अपनी दरें निर्धारित करें",
+        "choose_pricing": "अपना शिक्षण तरीका और मूल्य निर्धारण चुनें",
+        "modality": "मोडैलिटी",
+        "payout_country": "पेआउट देश",
+        "price_per_hour": "प्रति घंटा मूल्य",
+        "session_length": "सत्र की अवधि",
+        "min": "न्यूनतम",
+        "enter_bio": "कृपया एक बायो दर्ज करें",
+        "select_category": "कृपया कम से कम एक category चुनें",
+        "select_subject": "कृपया कम से कम एक विषय चुनें",
+        "select_level": "कृपया कम से कम एक स्तर चुनें",
+        "profile_updated": "आपकी प्रोफ़ाइल अपडेट हो गई है!",
+        "profile_created": "आपकी प्रोफाइल बना दी गई है और समीक्षा के लिए लंबित है।",
+        "save_failed": "प्रोफाइल सेव करने में असफल"
       },
       "reports": {
         "title": "रिपोर्ट्स",
@@ -2003,7 +2027,15 @@
         "save_schedule": "शेड्यूल सेव करें",
         "schedule_saved": "शेड्यूल सफलतापूर्वक सेव हो गया",
         "clear_all": "सभी साफ़ करें",
-        "reset": "रीसेट"
+        "reset": "रीसेट",
+        "save_failed": "शेड्यूल सेव करने में असफल",
+        "schedule_duration": "अनुसूची अवधि",
+        "auto_renew": "स्वतः नवीकरण",
+        "reminder_days": "रिमाइंडर दिन",
+        "start_time": "प्रारंभ समय",
+        "end_time": "अंत समय",
+        "enabled": "सक्षम",
+        "disabled": "अक्षम"
       },
       "faq": {
         "frequently_asked": "अक्सर पूछे जाने वाले प्रश्न",
@@ -2013,7 +2045,10 @@
         "account": "खाता",
         "contact_support": "सहायता से संपर्क करें",
         "still_need_help": "अभी भी मदद चाहिए?",
-        "title": "अक्सर पूछे जाने वाले प्रश्न"
+        "title": "अक्सर पूछे जाने वाले प्रश्न",
+        "help_center": "सहायता केंद्र",
+        "subtitle": "Maestro Habitat पर coaching के बारे में सामान्य प्रश्नों के उत्तर खोजें",
+        "still_have_questions": "अभी भी प्रश्न हैं?"
       },
       "notifications": {
         "title": "सूचनाएं",
@@ -2025,7 +2060,20 @@
         "booking_cancelled": "बुकिंग रद्द",
         "review_received": "समीक्षा प्राप्त हुई",
         "payout_completed": "भुगतान पूर्ण"
-      }
+      },
+      "every_week": "हर सप्ताह",
+      "select_days": "दिन चुनें",
+      "mon": "सोम",
+      "tue": "मंगल",
+      "wed": "बुध",
+      "thu": "गुरु",
+      "fri": "शुक्र",
+      "sat": "शनि",
+      "sun": "सूर्य",
+      "save_schedule": "शेड्यूल सेव करें",
+      "schedule_saved": "शेड्यूल सफलतापूर्वक सहेजा गया",
+      "clear_all": "सभी साफ़ करें",
+      "reset": "रीसेट"
     }
   },
   "coach": {
