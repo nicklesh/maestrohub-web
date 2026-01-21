@@ -11,23 +11,28 @@ import {
   Platform,
   Alert,
   Modal,
+  RefreshControl,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 import { useToast } from '@/src/context/ToastContext';
+import { useAuth } from '@/src/context/AuthContext';
 import { useTranslation } from '@/src/i18n';
 import AppHeader from '@/src/components/AppHeader';
+import { api } from '@/src/services/api';
 
 interface PricingPolicy {
-  id: string;
-  name: string;
-  description: string;
-  platformFeePercent: number;
-  minPrice: number;
-  maxPrice: number;
-  isActive: boolean;
-  hasHistory?: boolean; // If associated with users historically
+  policy_id: string;
+  market_id: string;
+  market_name?: string;
+  trial_days: number;
+  trial_free_until_first_booking: boolean;
+  nsf_amount_cents: number;
+  provider_fee_percent: number;
+  consumer_fee_percent: number;
+  pro_subscription_price_cents: number | null;
+  isActive?: boolean;
 }
 
 const DEFAULT_POLICIES: PricingPolicy[] = [
