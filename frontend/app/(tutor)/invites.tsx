@@ -35,7 +35,8 @@ interface Invite {
 export default function InvitesScreen() {
   const { token } = useAuth();
   const { colors } = useTheme();
-  const { showSuccess, showError } = useToast();
+  const { showSuccess, showError, showInfo } = useToast();
+  const { t } = useTranslation();
   const [invites, setInvites] = useState<Invite[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -70,14 +71,14 @@ export default function InvitesScreen() {
 
   const handleSendInvite = async () => {
     if (!newInviteEmail.trim()) {
-      showError('Please enter an email address');
+      showError(t('pages.coach.invites.enter_email'));
       return;
     }
 
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(newInviteEmail.trim())) {
-      showError('Please enter a valid email address');
+      showError(t('pages.coach.invites.invalid_email'));
       return;
     }
 
@@ -91,21 +92,21 @@ export default function InvitesScreen() {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      showSuccess('Invite sent successfully!');
+      showSuccess(t('pages.coach.invites.invite_sent'));
       setShowNewInviteModal(false);
       setNewInviteEmail('');
       setNewInviteName('');
       setNewInviteMessage('');
       loadInvites();
     } catch (error: any) {
-      showInfo(error.response?.data?.detail || 'Failed to send invite', 'Error');
+      showError(error.response?.data?.detail || t('pages.coach.invites.send_failed'));
     } finally {
       setSending(false);
     }
   };
 
   const handleCancelInvite = (inviteId: string) => {
-    showInfo('Are you sure you want to cancel this invite?', 'Cancel Invite');
+    showInfo(t('pages.coach.invites.cancel_confirm'));
   };
 
   const getStatusColor = (status: string) => {
