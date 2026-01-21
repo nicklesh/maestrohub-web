@@ -99,6 +99,19 @@ export function getLocalizedDayName(dayIndex: number, locale: string, short = fa
 export function formatLocalizedDate(date: Date | string, formatStr: string, locale: string): string {
   const d = typeof date === 'string' ? new Date(date) : date;
   
+  // Handle date-fns format patterns like 'PPp', 'PP', 'P'
+  if (formatStr === 'PPp' || formatStr === 'PP' || formatStr === 'P') {
+    // PPp = full date with time, PP = full date, P = short date
+    if (formatStr === 'PPp') {
+      // Format: "Jan 21, 2026, 2:30 PM"
+      return formatLocalizedDate(d, 'MMM d, yyyy, h:mm a', locale);
+    } else if (formatStr === 'PP') {
+      return formatLocalizedDate(d, 'MMM d, yyyy', locale);
+    } else {
+      return formatLocalizedDate(d, 'MM/dd/yyyy', locale);
+    }
+  }
+  
   const year = d.getFullYear();
   const month = d.getMonth();
   const day = d.getDate();
