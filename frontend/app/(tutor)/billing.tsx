@@ -166,7 +166,12 @@ export default function BillingScreen() {
             <View style={styles.cardHeader}>
               <Text style={[styles.cardTitleText, { marginBottom: 0 }]}>{t('pages.coach.billing.payout_account')}</Text>
             </View>
-            <TouchableOpacity style={[styles.setupButton, isTablet && styles.setupButtonTablet]}>
+            <TouchableOpacity 
+              style={[styles.setupButton, isTablet && styles.setupButtonTablet]}
+              onPress={() => {
+                showInfo(t('pages.coach.billing.stripe_coming_soon') || 'Stripe integration coming soon. Contact support for manual payout setup.');
+              }}
+            >
               <Ionicons name="add-circle-outline" size={20} color={colors.primary} />
               <Text style={[styles.setupButtonText, isTablet && styles.setupButtonTextTablet]}>{t('pages.coach.billing.connect_stripe')}</Text>
             </TouchableOpacity>
