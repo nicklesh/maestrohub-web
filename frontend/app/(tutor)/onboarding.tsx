@@ -162,19 +162,19 @@ export default function TutorOnboarding() {
 
   const handleSubmit = async () => {
     if (!bio.trim()) {
-      showError('Please enter a bio');
+      showError(t('pages.coach.onboarding.enter_bio'));
       return;
     }
     if (selectedCategories.length === 0) {
-      showError('Please select at least one category');
+      showError(t('pages.coach.onboarding.select_category'));
       return;
     }
     if (selectedSubjects.length === 0) {
-      showError('Please select at least one subject');
+      showError(t('pages.coach.onboarding.select_subject'));
       return;
     }
     if (selectedLevels.length === 0) {
-      showError('Please select at least one level');
+      showError(t('pages.coach.onboarding.select_level'));
       return;
     }
 
@@ -201,18 +201,18 @@ export default function TutorOnboarding() {
         await api.put('/tutors/profile', profileData, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        showSuccess('Your profile has been updated!');
+        showSuccess(t('pages.coach.onboarding.profile_updated'));
       } else {
         // Create new profile
         await api.post('/tutors/profile', profileData, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        showSuccess('Your profile has been created and is pending review.');
+        showSuccess(t('pages.coach.onboarding.profile_created'));
       }
 
       router.replace('/(tutor)/dashboard');
     } catch (error: any) {
-      const errorMsg = error.response?.data?.detail || 'Failed to save profile';
+      const errorMsg = error.response?.data?.detail || t('pages.coach.onboarding.save_failed');
       showError(errorMsg);
     } finally {
       setLoading(false);
@@ -221,12 +221,12 @@ export default function TutorOnboarding() {
 
   const renderStep1 = () => (
     <View style={styles.stepContent}>
-      <Text style={[styles.stepTitle, isDesktop && styles.stepTitleDesktop]}>Tell us about yourself</Text>
-      <Text style={[styles.stepSubtitle, isDesktop && styles.stepSubtitleDesktop]}>Write a bio that introduces you to students</Text>
+      <Text style={[styles.stepTitle, isDesktop && styles.stepTitleDesktop]}>{t('pages.coach.onboarding.about_yourself')}</Text>
+      <Text style={[styles.stepSubtitle, isDesktop && styles.stepSubtitleDesktop]}>{t('pages.coach.onboarding.write_bio')}</Text>
 
       <TextInput
         style={[styles.bioInput, isTablet && styles.bioInputTablet, { backgroundColor: colors.surface, borderColor: colors.border, color: colors.text }]}
-        placeholder="Hi! I'm a passionate educator with experience in..."
+        placeholder={t('pages.coach.onboarding.bio_placeholder')}
         placeholderTextColor={colors.textMuted}
         value={bio}
         onChangeText={setBio}
@@ -234,16 +234,16 @@ export default function TutorOnboarding() {
         numberOfLines={6}
         textAlignVertical="top"
       />
-      <Text style={[styles.charCount, { color: colors.textMuted }]}>{bio.length}/500 characters</Text>
+      <Text style={[styles.charCount, { color: colors.textMuted }]}>{bio.length}/500 {t('pages.coach.onboarding.characters')}</Text>
     </View>
   );
 
   const renderStep2 = () => (
     <View style={styles.stepContent}>
-      <Text style={[styles.stepTitle, isDesktop && styles.stepTitleDesktop]}>What do you teach?</Text>
-      <Text style={[styles.stepSubtitle, isDesktop && styles.stepSubtitleDesktop]}>Select your categories and subjects</Text>
+      <Text style={[styles.stepTitle, isDesktop && styles.stepTitleDesktop]}>{t('pages.coach.onboarding.what_teach')}</Text>
+      <Text style={[styles.stepSubtitle, isDesktop && styles.stepSubtitleDesktop]}>{t('pages.coach.onboarding.select_categories')}</Text>
 
-      <Text style={[styles.sectionLabel, { color: colors.text }]}>Categories</Text>
+      <Text style={[styles.sectionLabel, { color: colors.text }]}>{t('pages.coach.onboarding.categories')}</Text>
       <View style={styles.chipGrid}>
         {categories.map((cat) => (
           <TouchableOpacity
