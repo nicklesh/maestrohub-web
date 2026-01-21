@@ -233,13 +233,13 @@ export default function PackagesScreen() {
 
               <View style={styles.packagePricing}>
                 <View>
-                  <Text style={[styles.priceLabel, { color: colors.textMuted }]}>Per Session</Text>
+                  <Text style={[styles.priceLabel, { color: colors.textMuted }]}>{t('pages.coach.packages.per_session')}</Text>
                   <Text style={[styles.priceValue, { color: colors.text }]}>
                     {currencySymbol}{pkg.price_per_session.toFixed(2)}
                   </Text>
                 </View>
                 <View>
-                  <Text style={[styles.priceLabel, { color: colors.textMuted }]}>Total</Text>
+                  <Text style={[styles.priceLabel, { color: colors.textMuted }]}>{t('pages.coach.packages.total')}</Text>
                   <Text style={[styles.totalPrice, { color: colors.primary }]}>
                     {currencySymbol}{pkg.total_price.toFixed(2)}
                   </Text>
@@ -249,14 +249,14 @@ export default function PackagesScreen() {
               <View style={styles.packageMeta}>
                 <Ionicons name="time-outline" size={14} color={colors.textMuted} />
                 <Text style={[styles.metaText, { color: colors.textMuted }]}>
-                  Valid for {pkg.validity_days} days
+                  {t('pages.coach.packages.valid_for', { days: pkg.validity_days })}
                 </Text>
               </View>
 
               <View style={styles.packageActions}>
                 <View style={styles.activeToggle}>
                   <Text style={[styles.activeLabel, { color: colors.text }]}>
-                    {pkg.is_active ? 'Active' : 'Inactive'}
+                    {pkg.is_active ? t('pages.coach.packages.active') : t('pages.coach.packages.inactive')}
                   </Text>
                   <Switch
                     value={pkg.is_active}
@@ -283,7 +283,7 @@ export default function PackagesScreen() {
         onPress={() => setShowCreateModal(true)}
       >
         <Ionicons name="add" size={24} color="#fff" />
-        <Text style={styles.createButtonText}>Create Package</Text>
+        <Text style={styles.createButtonText}>{t('pages.coach.packages.create_package')}</Text>
       </TouchableOpacity>
 
       {/* Create Modal */}
@@ -291,23 +291,23 @@ export default function PackagesScreen() {
         <View style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
             <View style={styles.modalHeader}>
-              <Text style={[styles.modalTitle, { color: colors.text }]}>Create Package</Text>
+              <Text style={[styles.modalTitle, { color: colors.text }]}>{t('pages.coach.packages.create_package')}</Text>
               <TouchableOpacity onPress={() => setShowCreateModal(false)}>
                 <Ionicons name="close" size={24} color={colors.text} />
               </TouchableOpacity>
             </View>
 
             <ScrollView style={styles.modalBody} showsVerticalScrollIndicator={false}>
-              <Text style={[styles.inputLabel, { color: colors.text }]}>Package Name</Text>
+              <Text style={[styles.inputLabel, { color: colors.text }]}>{t('pages.coach.packages.package_name')}</Text>
               <TextInput
                 style={[styles.textInput, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-                placeholder="e.g., Monthly Bundle"
+                placeholder={t('pages.coach.packages.name_placeholder')}
                 placeholderTextColor={colors.textMuted}
                 value={newPackage.name}
                 onChangeText={(text) => setNewPackage({ ...newPackage, name: text })}
               />
 
-              <Text style={[styles.inputLabel, { color: colors.text }]}>Number of Sessions</Text>
+              <Text style={[styles.inputLabel, { color: colors.text }]}>{t('pages.coach.packages.number_sessions')}</Text>
               <View style={styles.optionsRow}>
                 {SESSION_OPTIONS.map((count) => (
                   <TouchableOpacity
