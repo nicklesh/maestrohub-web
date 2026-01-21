@@ -256,18 +256,18 @@ export default function SponsorshipScreen() {
                 
                 <View style={styles.activeStats}>
                   <View style={styles.activeStat}>
-                    <Text style={[styles.activeStatLabel, { color: colors.textMuted }]}>Expires</Text>
+                    <Text style={[styles.activeStatLabel, { color: colors.textMuted }]}>{t('pages.coach.sponsorship.expires')}</Text>
                     <Text style={[styles.activeStatValue, { color: colors.text }]}>{formatDate(sponsorship.expires_at)}</Text>
                   </View>
                   <View style={styles.activeStat}>
-                    <Text style={[styles.activeStatLabel, { color: colors.textMuted }]}>Days Left</Text>
+                    <Text style={[styles.activeStatLabel, { color: colors.textMuted }]}>{t('pages.coach.sponsorship.days_left')}</Text>
                     <Text style={[styles.activeStatValue, { color: colors.primary }]}>{getDaysRemaining(sponsorship.expires_at)}</Text>
                   </View>
                 </View>
 
                 <View style={styles.activeActions}>
                   <View style={styles.autoRenewToggle}>
-                    <Text style={[styles.autoRenewLabel, { color: colors.text }]}>Auto-renew</Text>
+                    <Text style={[styles.autoRenewLabel, { color: colors.text }]}>{t('pages.coach.sponsorship.auto_renew')}</Text>
                     <Switch
                       value={sponsorship.auto_renew}
                       onValueChange={() => handleToggleAutoRenew(sponsorship)}
@@ -280,7 +280,7 @@ export default function SponsorshipScreen() {
                       style={[styles.renewButton, { backgroundColor: colors.primary }]}
                       onPress={() => handleRenew(sponsorship)}
                     >
-                      <Text style={styles.renewButtonText}>Renew</Text>
+                      <Text style={styles.renewButtonText}>{t('pages.coach.sponsorship.renew')}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={[styles.cancelButton, { borderColor: colors.error }]}
