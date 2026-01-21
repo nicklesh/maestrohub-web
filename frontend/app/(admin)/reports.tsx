@@ -988,7 +988,7 @@ export default function AdminReportsScreen() {
             categoryBreakdown.map((cat) => (
               <View key={cat.category} style={styles.categoryRow}>
                 <View style={styles.categoryHeader}>
-                  <Text style={styles.categoryName}>{cat.category}</Text>
+                  <Text style={styles.categoryName}>{t(`categories.${cat.category.toLowerCase().replace(/[&\s]+/g, '_').replace(/,/g, '')}`) || cat.category}</Text>
                   <Text style={styles.categoryBookings}>{cat.bookings} {t('pages.admin.markets_page.bookings').toLowerCase()}</Text>
                 </View>
                 <View style={styles.categoryStats}>
