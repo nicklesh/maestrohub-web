@@ -1027,6 +1027,25 @@
         "max_less_than_min": "Maximum price must be equal to or greater than minimum price",
         "status_updated": "Policy status updated"
       },
+      "pricing_page": {
+        "title": "Pricing Policies",
+        "subtitle": "Manage platform fees by market",
+        "trial_days": "Trial Days",
+        "days": "days",
+        "provider_fee_percent": "Provider Fee (%)",
+        "consumer_fee_percent": "Consumer Fee (%)",
+        "provider_fee": "Provider Fee",
+        "consumer_fee": "Consumer Fee",
+        "nsf_amount": "NSF Amount",
+        "nsf_fee": "NSF Fee",
+        "active": "Active",
+        "inactive": "Inactive",
+        "load_failed": "Failed to load pricing policies",
+        "save_failed": "Failed to save pricing policy",
+        "policy_updated": "Pricing policy updated successfully",
+        "no_policies": "No Pricing Policies",
+        "no_policies_description": "No pricing policies found for any market"
+      },
       "scheduled_jobs": {
         "title": "Scheduled Jobs",
         "job_updated": "Job updated",
