@@ -191,10 +191,10 @@ export default function TutorFAQScreen() {
 
           <View style={styles.contactSection}>
             <Text style={[styles.contactTitle, { color: colors.text }]}>
-              Still have questions?
+              {t('pages.coach.faq.still_have_questions')}
             </Text>
             <Text style={[styles.contactText, { color: colors.textMuted }]}>
-              Can't find the answer you're looking for? Our support team is here to help.
+              {t('pages.coach.faq.contact_support')}
             </Text>
           </View>
         </View>
