@@ -137,8 +137,6 @@ export default function AdminPricingScreen() {
       setSaving(false);
     }
   };
-    setEditForm(null);
-  };
 
   const renderPolicyCard = (policy: PricingPolicy) => {
     const isEditing = editingId === policy.policy_id;
