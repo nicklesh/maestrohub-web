@@ -263,6 +263,7 @@ export default function AdminReportsScreen() {
 
   const [trendData, setTrendData] = useState<TrendData[]>([]);
   const [categoryBreakdown, setCategoryBreakdown] = useState<CategoryBreakdown[]>([]);
+  const [revenueData, setRevenueData] = useState<RevenueData[]>([]);
 
   useEffect(() => {
     loadData();
@@ -271,10 +272,11 @@ export default function AdminReportsScreen() {
   const loadData = async () => {
     try {
       // Load real data from new backend API endpoints
-      const [overviewRes, trendsRes, categoriesRes] = await Promise.all([
+      const [overviewRes, trendsRes, categoriesRes, revenueRes] = await Promise.all([
         api.get('/admin/reports/overview', { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: null })),
-        api.get('/admin/reports/trends?period=monthly&num_periods=4', { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: null })),
+        api.get('/admin/reports/trends?period=monthly&num_periods=6', { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: null })),
         api.get('/admin/reports/categories', { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: null })),
+        api.get('/admin/reports/revenue?period=monthly&num_periods=6', { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: null })),
       ]);
 
       // Update stats from overview endpoint
