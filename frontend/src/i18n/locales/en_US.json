@@ -1159,7 +1159,14 @@
         "update_failed": "Failed to update status",
         "reply": "Reply",
         "delete": "Delete",
-        "close": "Close"
+        "close": "Close",
+        "categories": {
+          "general": "General",
+          "billing": "Billing",
+          "technical": "Technical",
+          "feedback": "Feedback",
+          "other": "Other"
+        }
       },
       "coaches_page": {
         "title": "Manage Coaches",
@@ -1303,7 +1310,17 @@
         "growth_visualization": "Growth Visualization",
         "new_coaches_trend": "New Coaches Trend",
         "new_consumers_trend": "New Consumers Trend",
-        "top_categories": "Top Categories by Coaches"
+        "top_categories": "Top Categories by Coaches",
+        "performance_arts": "Performance & Creative Arts",
+        "academics": "Academics",
+        "activities_hobbies": "Activities & Hobbies",
+        "fitness_nutrition": "Fitness & Nutrition",
+        "health_mindfulness": "Health, Mindfulness & Wellbeing",
+        "business_communication": "Business, Communication & Leadership",
+        "finance_legal": "Finance, Legal & Negotiation",
+        "coaching_personal": "Coaching & Personal Growth",
+        "relationships_family": "Relationships & Family",
+        "culture_inclusion": "Culture, Inclusion & Experiences"
       },
       "settings_page": {
         "administrator": "Administrator",
@@ -1390,6 +1407,10 @@
         "7_desc": "System errors and critical issues",
         "8": "Support Requests",
         "8_desc": "New support ticket notifications"
+      },
+      "marketplace": {
+        "all_countries": "All Countries",
+        "filter_by_country": "Filter by Country"
       }
     },
     "edit_profile": {
@@ -1756,7 +1777,21 @@
         "profile_hidden": "Your profile is hidden",
         "published": "Published",
         "publish": "Publish",
-        "grow_business": "Grow Your Business"
+        "grow_business": "Grow Your Business",
+        "save_link": "Save Link",
+        "zoom_link": "Zoom Link",
+        "zoom_link_placeholder": "Enter your Zoom link",
+        "meeting_link": "Meeting Link",
+        "video_call_link": "Video Call Link",
+        "category": "Category",
+        "subcategory": "Subcategory",
+        "teaching_medium": "Teaching Medium",
+        "select_category": "Select Category",
+        "select_subcategory": "Select Subcategory",
+        "select_medium": "Select Medium",
+        "add_stripe_account": "Add Stripe Account",
+        "stripe_connected": "Stripe Connected",
+        "stripe_not_connected": "Stripe Not Connected"
       },
       "billing": {
         "title": "Billing",
@@ -1815,11 +1850,14 @@
         "would_not_recommend": "Would not recommend",
         "write_response": "Write Response",
         "respond_to_review": "Respond to Review",
-        "response_placeholder": "Thank the reviewer and address any feedback professionally...",
-        "response_tip": "Tip: Thank the client, acknowledge feedback, and highlight your commitment to quality."
+        "response_placeholder": "Write your response...",
+        "response_tip": "Tip: Thank the client, acknowledge feedback, and highlight your commitment to quality.",
+        "no_reviews_text": "You have not received any reviews yet",
+        "average_rating": "Average Rating",
+        "rating_breakdown": "Rating Breakdown"
       },
       "packages": {
-        "title": "Session Packages",
+        "title": "Packages",
         "create_package": "Create Package",
         "edit_package": "Edit Package",
         "package_name": "Package Name",
@@ -1838,7 +1876,7 @@
         "days": "days",
         "active": "Active",
         "inactive": "Inactive",
-        "no_packages": "No Packages Yet",
+        "no_packages": "No packages",
         "no_packages_description": "Create your first session package to offer discounts to clients",
         "package_saved": "Package created successfully!",
         "package_deleted": "Package deleted",
@@ -1855,7 +1893,16 @@
         "preview": "Package Preview",
         "regular_price": "Regular price",
         "package_price": "Package price",
-        "client_saves": "Client saves"
+        "client_saves": "Client saves",
+        "delete_package": "Delete Package",
+        "package_description": "Description",
+        "sessions_count": "Number of Sessions",
+        "set_available_times": "Set Available Times",
+        "select_category": "Select Category",
+        "select_subcategory": "Select Subcategory",
+        "no_packages_text": "You have not created any packages yet",
+        "publish": "Publish",
+        "unpublish": "Unpublish"
       },
       "invites": {
         "title": "Student Invites",
@@ -2020,11 +2067,18 @@
         "get_sponsored": "Get Sponsored"
       },
       "faq": {
-        "title": "Coach FAQ",
+        "title": "Frequently Asked Questions",
         "help_center": "Help Center",
-        "subtitle": "Find answers to common questions about coaching on Maestro Habitat",
+        "subtitle": "Find answers to common questions",
         "still_have_questions": "Still have questions?",
-        "contact_support": "Can't find the answer you're looking for? Our support team is here to help."
+        "contact_support": "Contact our support team for assistance",
+        "categories": {
+          "getting_started": "Getting Started",
+          "managing_availability": "Managing Availability",
+          "bookings_sessions": "Bookings & Sessions",
+          "payments_earnings": "Payments & Earnings",
+          "account_support": "Account & Support"
+        }
       },
       "schedule_builder": {
         "title": "Schedule Builder",
@@ -2055,7 +2109,10 @@
         "remove_time_slot": "Remove Time Slot",
         "daily": "Daily",
         "weekly": "Weekly",
-        "monthly": "Monthly"
+        "monthly": "Monthly",
+        "select_days": "Select Days",
+        "calendar": "Calendar",
+        "availability": "Availability"
       },
       "every_week": "Every Week",
       "select_days": "Select Days",
@@ -2069,7 +2126,21 @@
       "save_schedule": "Save Schedule",
       "schedule_saved": "Schedule saved successfully",
       "clear_all": "Clear All",
-      "reset": "Reset"
+      "reset": "Reset",
+      "notifications": {
+        "title": "Notifications",
+        "no_notifications": "No notifications",
+        "no_notifications_text": "You have no new notifications",
+        "mark_all_read": "Mark all as read",
+        "clear_all": "Clear all",
+        "booking_confirmed": "Booking confirmed",
+        "booking_cancelled": "Booking cancelled",
+        "new_message": "New message",
+        "payment_received": "Payment received",
+        "review_received": "New review received",
+        "profile_approved": "Profile approved",
+        "profile_update": "Profile update required"
+      }
     },
     "packages": {
       "title": "Packages",
@@ -2214,5 +2285,19 @@
     "in_person": "In Person",
     "both": "Both",
     "hybrid": "Hybrid"
+  },
+  "time": {
+    "hour": "hour",
+    "hours": "hours",
+    "minute": "minute",
+    "minutes": "minutes",
+    "hr": "hr",
+    "min": "min",
+    "am": "AM",
+    "pm": "PM",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "yesterday": "Yesterday",
+    "now": "Now"
   }
 }
