@@ -329,7 +329,7 @@ export default function PackagesScreen() {
                 ))}
               </View>
 
-              <Text style={[styles.inputLabel, { color: colors.text }]}>Discount Percentage</Text>
+              <Text style={[styles.inputLabel, { color: colors.text }]}>{t('pages.coach.packages.discount_percent')}</Text>
               <View style={styles.optionsRow}>
                 {DISCOUNT_OPTIONS.map((discount) => (
                   <TouchableOpacity
@@ -351,7 +351,7 @@ export default function PackagesScreen() {
                 ))}
               </View>
 
-              <Text style={[styles.inputLabel, { color: colors.text }]}>Validity Period</Text>
+              <Text style={[styles.inputLabel, { color: colors.text }]}>{t('pages.coach.packages.validity_period')}</Text>
               <View style={styles.validityOptions}>
                 {VALIDITY_OPTIONS.map((opt) => (
                   <TouchableOpacity
@@ -373,10 +373,10 @@ export default function PackagesScreen() {
                 ))}
               </View>
 
-              <Text style={[styles.inputLabel, { color: colors.text }]}>Description (Optional)</Text>
+              <Text style={[styles.inputLabel, { color: colors.text }]}>{t('pages.coach.packages.description_optional')}</Text>
               <TextInput
                 style={[styles.textInput, styles.textArea, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-                placeholder="Describe what's included..."
+                placeholder={t('pages.coach.packages.description_placeholder')}
                 placeholderTextColor={colors.textMuted}
                 multiline
                 numberOfLines={3}
@@ -386,21 +386,21 @@ export default function PackagesScreen() {
 
               {/* Preview */}
               <View style={[styles.previewCard, { backgroundColor: colors.background }]}>
-                <Text style={[styles.previewTitle, { color: colors.text }]}>Package Preview</Text>
+                <Text style={[styles.previewTitle, { color: colors.text }]}>{t('pages.coach.packages.preview')}</Text>
                 <View style={styles.previewRow}>
-                  <Text style={[styles.previewLabel, { color: colors.textMuted }]}>Regular price:</Text>
+                  <Text style={[styles.previewLabel, { color: colors.textMuted }]}>{t('pages.coach.packages.regular_price')}:</Text>
                   <Text style={[styles.previewValue, { color: colors.textMuted, textDecorationLine: 'line-through' }]}>
                     {currencySymbol}{(basePrice * newPackage.session_count).toFixed(2)}
                   </Text>
                 </View>
                 <View style={styles.previewRow}>
-                  <Text style={[styles.previewLabel, { color: colors.text }]}>Package price:</Text>
+                  <Text style={[styles.previewLabel, { color: colors.text }]}>{t('pages.coach.packages.package_price')}:</Text>
                   <Text style={[styles.previewValue, { color: colors.primary, fontWeight: '700' }]}>
                     {currencySymbol}{pricing.totalPrice.toFixed(2)}
                   </Text>
                 </View>
                 <View style={styles.previewRow}>
-                  <Text style={[styles.previewLabel, { color: colors.success }]}>Client saves:</Text>
+                  <Text style={[styles.previewLabel, { color: colors.success }]}>{t('pages.coach.packages.client_saves')}:</Text>
                   <Text style={[styles.previewValue, { color: colors.success, fontWeight: '600' }]}>
                     {currencySymbol}{pricing.savings.toFixed(2)}
                   </Text>
@@ -423,7 +423,7 @@ export default function PackagesScreen() {
                 {creating ? (
                   <ActivityIndicator size="small" color="#fff" />
                 ) : (
-                  <Text style={styles.submitButtonText}>Create Package</Text>
+                  <Text style={styles.submitButtonText}>{t('pages.coach.packages.create_package')}</Text>
                 )}
               </TouchableOpacity>
             </View>
