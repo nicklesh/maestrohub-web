@@ -122,9 +122,10 @@
     "relationships_family": "Relationships & Family",
     "culture_inclusion_experiences": "Culture, Inclusion & Experiences",
     "health_coaching": "Health Coaching",
-    "finance_legal": "वित्त, कानूनी और बातचीत",
-    "coaching_personal": "कोचिंग और व्यक्तिगत विकास",
-    "culture_inclusion": "संस्कृति, समावेश और अनुभव"
+    "finance_legal": "Finance, Legal & Negotiation",
+    "coaching_personal": "Coaching & Personal Growth",
+    "culture_inclusion": "Culture, Inclusion & Experiences",
+    "general": "General"
   },
   "buttons": {
     "submit": "Submit",
@@ -761,14 +762,39 @@
       "fill_all_fields": "Please fill in all fields"
     },
     "faq": {
-      "title": "FAQ",
+      "title": "Frequently Asked Questions",
       "frequently_asked": "Frequently Asked Questions",
       "getting_started": "Getting Started",
       "payments": "Payments",
       "bookings": "Bookings",
       "account": "Account",
       "contact_support": "Contact Support",
-      "still_need_help": "Still need help?"
+      "still_need_help": "Still need help?",
+      "subtitle": "Find answers to common questions",
+      "contact_us": "Contact Us",
+      "contact_us_text": "Can't find what you're looking for?",
+      "questions": {
+        "how_book_session": {
+          "question": "How do I book a session?",
+          "answer": "Browse coaches, select your preferred time slot, and confirm your booking."
+        },
+        "how_cancel_booking": {
+          "question": "How do I cancel a booking?",
+          "answer": "Go to your bookings, select the session, and click cancel. Cancellation policies apply."
+        },
+        "payment_methods": {
+          "question": "What payment methods are accepted?",
+          "answer": "We accept all major credit cards and debit cards through our secure payment system."
+        },
+        "how_become_coach": {
+          "question": "How do I become a coach?",
+          "answer": "Sign up as a coach, complete your profile, set your rates, and get verified."
+        },
+        "refund_policy": {
+          "question": "What is the refund policy?",
+          "answer": "Refunds are available if you cancel within the allowed timeframe specified in our policy."
+        }
+      }
     },
     "tutor_detail": {
       "about": "About",
@@ -878,16 +904,21 @@
       "title": "Notifications",
       "all": "All",
       "unread": "Unread",
-      "mark_all_read": "Mark All Read",
+      "mark_all_read": "Mark all as read",
       "no_notifications": "No notifications",
       "new_booking": "New Booking",
-      "booking_cancelled": "Booking Cancelled",
-      "review_received": "Review Received",
-      "payout_completed": "Payout Completed"
+      "booking_cancelled": "Booking cancelled",
+      "review_received": "New review received",
+      "payout_completed": "Payout Completed",
+      "no_notifications_text": "You have no new notifications",
+      "clear_all": "Clear all",
+      "booking_confirmed": "Booking confirmed",
+      "new_message": "New message",
+      "payment_received": "Payment received"
     },
     "reviews": {
       "title": "Reviews",
-      "write_review": "Write Review",
+      "write_review": "Write a Review",
       "your_rating": "Your Rating",
       "your_review": "Your Review",
       "review_placeholder": "Share your experience...",
@@ -910,9 +941,17 @@
       "share_experience": "Share your experience...",
       "would_recommend": "I would recommend this coach",
       "review_submitted": "Your review has been submitted successfully.",
-      "thank_you": "Thank You!",
+      "thank_you": "Thank you for your review!",
       "would_recommend_yes": "Would recommend",
-      "would_recommend_no": "Would not recommend"
+      "would_recommend_no": "Would not recommend",
+      "no_reviews": "No reviews yet",
+      "no_reviews_text": "You have not received any reviews yet",
+      "edit_review": "Edit Review",
+      "delete_review": "Delete Review",
+      "rating": "Rating",
+      "comment": "Comment",
+      "average_rating": "Average Rating",
+      "total_reviews": "Total Reviews"
     },
     "tutor_dashboard": {
       "title": "Dashboard",
@@ -1239,7 +1278,7 @@
         "no_data": "No data available",
         "share": "share",
         "coaches": "Coaches",
-        "monthly_revenue_chart": "Monthly Revenue Trend",
+        "monthly_revenue_chart": "Monthly Revenue Chart",
         "user_breakdown_chart": "User Distribution",
         "category_distribution": "Category Distribution",
         "booking_by_category": "Bookings by Category",
@@ -1638,7 +1677,10 @@
       "subjects": "Subjects",
       "rate": "Rate",
       "modality": "Modality",
-      "not_set": "Not set"
+      "not_set": "Not set",
+      "zoom_link": "Zoom Link",
+      "zoom_link_placeholder": "Enter your Zoom link",
+      "video_call_link": "Video Call Link"
     },
     "coach": {
       "dashboard": {
@@ -1999,7 +2041,21 @@
         "start_time": "Start Time",
         "end_time": "End Time",
         "enabled": "Enabled",
-        "disabled": "Disabled"
+        "disabled": "Disabled",
+        "vacation_mode": "Vacation Mode",
+        "set_vacation_days": "Set Vacation Days",
+        "available": "Available",
+        "unavailable": "Unavailable",
+        "vacation": "Vacation",
+        "set_recurring_schedule": "Set Recurring Schedule",
+        "quick_actions": "Quick Actions",
+        "tap_calendar_hint": "Tap any date on the calendar to set your availability",
+        "reset": "Reset",
+        "add_time_slot": "Add Time Slot",
+        "remove_time_slot": "Remove Time Slot",
+        "daily": "Daily",
+        "weekly": "Weekly",
+        "monthly": "Monthly"
       },
       "every_week": "Every Week",
       "select_days": "Select Days",
@@ -2014,6 +2070,23 @@
       "schedule_saved": "Schedule saved successfully",
       "clear_all": "Clear All",
       "reset": "Reset"
+    },
+    "packages": {
+      "title": "Packages",
+      "create_package": "Create Package",
+      "edit_package": "Edit Package",
+      "delete_package": "Delete Package",
+      "package_name": "Package Name",
+      "package_description": "Description",
+      "sessions_count": "Number of Sessions",
+      "price": "Price",
+      "validity": "Validity",
+      "days": "days",
+      "set_available_times": "Set Available Times",
+      "select_category": "Select Category",
+      "select_subcategory": "Select Subcategory",
+      "no_packages": "No packages",
+      "no_packages_text": "You have not created any packages yet"
     }
   },
   "common": {
@@ -2021,6 +2094,125 @@
     "manual": "Manual",
     "updated": "Updated",
     "just_now": "Just now",
-    "ago": "ago"
+    "ago": "ago",
+    "hour_short": "hr",
+    "min_short": "min",
+    "per_hour": "/hr",
+    "per_session": "/session",
+    "general": "General",
+    "all": "All",
+    "pending": "Pending",
+    "resolved": "Resolved",
+    "available": "Available",
+    "unavailable": "Unavailable",
+    "vacation": "Vacation",
+    "vacation_mode": "Vacation Mode",
+    "set_vacation_days": "Set Vacation Days",
+    "set_recurring_schedule": "Set Recurring Schedule",
+    "quick_actions": "Quick Actions",
+    "tap_calendar_hint": "Tap any date on the calendar to set your availability",
+    "new": "New",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "published": "Published",
+    "unpublished": "Unpublished"
+  },
+  "roles": {
+    "admin": "Admin",
+    "tutor": "Coach",
+    "coach": "Coach",
+    "parent": "Parent",
+    "consumer": "Consumer",
+    "user": "User"
+  },
+  "modals": {
+    "contact_us": {
+      "title": "Contact Us",
+      "subject": "Subject",
+      "subject_placeholder": "Enter subject",
+      "message": "Message",
+      "message_placeholder": "Enter your message",
+      "send": "Send",
+      "sending": "Sending...",
+      "success": "Message sent successfully",
+      "error": "Failed to send message"
+    }
+  },
+  "countries": {
+    "US": "United States",
+    "IN": "India",
+    "GB": "United Kingdom",
+    "CA": "Canada",
+    "AU": "Australia",
+    "DE": "Germany",
+    "FR": "France",
+    "BR": "Brazil",
+    "MX": "Mexico",
+    "JP": "Japan",
+    "KR": "South Korea",
+    "CN": "China",
+    "SG": "Singapore",
+    "AE": "United Arab Emirates",
+    "IL": "Israel",
+    "RU": "Russia",
+    "SA": "Saudi Arabia",
+    "PK": "Pakistan"
+  },
+  "calendar": {
+    "months": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+    },
+    "months_short": {
+      "jan": "Jan",
+      "feb": "Feb",
+      "mar": "Mar",
+      "apr": "Apr",
+      "may": "May",
+      "jun": "Jun",
+      "jul": "Jul",
+      "aug": "Aug",
+      "sep": "Sep",
+      "oct": "Oct",
+      "nov": "Nov",
+      "dec": "Dec"
+    },
+    "days": {
+      "sunday": "Sunday",
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday"
+    },
+    "days_short": {
+      "sun": "Sun",
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat"
+    }
+  },
+  "medium": {
+    "online": "Online",
+    "in_person": "In Person",
+    "both": "Both",
+    "hybrid": "Hybrid"
   }
 }
