@@ -283,7 +283,7 @@ export default function ScheduleBuilderScreen() {
                 {day.enabled && <Ionicons name="checkmark" size={16} color="#fff" />}
               </View>
               <Text style={[styles.dayName, !day.enabled && styles.dayNameDisabled]}>
-                {DAYS_OF_WEEK[index]}
+                {getTranslatedDayName(index)}
               </Text>
             </TouchableOpacity>
 
