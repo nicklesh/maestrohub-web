@@ -394,7 +394,7 @@ export default function AdminReportsScreen() {
         </View>
       </View>
 
-      {/* Revenue Summary */}
+      {/* Revenue Summary with Chart */}
       <View style={[styles.section, isTablet && styles.sectionTablet]}>
         <Text style={styles.sectionTitle}>{t('pages.admin.reports_page.revenue_summary')}</Text>
         <View style={styles.revenueRow}>
@@ -413,6 +413,37 @@ export default function AdminReportsScreen() {
             <Text style={[styles.revenueValue, { color: colors.accent }]}>${stats.pendingPayouts.toLocaleString()}</Text>
           </View>
         </View>
+        
+        {/* Revenue Chart */}
+        {revenueData.length > 0 && (
+          <View style={{ marginTop: 16 }}>
+            <Text style={[styles.chartTitle, { color: colors.textMuted }]}>{t('pages.admin.reports_page.monthly_revenue_chart')}</Text>
+            <BarChart
+              data={revenueData}
+              valueKey="gross_revenue_cents"
+              labelKey="period"
+              color={colors.success}
+              height={140}
+              formatValue={(v) => `$${(v / 100).toFixed(0)}`}
+              colors={colors}
+            />
+          </View>
+        )}
+      </View>
+
+      {/* User Distribution Chart */}
+      <View style={[styles.section, isTablet && styles.sectionTablet]}>
+        <Text style={styles.sectionTitle}>{t('pages.admin.reports_page.user_breakdown_chart')}</Text>
+        <DonutChart
+          data={[
+            { label: t('pages.admin.reports_page.coaches'), value: stats.totalTutors, color: colors.primary },
+            { label: t('pages.admin.reports_page.parents'), value: stats.totalParents, color: colors.accent },
+            { label: t('pages.admin.reports_page.paid_users'), value: stats.paidUsers, color: colors.success },
+          ]}
+          size={140}
+          colors={chartColors}
+          themeColors={colors}
+        />
       </View>
 
       {/* Recommendations */}
