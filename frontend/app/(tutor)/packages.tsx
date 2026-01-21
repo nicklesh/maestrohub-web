@@ -362,7 +362,7 @@ export default function PackagesScreen() {
 
               <Text style={[styles.inputLabel, { color: colors.text }]}>{t('pages.coach.packages.validity_period')}</Text>
               <View style={styles.validityOptions}>
-                {VALIDITY_OPTIONS.map((opt) => (
+                {validityOptions.map((opt) => (
                   <TouchableOpacity
                     key={opt.value}
                     style={[
