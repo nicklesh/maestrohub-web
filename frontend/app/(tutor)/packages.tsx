@@ -184,18 +184,18 @@ export default function PackagesScreen() {
         <View style={[styles.infoCard, { backgroundColor: colors.primaryLight }]}>
           <Ionicons name="gift" size={24} color={colors.primary} />
           <View style={styles.infoContent}>
-            <Text style={[styles.infoTitle, { color: colors.primary }]}>Offer Session Packages</Text>
+            <Text style={[styles.infoTitle, { color: colors.primary }]}>{t('pages.coach.packages.offer_packages')}</Text>
             <Text style={[styles.infoText, { color: colors.primary }]}>
-              Create discounted bundles to encourage commitment and recurring bookings from clients.
+              {t('pages.coach.packages.offer_description')}
             </Text>
           </View>
         </View>
 
         {/* Base Price Info */}
         <View style={[styles.basePriceCard, { backgroundColor: colors.surface }]}>
-          <Text style={[styles.basePriceLabel, { color: colors.textMuted }]}>Your session rate</Text>
+          <Text style={[styles.basePriceLabel, { color: colors.textMuted }]}>{t('pages.coach.packages.session_rate')}</Text>
           <Text style={[styles.basePriceValue, { color: colors.text }]}>
-            {currencySymbol}{basePrice}/session
+            {currencySymbol}{basePrice}/{t('pages.coach.packages.session')}
           </Text>
         </View>
 
@@ -203,9 +203,9 @@ export default function PackagesScreen() {
         {packages.length === 0 ? (
           <View style={styles.emptyState}>
             <Ionicons name="pricetags-outline" size={64} color={colors.textMuted} />
-            <Text style={[styles.emptyTitle, { color: colors.text }]}>No Packages Yet</Text>
+            <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('pages.coach.packages.no_packages')}</Text>
             <Text style={[styles.emptyText, { color: colors.textMuted }]}>
-              Create your first session package to offer discounts to clients
+              {t('pages.coach.packages.no_packages_description')}
             </Text>
           </View>
         ) : (
@@ -221,7 +221,7 @@ export default function PackagesScreen() {
                 <View style={styles.packageInfo}>
                   <Text style={[styles.packageName, { color: colors.text }]}>{pkg.name}</Text>
                   <Text style={[styles.packageSessions, { color: colors.textMuted }]}>
-                    {pkg.session_count} sessions
+                    {pkg.session_count} {t('pages.coach.packages.sessions')}
                   </Text>
                 </View>
                 <View style={[styles.discountBadge, { backgroundColor: colors.success + '20' }]}>
