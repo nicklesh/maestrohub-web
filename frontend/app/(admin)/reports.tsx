@@ -450,6 +450,7 @@ const HorizontalBarChart = ({
   color,
   colors: themeColors,
   maxItems = 5,
+  translateLabel,
 }: {
   data: any[];
   valueKey: string;
@@ -457,6 +458,7 @@ const HorizontalBarChart = ({
   color: string;
   colors: ThemeColors;
   maxItems?: number;
+  translateLabel?: (label: string) => string;
 }) => {
   const displayData = data.slice(0, maxItems);
   const maxVal = Math.max(...displayData.map(d => d[valueKey]), 1);
@@ -467,7 +469,7 @@ const HorizontalBarChart = ({
         <View key={index}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}>
             <Text style={{ fontSize: 12, color: themeColors.text, fontWeight: '500', flex: 1 }} numberOfLines={1}>
-              {item[labelKey]}
+              {translateLabel ? translateLabel(item[labelKey]) : item[labelKey]}
             </Text>
             <Text style={{ fontSize: 12, color: themeColors.textMuted, fontWeight: '600' }}>
               {item[valueKey]}
