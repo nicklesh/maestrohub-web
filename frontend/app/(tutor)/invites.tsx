@@ -245,15 +245,15 @@ export default function InvitesScreen() {
           />
           <View style={[styles.bottomSheet, { backgroundColor: colors.surface }]}>
             <View style={[styles.sheetHandle, { backgroundColor: colors.gray300 }]} />
-            <Text style={[styles.sheetTitle, { color: colors.text }]}>Send Invite</Text>
+            <Text style={[styles.sheetTitle, { color: colors.text }]}>{t('pages.coach.invites.send_invite')}</Text>
             <Text style={[styles.sheetSubtitle, { color: colors.textMuted }]}>
-              Invite a student to connect with you on Maestro Habitat
+              {t('pages.coach.invites.invite_description')}
             </Text>
 
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Email *</Text>
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.coach.invites.email_required')}</Text>
             <TextInput
               style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-              placeholder="student@example.com"
+              placeholder={t('pages.coach.invites.email_placeholder')}
               placeholderTextColor={colors.textMuted}
               value={newInviteEmail}
               onChangeText={setNewInviteEmail}
@@ -261,19 +261,19 @@ export default function InvitesScreen() {
               autoCapitalize="none"
             />
 
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Name (optional)</Text>
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.coach.invites.name_optional')}</Text>
             <TextInput
               style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-              placeholder="Student's name"
+              placeholder={t('pages.coach.invites.name_placeholder')}
               placeholderTextColor={colors.textMuted}
               value={newInviteName}
               onChangeText={setNewInviteName}
             />
 
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Personal Message (optional)</Text>
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.coach.invites.message_optional')}</Text>
             <TextInput
               style={[styles.input, styles.textArea, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-              placeholder="Hi! I'd love to help you with..."
+              placeholder={t('pages.coach.invites.message_placeholder')}
               placeholderTextColor={colors.textMuted}
               value={newInviteMessage}
               onChangeText={setNewInviteMessage}
@@ -291,7 +291,7 @@ export default function InvitesScreen() {
               ) : (
                 <>
                   <Ionicons name="send" size={18} color="#FFFFFF" />
-                  <Text style={styles.submitButtonText}>Send Invite</Text>
+                  <Text style={styles.submitButtonText}>{t('pages.coach.invites.send_invite')}</Text>
                 </>
               )}
             </TouchableOpacity>
