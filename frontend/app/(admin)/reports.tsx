@@ -920,6 +920,47 @@ export default function AdminReportsScreen() {
         )}
       </View>
 
+      {/* Visual Trend Charts */}
+      {displayTrends.length > 0 && (
+        <View style={[styles.section, isTablet && styles.sectionTablet]}>
+          <Text style={styles.sectionTitle}>{t('pages.admin.reports_page.growth_visualization') || 'Growth Visualization'}</Text>
+          
+          {/* Tutors Growth Line Chart */}
+          <View style={{ marginBottom: 24 }}>
+            <Text style={{ fontSize: 13, fontWeight: '600', color: colors.text, marginBottom: 12 }}>
+              {t('pages.admin.reports_page.new_coaches_trend') || 'New Coaches Trend'}
+            </Text>
+            <LineChart
+              data={displayTrends}
+              valueKey="tutors"
+              labelKey="period"
+              color={colors.primary}
+              height={160}
+              width={width - 80}
+              colors={colors}
+              showGrid={true}
+              showDots={true}
+              fillArea={true}
+            />
+          </View>
+          
+          {/* Parents Growth Area Chart */}
+          <View style={{ marginBottom: 16 }}>
+            <Text style={{ fontSize: 13, fontWeight: '600', color: colors.text, marginBottom: 12 }}>
+              {t('pages.admin.reports_page.new_consumers_trend') || 'New Consumers Trend'}
+            </Text>
+            <AreaChart
+              data={displayTrends}
+              valueKey="parents"
+              labelKey="period"
+              color={colors.accent}
+              height={120}
+              colors={colors}
+            />
+          </View>
+        </View>
+      )}
+
       {/* Projections */}
       <View style={[styles.section, isTablet && styles.sectionTablet]}>
         <Text style={styles.sectionTitle}>📊 {t('pages.admin.reports_page.projections')}</Text>
