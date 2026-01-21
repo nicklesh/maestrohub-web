@@ -208,8 +208,8 @@ export default function TutorReportsScreen() {
           {/* Header */}
           <View style={styles.header}>
             <View>
-              <Text style={[styles.title, isDesktop && styles.titleDesktop]}>Earnings Report</Text>
-              <Text style={styles.subtitle}>Track your sessions and payouts</Text>
+              <Text style={[styles.title, isDesktop && styles.titleDesktop]}>{t('pages.coach.reports.title')}</Text>
+              <Text style={styles.subtitle}>{t('pages.coach.reports.subtitle')}</Text>
             </View>
             <TouchableOpacity 
               style={[styles.downloadButton, downloading && styles.downloadButtonDisabled]}
@@ -232,29 +232,29 @@ export default function TutorReportsScreen() {
             <View style={[styles.summaryCard, { backgroundColor: colors.cardPrimary }]}>
               <Ionicons name="cash" size={28} color={colors.white} />
               <Text style={styles.summaryValue}>{formatCurrency(summary?.total_earned_cents || 0)}</Text>
-              <Text style={styles.summaryLabel}>Total Earned</Text>
+              <Text style={styles.summaryLabel}>{t('pages.coach.reports.total_earned')}</Text>
             </View>
             <View style={[styles.summaryCard, { backgroundColor: colors.cardWarning }]}>
               <Ionicons name="hourglass" size={28} color={colors.white} />
               <Text style={styles.summaryValue}>{formatCurrency(summary?.pending_cents || 0)}</Text>
-              <Text style={styles.summaryLabel}>Pending</Text>
+              <Text style={styles.summaryLabel}>{t('pages.coach.reports.pending')}</Text>
             </View>
             <View style={[styles.summaryCard, { backgroundColor: colors.cardSuccess }]}>
               <Ionicons name="checkmark-circle" size={28} color={colors.white} />
               <Text style={styles.summaryValue}>{summary?.completed_sessions || 0}</Text>
-              <Text style={styles.summaryLabel}>Completed</Text>
+              <Text style={styles.summaryLabel}>{t('pages.coach.reports.completed')}</Text>
             </View>
             <View style={[styles.summaryCard, { backgroundColor: colors.cardInfo }]}>
               <Ionicons name="time" size={28} color={colors.white} />
               <Text style={styles.summaryValue}>{summary?.upcoming_sessions || 0}</Text>
-              <Text style={styles.summaryLabel}>Upcoming</Text>
+              <Text style={styles.summaryLabel}>{t('pages.coach.reports.upcoming')}</Text>
             </View>
           </View>
 
           {/* By Student Section */}
           {byStudent.length > 0 && (
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Earnings by Student</Text>
+              <Text style={styles.sectionTitle}>{t('pages.coach.reports.by_student')}</Text>
               {byStudent.map((item, index) => (
                 <View key={index} style={styles.listItem}>
                   <View style={styles.listItemLeft}>
@@ -263,7 +263,7 @@ export default function TutorReportsScreen() {
                     </View>
                     <View>
                       <Text style={styles.listItemName}>{item.student_name}</Text>
-                      <Text style={styles.listItemSub}>{item.sessions} sessions</Text>
+                      <Text style={styles.listItemSub}>{item.sessions} {t('pages.coach.reports.sessions')}</Text>
                     </View>
                   </View>
                   <Text style={styles.listItemAmount}>{formatCurrency(item.earned_cents)}</Text>
@@ -275,12 +275,12 @@ export default function TutorReportsScreen() {
           {/* Monthly Breakdown */}
           {byMonth.length > 0 && (
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Monthly Earnings</Text>
+              <Text style={styles.sectionTitle}>{t('pages.coach.reports.monthly_earnings')}</Text>
               {byMonth.slice(0, 6).map((item, index) => (
                 <View key={index} style={styles.monthItem}>
                   <Text style={styles.monthLabel}>{item.month}</Text>
                   <View style={styles.monthStats}>
-                    <Text style={styles.monthSessions}>{item.sessions} sessions</Text>
+                    <Text style={styles.monthSessions}>{item.sessions} {t('pages.coach.reports.sessions')}</Text>
                     <Text style={styles.monthAmount}>{formatCurrency(item.earned_cents)}</Text>
                   </View>
                 </View>
@@ -291,7 +291,7 @@ export default function TutorReportsScreen() {
           {/* Sponsorship Section */}
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>Sponsorship & Advertising</Text>
+              <Text style={styles.sectionTitle}>{t('pages.coach.reports.sponsorship_advertising')}</Text>
               <View style={[styles.sectionBadge, { backgroundColor: colors.warning + '20' }]}>
                 <Ionicons name="megaphone" size={14} color={colors.warning} />
               </View>
