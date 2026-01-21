@@ -95,7 +95,7 @@ export default function MarketSelectionModal({
                 </Text>
                 <View style={styles.marketInfo}>
                   <Text style={[styles.marketName, isTablet && styles.marketNameTablet]}>
-                    {market.country === 'US' ? 'United States' : 'India'}
+                    {t(`countries.${market.country}`) || (market.country === 'US' ? 'United States' : 'India')}
                   </Text>
                   <Text style={styles.marketCurrency}>
                     {market.currency_symbol} {market.currency}
