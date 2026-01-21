@@ -58,6 +58,7 @@ export default function ScheduleBuilderScreen() {
   const { token } = useAuth();
   const { colors } = useTheme();
   const { showSuccess, showError } = useToast();
+  const { t } = useTranslation();
   const { width } = useWindowDimensions();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
