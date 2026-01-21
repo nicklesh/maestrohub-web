@@ -1027,6 +1027,22 @@ export default function AdminReportsScreen() {
       ))
       )}
     </View>
+    
+    {/* Horizontal Bar Chart Summary */}
+    {categoryBreakdown.length > 0 && (
+      <View style={[styles.section, isTablet && styles.sectionTablet]}>
+        <Text style={styles.sectionTitle}>{t('pages.admin.reports_page.top_categories') || 'Top Categories by Coaches'}</Text>
+        <HorizontalBarChart
+          data={categoryBreakdown}
+          valueKey="tutors"
+          labelKey="category"
+          color={colors.primary}
+          colors={colors}
+          maxItems={6}
+        />
+      </View>
+    )}
+    </>
   );
 
   const renderRevenue = () => (
