@@ -982,6 +982,7 @@ export default function AdminReportsScreen() {
   };
 
   const renderCategories = () => (
+    <>
     <View style={[styles.section, isTablet && styles.sectionTablet]}>
       <Text style={styles.sectionTitle}>{t('pages.admin.reports_page.category_breakdown')}</Text>
       {categoryBreakdown.length === 0 ? (
