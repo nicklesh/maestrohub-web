@@ -115,7 +115,80 @@ export default function ScheduledJobsScreen() {
   const { t } = useTranslation();
   const { width } = useWindowDimensions();
   
-  const [jobs, setJobs] = useState<ScheduledJob[]>(DEFAULT_JOBS);
+  // Helper to safely get translation string
+  const ts = (key: string, fallback: string): string => {
+    const result = t(key);
+    return typeof result === 'string' ? result : fallback;
+  };
+  
+  // Translated job data
+  const getTranslatedJobs = (): ScheduledJob[] => [
+    {
+      id: 'monthly_reports',
+      name: ts('pages.admin.scheduled_jobs.monthly_reports', 'Monthly Tax Reports'),
+      description: ts('pages.admin.scheduled_jobs.monthly_reports_desc', 'Generate monthly payment summary reports for all users with transactions'),
+      schedule: '0 2 1 * *',
+      schedule_display: ts('pages.admin.scheduled_jobs.1st_of_month', '1st of every month') + ' ' + ts('pages.admin.scheduled_jobs.at', 'at') + ' 2:00 ' + ts('pages.admin.scheduled_jobs.am', 'AM'),
+      enabled: true,
+      last_run: null,
+      last_status: 'never',
+      next_run: null,
+      can_trigger_manually: true,
+      settings: { day_of_month: 1, hour: 2, minute: 0 }
+    },
+    {
+      id: 'annual_1099_reports',
+      name: ts('pages.admin.scheduled_jobs.annual_1099_reports', 'Annual 1099 Reports'),
+      description: ts('pages.admin.scheduled_jobs.annual_1099_reports_desc', 'Generate annual tax documents (1099 equivalent) for all providers'),
+      schedule: '0 3 1 1 *',
+      schedule_display: ts('calendar.months.january', 'January') + ' 1st ' + ts('pages.admin.scheduled_jobs.at', 'at') + ' 3:00 ' + ts('pages.admin.scheduled_jobs.am', 'AM'),
+      enabled: true,
+      last_run: null,
+      last_status: 'never',
+      next_run: null,
+      can_trigger_manually: true,
+      settings: { day_of_month: 1, hour: 3, minute: 0 }
+    },
+    {
+      id: 'session_reminders',
+      name: ts('pages.admin.scheduled_jobs.session_reminders', 'Session Reminders'),
+      description: ts('pages.admin.scheduled_jobs.session_reminders_desc', 'Send reminder notifications for upcoming sessions (24h and 1h before)'),
+      schedule: '0 * * * *',
+      schedule_display: ts('pages.admin.scheduled_jobs.every_hour', 'Every hour'),
+      enabled: true,
+      last_run: null,
+      last_status: 'never',
+      next_run: null,
+      can_trigger_manually: true,
+    },
+    {
+      id: 'kid_notifications',
+      name: ts('pages.admin.scheduled_jobs.kid_notifications', 'Kid Activity Updates'),
+      description: ts('pages.admin.scheduled_jobs.kid_notifications_desc', 'Send parents updates about their children\'s session activities'),
+      schedule: '0 18 * * *',
+      schedule_display: ts('common.daily', 'Daily') + ' ' + ts('pages.admin.scheduled_jobs.at', 'at') + ' 6:00 ' + ts('pages.admin.scheduled_jobs.pm', 'PM'),
+      enabled: true,
+      last_run: null,
+      last_status: 'never',
+      next_run: null,
+      can_trigger_manually: true,
+      settings: { hour: 18, minute: 0 }
+    },
+    {
+      id: 'referral_check',
+      name: ts('pages.admin.scheduled_jobs.referral_check', 'Referral Credit Processing'),
+      description: ts('pages.admin.scheduled_jobs.referral_check_desc', 'Process pending referral credits and bonuses'),
+      schedule: '0 0 * * *',
+      schedule_display: ts('common.daily', 'Daily') + ' ' + ts('pages.admin.scheduled_jobs.at', 'at') + ' 12:00 ' + ts('pages.admin.scheduled_jobs.am', 'AM'),
+      enabled: true,
+      last_run: null,
+      last_status: 'never',
+      next_run: null,
+      can_trigger_manually: true,
+    },
+  ];
+
+  const [jobs, setJobs] = useState<ScheduledJob[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [runningJob, setRunningJob] = useState<string | null>(null);
@@ -126,24 +199,27 @@ export default function ScheduledJobsScreen() {
   const styles = getStyles(colors, isTablet);
 
   const loadJobs = useCallback(async () => {
+    const translatedJobs = getTranslatedJobs();
     try {
       const response = await api.get('/admin/scheduled-jobs', {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (response.data.jobs) {
         setJobs(response.data.jobs.map((j: any) => ({
-          ...DEFAULT_JOBS.find(d => d.id === j.id) || {},
+          ...translatedJobs.find(d => d.id === j.id) || {},
           ...j
         })));
+      } else {
+        setJobs(translatedJobs);
       }
     } catch (error) {
-      // Use defaults if API fails
-      setJobs(DEFAULT_JOBS);
+      // Use translated defaults if API fails
+      setJobs(translatedJobs);
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [token]);
+  }, [token, t]);
 
   useEffect(() => {
     loadJobs();
