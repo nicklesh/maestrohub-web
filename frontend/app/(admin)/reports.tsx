@@ -319,7 +319,10 @@ export default function AdminReportsScreen() {
   const renderCategories = () => (
     <View style={[styles.section, isTablet && styles.sectionTablet]}>
       <Text style={styles.sectionTitle}>{t('pages.admin.reports_page.category_breakdown')}</Text>
-      {categoryBreakdown.map((cat) => (
+      {categoryBreakdown.length === 0 ? (
+        <Text style={styles.emptyText}>{t('pages.admin.reports_page.no_data')}</Text>
+      ) : (
+      categoryBreakdown.map((cat) => (
         <View key={cat.category} style={styles.categoryRow}>
           <View style={styles.categoryHeader}>
             <Text style={styles.categoryName}>{cat.category}</Text>
@@ -339,7 +342,7 @@ export default function AdminReportsScreen() {
             <View style={styles.categoryStat}>
               <Ionicons name="trending-up" size={14} color={colors.success} />
               <Text style={styles.categoryStatValue}>
-                {((cat.bookings / categoryBreakdown.reduce((sum, c) => sum + c.bookings, 0)) * 100).toFixed(0)}%
+                {categoryBreakdown.length > 0 ? ((cat.tutors / categoryBreakdown.reduce((sum, c) => sum + c.tutors, 0)) * 100).toFixed(0) : 0}%
               </Text>
               <Text style={styles.categoryStatLabel}>{t('pages.admin.reports_page.share')}</Text>
             </View>
@@ -349,14 +352,15 @@ export default function AdminReportsScreen() {
               style={[
                 styles.categoryBarFill,
                 {
-                  width: `${(cat.bookings / categoryBreakdown[0].bookings) * 100}%`,
+                  width: `${categoryBreakdown[0]?.tutors > 0 ? (cat.tutors / categoryBreakdown[0].tutors) * 100 : 0}%`,
                   backgroundColor: colors.primary,
                 },
               ]}
             />
           </View>
         </View>
-      ))}
+      ))
+      )}
     </View>
   );
 
