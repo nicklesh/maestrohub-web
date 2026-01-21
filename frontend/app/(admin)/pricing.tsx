@@ -140,84 +140,192 @@ export default function AdminPricingScreen() {
     setEditForm(null);
   };
 
-  const savePolicy = () => {
-    if (!editForm) return;
-
-    // Validate minimum price
-    const calculatedMin = calculateMinPrice(editForm.platformFeePercent);
-    if (editForm.minPrice < calculatedMin) {
-      showError(t('pages.admin.pricing.min_price_error', { amount: calculatedMin }));
-      return;
-    }
-
-    // Validate max >= min
-    if (editForm.maxPrice < editForm.minPrice) {
-      showError(t('pages.admin.pricing.max_less_than_min'));
-      return;
-    }
-
-    // Check max price warning
-    if (editForm.maxPrice > INDUSTRY_MAX) {
-      setShowMaxWarning(true);
-      setPendingMaxValue(editForm.maxPrice);
-      return;
-    }
-
-    confirmSave();
-  };
-
-  const confirmSave = () => {
-    if (!editForm) return;
+  const renderPolicyCard = (policy: PricingPolicy) => {
+    const isEditing = editingId === policy.policy_id;
     
-    setPolicies(prev =>
-      prev.map(p => (p.id === editForm.id ? { ...editForm } : p))
+    return (
+      <View key={policy.policy_id} style={[styles.policyCard, { backgroundColor: colors.surface }]}>
+        <View style={styles.policyHeader}>
+          <View style={styles.policyTitleRow}>
+            <Text style={[styles.policyName, { color: colors.text }]}>
+              {policy.market_name || policy.market_id}
+            </Text>
+            {policy.isActive && (
+              <View style={[styles.activeBadge, { backgroundColor: colors.success + '20' }]}>
+                <Text style={[styles.activeBadgeText, { color: colors.success }]}>
+                  {t('pages.admin.pricing_page.active')}
+                </Text>
+              </View>
+            )}
+          </View>
+          <TouchableOpacity
+            style={[styles.editButton, { backgroundColor: colors.primary + '15' }]}
+            onPress={() => isEditing ? cancelEditing() : startEditing(policy)}
+          >
+            <Ionicons 
+              name={isEditing ? 'close' : 'pencil'} 
+              size={18} 
+              color={colors.primary} 
+            />
+          </TouchableOpacity>
+        </View>
+
+        {isEditing && editForm ? (
+          <View style={styles.editForm}>
+            <View style={styles.formRow}>
+              <Text style={[styles.formLabel, { color: colors.text }]}>
+                {t('pages.admin.pricing_page.trial_days')}
+              </Text>
+              <TextInput
+                style={[styles.formInput, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
+                value={String(editForm.trial_days)}
+                onChangeText={(text) => setEditForm({ ...editForm, trial_days: parseInt(text) || 0 })}
+                keyboardType="numeric"
+              />
+            </View>
+
+            <View style={styles.formRow}>
+              <Text style={[styles.formLabel, { color: colors.text }]}>
+                {t('pages.admin.pricing_page.provider_fee_percent')}
+              </Text>
+              <TextInput
+                style={[styles.formInput, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
+                value={String(editForm.provider_fee_percent)}
+                onChangeText={(text) => setEditForm({ ...editForm, provider_fee_percent: parseFloat(text) || 0 })}
+                keyboardType="numeric"
+              />
+            </View>
+
+            <View style={styles.formRow}>
+              <Text style={[styles.formLabel, { color: colors.text }]}>
+                {t('pages.admin.pricing_page.consumer_fee_percent')}
+              </Text>
+              <TextInput
+                style={[styles.formInput, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
+                value={String(editForm.consumer_fee_percent)}
+                onChangeText={(text) => setEditForm({ ...editForm, consumer_fee_percent: parseFloat(text) || 0 })}
+                keyboardType="numeric"
+              />
+            </View>
+
+            <View style={styles.formRow}>
+              <Text style={[styles.formLabel, { color: colors.text }]}>
+                {t('pages.admin.pricing_page.nsf_amount')} (cents)
+              </Text>
+              <TextInput
+                style={[styles.formInput, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
+                value={String(editForm.nsf_amount_cents)}
+                onChangeText={(text) => setEditForm({ ...editForm, nsf_amount_cents: parseInt(text) || 0 })}
+                keyboardType="numeric"
+              />
+            </View>
+
+            <View style={styles.formActions}>
+              <TouchableOpacity
+                style={[styles.cancelButton, { borderColor: colors.border }]}
+                onPress={cancelEditing}
+              >
+                <Text style={[styles.cancelButtonText, { color: colors.text }]}>
+                  {t('buttons.cancel')}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.saveButton, { backgroundColor: colors.primary }]}
+                onPress={savePolicy}
+                disabled={saving}
+              >
+                {saving ? (
+                  <ActivityIndicator size="small" color="#fff" />
+                ) : (
+                  <Text style={styles.saveButtonText}>{t('buttons.save')}</Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : (
+          <View style={styles.policyDetails}>
+            <View style={styles.policyRow}>
+              <Text style={[styles.policyLabel, { color: colors.textMuted }]}>
+                {t('pages.admin.pricing_page.trial_days')}
+              </Text>
+              <Text style={[styles.policyValue, { color: colors.text }]}>
+                {policy.trial_days} {t('pages.admin.pricing_page.days')}
+              </Text>
+            </View>
+            <View style={styles.policyRow}>
+              <Text style={[styles.policyLabel, { color: colors.textMuted }]}>
+                {t('pages.admin.pricing_page.provider_fee')}
+              </Text>
+              <Text style={[styles.policyValue, { color: colors.text }]}>
+                {policy.provider_fee_percent}%
+              </Text>
+            </View>
+            <View style={styles.policyRow}>
+              <Text style={[styles.policyLabel, { color: colors.textMuted }]}>
+                {t('pages.admin.pricing_page.consumer_fee')}
+              </Text>
+              <Text style={[styles.policyValue, { color: colors.text }]}>
+                {policy.consumer_fee_percent}%
+              </Text>
+            </View>
+            <View style={styles.policyRow}>
+              <Text style={[styles.policyLabel, { color: colors.textMuted }]}>
+                {t('pages.admin.pricing_page.nsf_fee')}
+              </Text>
+              <Text style={[styles.policyValue, { color: colors.text }]}>
+                ${(policy.nsf_amount_cents / 100).toFixed(2)}
+              </Text>
+            </View>
+          </View>
+        )}
+      </View>
     );
-    showSuccess(t('pages.admin.pricing.policy_saved'));
-    setEditingId(null);
-    setEditForm(null);
-    setShowMaxWarning(false);
   };
 
-  const handleMaxWarningConfirm = () => {
-    confirmSave();
-  };
-
-  const handleMaxWarningCancel = () => {
-    setShowMaxWarning(false);
-    // Keep editing mode open
-  };
-
-  const togglePolicy = (id: string) => {
-    setPolicies(prev =>
-      prev.map(p => (p.id === id ? { ...p, isActive: !p.isActive } : p))
+  if (loading) {
+    return (
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+        <AppHeader title={t('pages.admin.pricing_page.title')} showBack />
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={colors.primary} />
+        </View>
+      </SafeAreaView>
     );
-    showSuccess(t('pages.admin.pricing.status_updated'));
-  };
+  }
 
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [policyToDelete, setPolicyToDelete] = useState<PricingPolicy | null>(null);
+  return (
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+      <AppHeader title={t('pages.admin.pricing_page.title')} showBack />
+      <ScrollView
+        contentContainerStyle={[styles.content, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      >
+        <View style={styles.header}>
+          <Text style={[styles.title, { color: colors.text }]}>
+            {t('pages.admin.pricing_page.title')}
+          </Text>
+          <Text style={[styles.subtitle, { color: colors.textMuted }]}>
+            {t('pages.admin.pricing_page.subtitle')}
+          </Text>
+        </View>
 
-  const deletePolicy = (policy: PricingPolicy) => {
-    if (policy.hasHistory) {
-      showError(t('pages.admin.pricing.cannot_delete_history'));
-      return;
-    }
-    setPolicyToDelete(policy);
-    setShowDeleteModal(true);
-  };
-
-  const confirmDelete = () => {
-    if (policyToDelete) {
-      setPolicies(prev => prev.filter(p => p.id !== policyToDelete.id));
-      showSuccess(t('pages.admin.pricing.policy_deleted'));
-    }
-    setShowDeleteModal(false);
-    setPolicyToDelete(null);
-  };
-
-  const cancelDelete = () => {
-    setShowDeleteModal(false);
-    setPolicyToDelete(null);
+        {policies.length === 0 ? (
+          <View style={styles.emptyState}>
+            <Ionicons name="pricetag-outline" size={64} color={colors.textMuted} />
+            <Text style={[styles.emptyTitle, { color: colors.text }]}>
+              {t('pages.admin.pricing_page.no_policies')}
+            </Text>
+            <Text style={[styles.emptyText, { color: colors.textMuted }]}>
+              {t('pages.admin.pricing_page.no_policies_description')}
+            </Text>
+          </View>
+        ) : (
+          policies.map(policy => renderPolicyCard(policy))
+        )}
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
   };
 
   const addNewPolicy = () => {
