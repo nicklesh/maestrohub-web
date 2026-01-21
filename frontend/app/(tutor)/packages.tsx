@@ -140,7 +140,7 @@ export default function PackagesScreen() {
 
   const handleDelete = async (pkg: SessionPackage) => {
     const confirmed = Platform.OS === 'web'
-      ? window.confirm(`Are you sure you want to delete "${pkg.name}"?`)
+      ? window.confirm(t('pages.coach.packages.delete_confirm', { name: pkg.name }))
       : true;
     
     if (confirmed) {
@@ -148,10 +148,10 @@ export default function PackagesScreen() {
         await api.delete(`/tutor/packages/${pkg.package_id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        showSuccess('Package deleted');
+        showSuccess(t('pages.coach.packages.package_deleted'));
         loadData();
       } catch (error: any) {
-        showError(error.response?.data?.detail || 'Failed to delete package');
+        showError(error.response?.data?.detail || t('pages.coach.packages.delete_failed'));
       }
     }
   };
@@ -161,7 +161,7 @@ export default function PackagesScreen() {
   if (loading) {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-        <AppHeader showBack title="Session Packages" />
+        <AppHeader showBack title={t('pages.coach.packages.title')} />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -171,7 +171,7 @@ export default function PackagesScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <AppHeader showBack title="Session Packages" />
+      <AppHeader showBack title={t('pages.coach.packages.title')} />
 
       <ScrollView
         style={styles.content}
