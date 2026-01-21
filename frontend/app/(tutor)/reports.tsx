@@ -307,7 +307,7 @@ export default function TutorReportsScreen() {
                       <Text style={[styles.sponsorshipValue, { color: colors.text }]}>
                         {formatCurrency(sponsorship.total_spent_cents)}
                       </Text>
-                      <Text style={[styles.sponsorshipLabel, { color: colors.textMuted }]}>Total Spent</Text>
+                      <Text style={[styles.sponsorshipLabel, { color: colors.textMuted }]}>{t('pages.coach.reports.total_spent')}</Text>
                     </View>
                     <View style={styles.sponsorshipStatDivider} />
                     <View style={styles.sponsorshipStat}>
@@ -315,7 +315,7 @@ export default function TutorReportsScreen() {
                       <Text style={[styles.sponsorshipValue, { color: colors.text }]}>
                         {sponsorship.total_purchases}
                       </Text>
-                      <Text style={[styles.sponsorshipLabel, { color: colors.textMuted }]}>Purchases</Text>
+                      <Text style={[styles.sponsorshipLabel, { color: colors.textMuted }]}>{t('pages.coach.reports.purchases')}</Text>
                     </View>
                     <View style={styles.sponsorshipStatDivider} />
                     <View style={styles.sponsorshipStat}>
@@ -323,7 +323,7 @@ export default function TutorReportsScreen() {
                       <Text style={[styles.sponsorshipValue, { color: sponsorship.active_count > 0 ? colors.success : colors.text }]}>
                         {sponsorship.active_count}
                       </Text>
-                      <Text style={[styles.sponsorshipLabel, { color: colors.textMuted }]}>Active Now</Text>
+                      <Text style={[styles.sponsorshipLabel, { color: colors.textMuted }]}>{t('pages.coach.reports.active_now')}</Text>
                     </View>
                   </View>
                   
@@ -332,13 +332,13 @@ export default function TutorReportsScreen() {
                     <View style={[styles.activeSponsorship, { backgroundColor: colors.success + '15', borderColor: colors.success }]}>
                       <View style={styles.activeSponsorshipHeader}>
                         <Ionicons name="star" size={18} color={colors.success} />
-                        <Text style={[styles.activeSponsorshipTitle, { color: colors.success }]}>Currently Active</Text>
+                        <Text style={[styles.activeSponsorshipTitle, { color: colors.success }]}>{t('pages.coach.reports.currently_active')}</Text>
                       </View>
                       <Text style={[styles.activeSponsorshipPlan, { color: colors.text }]}>
-                        {sponsorship.current_active.plan_name} ({sponsorship.current_active.weeks} weeks)
+                        {sponsorship.current_active.plan_name} ({sponsorship.current_active.weeks} {t('pages.coach.sponsorship.weeks')})
                       </Text>
                       <Text style={[styles.activeSponsorshipExpires, { color: colors.textMuted }]}>
-                        Expires: {new Date(sponsorship.current_active.expires_at).toLocaleDateString()}
+                        {t('pages.coach.sponsorship.expires')}: {new Date(sponsorship.current_active.expires_at).toLocaleDateString()}
                       </Text>
                       {sponsorship.current_active.categories.length > 0 && (
                         <View style={styles.activeSponsorshipCategories}>
@@ -356,15 +356,15 @@ export default function TutorReportsScreen() {
             ) : (
               <View style={[styles.sponsorshipEmpty, { backgroundColor: colors.surface }]}>
                 <Ionicons name="megaphone-outline" size={40} color={colors.textMuted} />
-                <Text style={[styles.sponsorshipEmptyTitle, { color: colors.text }]}>No Sponsorships Yet</Text>
+                <Text style={[styles.sponsorshipEmptyTitle, { color: colors.text }]}>{t('pages.coach.reports.no_sponsorships')}</Text>
                 <Text style={[styles.sponsorshipEmptyText, { color: colors.textMuted }]}>
-                  Boost your visibility by becoming a sponsored coach
+                  {t('pages.coach.reports.boost_visibility')}
                 </Text>
                 <TouchableOpacity 
                   style={[styles.sponsorshipCTA, { backgroundColor: colors.warning }]}
                   onPress={() => router.push('/(tutor)/sponsorship')}
                 >
-                  <Text style={styles.sponsorshipCTAText}>Get Sponsored</Text>
+                  <Text style={styles.sponsorshipCTAText}>{t('pages.coach.reports.get_sponsored')}</Text>
                 </TouchableOpacity>
               </View>
             )}
