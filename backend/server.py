@@ -82,6 +82,9 @@ JWT_SECRET = os.environ.get('JWT_SECRET', 'maestrohabitat-secret-key-change-in-p
 JWT_ALGORITHM = 'HS256'
 JWT_EXPIRATION_DAYS = 7
 
+# Password Security
+PASSWORD_PEPPER = os.environ.get('PASSWORD_PEPPER', 'default-pepper-change-in-production')
+
 # Stripe Config (placeholder)
 STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', 'sk_test_placeholder')
 STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY', 'pk_test_placeholder')
@@ -90,6 +93,14 @@ PLATFORM_FEE_PERCENT = float(os.environ.get('PLATFORM_FEE_PERCENT', '10'))  # 10
 
 # Resend Config (placeholder)
 RESEND_API_KEY = os.environ.get('RESEND_API_KEY', 're_placeholder')
+
+# Third Party Integrations
+CLOUDINARY_CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD_NAME', '')
+CLOUDINARY_API_KEY = os.environ.get('CLOUDINARY_API_KEY', '')
+CLOUDINARY_API_SECRET = os.environ.get('CLOUDINARY_API_SECRET', '')
+MIXPANEL_TOKEN = os.environ.get('MIXPANEL_TOKEN', '')
+SENTRY_DSN = os.environ.get('SENTRY_DSN', '')
+NEW_RELIC_LICENSE_KEY = os.environ.get('NEW_RELIC_LICENSE_KEY', '')
 
 # ============== FEATURE FLAGS ==============
 FEATURE_FLAGS = {
