@@ -1028,7 +1028,6 @@ export default function AdminReportsScreen() {
       ))
       )}
     </View>
-    
     {/* Horizontal Bar Chart Summary */}
     {categoryBreakdown.length > 0 && (
       <View style={[styles.section, isTablet && styles.sectionTablet]}>
