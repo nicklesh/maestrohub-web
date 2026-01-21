@@ -295,7 +295,7 @@ export default function ScheduleBuilderScreen() {
                 >
                   <Text style={styles.timeText}>{day.startTime}</Text>
                 </TouchableOpacity>
-                <Text style={styles.timeSeparator}>to</Text>
+                <Text style={styles.timeSeparator}>{t('pages.coach.schedule_builder.to') || 'to'}</Text>
                 <TouchableOpacity 
                   style={styles.timeSelector}
                   onPress={() => setEditingDay(index)}
@@ -319,7 +319,7 @@ export default function ScheduleBuilderScreen() {
         ) : (
           <>
             <Ionicons name="save" size={20} color="#fff" />
-            <Text style={styles.saveButtonText}>Save Schedule</Text>
+            <Text style={styles.saveButtonText}>{t('pages.coach.schedule_builder.save_schedule') || 'Save Schedule'}</Text>
           </>
         )}
       </TouchableOpacity>
