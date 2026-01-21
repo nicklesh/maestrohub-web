@@ -981,69 +981,70 @@ export default function AdminReportsScreen() {
   );
   };
 
-  const renderCategories = () => (
-    <>
-    <View style={[styles.section, isTablet && styles.sectionTablet]}>
-      <Text style={styles.sectionTitle}>{t('pages.admin.reports_page.category_breakdown')}</Text>
-      {categoryBreakdown.length === 0 ? (
-        <Text style={styles.emptyText}>{t('pages.admin.reports_page.no_data')}</Text>
-      ) : (
-      categoryBreakdown.map((cat) => (
-        <View key={cat.category} style={styles.categoryRow}>
-          <View style={styles.categoryHeader}>
-            <Text style={styles.categoryName}>{cat.category}</Text>
-            <Text style={styles.categoryBookings}>{cat.bookings} {t('pages.admin.markets_page.bookings').toLowerCase()}</Text>
-          </View>
-          <View style={styles.categoryStats}>
-            <View style={styles.categoryStat}>
-              <Ionicons name="school" size={14} color={colors.primary} />
-              <Text style={styles.categoryStatValue}>{cat.tutors}</Text>
-              <Text style={styles.categoryStatLabel}>{t('pages.admin.markets_page.coaches').toLowerCase()}</Text>
-            </View>
-            <View style={styles.categoryStat}>
-              <Ionicons name="people" size={14} color={colors.accent} />
-              <Text style={styles.categoryStatValue}>{cat.parents}</Text>
-              <Text style={styles.categoryStatLabel}>{t('pages.admin.reports_page.parents').toLowerCase()}</Text>
-            </View>
-            <View style={styles.categoryStat}>
-              <Ionicons name="trending-up" size={14} color={colors.success} />
-              <Text style={styles.categoryStatValue}>
-                {categoryBreakdown.length > 0 ? ((cat.tutors / categoryBreakdown.reduce((sum, c) => sum + c.tutors, 0)) * 100).toFixed(0) : 0}%
-              </Text>
-              <Text style={styles.categoryStatLabel}>{t('pages.admin.reports_page.share')}</Text>
-            </View>
-          </View>
-          <View style={styles.categoryBar}>
-            <View
-              style={[
-                styles.categoryBarFill,
-                {
-                  width: `${categoryBreakdown[0]?.tutors > 0 ? (cat.tutors / categoryBreakdown[0].tutors) * 100 : 0}%`,
-                  backgroundColor: colors.primary,
-                },
-              ]}
+  const renderCategories = () => {
+    return (
+      <>
+        <View style={[styles.section, isTablet && styles.sectionTablet]}>
+          <Text style={styles.sectionTitle}>{t('pages.admin.reports_page.category_breakdown')}</Text>
+          {categoryBreakdown.length === 0 ? (
+            <Text style={styles.emptyText}>{t('pages.admin.reports_page.no_data')}</Text>
+          ) : (
+            categoryBreakdown.map((cat) => (
+              <View key={cat.category} style={styles.categoryRow}>
+                <View style={styles.categoryHeader}>
+                  <Text style={styles.categoryName}>{cat.category}</Text>
+                  <Text style={styles.categoryBookings}>{cat.bookings} {t('pages.admin.markets_page.bookings').toLowerCase()}</Text>
+                </View>
+                <View style={styles.categoryStats}>
+                  <View style={styles.categoryStat}>
+                    <Ionicons name="school" size={14} color={colors.primary} />
+                    <Text style={styles.categoryStatValue}>{cat.tutors}</Text>
+                    <Text style={styles.categoryStatLabel}>{t('pages.admin.markets_page.coaches').toLowerCase()}</Text>
+                  </View>
+                  <View style={styles.categoryStat}>
+                    <Ionicons name="people" size={14} color={colors.accent} />
+                    <Text style={styles.categoryStatValue}>{cat.parents}</Text>
+                    <Text style={styles.categoryStatLabel}>{t('pages.admin.reports_page.parents').toLowerCase()}</Text>
+                  </View>
+                  <View style={styles.categoryStat}>
+                    <Ionicons name="trending-up" size={14} color={colors.success} />
+                    <Text style={styles.categoryStatValue}>
+                      {categoryBreakdown.length > 0 ? ((cat.tutors / categoryBreakdown.reduce((sum, c) => sum + c.tutors, 0)) * 100).toFixed(0) : 0}%
+                    </Text>
+                    <Text style={styles.categoryStatLabel}>{t('pages.admin.reports_page.share')}</Text>
+                  </View>
+                </View>
+                <View style={styles.categoryBar}>
+                  <View
+                    style={[
+                      styles.categoryBarFill,
+                      {
+                        width: `${categoryBreakdown[0]?.tutors > 0 ? (cat.tutors / categoryBreakdown[0].tutors) * 100 : 0}%`,
+                        backgroundColor: colors.primary,
+                      },
+                    ]}
+                  />
+                </View>
+              </View>
+            ))
+          )}
+        </View>
+        {categoryBreakdown.length > 0 && (
+          <View style={[styles.section, isTablet && styles.sectionTablet]}>
+            <Text style={styles.sectionTitle}>{t('pages.admin.reports_page.top_categories') || 'Top Categories by Coaches'}</Text>
+            <HorizontalBarChart
+              data={categoryBreakdown}
+              valueKey="tutors"
+              labelKey="category"
+              color={colors.primary}
+              colors={colors}
+              maxItems={6}
             />
           </View>
-        </View>
-      ))
-      )}
-    </View>
-    {/* Horizontal Bar Chart Summary */}
-    {categoryBreakdown.length > 0 && (
-      <View style={[styles.section, isTablet && styles.sectionTablet]}>
-        <Text style={styles.sectionTitle}>{t('pages.admin.reports_page.top_categories') || 'Top Categories by Coaches'}</Text>
-        <HorizontalBarChart
-          data={categoryBreakdown}
-          valueKey="tutors"
-          labelKey="category"
-          color={colors.primary}
-          colors={colors}
-          maxItems={6}
-        />
-      </View>
-    )}
-    </>
-  );
+        )}
+      </>
+    );
+  };
 
   const renderRevenue = () => (
     <>
