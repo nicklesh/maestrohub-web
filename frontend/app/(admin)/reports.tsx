@@ -245,14 +245,17 @@ export default function AdminReportsScreen() {
   );
 
   const renderTrends = () => {
-    const weeklyTrends = getWeeklyTrends();
-    const monthlyTrends = getMonthlyTrends();
+    // Use real trend data from API, fallback to empty array
+    const displayTrends = trendData.length > 0 ? trendData : [];
     
     return (
     <>
-      {/* Weekly Trends */}
+      {/* Monthly Trends from API */}
       <View style={[styles.section, isTablet && styles.sectionTablet]}>
-        <Text style={styles.sectionTitle}>{t('pages.admin.reports_page.week_over_week')}</Text>
+        <Text style={styles.sectionTitle}>{t('pages.admin.reports_page.month_over_month')}</Text>
+        {displayTrends.length === 0 ? (
+          <Text style={styles.emptyText}>{t('pages.admin.reports_page.no_data')}</Text>
+        ) : (
         <View style={styles.trendTable}>
           <View style={styles.trendHeader}>
             <Text style={[styles.trendHeaderCell, { flex: 1.5 }]}>{t('pages.admin.reports_page.period')}</Text>
@@ -260,78 +263,37 @@ export default function AdminReportsScreen() {
             <Text style={styles.trendHeaderCell}>{t('pages.admin.reports_page.parents')}</Text>
             <Text style={styles.trendHeaderCell}>{t('pages.admin.reports_page.revenue')}</Text>
           </View>
-          {weeklyTrends.map((trend, index) => (
+          {displayTrends.map((trend, index) => (
             <View key={trend.period} style={styles.trendRow}>
               <Text style={[styles.trendCell, { flex: 1.5 }]}>{trend.period}</Text>
               <View style={styles.trendCellWithGrowth}>
                 <Text style={styles.trendCell}>{trend.tutors}</Text>
-                {index > 0 && (
+                {index > 0 && displayTrends[index - 1].tutors > 0 && (
                   <Text style={[styles.trendGrowth, { color: colors.success }]}>
-                    {calculateGrowth(trend.tutors, weeklyTrends[index - 1].tutors)}
+                    {calculateGrowth(trend.tutors, displayTrends[index - 1].tutors)}
                   </Text>
                 )}
               </View>
               <View style={styles.trendCellWithGrowth}>
                 <Text style={styles.trendCell}>{trend.parents}</Text>
-                {index > 0 && (
+                {index > 0 && displayTrends[index - 1].parents > 0 && (
                   <Text style={[styles.trendGrowth, { color: colors.success }]}>
-                    {calculateGrowth(trend.parents, weeklyTrends[index - 1].parents)}
+                    {calculateGrowth(trend.parents, displayTrends[index - 1].parents)}
                   </Text>
                 )}
               </View>
               <View style={styles.trendCellWithGrowth}>
                 <Text style={styles.trendCell}>${trend.revenue}</Text>
-                {index > 0 && (
+                {index > 0 && displayTrends[index - 1].revenue > 0 && (
                   <Text style={[styles.trendGrowth, { color: colors.success }]}>
-                    {calculateGrowth(trend.revenue, weeklyTrends[index - 1].revenue)}
+                    {calculateGrowth(trend.revenue, displayTrends[index - 1].revenue)}
                   </Text>
                 )}
               </View>
             </View>
           ))}
         </View>
-      </View>
-
-      {/* Monthly Trends */}
-      <View style={[styles.section, isTablet && styles.sectionTablet]}>
-        <Text style={styles.sectionTitle}>{t('pages.admin.reports_page.month_over_month')}</Text>
-        <View style={styles.trendTable}>
-          <View style={styles.trendHeader}>
-            <Text style={[styles.trendHeaderCell, { flex: 1.5 }]}>{t('pages.admin.reports_page.month')}</Text>
-            <Text style={styles.trendHeaderCell}>{t('pages.admin.coaches_page.title')}</Text>
-            <Text style={styles.trendHeaderCell}>{t('pages.admin.reports_page.parents')}</Text>
-            <Text style={styles.trendHeaderCell}>{t('pages.admin.reports_page.revenue')}</Text>
-          </View>
-          {monthlyTrends.map((trend, index) => (
-            <View key={trend.period} style={styles.trendRow}>
-              <Text style={[styles.trendCell, { flex: 1.5 }]}>{trend.period}</Text>
-              <View style={styles.trendCellWithGrowth}>
-                <Text style={styles.trendCell}>{trend.tutors}</Text>
-                {index > 0 && (
-                  <Text style={[styles.trendGrowth, { color: colors.success }]}>
-                    {calculateGrowth(trend.tutors, monthlyTrends[index - 1].tutors)}
-                  </Text>
-                )}
-              </View>
-              <View style={styles.trendCellWithGrowth}>
-                <Text style={styles.trendCell}>{trend.parents}</Text>
-                {index > 0 && (
-                  <Text style={[styles.trendGrowth, { color: colors.success }]}>
-                    {calculateGrowth(trend.parents, monthlyTrends[index - 1].parents)}
-                  </Text>
-                )}
-              </View>
-              <View style={styles.trendCellWithGrowth}>
-                <Text style={styles.trendCell}>${trend.revenue}</Text>
-                {index > 0 && (
-                  <Text style={[styles.trendGrowth, { color: colors.success }]}>
-                    {calculateGrowth(trend.revenue, monthlyTrends[index - 1].revenue)}
-                  </Text>
-                )}
-              </View>
-            </View>
-          ))}
-        </View>
+        )}
       </View>
 
       {/* Projections */}
