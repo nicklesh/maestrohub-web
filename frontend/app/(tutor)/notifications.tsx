@@ -177,8 +177,8 @@ export default function TutorNotificationsScreen() {
         {notifications.length === 0 ? (
           <View style={styles.emptyState}>
             <Ionicons name="notifications-off-outline" size={64} color={colors.textMuted} />
-            <Text style={styles.emptyTitle}>No Notifications</Text>
-            <Text style={styles.emptyText}>You're all caught up!</Text>
+            <Text style={styles.emptyTitle}>{t('pages.coach.notifications.no_notifications') || 'No Notifications'}</Text>
+            <Text style={styles.emptyText}>{t('pages.coach.notifications.all_caught_up') || "You're all caught up!"}</Text>
           </View>
         ) : (
           notifications.map((notification) => (
