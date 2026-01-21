@@ -277,7 +277,7 @@ export default function CoachReviewsScreen() {
                   <Ionicons name="chatbubble-outline" size={18} color={colors.primary} />
                   <Text style={[styles.respondButtonText, { color: colors.primary }]}>{t('pages.coach.reviews.write_response')}</Text>
                 </TouchableOpacity>
-              )}}
+              )}
             </View>
           ))
         )}
