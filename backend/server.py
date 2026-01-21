@@ -217,6 +217,114 @@ def validate_password_strength(password: str) -> tuple[bool, str]:
         return False, "Password must contain at least one number"
     return True, "Password is valid"
 
+# ============== SECURITY: Enhanced Password Hashing with Pepper ==============
+def hash_password_secure(password: str) -> dict:
+    """
+    Hash password with dynamic salt and server-side pepper.
+    Returns dict with hash and salt for separate storage.
+    """
+    import hashlib
+    import secrets
+    
+    # Generate a unique salt for this password
+    salt = secrets.token_hex(32)  # 64 character hex string
+    
+    # Combine password with pepper and salt
+    peppered_password = f"{password}{PASSWORD_PEPPER}"
+    
+    # Use bcrypt with the peppered password
+    password_hash = bcrypt.hashpw(peppered_password.encode('utf-8'), bcrypt.gensalt(rounds=12))
+    
+    return {
+        "password_hash": password_hash.decode('utf-8'),
+        "salt": salt,
+        "algorithm": "bcrypt_peppered",
+        "version": 2  # For future migration handling
+    }
+
+def verify_password_secure(password: str, stored_hash: str, salt: str = None, version: int = 1) -> bool:
+    """
+    Verify password against stored hash.
+    Handles both legacy (v1) and new (v2) password formats.
+    """
+    try:
+        if version >= 2:
+            # New format with pepper
+            peppered_password = f"{password}{PASSWORD_PEPPER}"
+            return bcrypt.checkpw(peppered_password.encode('utf-8'), stored_hash.encode('utf-8'))
+        else:
+            # Legacy format without pepper (for backward compatibility)
+            return bcrypt.checkpw(password.encode('utf-8'), stored_hash.encode('utf-8'))
+    except Exception as e:
+        logger.error(f"Password verification error: {e}")
+        return False
+
+async def store_credentials_separately(user_id: str, email: str, password: str):
+    """
+    Store credentials in a separate collection for security.
+    This separates sensitive auth data from user profile data.
+    """
+    credentials_data = hash_password_secure(password)
+    credentials_data.update({
+        "user_id": user_id,
+        "email": email.lower(),
+        "created_at": datetime.now(timezone.utc),
+        "updated_at": datetime.now(timezone.utc),
+        "failed_attempts": 0,
+        "locked_until": None
+    })
+    
+    # Store in separate credentials collection
+    await db.credentials.update_one(
+        {"user_id": user_id},
+        {"$set": credentials_data},
+        upsert=True
+    )
+    
+    return credentials_data["password_hash"]
+
+async def get_credentials(user_id: str = None, email: str = None) -> dict:
+    """Retrieve credentials from separate collection"""
+    if user_id:
+        return await db.credentials.find_one({"user_id": user_id})
+    elif email:
+        return await db.credentials.find_one({"email": email.lower()})
+    return None
+
+async def record_failed_login(user_id: str):
+    """Record failed login attempt and handle account lockout"""
+    credentials = await db.credentials.find_one({"user_id": user_id})
+    if credentials:
+        failed_attempts = credentials.get("failed_attempts", 0) + 1
+        update_data = {"failed_attempts": failed_attempts, "last_failed_at": datetime.now(timezone.utc)}
+        
+        # Lock account after 5 failed attempts for 15 minutes
+        if failed_attempts >= 5:
+            update_data["locked_until"] = datetime.now(timezone.utc) + timedelta(minutes=15)
+            logger.warning(f"Account locked for user {user_id} due to too many failed attempts")
+        
+        await db.credentials.update_one(
+            {"user_id": user_id},
+            {"$set": update_data}
+        )
+
+async def reset_failed_login(user_id: str):
+    """Reset failed login counter on successful login"""
+    await db.credentials.update_one(
+        {"user_id": user_id},
+        {"$set": {"failed_attempts": 0, "locked_until": None}}
+    )
+
+async def is_account_locked(user_id: str) -> bool:
+    """Check if account is locked due to failed attempts"""
+    credentials = await db.credentials.find_one({"user_id": user_id})
+    if credentials and credentials.get("locked_until"):
+        if credentials["locked_until"] > datetime.now(timezone.utc):
+            return True
+        # Lock has expired, reset it
+        await reset_failed_login(user_id)
+    return False
+
 # Add validation error handler to log the actual error
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
