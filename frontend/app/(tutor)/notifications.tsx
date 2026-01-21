@@ -56,6 +56,7 @@ const mockNotifications: Notification[] = [
 export default function TutorNotificationsScreen() {
   const { colors } = useTheme();
   const { width } = useWindowDimensions();
+  const { t } = useTranslation();
   const isTablet = width >= 768;
   const isDesktop = width >= 1024;
   const contentMaxWidth = isDesktop ? 640 : isTablet ? 560 : undefined;
@@ -73,7 +74,34 @@ export default function TutorNotificationsScreen() {
   const loadNotifications = async () => {
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 500));
-    setNotifications(mockNotifications);
+    // Use translated mock notifications
+    const translatedNotifications: Notification[] = [
+      {
+        id: '1',
+        title: t('pages.coach.notifications.new_booking_request') || 'New Booking Request',
+        message: t('pages.coach.notifications.booking_message') || 'You have a new booking request from Sarah for Math tutoring.',
+        type: 'booking',
+        read: false,
+        createdAt: new Date().toISOString(),
+      },
+      {
+        id: '2',
+        title: t('pages.coach.notifications.payment_received') || 'Payment Received',
+        message: t('pages.coach.notifications.payment_message') || 'You received $50.00 for your session with John.',
+        type: 'payment',
+        read: true,
+        createdAt: new Date(Date.now() - 86400000).toISOString(),
+      },
+      {
+        id: '3',
+        title: t('pages.coach.notifications.profile_approved') || 'Profile Approved',
+        message: t('pages.coach.notifications.profile_approved_message') || 'Congratulations! Your tutor profile has been approved.',
+        type: 'system',
+        read: true,
+        createdAt: new Date(Date.now() - 172800000).toISOString(),
+      },
+    ];
+    setNotifications(translatedNotifications);
     setLoading(false);
     setRefreshing(false);
   };
