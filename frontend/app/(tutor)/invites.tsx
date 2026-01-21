@@ -164,7 +164,7 @@ export default function InvitesScreen() {
       
       <View style={styles.inviteFooter}>
         <Text style={[styles.inviteDate, { color: colors.textMuted }]}>
-          Sent: {formatDate(item.created_at)}
+          {t('pages.coach.invites.sent')}: {formatDate(item.created_at)}
         </Text>
         {item.status === 'pending' && (
           <TouchableOpacity 
@@ -176,7 +176,7 @@ export default function InvitesScreen() {
         )}
         {item.status === 'accepted' && item.accepted_at && (
           <Text style={[styles.acceptedDate, { color: colors.success }]}>
-            Accepted: {formatDate(item.accepted_at)}
+            {t('pages.coach.invites.accepted')}: {formatDate(item.accepted_at)}
           </Text>
         )}
       </View>
@@ -199,15 +199,14 @@ export default function InvitesScreen() {
       <AppHeader />
       
       <View style={styles.content}>
-        {/* Title and New Invite Button */}
         <View style={styles.header}>
-          <Text style={[styles.title, { color: colors.text }]}>Student Invites</Text>
+          <Text style={[styles.title, { color: colors.text }]}>{t('pages.coach.invites.title')}</Text>
           <TouchableOpacity 
             style={[styles.newInviteButton, { backgroundColor: colors.primary }]}
             onPress={() => setShowNewInviteModal(true)}
           >
             <Ionicons name="add" size={20} color="#FFFFFF" />
-            <Text style={styles.newInviteButtonText}>New Invite</Text>
+            <Text style={styles.newInviteButtonText}>{t('pages.coach.invites.new_invite')}</Text>
           </TouchableOpacity>
         </View>
 
@@ -215,9 +214,9 @@ export default function InvitesScreen() {
         {invites.length === 0 ? (
           <View style={styles.emptyContainer}>
             <Ionicons name="mail-outline" size={64} color={colors.textMuted} />
-            <Text style={[styles.emptyTitle, { color: colors.text }]}>No invites yet</Text>
+            <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('pages.coach.invites.no_invites')}</Text>
             <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
-              Send invites to students you'd like to connect with
+              {t('pages.coach.invites.empty_description')}
             </Text>
           </View>
         ) : (
