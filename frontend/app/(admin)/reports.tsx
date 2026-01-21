@@ -319,6 +319,11 @@ export default function AdminReportsScreen() {
         }));
         setCategoryBreakdown(formattedCategories);
       }
+
+      // Update revenue data from revenue endpoint
+      if (revenueRes.data?.revenue) {
+        setRevenueData(revenueRes.data.revenue);
+      }
     } catch (error) {
       console.error('Failed to load reports data:', error);
     } finally {
