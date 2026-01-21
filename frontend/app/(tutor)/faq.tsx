@@ -115,7 +115,66 @@ export default function TutorFAQScreen() {
   
   const styles = getStyles(colors);
 
-  const categories = [...new Set(faqData.map(item => item.category))];
+  // Translated FAQ data
+  const translatedFaqData = [
+    // Getting Started
+    {
+      category: t('pages.coach.faq.categories.getting_started') || 'Getting Started',
+      question: t('pages.coach.faq.q1_question') || 'How do I get started as a coach?',
+      answer: t('pages.coach.faq.q1_answer') || 'Complete your profile by adding your expertise, rates, and availability. Once approved by our team, you\'ll appear in search results and students can book sessions with you.'
+    },
+    {
+      category: t('pages.coach.faq.categories.getting_started') || 'Getting Started',
+      question: t('pages.coach.faq.q2_question') || 'How do I set my hourly rate?',
+      answer: t('pages.coach.faq.q2_answer') || 'Go to Settings > Profile and scroll to the Rates section. You can set different rates for different subjects. Consider your experience level and local market rates when setting prices.'
+    },
+    // Managing Availability
+    {
+      category: t('pages.coach.faq.categories.managing_availability') || 'Managing Availability',
+      question: t('pages.coach.faq.q3_question') || 'How do I set my availability?',
+      answer: t('pages.coach.faq.q3_answer') || 'Go to the Calendar tab and tap on any date to add time slots. You can set recurring weekly availability or block specific dates for vacations.'
+    },
+    {
+      category: t('pages.coach.faq.categories.managing_availability') || 'Managing Availability',
+      question: t('pages.coach.faq.q4_question') || 'How do I block time off for vacation?',
+      answer: t('pages.coach.faq.q4_answer') || 'In the Calendar tab, tap "Add Vacation" and select your start and end dates. All bookings during this period will be automatically blocked.'
+    },
+    // Bookings & Sessions
+    {
+      category: t('pages.coach.faq.categories.bookings_sessions') || 'Bookings & Sessions',
+      question: t('pages.coach.faq.q5_question') || 'How do I view my upcoming sessions?',
+      answer: t('pages.coach.faq.q5_answer') || 'Your Dashboard shows upcoming sessions at a glance. For a complete list, go to the Bookings tab where you can filter by status.'
+    },
+    {
+      category: t('pages.coach.faq.categories.bookings_sessions') || 'Bookings & Sessions',
+      question: t('pages.coach.faq.q6_question') || 'How do I conduct an online session?',
+      answer: t('pages.coach.faq.q6_answer') || 'For online sessions, you\'ll receive a video call link before the scheduled time. Make sure you have a stable internet connection.'
+    },
+    // Payments & Earnings
+    {
+      category: t('pages.coach.faq.categories.payments_earnings') || 'Payments & Earnings',
+      question: t('pages.coach.faq.q7_question') || 'When do I get paid?',
+      answer: t('pages.coach.faq.q7_answer') || 'Payments are processed weekly for all completed sessions. Funds typically arrive in your bank account within 2-3 business days.'
+    },
+    {
+      category: t('pages.coach.faq.categories.payments_earnings') || 'Payments & Earnings',
+      question: t('pages.coach.faq.q8_question') || 'How do I view my earnings?',
+      answer: t('pages.coach.faq.q8_answer') || 'Go to the Reports tab to see your earnings summary, including total earnings, completed sessions, and payment history.'
+    },
+    // Account & Support
+    {
+      category: t('pages.coach.faq.categories.account_support') || 'Account & Support',
+      question: t('pages.coach.faq.q9_question') || 'How do I contact support?',
+      answer: t('pages.coach.faq.q9_answer') || 'Tap the Contact Us button below or use the Contact Us option in Settings. We aim to respond within 24 hours.'
+    },
+    {
+      category: t('pages.coach.faq.categories.account_support') || 'Account & Support',
+      question: t('pages.coach.faq.q10_question') || 'How do I update my payout information?',
+      answer: t('pages.coach.faq.q10_answer') || 'Go to Settings > Billing to update your bank account or payment details. Changes take effect on the next payment cycle.'
+    },
+  ];
+
+  const categories = [...new Set(translatedFaqData.map(item => item.category))];
 
   const toggleExpand = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index);
