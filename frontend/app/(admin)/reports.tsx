@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   RefreshControl,
   useWindowDimensions,
+  Animated,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -32,6 +33,200 @@ interface CategoryBreakdown {
   bookings: number;
 }
 
+interface RevenueData {
+  period: string;
+  gross_revenue_cents: number;
+  platform_fees_cents: number;
+  net_to_coaches_cents: number;
+  booking_count: number;
+}
+
+// Simple Bar Chart Component
+const BarChart = ({ 
+  data, 
+  valueKey, 
+  labelKey, 
+  color, 
+  height = 150,
+  formatValue = (v: number) => String(v),
+  colors 
+}: {
+  data: any[];
+  valueKey: string;
+  labelKey: string;
+  color: string;
+  height?: number;
+  formatValue?: (v: number) => string;
+  colors: ThemeColors;
+}) => {
+  const maxValue = Math.max(...data.map(d => d[valueKey]), 1);
+  
+  return (
+    <View style={{ height, flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-around', paddingHorizontal: 8 }}>
+      {data.map((item, index) => {
+        const barHeight = (item[valueKey] / maxValue) * (height - 30);
+        return (
+          <View key={index} style={{ alignItems: 'center', flex: 1, maxWidth: 80 }}>
+            <Text style={{ fontSize: 10, color: colors.text, marginBottom: 4, fontWeight: '600' }}>
+              {formatValue(item[valueKey])}
+            </Text>
+            <View 
+              style={{ 
+                width: '60%', 
+                height: Math.max(barHeight, 4), 
+                backgroundColor: color,
+                borderRadius: 4,
+                minWidth: 20,
+              }} 
+            />
+            <Text style={{ fontSize: 9, color: colors.textMuted, marginTop: 4, textAlign: 'center' }}>
+              {item[labelKey]}
+            </Text>
+          </View>
+        );
+      })}
+    </View>
+  );
+};
+
+// Donut/Pie Chart Component (simplified as circular progress)
+const DonutChart = ({
+  data,
+  size = 120,
+  colors: chartColors,
+  themeColors,
+}: {
+  data: { label: string; value: number; color: string }[];
+  size?: number;
+  colors: string[];
+  themeColors: ThemeColors;
+}) => {
+  const total = data.reduce((sum, d) => sum + d.value, 0);
+  let currentAngle = 0;
+  
+  return (
+    <View style={{ alignItems: 'center' }}>
+      <View style={{ width: size, height: size, position: 'relative' }}>
+        {/* Background circle */}
+        <View style={{
+          position: 'absolute',
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          backgroundColor: themeColors.border,
+        }} />
+        {/* Segments represented as overlapping progress bars */}
+        {data.map((segment, index) => {
+          const percentage = total > 0 ? (segment.value / total) * 100 : 0;
+          const segmentColor = chartColors[index % chartColors.length];
+          return (
+            <View key={index} style={{
+              position: 'absolute',
+              width: size,
+              height: size,
+              borderRadius: size / 2,
+              borderWidth: size / 5,
+              borderColor: 'transparent',
+              borderTopColor: segmentColor,
+              transform: [{ rotate: `${currentAngle}deg` }],
+            }}>
+              {(() => { currentAngle += (percentage / 100) * 360; return null; })()}
+            </View>
+          );
+        })}
+        {/* Center hole */}
+        <View style={{
+          position: 'absolute',
+          width: size * 0.6,
+          height: size * 0.6,
+          borderRadius: size * 0.3,
+          backgroundColor: themeColors.surface,
+          top: size * 0.2,
+          left: size * 0.2,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+          <Text style={{ fontSize: 16, fontWeight: 'bold', color: themeColors.text }}>{total}</Text>
+          <Text style={{ fontSize: 10, color: themeColors.textMuted }}>Total</Text>
+        </View>
+      </View>
+      {/* Legend */}
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', marginTop: 12, gap: 12 }}>
+        {data.map((segment, index) => (
+          <View key={index} style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: chartColors[index % chartColors.length], marginRight: 4 }} />
+            <Text style={{ fontSize: 11, color: themeColors.textMuted }}>{segment.label}: {segment.value}</Text>
+          </View>
+        ))}
+      </View>
+    </View>
+  );
+};
+
+// Line Sparkline Component
+const SparkLine = ({
+  data,
+  width = 100,
+  height = 30,
+  color,
+}: {
+  data: number[];
+  width?: number;
+  height?: number;
+  color: string;
+}) => {
+  if (data.length < 2) return null;
+  const maxVal = Math.max(...data, 1);
+  const minVal = Math.min(...data, 0);
+  const range = maxVal - minVal || 1;
+  
+  const points = data.map((val, i) => ({
+    x: (i / (data.length - 1)) * width,
+    y: height - ((val - minVal) / range) * height,
+  }));
+  
+  return (
+    <View style={{ width, height, flexDirection: 'row', alignItems: 'flex-end' }}>
+      {points.map((point, i) => (
+        <View
+          key={i}
+          style={{
+            position: 'absolute',
+            left: point.x - 2,
+            top: point.y - 2,
+            width: 4,
+            height: 4,
+            borderRadius: 2,
+            backgroundColor: color,
+          }}
+        />
+      ))}
+      {/* Simplified line as connected dots */}
+      {points.slice(0, -1).map((point, i) => {
+        const nextPoint = points[i + 1];
+        const lineWidth = Math.sqrt(Math.pow(nextPoint.x - point.x, 2) + Math.pow(nextPoint.y - point.y, 2));
+        const angle = Math.atan2(nextPoint.y - point.y, nextPoint.x - point.x) * 180 / Math.PI;
+        return (
+          <View
+            key={`line-${i}`}
+            style={{
+              position: 'absolute',
+              left: point.x,
+              top: point.y,
+              width: lineWidth,
+              height: 2,
+              backgroundColor: color,
+              opacity: 0.5,
+              transform: [{ rotate: `${angle}deg` }],
+              transformOrigin: 'left center',
+            }}
+          />
+        );
+      })}
+    </View>
+  );
+};
+
 export default function AdminReportsScreen() {
   const { colors } = useTheme();
   const { token } = useAuth();
@@ -47,7 +242,10 @@ export default function AdminReportsScreen() {
 
   const styles = getStyles(colors);
 
-  // Mock data - In production, these would come from API
+  // Chart colors
+  const chartColors = [colors.primary, colors.success, colors.warning, colors.error, colors.accent];
+
+  // State for API data
   const [stats, setStats] = useState({
     totalUsers: 0,
     paidUsers: 0,
