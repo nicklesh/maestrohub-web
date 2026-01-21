@@ -1930,7 +1930,8 @@
         "start_teaching": "Start Teaching"
       },
       "reports": {
-        "title": "Reports",
+        "title": "Earnings Report",
+        "subtitle": "Track your sessions and payouts",
         "earnings_report": "Earnings Report",
         "sessions_report": "Sessions Report",
         "students_report": "Students Report",
@@ -1945,7 +1946,29 @@
         "avg_rating": "Average Rating",
         "download_report": "Download Report",
         "export_csv": "Export CSV",
-        "export_pdf": "Export PDF"
+        "export_pdf": "Export PDF",
+        "total_earned": "Total Earned",
+        "pending": "Pending",
+        "completed": "Completed",
+        "upcoming": "Upcoming",
+        "by_student": "Earnings by Student",
+        "sessions": "sessions",
+        "monthly_earnings": "Monthly Earnings",
+        "sponsorship_advertising": "Sponsorship & Advertising",
+        "total_spent": "Total Spent",
+        "purchases": "Purchases",
+        "active_now": "Active Now",
+        "currently_active": "Currently Active",
+        "no_sponsorships": "No Sponsorships Yet",
+        "boost_visibility": "Boost your visibility by becoming a sponsored coach",
+        "get_sponsored": "Get Sponsored"
+      },
+      "faq": {
+        "title": "Coach FAQ",
+        "help_center": "Help Center",
+        "subtitle": "Find answers to common questions about coaching on Maestro Habitat",
+        "still_have_questions": "Still have questions?",
+        "contact_support": "Can't find the answer you're looking for? Our support team is here to help."
       },
       "schedule_builder": {
         "title": "Schedule Builder",
