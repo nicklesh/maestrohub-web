@@ -722,8 +722,7 @@ export default function AdminReportsScreen() {
   };
 
   const onRefresh = () => {
-    setRefreshing(true);
-    loadData();
+    loadData(true);
   };
 
   const calculateGrowth = (current: number, previous: number) => {
