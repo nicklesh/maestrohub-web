@@ -40,6 +40,14 @@ from email_service import (
 from services.tax_report_service import TaxReportService
 from services.referral_service import ReferralService
 from services.kid_notification_service import KidNotificationService
+from services.integrations import (
+    cloudinary_service, 
+    mixpanel_service, 
+    sentry_service, 
+    newrelic_service,
+    track_event,
+    capture_error
+)
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
