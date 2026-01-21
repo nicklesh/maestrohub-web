@@ -1166,7 +1166,37 @@
             "description": "保留中の紹介クレジットとボーナスを処理する",
             "schedule_display": "毎日深夜0時に"
           }
-        }
+        },
+        "1099_equivalent": "1099相当",
+        "tax_documents": "税務書類",
+        "generate_tax_docs": "全てのプロバイダーに対して年次税務書類（1099相当）を生成する",
+        "monthly_reports": "月次税務報告書",
+        "monthly_reports_desc": "取引のあるすべてのユーザーの月次支払いサマリーレポートを生成する",
+        "annual_1099_reports": "年次1099レポート",
+        "annual_1099_reports_desc": "すべてのプロバイダーに対する年次税務書類（1099相当）を生成する",
+        "parent_updates": "親セッション更新",
+        "parent_updates_desc": "子供のセッション活動について保護者にアップデートを送信する",
+        "success": "成功",
+        "hour": "時間",
+        "minute": "分",
+        "save_settings": "設定を保存",
+        "job_triggered": "ジョブが正常にトリガーされました",
+        "job_error": "ジョブの実行に失敗しました",
+        "1st_of_month": "毎月1日",
+        "jan_15": "1月15日",
+        "every_sunday": "毎週日曜日",
+        "payment_summary": "支払い概要",
+        "transactions": "トランザクション",
+        "session": "セッション",
+        "sessions": "セッション",
+        "activities": "アクティビティ",
+        "session_reminders": "セッションリマインダー",
+        "session_reminders_desc": "今後のセッションのリマインダー通知を送信（24時間前と1時間前）",
+        "kid_notifications": "子ども活動更新",
+        "kid_notifications_desc": "保護者にお子様のセッション活動について更新情報を送信する",
+        "referral_check": "紹介クレジット処理",
+        "referral_check_desc": "保留中の紹介クレジットとボーナスを処理する",
+        "every_hour": "毎時間"
       },
       "inbox_page": {
         "title": "受信トレイ",
@@ -1350,7 +1380,13 @@
         "finance_legal": "ファイナンス、法務・交渉",
         "coaching_personal": "コーチング＆個人的成長",
         "relationships_family": "人間関係と家族",
-        "culture_inclusion": "文化、インクルージョン、体験"
+        "culture_inclusion": "文化、インクルージョン、体験",
+        "total_users": "総ユーザー数",
+        "total_parents": "親の総数",
+        "total_bookings": "総予約数",
+        "monthly_revenue": "月間売上",
+        "monthly_growth": "月次成長",
+        "user_breakdown": "ユーザー内訳"
       },
       "settings_page": {
         "title": "設定",
@@ -1854,7 +1890,8 @@
         "want_more_bookings": "より多くの予約をお望みですか？",
         "get_featured": "検索結果の上位に表示される",
         "more_visibility": "3倍の可視性",
-        "top_placement": "トップ検索順位"
+        "top_placement": "トップ検索順位",
+        "stripe_coming_soon": "Stripe統合は近日公開予定です。手動支払い設定についてはサポートにお問い合わせください。"
       },
       "reviews": {
         "title": "レビュー",
@@ -1931,7 +1968,21 @@
         "select_subcategory": "サブカテゴリを選択",
         "no_packages_text": "まだパッケージを作成していません",
         "publish": "公開",
-        "unpublish": "非公開にする"
+        "unpublish": "非公開にする",
+        "package_name_placeholder": "例：プレミアム個別指導パッケージ",
+        "discount": "割引",
+        "validity_1_month": "1ヶ月",
+        "validity_2_months": "2か月",
+        "validity_3_months": "3ヶ月",
+        "validity_6_months": "6ヶ月",
+        "validity_1_year": "1年",
+        "total_price": "合計金額",
+        "price_per_session": "セッション単価",
+        "set_base_price": "まず基本時給を設定してください",
+        "package_created": "パッケージが正常に作成されました",
+        "confirm_delete": "このパッケージを削除してもよろしいですか？",
+        "off": "オフ",
+        "no_packages_yet": "まだパッケージが作成されていません"
       },
       "invites": {
         "title": "招待",
@@ -1957,7 +2008,11 @@
         "name_optional": "名前（任意）",
         "name_placeholder": "学生の名前",
         "message_optional": "個人メッセージ（任意）",
-        "message_placeholder": "こんにちは！喜んでお手伝いさせていただきます..."
+        "message_placeholder": "こんにちは！喜んでお手伝いさせていただきます...",
+        "email_placeholder": "メールアドレスを入力してください",
+        "pending": "保留中",
+        "expired": "期限切れ",
+        "invite_error": "招待の送信に失敗しました"
       },
       "sponsorship": {
         "title": "スポンサーシップ",
@@ -2091,7 +2146,29 @@
         "currently_active": "現在アクティブ",
         "no_sponsorships": "まだスポンサーシップはありません",
         "boost_visibility": "スポンサードコーチになって知名度を向上させましょう",
-        "get_sponsored": "スポンサーを獲得する"
+        "get_sponsored": "スポンサーを獲得する",
+        "earnings_summary": "収益サマリー",
+        "pending_payout": "支払い保留中",
+        "platform_fees": "プラットフォーム手数料",
+        "sessions_summary": "セッション概要",
+        "completed_sessions": "完了したセッション",
+        "upcoming_sessions": "今後のセッション",
+        "canceled_sessions": "キャンセルされたセッション",
+        "completion_rate": "完了率",
+        "earnings_by_month": "月別収益",
+        "earnings_by_student": "学生別収益",
+        "download_pdf": "PDFをダウンロード",
+        "downloading": "ダウンロード中...",
+        "report_downloaded": "レポートが正常にダウンロードされました",
+        "download_error": "レポートのダウンロードに失敗しました",
+        "no_data": "まだデータがありません",
+        "sponsorship_summary": "スポンサーシップサマリー",
+        "active_sponsorships": "アクティブなスポンサーシップ",
+        "total_purchases": "総購入金額",
+        "current_plan": "現在のプラン",
+        "expires": "期限切れ",
+        "weeks": "週間",
+        "no_sponsorship": "アクティブなスポンサーシップがありません"
       },
       "schedule_builder": {
         "title": "スケジュールビルダー",
@@ -2134,7 +2211,22 @@
         "weekly": "週次",
         "monthly": "月次",
         "calendar": "カレンダー",
-        "availability": "可用性"
+        "availability": "可用性",
+        "duration_month": "1か月",
+        "duration_quarter": "3ヶ月（四半期）",
+        "duration_year": "1年",
+        "months": "月",
+        "schedule_active_until": "アクティブなスケジュール期限",
+        "auto_renewal": "自動更新",
+        "auto_renewal_hint": "スケジュールの有効期限が切れたときに自動更新する",
+        "reminder_before_expiry": "有効期限前のリマインダー",
+        "days": "日",
+        "weekly_hours": "週間時間",
+        "apply_to_all": "すべてに適用",
+        "no_schedule": "スケジュールが設定されていません",
+        "schedule_error": "スケジュールの保存に失敗しました",
+        "auto_renew_message": "あなたのスケジュールは{date}に自動更新されます。{days}日前にリマインダーを受け取ります。",
+        "schedule_expires_message": "あなたのスケジュールは{date}に期限切れになります。継続するには自動更新を有効にしてください。"
       },
       "faq": {
         "frequently_asked": "よくある質問",
@@ -2154,7 +2246,27 @@
           "bookings_sessions": "予約＆セッション",
           "payments_earnings": "支払いと収益",
           "account_support": "アカウント&サポート"
-        }
+        },
+        "q1_question": "コーチとして始めるにはどうすればよいですか？",
+        "q1_answer": "プロフィールを完成させるために、専門知識、料金、空き状況を追加してください。私たちのチームによる承認後、検索結果に表示され、学生があなたとのセッションを予約できるようになります。",
+        "q2_question": "時給はどのように設定しますか？",
+        "q2_answer": "設定 > プロフィールに移動し、料金セクションまでスクロールしてください。異なる科目に対して異なる料金を設定できます。価格を設定する際は、あなたの経験レベルと地域の市場料金を考慮してください。",
+        "q3_question": "空き状況を設定するにはどうすればよいですか？",
+        "q3_answer": "カレンダータブに移動し、任意の日付をタップして時間枠を追加します。毎週の定期的な空き時間を設定したり、休暇のために特定の日付をブロックしたりできます。",
+        "q4_question": "休暇のために時間をブロックするにはどうすればよいですか？",
+        "q4_answer": "カレンダータブで「休暇を追加」をタップし、開始日と終了日を選択してください。この期間中のすべての予約は自動的にブロックされます。",
+        "q5_question": "今後のセッションを確認するにはどうすればよいですか？",
+        "q5_answer": "ダッシュボードでは今後のセッションを一目で確認できます。完全なリストについては、Bookingsタブに移動してステータスでフィルタリングできます。",
+        "q6_question": "オンラインセッションを実施するにはどうすればよいですか？",
+        "q6_answer": "オンラインセッションでは、予定時刻の前にビデオ通話のリンクをお送りします。安定したインターネット接続があることを確認してください。",
+        "q7_question": "いつ給料をもらえますか？",
+        "q7_answer": "支払いは完了したセッションすべてに対して週単位で処理されます。資金は通常、2-3営業日以内にあなたの銀行口座に到着します。",
+        "q8_question": "収益を確認するにはどうすればよいですか？",
+        "q8_answer": "レポートタブに移動して、総収益、完了したセッション、支払い履歴を含む収益サマリーを確認してください。",
+        "q9_question": "サポートに連絡するにはどうすればよいですか？",
+        "q9_answer": "下記の「お問い合わせ」ボタンをタップするか、設定の「お問い合わせ」オプションをご利用ください。24時間以内の回答を目指しています。",
+        "q10_question": "支払い情報を更新するにはどうすればよいですか？",
+        "q10_answer": "設定 > 請求に移動して、銀行口座または支払い詳細を更新してください。変更は次の支払いサイクルから有効になります。"
       },
       "notifications": {
         "title": "通知",
@@ -2172,7 +2284,12 @@
         "new_message": "新しいメッセージ",
         "payment_received": "支払いを受け取りました",
         "profile_approved": "プロフィールが承認されました",
-        "profile_update": "プロフィールの更新が必要です"
+        "profile_update": "プロフィールの更新が必要です",
+        "all_caught_up": "全て確認済みです！",
+        "new_booking_request": "新しい予約リクエスト",
+        "booking_message": "あなたのセッションに新しい予約リクエストがあります。",
+        "payment_message": "セッションの支払いを受け取りました。",
+        "profile_approved_message": "おめでとうございます！あなたのコーチプロフィールが承認されました。"
       },
       "every_week": "毎週",
       "select_days": "日を選択",
@@ -2322,7 +2439,8 @@
     "per": "あたり",
     "on": "オン",
     "off": "オフ",
-    "hour_short": "hr"
+    "hour_short": "hr",
+    "admin_access_required": "管理者アクセスが必要です"
   },
   "faq": {
     "consumer": [

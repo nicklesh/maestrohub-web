@@ -1166,7 +1166,37 @@
             "description": "处理待处理的推荐积分和奖金",
             "schedule_display": "每日午夜"
           }
-        }
+        },
+        "1099_equivalent": "1099等价物",
+        "tax_documents": "税务文件",
+        "generate_tax_docs": "为所有提供商生成年度税务文件（相当于1099表格）",
+        "monthly_reports": "月度税务报告",
+        "monthly_reports_desc": "为所有有交易记录的用户生成月度付款汇总报告",
+        "annual_1099_reports": "年度1099报告",
+        "annual_1099_reports_desc": "为所有提供商生成年度税务文件（1099等效文件）",
+        "parent_updates": "父会话更新",
+        "parent_updates_desc": "向家长发送关于其孩子课程活动的更新信息",
+        "success": "成功",
+        "hour": "小时",
+        "minute": "分钟",
+        "save_settings": "保存设置",
+        "job_triggered": "作业触发成功",
+        "job_error": "任务运行失败",
+        "1st_of_month": "每月1日",
+        "jan_15": "1月15日",
+        "every_sunday": "每个星期天",
+        "payment_summary": "付款摘要",
+        "transactions": "交易",
+        "session": "会话",
+        "sessions": "会话",
+        "activities": "活动",
+        "session_reminders": "会话提醒",
+        "session_reminders_desc": "为即将到来的会话发送提醒通知（提前24小时和1小时）",
+        "kid_notifications": "儿童活动更新",
+        "kid_notifications_desc": "向家长发送孩子的课程活动更新",
+        "referral_check": "推荐积分处理",
+        "referral_check_desc": "处理待处理的推荐积分和奖金",
+        "every_hour": "每小时"
       },
       "inbox_page": {
         "title": "收件箱",
@@ -1350,7 +1380,13 @@
         "finance_legal": "财务、法律与谈判",
         "coaching_personal": "教练指导与个人成长",
         "relationships_family": "关系与家庭",
-        "culture_inclusion": "文化、包容与体验"
+        "culture_inclusion": "文化、包容与体验",
+        "total_users": "总用户数",
+        "total_parents": "家长总数",
+        "total_bookings": "总预订量",
+        "monthly_revenue": "月收入",
+        "monthly_growth": "月度增长",
+        "user_breakdown": "用户分析"
       },
       "settings_page": {
         "title": "设置",
@@ -1847,7 +1883,8 @@
         "want_more_bookings": "想要更多预订？",
         "get_featured": "在搜索结果顶部获得推荐",
         "more_visibility": "3倍更多可见性",
-        "top_placement": "搜索排名靠前"
+        "top_placement": "搜索排名靠前",
+        "stripe_coming_soon": "Stripe集成即将推出。请联系支持团队进行手动支付设置。"
       },
       "reviews": {
         "title": "评论",
@@ -1924,7 +1961,21 @@
         "select_subcategory": "选择子类别",
         "no_packages_text": "您还没有创建任何包",
         "publish": "发布",
-        "unpublish": "取消发布"
+        "unpublish": "取消发布",
+        "package_name_placeholder": "例如，高级辅导套餐",
+        "discount": "折扣",
+        "validity_1_month": "1个月",
+        "validity_2_months": "2个月",
+        "validity_3_months": "3个月",
+        "validity_6_months": "6个月",
+        "validity_1_year": "1年",
+        "total_price": "总价",
+        "price_per_session": "每次价格",
+        "set_base_price": "首先设置您的基础小时费率",
+        "package_created": "包创建成功",
+        "confirm_delete": "您确定要删除这个包吗？",
+        "off": "关",
+        "no_packages_yet": "尚未创建任何包"
       },
       "invites": {
         "title": "邀请",
@@ -1950,7 +2001,11 @@
         "name_optional": "姓名（可选）",
         "name_placeholder": "学生姓名",
         "message_optional": "个人消息（可选）",
-        "message_placeholder": "你好！我很乐意帮助你..."
+        "message_placeholder": "你好！我很乐意帮助你...",
+        "email_placeholder": "输入邮箱地址",
+        "pending": "待处理",
+        "expired": "已过期",
+        "invite_error": "邀请发送失败"
       },
       "sponsorship": {
         "title": "赞助",
@@ -2084,7 +2139,29 @@
         "currently_active": "当前活跃",
         "no_sponsorships": "暂无赞助",
         "boost_visibility": "通过成为赞助教练提升您的知名度",
-        "get_sponsored": "获得赞助"
+        "get_sponsored": "获得赞助",
+        "earnings_summary": "收益摘要",
+        "pending_payout": "待发放收益",
+        "platform_fees": "平台费用",
+        "sessions_summary": "会话摘要",
+        "completed_sessions": "已完成的会话",
+        "upcoming_sessions": "即将到来的会议",
+        "canceled_sessions": "已取消的会话",
+        "completion_rate": "完成率",
+        "earnings_by_month": "按月收益",
+        "earnings_by_student": "学生收入",
+        "download_pdf": "下载PDF",
+        "downloading": "下载中...",
+        "report_downloaded": "报告下载成功",
+        "download_error": "下载报告失败",
+        "no_data": "暂无可用数据",
+        "sponsorship_summary": "赞助总结",
+        "active_sponsorships": "有效赞助",
+        "total_purchases": "总购买量",
+        "current_plan": "当前计划",
+        "expires": "过期",
+        "weeks": "周",
+        "no_sponsorship": "暂无有效赞助"
       },
       "schedule_builder": {
         "title": "课程表制作器",
@@ -2127,7 +2204,22 @@
         "weekly": "每周",
         "monthly": "每月",
         "calendar": "日历",
-        "availability": "可用性"
+        "availability": "可用性",
+        "duration_month": "1个月",
+        "duration_quarter": "3个月（季度）",
+        "duration_year": "1年",
+        "months": "月",
+        "schedule_active_until": "计划激活至",
+        "auto_renewal": "自动续费",
+        "auto_renewal_hint": "计划到期时自动续期",
+        "reminder_before_expiry": "到期前提醒",
+        "days": "天",
+        "weekly_hours": "每周小时数",
+        "apply_to_all": "应用于全部",
+        "no_schedule": "未设置时间表",
+        "schedule_error": "保存计划失败",
+        "auto_renew_message": "您的计划将在{date}自动续订。您将在{days}天前收到提醒。",
+        "schedule_expires_message": "您的计划将在{date}到期。启用自动续费以继续使用。"
       },
       "faq": {
         "title": "常见问题",
@@ -2147,7 +2239,27 @@
           "bookings_sessions": "预订与课程",
           "payments_earnings": "付款和收入",
           "account_support": "账户与支持"
-        }
+        },
+        "q1_question": "我如何开始成为一名教练？",
+        "q1_answer": "通过添加您的专业技能、费率和可用时间来完善您的个人资料。一旦获得我们团队的批准，您将出现在搜索结果中，学生就可以与您预约课程。",
+        "q2_question": "我如何设置我的时薪？",
+        "q2_answer": "前往设置 > 个人资料，滚动到费率部分。您可以为不同科目设置不同的费率。在设定价格时请考虑您的经验水平和当地市场费率。",
+        "q3_question": "如何设置我的可用性？",
+        "q3_answer": "前往日历选项卡，点击任意日期以添加时间段。您可以设置每周重复的可用时间或屏蔽特定的假期日期。",
+        "q4_question": "如何为休假预留时间？",
+        "q4_answer": "在日历选项卡中，点击\"添加假期\"并选择您的开始和结束日期。此期间内的所有预订将自动被阻止。",
+        "q5_question": "如何查看我即将到来的会话？",
+        "q5_answer": "您的仪表板显示即将到来的会话概览。要查看完整列表，请转到预订标签页，您可以在那里按状态进行筛选。",
+        "q6_question": "如何进行在线会话？",
+        "q6_answer": "对于在线课程，您将在预定时间前收到视频通话链接。请确保您有稳定的网络连接。",
+        "q7_question": "我什么时候能收到付款？",
+        "q7_answer": "付款每周处理一次，针对所有已完成的会话。资金通常在2-3个工作日内到达您的银行账户。",
+        "q8_question": "如何查看我的收入？",
+        "q8_answer": "转到报告选项卡查看您的收益摘要，包括总收益、已完成的会话和付款历史记录。",
+        "q9_question": "如何联系客服？",
+        "q9_answer": "点击下方的联系我们按钮或使用设置中的联系我们选项。我们的目标是在24小时内回复。",
+        "q10_question": "如何更新我的付款信息？",
+        "q10_answer": "前往设置 > 账单来更新您的银行账户或付款详情。更改将在下一个付款周期生效。"
       },
       "notifications": {
         "title": "通知",
@@ -2165,7 +2277,12 @@
         "new_message": "新消息",
         "payment_received": "已收到付款",
         "profile_approved": "资料已审核通过",
-        "profile_update": "需要更新个人资料"
+        "profile_update": "需要更新个人资料",
+        "all_caught_up": "你已经全部看完了！",
+        "new_booking_request": "新预订请求",
+        "booking_message": "您有一个新的课程预约请求。",
+        "payment_message": "您收到了会话的付款。",
+        "profile_approved_message": "恭喜！您的教练档案已通过审批。"
       },
       "every_week": "每周",
       "select_days": "选择天数",
@@ -2315,7 +2432,8 @@
     "per": "每",
     "on": "开",
     "off": "关",
-    "hour_short": "hr"
+    "hour_short": "hr",
+    "admin_access_required": "需要管理员权限"
   },
   "faq": {
     "consumer": [

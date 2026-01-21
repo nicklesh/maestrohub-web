@@ -1166,7 +1166,37 @@
             "description": "대기 중인 추천 크레딧 및 보너스 처리",
             "schedule_display": "매일 자정에"
           }
-        }
+        },
+        "1099_equivalent": "1099 동등물",
+        "tax_documents": "세금 서류",
+        "generate_tax_docs": "모든 제공업체에 대한 연간 세금 서류(1099 equivalent) 생성",
+        "monthly_reports": "월별 세무 보고서",
+        "monthly_reports_desc": "거래가 있는 모든 사용자에 대한 월별 결제 요약 보고서 생성",
+        "annual_1099_reports": "연간 1099 보고서",
+        "annual_1099_reports_desc": "모든 공급업체에 대한 연간 세무 서류(1099 equivalent) 생성",
+        "parent_updates": "부모 세션 업데이트",
+        "parent_updates_desc": "자녀의 세션 활동에 대한 업데이트를 부모에게 전송",
+        "success": "성공",
+        "hour": "시간",
+        "minute": "분",
+        "save_settings": "설정 저장",
+        "job_triggered": "작업이 성공적으로 트리거되었습니다",
+        "job_error": "작업 실행 실패",
+        "1st_of_month": "매월 1일",
+        "jan_15": "1월 15일",
+        "every_sunday": "매주 일요일",
+        "payment_summary": "결제 요약",
+        "transactions": "거래",
+        "session": "세션",
+        "sessions": "세션",
+        "activities": "활동",
+        "session_reminders": "세션 알림",
+        "session_reminders_desc": "다가오는 세션에 대한 알림 알림 보내기 (24시간 전과 1시간 전)",
+        "kid_notifications": "어린이 활동 업데이트",
+        "kid_notifications_desc": "자녀의 세션 활동에 대한 업데이트를 부모에게 보내기",
+        "referral_check": "추천 크레딧 처리",
+        "referral_check_desc": "대기 중인 추천 크레딧 및 보너스 처리",
+        "every_hour": "매시간"
       },
       "inbox_page": {
         "title": "받은 편지함",
@@ -1350,7 +1380,13 @@
         "finance_legal": "금융, 법무 및 협상",
         "coaching_personal": "코칭 & 개인 성장",
         "relationships_family": "인간관계 및 가족",
-        "culture_inclusion": "문화, 포용성 및 경험"
+        "culture_inclusion": "문화, 포용성 및 경험",
+        "total_users": "전체 사용자",
+        "total_parents": "전체 부모",
+        "total_bookings": "총 예약",
+        "monthly_revenue": "월별 수익",
+        "monthly_growth": "월별 성장",
+        "user_breakdown": "사용자 분석"
       },
       "settings_page": {
         "title": "설정",
@@ -1855,7 +1891,8 @@
         "get_featured": "검색 결과 상단에 노출되기",
         "more_visibility": "3배 더 높은 가시성",
         "top_placement": "상위 검색 배치",
-        "paypal": "페이팔"
+        "paypal": "페이팔",
+        "stripe_coming_soon": "Stripe 통합이 곧 출시될 예정입니다. 수동 지급 설정을 위해 지원팀에 문의하세요."
       },
       "reviews": {
         "title": "리뷰",
@@ -1932,7 +1969,21 @@
         "select_subcategory": "하위 카테고리 선택",
         "no_packages_text": "아직 패키지를 생성하지 않았습니다",
         "publish": "게시",
-        "unpublish": "게시 취소"
+        "unpublish": "게시 취소",
+        "package_name_placeholder": "예: 프리미엄 튜터링 패키지",
+        "discount": "할인",
+        "validity_1_month": "1개월",
+        "validity_2_months": "2개월",
+        "validity_3_months": "3개월",
+        "validity_6_months": "6개월",
+        "validity_1_year": "1년",
+        "total_price": "총 가격",
+        "price_per_session": "세션당 가격",
+        "set_base_price": "먼저 기본 시급을 설정하세요",
+        "package_created": "패키지가 성공적으로 생성되었습니다",
+        "confirm_delete": "이 패키지를 삭제하시겠습니까?",
+        "off": "꺼짐",
+        "no_packages_yet": "아직 생성된 패키지가 없습니다"
       },
       "invites": {
         "title": "초대",
@@ -1958,7 +2009,11 @@
         "name_optional": "이름 (선택사항)",
         "name_placeholder": "학생 이름",
         "message_optional": "개인 메시지 (선택사항)",
-        "message_placeholder": "안녕하세요! 기꺼이 도와드리겠습니다..."
+        "message_placeholder": "안녕하세요! 기꺼이 도와드리겠습니다...",
+        "email_placeholder": "이메일 주소 입력",
+        "pending": "대기 중",
+        "expired": "만료됨",
+        "invite_error": "초대 전송에 실패했습니다"
       },
       "sponsorship": {
         "title": "후원",
@@ -2092,7 +2147,29 @@
         "currently_active": "현재 활성",
         "no_sponsorships": "아직 스폰서십이 없습니다",
         "boost_visibility": "스폰서 코치가 되어 가시성을 높이세요",
-        "get_sponsored": "후원받기"
+        "get_sponsored": "후원받기",
+        "earnings_summary": "수익 요약",
+        "pending_payout": "지급 대기 중",
+        "platform_fees": "플랫폼 수수료",
+        "sessions_summary": "세션 요약",
+        "completed_sessions": "완료된 세션",
+        "upcoming_sessions": "예정된 세션",
+        "canceled_sessions": "취소된 세션",
+        "completion_rate": "완료율",
+        "earnings_by_month": "월별 수익",
+        "earnings_by_student": "학생별 수익",
+        "download_pdf": "PDF 다운로드",
+        "downloading": "다운로드 중...",
+        "report_downloaded": "보고서가 성공적으로 다운로드되었습니다",
+        "download_error": "보고서 다운로드 실패",
+        "no_data": "아직 사용할 수 있는 데이터가 없습니다",
+        "sponsorship_summary": "후원 요약",
+        "active_sponsorships": "활성 후원",
+        "total_purchases": "총 구매액",
+        "current_plan": "현재 계획",
+        "expires": "만료",
+        "weeks": "주",
+        "no_sponsorship": "활성 후원 없음"
       },
       "schedule_builder": {
         "title": "일정 작성기",
@@ -2135,7 +2212,22 @@
         "weekly": "주간",
         "monthly": "월별",
         "calendar": "달력",
-        "availability": "가용성"
+        "availability": "가용성",
+        "duration_month": "1개월",
+        "duration_quarter": "3개월 (분기)",
+        "duration_year": "1년",
+        "months": "개월",
+        "schedule_active_until": "일정 활성 기한",
+        "auto_renewal": "자동 갱신",
+        "auto_renewal_hint": "일정이 만료되면 자동으로 갱신",
+        "reminder_before_expiry": "만료 전 알림",
+        "days": "일",
+        "weekly_hours": "주간 시간",
+        "apply_to_all": "모두에게 적용",
+        "no_schedule": "설정된 일정 없음",
+        "schedule_error": "일정 저장에 실패했습니다",
+        "auto_renew_message": "귀하의 일정은 {date}에 자동으로 갱신됩니다. {days}일 전에 알림을 받게 됩니다.",
+        "schedule_expires_message": "귀하의 일정은 {date}에 만료됩니다. 계속하려면 자동 갱신을 활성화하세요."
       },
       "faq": {
         "title": "자주 묻는 질문",
@@ -2155,7 +2247,27 @@
           "bookings_sessions": "예약 및 세션",
           "payments_earnings": "결제 및 수익",
           "account_support": "계정 및 지원"
-        }
+        },
+        "q1_question": "코치로 시작하려면 어떻게 해야 하나요?",
+        "q1_answer": "전문 분야, 수업료, 그리고 가능한 시간을 추가하여 프로필을 완성하세요. 저희 팀의 승인이 완료되면 검색 결과에 표시되며 학생들이 세션을 예약할 수 있습니다.",
+        "q2_question": "시간당 요금을 어떻게 설정하나요?",
+        "q2_answer": "설정 > 프로필로 이동하여 요금 섹션으로 스크롤하세요. 다양한 과목에 대해 서로 다른 요금을 설정할 수 있습니다. 가격을 설정할 때 경험 수준과 지역 시장 요금을 고려하세요.",
+        "q3_question": "내 가용성을 어떻게 설정하나요?",
+        "q3_answer": "Calendar 탭으로 이동하여 날짜를 탭하면 시간대를 추가할 수 있습니다. 매주 반복되는 가용성을 설정하거나 휴가를 위해 특정 날짜를 차단할 수 있습니다.",
+        "q4_question": "휴가를 위해 시간을 어떻게 차단하나요?",
+        "q4_answer": "Calendar 탭에서 \"휴가 추가\"를 탭하고 시작일과 종료일을 선택하세요. 이 기간 동안의 모든 예약이 자동으로 차단됩니다.",
+        "q5_question": "예정된 세션을 어떻게 확인하나요?",
+        "q5_answer": "대시보드에서는 예정된 세션을 한눈에 볼 수 있습니다. 전체 목록을 보려면 Bookings 탭으로 이동하여 상태별로 필터링할 수 있습니다.",
+        "q6_question": "온라인 세션을 어떻게 진행하나요?",
+        "q6_answer": "온라인 세션의 경우, 예정된 시간 전에 화상 통화 링크를 받으실 것입니다. 안정적인 인터넷 연결을 확인해 주세요.",
+        "q7_question": "언제 급여를 받나요?",
+        "q7_answer": "완료된 모든 세션에 대한 결제는 매주 처리됩니다. 자금은 일반적으로 영업일 기준 2-3일 내에 귀하의 은행 계좌에 도착합니다.",
+        "q8_question": "수익을 어떻게 확인하나요?",
+        "q8_answer": "보고서 탭으로 이동하여 총 수익, 완료된 세션, 결제 내역을 포함한 수익 요약을 확인하세요.",
+        "q9_question": "지원팀에 어떻게 연락하나요?",
+        "q9_answer": "아래 Contact Us 버튼을 탭하거나 설정의 Contact Us 옵션을 사용하세요. 24시간 이내에 응답하는 것을 목표로 합니다.",
+        "q10_question": "지급 정보를 어떻게 업데이트하나요?",
+        "q10_answer": "설정 > 결제로 이동하여 은행 계좌 또는 결제 정보를 업데이트하세요. 변경 사항은 다음 결제 주기부터 적용됩니다."
       },
       "notifications": {
         "title": "알림",
@@ -2173,7 +2285,12 @@
         "new_message": "새 메시지",
         "payment_received": "결제 완료",
         "profile_approved": "프로필 승인됨",
-        "profile_update": "프로필 업데이트 필요"
+        "profile_update": "프로필 업데이트 필요",
+        "all_caught_up": "모든 내용을 확인했습니다!",
+        "new_booking_request": "새로운 예약 요청",
+        "booking_message": "세션에 대한 새로운 예약 요청이 있습니다.",
+        "payment_message": "세션에 대한 결제를 받았습니다.",
+        "profile_approved_message": "축하합니다! 코치 프로필이 승인되었습니다."
       },
       "every_week": "매주",
       "select_days": "날짜 선택",
@@ -2323,7 +2440,8 @@
     "per": "~당",
     "on": "켜짐",
     "off": "꺼짐",
-    "hour_short": "hr"
+    "hour_short": "hr",
+    "admin_access_required": "관리자 권한이 필요합니다"
   },
   "faq": {
     "consumer": [
