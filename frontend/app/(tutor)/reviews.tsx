@@ -46,7 +46,8 @@ const RATING_CATEGORIES = [
 export default function CoachReviewsScreen() {
   const { token } = useAuth();
   const { colors } = useTheme();
-  const { showSuccess, showError } = useToast();
+  const { showSuccess, showError, showInfo } = useToast();
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -83,7 +84,7 @@ export default function CoachReviewsScreen() {
 
   const handleSubmitResponse = async () => {
     if (!selectedReview || !responseText.trim()) {
-      showInfo('Please enter a response', 'Required');
+      showInfo(t('pages.coach.reviews.response_required'));
       return;
     }
     
@@ -95,11 +96,11 @@ export default function CoachReviewsScreen() {
         headers: { Authorization: `Bearer ${token}` }
       });
       
-      showSuccess('Your response has been added.');
+      showSuccess(t('pages.coach.reviews.response_submitted'));
       setShowResponseModal(false);
       loadData();
     } catch (error: any) {
-      showInfo(error.response?.data?.detail || 'Failed to submit response', 'Error');
+      showError(error.response?.data?.detail || t('pages.coach.reviews.submit_failed'));
     } finally {
       setSubmitting(false);
     }
