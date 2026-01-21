@@ -1037,6 +1037,7 @@ export default function AdminReportsScreen() {
               color={colors.primary}
               colors={colors}
               maxItems={6}
+              translateLabel={(label) => t(`categories.${label.toLowerCase().replace(/[&\s]+/g, '_').replace(/,/g, '')}`) || label}
             />
           </View>
         )}
