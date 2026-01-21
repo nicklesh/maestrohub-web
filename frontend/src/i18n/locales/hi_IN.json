@@ -790,7 +790,11 @@
         "when_get_paid": "मुझे कब और कैसे भुगतान मिलता है?",
         "app_not_working": "ऐप सही से काम नहीं कर रहा। मुझे क्या करना चाहिए?",
         "update_profile": "मैं अपनी प्रोफ़ाइल जानकारी कैसे अपडेट करूं?",
-        "contact_support": "मैं सहायता से कैसे संपर्क करूं?"
+        "contact_support": "मैं सहायता से कैसे संपर्क करूं?",
+        "how_become_coach": {
+          "question": "मैं कोच कैसे बनूं?",
+          "answer": "कोच के रूप में साइन अप करें, अपनी प्रोफाइल पूरी करें, अपनी दरें निर्धारित करें, और सत्यापित हो जाएं।"
+        }
       },
       "answers": {
         "how_create_account": "खाता बनाने के लिए, लॉगिन स्क्रीन पर 'साइन अप' पर टैप करें। आप अपने ईमेल पते का उपयोग करके पंजीकरण कर सकते हैं या Google से साइन इन कर सकते हैं। चुनें कि आप अभिभावक/छात्र (कोच खोजने के लिए) या कोच/ट्यूटर (अपनी सेवाएं देने के लिए) के रूप में जुड़ना चाहते हैं।",
@@ -1184,7 +1188,14 @@
         "message_details": "संदेश विवरण",
         "status": "स्थिति",
         "update_failed": "स्थिति अपडेट करने में विफल",
-        "close": "बंद करें"
+        "close": "बंद करें",
+        "categories": {
+          "general": "सामान्य",
+          "billing": "बिलिंग",
+          "technical": "तकनीकी",
+          "feedback": "फीडबैक",
+          "other": "अन्य"
+        }
       },
       "coaches_page": {
         "title": "कोच प्रबंधित करें",
@@ -1323,7 +1334,23 @@
         "revenue_trend": "राजस्व प्रवृत्ति",
         "gross_revenue": "सकल आय",
         "net_to_coaches": "कोचों के लिए शुद्ध",
-        "bookings_count": "बुकिंग"
+        "bookings_count": "बुकिंग",
+        "auto_refresh_on": "ऑटो-रिफ्रेश सक्षम",
+        "auto_refresh_off": "स्वतः-रीफ्रेश अक्षम",
+        "growth_visualization": "विकास दृश्यीकरण",
+        "new_coaches_trend": "नए कोचों का चलन",
+        "new_consumers_trend": "नए उपभोक्ता रुझान",
+        "top_categories": "कोचों द्वारा शीर्ष श्रेणियां",
+        "performance_arts": "प्रदर्शन और रचनात्मक कलाएं",
+        "academics": "शैक्षणिक",
+        "activities_hobbies": "गतिविधियाँ और शौक",
+        "fitness_nutrition": "फिटनेस और पोषण",
+        "health_mindfulness": "स्वास्थ्य, सचेतना और कल्याण",
+        "business_communication": "व्यापार, संचार और नेतृत्व",
+        "finance_legal": "वित्त, कानूनी और बातचीत",
+        "coaching_personal": "कोचिंग और व्यक्तिगत विकास",
+        "relationships_family": "रिश्ते और परिवार",
+        "culture_inclusion": "संस्कृति, समावेश और अनुभव"
       },
       "settings_page": {
         "title": "सेटिंग्स",
@@ -1442,6 +1469,10 @@
         "policy_updated": "मूल्य निर्धारण नीति सफलतापूर्वक अपडेट की गई",
         "no_policies": "कोई मूल्य निर्धारण नीतियां नहीं",
         "no_policies_description": "किसी भी बाज़ार के लिए कोई मूल्य निर्धारण नीतियां नहीं मिलीं"
+      },
+      "marketplace": {
+        "all_countries": "सभी देश",
+        "filter_by_country": "देश के अनुसार फ़िल्टर करें"
       }
     },
     "edit_profile": {
@@ -1777,7 +1808,19 @@
         "profile_hidden": "आपकी प्रोफ़ाइल छुपी हुई है",
         "published": "प्रकाशित",
         "publish": "प्रकाशित करें",
-        "grow_business": "अपना व्यवसाय बढ़ाएं"
+        "grow_business": "अपना व्यवसाय बढ़ाएं",
+        "save_link": "लिंक सेव करें",
+        "zoom_link_placeholder": "अपना Zoom लिंक दर्ज करें",
+        "meeting_link": "मीटिंग लिंक",
+        "video_call_link": "वीडियो कॉल लिंक",
+        "category": "श्रेणी",
+        "subcategory": "उपश्रेणी",
+        "teaching_medium": "शिक्षण माध्यम",
+        "select_category": "श्रेणी चुनें",
+        "select_subcategory": "उपश्रेणी चुनें",
+        "select_medium": "मीडियम चुनें",
+        "add_stripe_account": "Stripe अकाउंट जोड़ें",
+        "stripe_not_connected": "Stripe कनेक्ट नहीं है"
       },
       "billing": {
         "title": "बिलिंग",
@@ -1837,7 +1880,10 @@
         "write_response": "प्रतिक्रिया लिखें",
         "respond_to_review": "समीक्षा का जवाब दें",
         "response_placeholder": "समीक्षक को धन्यवाद दें और किसी भी फीडबैक को पेशेवर तरीके से संबोधित करें...",
-        "response_tip": "सुझाव: ग्राहक को धन्यवाद दें, फीडबैक को स्वीकार करें, और गुणवत्ता के प्रति अपनी प्रतिबद्धता को उजागर करें।"
+        "response_tip": "सुझाव: ग्राहक को धन्यवाद दें, फीडबैक को स्वीकार करें, और गुणवत्ता के प्रति अपनी प्रतिबद्धता को उजागर करें।",
+        "no_reviews_text": "आपको अभी तक कोई समीक्षा प्राप्त नहीं हुई है",
+        "average_rating": "औसत रेटिंग",
+        "rating_breakdown": "रेटिंग विवरण"
       },
       "packages": {
         "title": "पैकेज",
@@ -1876,7 +1922,16 @@
         "preview": "पैकेज पूर्वावलोकन",
         "regular_price": "नियमित मूल्य",
         "package_price": "पैकेज मूल्य",
-        "client_saves": "क्लाइंट सेव करता है"
+        "client_saves": "क्लाइंट सेव करता है",
+        "delete_package": "पैकेज डिलीट करें",
+        "package_description": "विवरण",
+        "sessions_count": "सत्रों की संख्या",
+        "set_available_times": "उपलब्ध समय निर्धारित करें",
+        "select_category": "श्रेणी चुनें",
+        "select_subcategory": "उपश्रेणी चुनें",
+        "no_packages_text": "आपने अभी तक कोई पैकेज नहीं बनाया है",
+        "publish": "प्रकाशित करें",
+        "unpublish": "अप्रकाशित करें"
       },
       "invites": {
         "title": "आमंत्रण",
@@ -2064,7 +2119,22 @@
         "start_time": "प्रारंभ समय",
         "end_time": "अंत समय",
         "enabled": "सक्षम",
-        "disabled": "अक्षम"
+        "disabled": "अक्षम",
+        "vacation_mode": "वेकेशन मोड",
+        "set_vacation_days": "छुट्टी के दिन सेट करें",
+        "available": "उपलब्ध",
+        "unavailable": "अनुपलब्ध",
+        "vacation": "छुट्टी",
+        "set_recurring_schedule": "आवर्ती अनुसूची सेट करें",
+        "quick_actions": "त्वरित कार्य",
+        "tap_calendar_hint": "कैलेंडर पर किसी भी तारीख पर टैप करें अपनी उपलब्धता सेट करने के लिए",
+        "add_time_slot": "समय स्लॉट जोड़ें",
+        "remove_time_slot": "समय स्लॉट हटाएं",
+        "daily": "दैनिक",
+        "weekly": "साप्ताहिक",
+        "monthly": "मासिक",
+        "calendar": "कैलेंडर",
+        "availability": "उपलब्धता"
       },
       "faq": {
         "frequently_asked": "अक्सर पूछे जाने वाले प्रश्न",
@@ -2077,7 +2147,14 @@
         "title": "अक्सर पूछे जाने वाले प्रश्न",
         "help_center": "सहायता केंद्र",
         "subtitle": "Maestro Habitat पर coaching के बारे में सामान्य प्रश्नों के उत्तर खोजें",
-        "still_have_questions": "अभी भी प्रश्न हैं?"
+        "still_have_questions": "अभी भी प्रश्न हैं?",
+        "categories": {
+          "getting_started": "शुरुआत करना",
+          "managing_availability": "उपलब्धता का प्रबंधन",
+          "bookings_sessions": "बुकिंग और सेशन",
+          "payments_earnings": "भुगतान और आय",
+          "account_support": "खाता और सहायता"
+        }
       },
       "notifications": {
         "title": "सूचनाएं",
@@ -2088,7 +2165,14 @@
         "new_booking": "नई बुकिंग",
         "booking_cancelled": "बुकिंग रद्द",
         "review_received": "समीक्षा प्राप्त हुई",
-        "payout_completed": "भुगतान पूर्ण"
+        "payout_completed": "भुगतान पूर्ण",
+        "no_notifications_text": "आपके पास कोई नई सूचनाएं नहीं हैं",
+        "clear_all": "सभी साफ़ करें",
+        "booking_confirmed": "बुकिंग की पुष्टि हो गई",
+        "new_message": "नया संदेश",
+        "payment_received": "भुगतान प्राप्त हुआ",
+        "profile_approved": "प्रोफाइल अप्रूव हो गया",
+        "profile_update": "प्रोफ़ाइल अपडेट आवश्यक है"
       },
       "every_week": "हर सप्ताह",
       "select_days": "दिन चुनें",
