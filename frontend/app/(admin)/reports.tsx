@@ -580,11 +580,10 @@ export default function AdminReportsScreen() {
   const [categoryBreakdown, setCategoryBreakdown] = useState<CategoryBreakdown[]>([]);
   const [revenueData, setRevenueData] = useState<RevenueData[]>([]);
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
+  // Load data function wrapped in useCallback for auto-refresh
+  const loadData = useCallback(async (showRefreshIndicator = false) => {
+    if (showRefreshIndicator) setRefreshing(true);
+    
     try {
       // Load real data from new backend API endpoints
       const [overviewRes, trendsRes, categoriesRes, revenueRes] = await Promise.all([
@@ -639,12 +638,87 @@ export default function AdminReportsScreen() {
       if (revenueRes.data?.revenue) {
         setRevenueData(revenueRes.data.revenue);
       }
+      
+      // Update last refresh timestamp
+      setLastUpdated(new Date());
     } catch (error) {
       console.error('Failed to load reports data:', error);
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
+  }, [token]);
+
+  // Initial load
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  // Auto-refresh functionality
+  useEffect(() => {
+    // Set up auto-refresh interval
+    const startAutoRefresh = () => {
+      if (refreshIntervalRef.current) {
+        clearInterval(refreshIntervalRef.current);
+      }
+      if (autoRefreshEnabled) {
+        refreshIntervalRef.current = setInterval(() => {
+          loadData(false); // Silent refresh without indicator
+        }, AUTO_REFRESH_INTERVAL);
+      }
+    };
+
+    // Handle app state changes (pause refresh when app is in background)
+    const handleAppStateChange = (nextAppState: string) => {
+      if (appStateRef.current.match(/inactive|background/) && nextAppState === 'active') {
+        // App came to foreground - refresh data
+        loadData(false);
+        startAutoRefresh();
+      } else if (nextAppState.match(/inactive|background/)) {
+        // App went to background - stop auto-refresh
+        if (refreshIntervalRef.current) {
+          clearInterval(refreshIntervalRef.current);
+        }
+      }
+      appStateRef.current = nextAppState as typeof appStateRef.current;
+    };
+
+    startAutoRefresh();
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+
+    return () => {
+      if (refreshIntervalRef.current) {
+        clearInterval(refreshIntervalRef.current);
+      }
+      subscription?.remove();
+    };
+  }, [autoRefreshEnabled, loadData]);
+
+  // Toggle auto-refresh
+  const toggleAutoRefresh = () => {
+    setAutoRefreshEnabled(prev => {
+      const newValue = !prev;
+      if (newValue) {
+        showToast(t('pages.admin.reports_page.auto_refresh_on') || 'Auto-refresh enabled', 'success');
+      } else {
+        showToast(t('pages.admin.reports_page.auto_refresh_off') || 'Auto-refresh disabled', 'info');
+      }
+      return newValue;
+    });
+  };
+
+  // Format last updated time
+  const formatLastUpdated = () => {
+    if (!lastUpdated) return '';
+    const now = new Date();
+    const diffMs = now.getTime() - lastUpdated.getTime();
+    const diffSecs = Math.floor(diffMs / 1000);
+    const diffMins = Math.floor(diffSecs / 60);
+    
+    if (diffSecs < 10) return t('common.just_now') || 'Just now';
+    if (diffSecs < 60) return `${diffSecs}s ${t('common.ago') || 'ago'}`;
+    if (diffMins < 60) return `${diffMins}m ${t('common.ago') || 'ago'}`;
+    return lastUpdated.toLocaleTimeString();
   };
 
   const onRefresh = () => {
