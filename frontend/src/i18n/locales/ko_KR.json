@@ -790,7 +790,11 @@
         "when_get_paid": "언제 어떻게 급여를 받나요?",
         "app_not_working": "앱이 제대로 작동하지 않아요. 어떻게 해야 하나요?",
         "update_profile": "내 프로필 정보를 어떻게 업데이트하나요?",
-        "contact_support": "지원팀에 어떻게 연락하나요?"
+        "contact_support": "지원팀에 어떻게 연락하나요?",
+        "how_become_coach": {
+          "question": "코치가 되려면 어떻게 해야 하나요?",
+          "answer": "코치로 가입하고, 프로필을 완성하고, 요금을 설정하고, 인증을 받으세요."
+        }
       },
       "answers": {
         "how_create_account": "계정을 만들려면 로그인 화면에서 '가입하기'를 탭하세요. 이메일 주소로 등록하거나 Google로 로그인할 수 있습니다. 학부모/학생(코치 찾기) 또는 코치/튜터(서비스 제공) 중 원하는 역할을 선택하세요.",
@@ -1184,7 +1188,14 @@
         "message_details": "메시지 상세",
         "status": "상태",
         "update_failed": "상태 업데이트에 실패했습니다",
-        "close": "닫기"
+        "close": "닫기",
+        "categories": {
+          "general": "일반",
+          "billing": "청구서",
+          "technical": "기술적",
+          "feedback": "피드백",
+          "other": "기타"
+        }
       },
       "coaches_page": {
         "title": "코치 관리",
@@ -1323,7 +1334,23 @@
         "revenue_trend": "수익 추세",
         "gross_revenue": "총매출",
         "net_to_coaches": "코치들에게 순액",
-        "bookings_count": "예약"
+        "bookings_count": "예약",
+        "auto_refresh_on": "자동 새로고침 활성화됨",
+        "auto_refresh_off": "자동 새로고침 비활성화",
+        "growth_visualization": "성장 시각화",
+        "new_coaches_trend": "새로운 코치 트렌드",
+        "new_consumers_trend": "새로운 소비자 트렌드",
+        "top_categories": "코치별 상위 카테고리",
+        "performance_arts": "공연 및 창작 예술",
+        "academics": "학계",
+        "activities_hobbies": "활동 및 취미",
+        "fitness_nutrition": "피트니스 및 영양",
+        "health_mindfulness": "건강, 마음챙김 및 웰빙",
+        "business_communication": "비즈니스, 커뮤니케이션 및 리더십",
+        "finance_legal": "금융, 법무 및 협상",
+        "coaching_personal": "코칭 & 개인 성장",
+        "relationships_family": "인간관계 및 가족",
+        "culture_inclusion": "문화, 포용성 및 경험"
       },
       "settings_page": {
         "title": "설정",
@@ -1442,6 +1469,10 @@
         "policy_updated": "가격 정책이 성공적으로 업데이트되었습니다",
         "no_policies": "가격 정책 없음",
         "no_policies_description": "어떤 시장에 대해서도 가격 정책을 찾을 수 없습니다"
+      },
+      "marketplace": {
+        "all_countries": "모든 국가",
+        "filter_by_country": "국가별 필터링"
       }
     },
     "edit_profile": {
@@ -1777,7 +1808,20 @@
         "profile_hidden": "귀하의 프로필이 숨겨져 있습니다",
         "published": "게시됨",
         "publish": "게시",
-        "grow_business": "비즈니스를 성장시키세요"
+        "grow_business": "비즈니스를 성장시키세요",
+        "save_link": "링크 저장",
+        "zoom_link": "줌 링크",
+        "zoom_link_placeholder": "Zoom 링크를 입력하세요",
+        "meeting_link": "회의 링크",
+        "video_call_link": "영상 통화 링크",
+        "category": "카테고리",
+        "subcategory": "하위 범주",
+        "teaching_medium": "교육 매체",
+        "select_category": "카테고리 선택",
+        "select_subcategory": "하위 카테고리 선택",
+        "select_medium": "미디엄 선택",
+        "add_stripe_account": "Stripe 계정 추가",
+        "stripe_not_connected": "Stripe 연결되지 않음"
       },
       "billing": {
         "title": "청구서",
@@ -1810,7 +1854,8 @@
         "want_more_bookings": "더 많은 예약을 원하시나요?",
         "get_featured": "검색 결과 상단에 노출되기",
         "more_visibility": "3배 더 높은 가시성",
-        "top_placement": "상위 검색 배치"
+        "top_placement": "상위 검색 배치",
+        "paypal": "페이팔"
       },
       "reviews": {
         "title": "리뷰",
@@ -1836,7 +1881,10 @@
         "write_response": "응답 작성",
         "respond_to_review": "리뷰에 응답하기",
         "response_placeholder": "리뷰어에게 감사를 표하고 모든 피드백에 전문적으로 응답하세요...",
-        "response_tip": "팁: 고객에게 감사를 표하고, 피드백을 인정하며, 품질에 대한 귀하의 헌신을 강조하세요."
+        "response_tip": "팁: 고객에게 감사를 표하고, 피드백을 인정하며, 품질에 대한 귀하의 헌신을 강조하세요.",
+        "no_reviews_text": "아직 리뷰를 받지 못했습니다",
+        "average_rating": "평균 평점",
+        "rating_breakdown": "평점 분석"
       },
       "packages": {
         "title": "패키지",
@@ -1875,7 +1923,16 @@
         "preview": "패키지 미리보기",
         "regular_price": "정가",
         "package_price": "패키지 가격",
-        "client_saves": "클라이언트 저장"
+        "client_saves": "클라이언트 저장",
+        "delete_package": "패키지 삭제",
+        "package_description": "설명",
+        "sessions_count": "세션 수",
+        "set_available_times": "이용 가능한 시간 설정",
+        "select_category": "카테고리 선택",
+        "select_subcategory": "하위 카테고리 선택",
+        "no_packages_text": "아직 패키지를 생성하지 않았습니다",
+        "publish": "게시",
+        "unpublish": "게시 취소"
       },
       "invites": {
         "title": "초대",
@@ -2063,7 +2120,22 @@
         "start_time": "시작 시간",
         "end_time": "종료 시간",
         "enabled": "활성화됨",
-        "disabled": "비활성화됨"
+        "disabled": "비활성화됨",
+        "vacation_mode": "휴가 모드",
+        "set_vacation_days": "휴가일 설정",
+        "available": "사용 가능",
+        "unavailable": "사용할 수 없음",
+        "vacation": "휴가",
+        "set_recurring_schedule": "반복 일정 설정",
+        "quick_actions": "빠른 작업",
+        "tap_calendar_hint": "달력의 날짜를 탭하여 가능한 시간을 설정하세요",
+        "add_time_slot": "시간대 추가",
+        "remove_time_slot": "시간 슬롯 제거",
+        "daily": "일일",
+        "weekly": "주간",
+        "monthly": "월별",
+        "calendar": "달력",
+        "availability": "가용성"
       },
       "faq": {
         "title": "자주 묻는 질문",
@@ -2076,7 +2148,14 @@
         "still_need_help": "여전히 도움이 필요하신가요?",
         "help_center": "고객센터",
         "subtitle": "Maestro Habitat에서 코칭에 대한 일반적인 질문들의 답변을 찾아보세요",
-        "still_have_questions": "아직도 궁금한 점이 있으신가요?"
+        "still_have_questions": "아직도 궁금한 점이 있으신가요?",
+        "categories": {
+          "getting_started": "시작하기",
+          "managing_availability": "가용성 관리",
+          "bookings_sessions": "예약 및 세션",
+          "payments_earnings": "결제 및 수익",
+          "account_support": "계정 및 지원"
+        }
       },
       "notifications": {
         "title": "알림",
@@ -2087,7 +2166,14 @@
         "new_booking": "새 예약",
         "booking_cancelled": "예약이 취소되었습니다",
         "review_received": "리뷰 수신됨",
-        "payout_completed": "지급 완료"
+        "payout_completed": "지급 완료",
+        "no_notifications_text": "새로운 알림이 없습니다",
+        "clear_all": "모두 지우기",
+        "booking_confirmed": "예약 확정",
+        "new_message": "새 메시지",
+        "payment_received": "결제 완료",
+        "profile_approved": "프로필 승인됨",
+        "profile_update": "프로필 업데이트 필요"
       },
       "every_week": "매주",
       "select_days": "날짜 선택",

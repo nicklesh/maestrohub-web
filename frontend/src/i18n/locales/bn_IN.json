@@ -62,7 +62,8 @@
     "coach_sponsorship": "স্পনসরশিপ",
     "coach_reports": "রিপোর্ট",
     "coach_schedule": "সময়সূচী",
-    "coach_onboarding": "অনবোর্ডিং"
+    "coach_onboarding": "অনবোর্ডিং",
+    "coach_faq": "প্রশ্নোত্তর"
   },
   "categories": {
     "academics": "শিক্ষা",
@@ -789,7 +790,11 @@
         "when_get_paid": "আমি কখন এবং কীভাবে পেমেন্ট পাই?",
         "app_not_working": "অ্যাপ সঠিকভাবে কাজ করছে না। আমাকে কি করতে হবে?",
         "update_profile": "আমি কীভাবে আমার প্রোফাইল তথ্য আপডেট করব?",
-        "contact_support": "আমি কীভাবে সহায়তার সাথে যোগাযোগ করব?"
+        "contact_support": "আমি কীভাবে সহায়তার সাথে যোগাযোগ করব?",
+        "how_become_coach": {
+          "question": "আমি কীভাবে একজন কোচ হতে পারি?",
+          "answer": "কোচ হিসেবে সাইন আপ করুন, আপনার প্রোফাইল সম্পূর্ণ করুন, আপনার রেট নির্ধারণ করুন, এবং ভেরিফাইড হন।"
+        }
       },
       "answers": {
         "how_create_account": "অ্যাকাউন্ট তৈরি করতে লগইন স্ক্রীনে 'সাইন আপ' এ ট্যাপ করুন। আপনি আপনার ইমেল ঠিকানা ব্যবহার করে রেজিস্ট্রেশন করতে পারেন বা Google দিয়ে সাইন ইন করতে পারেন। বেছে নিন আপনি অভিভাবক/ছাত্র (কোচ খুঁজতে) অথবা কোচ/টিউটর (আপনার সেবা দিতে) হিসাবে যোগ দিতে চান।",
@@ -1183,7 +1188,14 @@
         "message_details": "বার্তার বিস্তারিত",
         "status": "অবস্থা",
         "update_failed": "অবস্থা আপডেট করতে ব্যর্থ হয়েছে",
-        "close": "বন্ধ করুন"
+        "close": "বন্ধ করুন",
+        "categories": {
+          "general": "সাধারণ",
+          "billing": "বিলিং",
+          "technical": "কারিগরি",
+          "feedback": "ফিডব্যাক",
+          "other": "অন্যান্য"
+        }
       },
       "coaches_page": {
         "title": "কোচ পরিচালনা করুন",
@@ -1322,7 +1334,23 @@
         "revenue_trend": "আয়ের প্রবণতা",
         "gross_revenue": "মোট রাজস্ব",
         "net_to_coaches": "কোচদের নিট",
-        "bookings_count": "বুকিং"
+        "bookings_count": "বুকিং",
+        "auto_refresh_on": "অটো-রিফ্রেশ সক্রিয় করা হয়েছে",
+        "auto_refresh_off": "অটো-রিফ্রেশ নিষ্ক্রিয় করা হয়েছে",
+        "growth_visualization": "বৃদ্ধির ভিজ্যুয়ালাইজেশন",
+        "new_coaches_trend": "নতুন কোচদের ট্রেন্ড",
+        "new_consumers_trend": "নতুন ভোক্তা প্রবণতা",
+        "top_categories": "কোচদের দ্বারা শীর্ষ ক্যাটেগরিসমূহ",
+        "performance_arts": "পারফরমেন্স ও সৃজনশীল শিল্পকলা",
+        "academics": "একাডেমিকস",
+        "activities_hobbies": "কার্যক্রম ও শখ",
+        "fitness_nutrition": "ফিটনেস ও পুষ্টি",
+        "health_mindfulness": "স্বাস্থ্য, মনঃসচেতনতা ও কল্যাণ",
+        "business_communication": "ব্যবসা, যোগাযোগ ও নেতৃত্ব",
+        "finance_legal": "অর্থায়ন, আইনি ও আলোচনা",
+        "coaching_personal": "কোচিং ও ব্যক্তিগত উন্নতি",
+        "relationships_family": "সম্পর্ক ও পরিবার",
+        "culture_inclusion": "সংস্কৃতি, অন্তর্ভুক্তি এবং অভিজ্ঞতা"
       },
       "settings_page": {
         "title": "সেটিংস",
@@ -1441,6 +1469,10 @@
         "policy_updated": "মূল্য নীতি সফলভাবে আপডেট হয়েছে",
         "no_policies": "কোনো মূল্য নীতি নেই",
         "no_policies_description": "কোনো বাজারের জন্য কোনো মূল্য নীতি পাওয়া যায়নি"
+      },
+      "marketplace": {
+        "all_countries": "সব দেশ",
+        "filter_by_country": "দেশ অনুযায়ী ফিল্টার করুন"
       }
     },
     "edit_profile": {
@@ -1776,7 +1808,20 @@
         "profile_hidden": "আপনার প্রোফাইল লুকানো আছে",
         "published": "প্রকাশিত",
         "publish": "প্রকাশ করুন",
-        "grow_business": "আপনার ব্যবসা বৃদ্ধি করুন"
+        "grow_business": "আপনার ব্যবসা বৃদ্ধি করুন",
+        "save_link": "লিংক সংরক্ষণ করুন",
+        "zoom_link": "জুম লিঙ্ক",
+        "zoom_link_placeholder": "আপনার Zoom লিংক প্রবেশ করান",
+        "meeting_link": "মিটিং লিংক",
+        "video_call_link": "ভিডিও কল লিঙ্ক",
+        "category": "বিভাগ",
+        "subcategory": "উপবিভাগ",
+        "teaching_medium": "শিক্ষার মাধ্যম",
+        "select_category": "ক্যাটাগরি নির্বাচন করুন",
+        "select_subcategory": "উপবিভাগ নির্বাচন করুন",
+        "select_medium": "মাধ্যম নির্বাচন করুন",
+        "add_stripe_account": "Stripe অ্যাকাউন্ট যোগ করুন",
+        "stripe_not_connected": "Stripe সংযুক্ত নেই"
       },
       "billing": {
         "title": "বিলিং",
@@ -1835,7 +1880,10 @@
         "write_response": "উত্তর লিখুন",
         "respond_to_review": "রিভিউ-এর জবাব দিন",
         "response_placeholder": "পর্যালোচকদের ধন্যবাদ জানান এবং যেকোনো প্রতিক্রিয়া পেশাদারভাবে মোকাবেলা করুন...",
-        "response_tip": "টিপ: ক্লায়েন্টকে ধন্যবাদ জানান, প্রতিক্রিয়া স্বীকার করুন এবং গুণগত মানের প্রতি আপনার প্রতিশ্রুতি তুলে ধরুন।"
+        "response_tip": "টিপ: ক্লায়েন্টকে ধন্যবাদ জানান, প্রতিক্রিয়া স্বীকার করুন এবং গুণগত মানের প্রতি আপনার প্রতিশ্রুতি তুলে ধরুন।",
+        "no_reviews_text": "আপনি এখনও কোনো রিভিউ পাননি",
+        "average_rating": "গড় রেটিং",
+        "rating_breakdown": "রেটিং বিভাজন"
       },
       "packages": {
         "title": "প্যাকেজ",
@@ -1874,7 +1922,16 @@
         "preview": "প্যাকেজ প্রিভিউ",
         "regular_price": "নিয়মিত মূল্য",
         "package_price": "প্যাকেজের দাম",
-        "client_saves": "ক্লায়েন্ট সেভ"
+        "client_saves": "ক্লায়েন্ট সেভ",
+        "delete_package": "প্যাকেজ মুছুন",
+        "package_description": "বর্ণনা",
+        "sessions_count": "সেশনের সংখ্যা",
+        "set_available_times": "উপলব্ধ সময় নির্ধারণ করুন",
+        "select_category": "বিভাগ নির্বাচন করুন",
+        "select_subcategory": "উপবিভাগ নির্বাচন করুন",
+        "no_packages_text": "আপনি এখনও কোনো প্যাকেজ তৈরি করেননি",
+        "publish": "প্রকাশ করুন",
+        "unpublish": "অপ্রকাশিত করুন"
       },
       "invites": {
         "title": "আমন্ত্রণ",
@@ -2062,7 +2119,22 @@
         "start_time": "শুরুর সময়",
         "end_time": "শেষ সময়",
         "enabled": "সক্রিয়",
-        "disabled": "অক্ষম"
+        "disabled": "অক্ষম",
+        "vacation_mode": "ছুটির মোড",
+        "set_vacation_days": "ছুটির দিন নির্ধারণ করুন",
+        "available": "উপলব্ধ",
+        "unavailable": "অনুপলব্ধ",
+        "vacation": "ছুটি",
+        "set_recurring_schedule": "পুনরাবৃত্তিমূলক সময়সূচী সেট করুন",
+        "quick_actions": "দ্রুত কার্যাবলী",
+        "tap_calendar_hint": "ক্যালেন্ডারে যেকোনো তারিখে ট্যাপ করুন আপনার সময়ের সুবিধা সেট করতে",
+        "add_time_slot": "সময়ের স্লট যোগ করুন",
+        "remove_time_slot": "সময়ের স্লট সরান",
+        "daily": "দৈনিক",
+        "weekly": "সাপ্তাহিক",
+        "monthly": "মাসিক",
+        "calendar": "ক্যালেন্ডার",
+        "availability": "উপলব্ধতা"
       },
       "faq": {
         "frequently_asked": "প্রায়শই জিজ্ঞাসিত প্রশ্নাবলী",
@@ -2075,7 +2147,14 @@
         "title": "প্রায়শই জিজ্ঞাসিত প্রশ্নাবলী",
         "help_center": "সহায়তা কেন্দ্র",
         "subtitle": "Maestro Habitat-এ coaching সম্পর্কে সাধারণ প্রশ্নের উত্তর খুঁজুন",
-        "still_have_questions": "এখনও প্রশ্ন আছে?"
+        "still_have_questions": "এখনও প্রশ্ন আছে?",
+        "categories": {
+          "getting_started": "শুরু করা",
+          "managing_availability": "প্রাপ্যতা পরিচালনা",
+          "bookings_sessions": "বুকিং ও সেশন",
+          "payments_earnings": "পেমেন্ট এবং আয়",
+          "account_support": "অ্যাকাউন্ট ও সাপোর্ট"
+        }
       },
       "notifications": {
         "title": "বিজ্ঞপ্তি",
@@ -2086,7 +2165,14 @@
         "new_booking": "নতুন বুকিং",
         "booking_cancelled": "বুকিং বাতিল করা হয়েছে",
         "review_received": "পর্যালোচনা প্রাপ্ত",
-        "payout_completed": "পেআউট সম্পন্ন"
+        "payout_completed": "পেআউট সম্পন্ন",
+        "no_notifications_text": "আপনার কোনো নতুন নোটিফিকেশন নেই",
+        "clear_all": "সব মুছে ফেলুন",
+        "booking_confirmed": "বুকিং নিশ্চিত হয়েছে",
+        "new_message": "নতুন বার্তা",
+        "payment_received": "পেমেন্ট গ্রহণ করা হয়েছে",
+        "profile_approved": "প্রোফাইল অনুমোদিত",
+        "profile_update": "প্রোফাইল আপডেট প্রয়োজন"
       },
       "every_week": "প্রতি সপ্তাহে",
       "select_days": "দিন নির্বাচন করুন",

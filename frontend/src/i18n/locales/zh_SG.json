@@ -790,7 +790,11 @@
         "when_get_paid": "我何时及如何获得报酬？",
         "app_not_working": "应用程序无法正常工作，我该怎么办？",
         "update_profile": "如何更新我的个人资料信息？",
-        "contact_support": "如何联系支持？"
+        "contact_support": "如何联系支持？",
+        "how_become_coach": {
+          "question": "我要如何成为教练？",
+          "answer": "注册成为教练，完善您的个人资料，设定您的收费，并获得验证。"
+        }
       },
       "answers": {
         "how_create_account": "要创建账户，请点击登录界面的“注册”。您可以使用电子邮件地址注册或通过Google登录。选择您是作为家长/学生（寻找教练）还是作为教练/导师（提供服务）加入。",
@@ -1184,7 +1188,14 @@
         "message_details": "信息详情",
         "status": "状态",
         "update_failed": "无法更新状态",
-        "close": "关闭"
+        "close": "关闭",
+        "categories": {
+          "general": "一般",
+          "billing": "账单",
+          "technical": "技术性的",
+          "feedback": "反馈",
+          "other": "其他"
+        }
       },
       "coaches_page": {
         "title": "管理教练",
@@ -1323,7 +1334,23 @@
         "revenue_trend": "收入趋势",
         "gross_revenue": "总收入",
         "net_to_coaches": "净收入给教练",
-        "bookings_count": "预订"
+        "bookings_count": "预订",
+        "auto_refresh_on": "已启用自动刷新",
+        "auto_refresh_off": "自动刷新已禁用",
+        "growth_visualization": "增长可视化",
+        "new_coaches_trend": "新教练趋势",
+        "new_consumers_trend": "新消费者趋势",
+        "top_categories": "教练热门类别",
+        "performance_arts": "表演与创意艺术",
+        "academics": "学者",
+        "activities_hobbies": "活动与兴趣爱好",
+        "fitness_nutrition": "健身与营养",
+        "health_mindfulness": "健康、正念与福祉",
+        "business_communication": "商业、沟通与领导力",
+        "finance_legal": "金融、法律与谈判",
+        "coaching_personal": "教练指导与个人成长",
+        "relationships_family": "关系与家庭",
+        "culture_inclusion": "文化、包容与体验"
       },
       "settings_page": {
         "title": "设置",
@@ -1435,6 +1462,10 @@
         "policy_updated": "定价政策更新成功",
         "no_policies": "没有定价政策",
         "no_policies_description": "未找到任何市场的定价政策"
+      },
+      "marketplace": {
+        "all_countries": "所有国家",
+        "filter_by_country": "按国家筛选"
       }
     },
     "edit_profile": {
@@ -1770,7 +1801,20 @@
         "profile_hidden": "您的个人资料已隐藏",
         "published": "已发布",
         "publish": "发布",
-        "grow_business": "发展您的业务"
+        "grow_business": "发展您的业务",
+        "save_link": "保存链接",
+        "zoom_link": "Zoom 链接",
+        "zoom_link_placeholder": "输入您的 Zoom 链接",
+        "meeting_link": "会议链接",
+        "video_call_link": "视频通话链接",
+        "category": "类别",
+        "subcategory": "子类别",
+        "teaching_medium": "教学媒介",
+        "select_category": "选择类别",
+        "select_subcategory": "选择子类别",
+        "select_medium": "选择媒体",
+        "add_stripe_account": "添加 Stripe 账户",
+        "stripe_not_connected": "Stripe 未连接"
       },
       "billing": {
         "title": "账单",
@@ -1829,7 +1873,10 @@
         "write_response": "写回复",
         "respond_to_review": "回复评价",
         "response_placeholder": "感谢审核者并专业地回应任何反馈...",
-        "response_tip": "提示：感谢客户，认可反馈，并强调您对质量的承诺。"
+        "response_tip": "提示：感谢客户，认可反馈，并强调您对质量的承诺。",
+        "no_reviews_text": "您还没有收到任何评价",
+        "average_rating": "平均评分",
+        "rating_breakdown": "评分细分"
       },
       "packages": {
         "title": "包裹",
@@ -1868,7 +1915,16 @@
         "preview": "包裹预览",
         "regular_price": "常规价格",
         "package_price": "配套价格",
-        "client_saves": "客户端保存"
+        "client_saves": "客户端保存",
+        "delete_package": "删除Package",
+        "package_description": "描述",
+        "sessions_count": "会话数量",
+        "set_available_times": "设置可预约时间",
+        "select_category": "选择类别",
+        "select_subcategory": "选择子类别",
+        "no_packages_text": "您还没有创建任何配套",
+        "publish": "发布",
+        "unpublish": "取消发布"
       },
       "invites": {
         "title": "邀请",
@@ -2056,7 +2112,22 @@
         "start_time": "开始时间",
         "end_time": "结束时间",
         "enabled": "已启用",
-        "disabled": "已禁用"
+        "disabled": "已禁用",
+        "vacation_mode": "假期模式",
+        "set_vacation_days": "设置假期天数",
+        "available": "可用",
+        "unavailable": "不可用",
+        "vacation": "假期",
+        "set_recurring_schedule": "设定重复时间表",
+        "quick_actions": "快速操作",
+        "tap_calendar_hint": "点击日历上的任何日期来设置您的可用时间",
+        "add_time_slot": "添加时间段",
+        "remove_time_slot": "移除时间段",
+        "daily": "每日",
+        "weekly": "每周",
+        "monthly": "每月",
+        "calendar": "日历",
+        "availability": "可用性"
       },
       "faq": {
         "title": "常见问题",
@@ -2069,7 +2140,14 @@
         "still_need_help": "还需要帮助吗？",
         "help_center": "帮助中心",
         "subtitle": "在Maestro Habitat上找到关于coaching常见问题的答案",
-        "still_have_questions": "还有疑问吗？"
+        "still_have_questions": "还有疑问吗？",
+        "categories": {
+          "getting_started": "开始使用",
+          "managing_availability": "管理可用性",
+          "bookings_sessions": "预订与课程",
+          "payments_earnings": "付款与收入",
+          "account_support": "账户与支持"
+        }
       },
       "notifications": {
         "title": "通知",
@@ -2080,7 +2158,14 @@
         "new_booking": "新预订",
         "booking_cancelled": "预订已取消",
         "review_received": "已收到评价",
-        "payout_completed": "付款已完成"
+        "payout_completed": "付款已完成",
+        "no_notifications_text": "您没有新通知",
+        "clear_all": "清除全部",
+        "booking_confirmed": "预订已确认",
+        "new_message": "新消息",
+        "payment_received": "已收到付款",
+        "profile_approved": "档案已批准",
+        "profile_update": "需要更新个人资料"
       },
       "every_week": "每周",
       "select_days": "选择日期",

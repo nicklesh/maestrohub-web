@@ -1137,7 +1137,10 @@
             "description": "Process pending referral credits and bonuses",
             "schedule_display": "Daily at midnight"
           }
-        }
+        },
+        "1099_equivalent": "1099 equivalent",
+        "tax_documents": "Tax Documents",
+        "generate_tax_docs": "Generate annual tax documents (1099 equivalent) for all providers"
       },
       "inbox_page": {
         "title": "Inbox",
@@ -1701,7 +1704,8 @@
       "not_set": "Not set",
       "zoom_link": "Zoom Link",
       "zoom_link_placeholder": "Enter your Zoom link",
-      "video_call_link": "Video Call Link"
+      "video_call_link": "Video Call Link",
+      "meeting_desc": "Enter your video meeting link for online sessions"
     },
     "coach": {
       "dashboard": {
@@ -1916,7 +1920,8 @@
         "set_base_price": "Set your base hourly rate first",
         "package_created": "Package created successfully",
         "confirm_delete": "Are you sure you want to delete this package?",
-        "off": "off"
+        "off": "off",
+        "no_packages_yet": "No packages created yet"
       },
       "invites": {
         "title": "Student Invites",
@@ -1932,18 +1937,21 @@
         "new_invite": "New Invite",
         "enter_email": "Please enter an email address",
         "invalid_email": "Please enter a valid email address",
-        "invite_sent": "Invite sent successfully!",
+        "invite_sent": "Invite sent successfully",
         "send_failed": "Failed to send invite",
         "cancel_confirm": "Are you sure you want to cancel this invite?",
         "sent": "Sent",
         "accepted": "Accepted",
         "invite_description": "Invite a student to connect with you on Maestro Habitat",
         "email_required": "Email *",
-        "email_placeholder": "student@example.com",
+        "email_placeholder": "Enter email address",
         "name_optional": "Name (optional)",
         "name_placeholder": "Student's name",
         "message_optional": "Personal Message (optional)",
-        "message_placeholder": "Hi! I'd love to help you with..."
+        "message_placeholder": "Hi! I'd love to help you with...",
+        "pending": "Pending",
+        "expired": "Expired",
+        "invite_error": "Failed to send invite"
       },
       "sponsorship": {
         "title": "Sponsorship",
@@ -2160,7 +2168,9 @@
         "apply_to_all": "Apply to All",
         "to": "to",
         "no_schedule": "No schedule set",
-        "schedule_error": "Failed to save schedule"
+        "schedule_error": "Failed to save schedule",
+        "auto_renew_message": "Your schedule will auto-renew on {date}. You'll receive a reminder {days} days before.",
+        "schedule_expires_message": "Your schedule expires on {date}. Enable auto-renewal to continue."
       },
       "every_week": "Every Week",
       "select_days": "Select Days",
@@ -2242,7 +2252,22 @@
     "cancel": "Cancel",
     "confirm": "Confirm",
     "published": "Published",
-    "unpublished": "Unpublished"
+    "unpublished": "Unpublished",
+    "packages": "Packages",
+    "sessions": "Sessions",
+    "transactions": "Transactions",
+    "payment_summary": "Payment Summary",
+    "session": "Session",
+    "completion_rate": "Completion Rate",
+    "reminder_emails": "Reminder Emails",
+    "campaigns": "Campaigns",
+    "freemium": "Freemium",
+    "subscriptions": "Subscriptions",
+    "tutoring": "Tutoring",
+    "admin_access_required": "Admin access required",
+    "please_fill_all_fields": "Please fill in all fields",
+    "message_sent": "Your message has been sent!",
+    "error_sending_message": "Error sending message"
   },
   "roles": {
     "admin": "Admin",
@@ -2261,8 +2286,9 @@
       "message_placeholder": "Enter your message",
       "send": "Send",
       "sending": "Sending...",
-      "success": "Message sent successfully",
-      "error": "Failed to send message"
+      "success": "Your message has been sent!",
+      "error": "Failed to send message",
+      "fill_all_fields": "Please fill in all fields"
     }
   },
   "countries": {
@@ -2283,7 +2309,10 @@
     "IL": "Israel",
     "RU": "Russia",
     "SA": "Saudi Arabia",
-    "PK": "Pakistan"
+    "PK": "Pakistan",
+    "ES": "Spain",
+    "IT": "Italy",
+    "BD": "Bangladesh"
   },
   "calendar": {
     "months": {

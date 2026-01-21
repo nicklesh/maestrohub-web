@@ -790,7 +790,11 @@
         "when_get_paid": "నాకు ఎప్పుడు మరియు ఎలా చెల్లింపులు వస్తాయి?",
         "app_not_working": "యాప్ బాగా పని చేయడం లేదు. నేను ఏమి చేయాలి?",
         "update_profile": "నేను నా ప్రొఫైల్ సమాచారాన్ని ఎలా నవీకరించాలి?",
-        "contact_support": "నేను సహాయాన్ని ఎలా సంప్రదించగలను?"
+        "contact_support": "నేను సహాయాన్ని ఎలా సంప్రదించగలను?",
+        "how_become_coach": {
+          "question": "నేను కోచ్ ఎలా అవ్వాలి?",
+          "answer": "కోచ్‌గా సైన్ అప్ చేయండి, మీ ప్రొఫైల్‌ను పూర్తి చేయండి, మీ రేట్లను సెట్ చేయండి మరియు వెరిఫై చేయించుకోండి."
+        }
       },
       "answers": {
         "how_create_account": "ఖాతాను సృష్టించడానికి, లాగిన్ స్క్రీన్‌లో 'సైన్ అప్'పై ట్యాప్ చేయండి. మీరు మీ ఇమెయిల్ చిరునామా ఉపయోగించి రిజిస్టర్ చేయవచ్చు లేదా Google ద్వారా సైన్ ఇన్ అవ్వవచ్చు. మీరు తల్లిదండ్రి/విద్యార్థి (కోచ్ కనుగొనడానికి) లేదా కోచ్/ట్యూటర్ (మీ సేవలను అందించడానికి) గా చేరాలని ఎంచుకోండి.",
@@ -1184,7 +1188,14 @@
         "message_details": "సందేశం వివరాలు",
         "status": "స్థితి",
         "update_failed": "స్థితి నవీకరించగలిగింది లేదు",
-        "close": "మూసివేయండి"
+        "close": "మూసివేయండి",
+        "categories": {
+          "general": "సాధారణ",
+          "billing": "బిల్లింగ్",
+          "technical": "సాంకేతిక",
+          "feedback": "అభిప్రాయం",
+          "other": "ఇతరం"
+        }
       },
       "coaches_page": {
         "title": "కోచింగ్ నిర్వాహణ",
@@ -1323,7 +1334,23 @@
         "revenue_trend": "రెవెన్యూ ట్రెండ్",
         "gross_revenue": "మొత్తం ఆదాయం",
         "net_to_coaches": "కోచ్‌లకు నెట్",
-        "bookings_count": "బుకింగ్‌లు"
+        "bookings_count": "బుకింగ్‌లు",
+        "auto_refresh_on": "స్వయం-రిఫ్రెష్ ప్రారంభించబడింది",
+        "auto_refresh_off": "ఆటో-రిఫ్రెష్ నిలిపివేయబడింది",
+        "growth_visualization": "వృద్ధి దృశ్యీకరణ",
+        "new_coaches_trend": "కొత్త కోచ్‌ల ట్రెండ్",
+        "new_consumers_trend": "కొత్త వినియోగదారుల ధోరణి",
+        "top_categories": "కోచ్‌ల వారీగా టాప్ కేటగిరీలు",
+        "performance_arts": "ప్రదర్శన & సృజనాత్మక కళలు",
+        "academics": "అకాడెమిక్స్",
+        "activities_hobbies": "కార్యకలాపాలు & అభిరుచులు",
+        "fitness_nutrition": "ఫిట్నెస్ & పోషణ",
+        "health_mindfulness": "ఆరోగ్యం, మైండ్‌ఫుల్‌నెస్ & సంక్షేమం",
+        "business_communication": "వ్యాపారం, కమ్యూనికేషన్ & నాయకత్వం",
+        "finance_legal": "ఫైనాన్స్, లీగల్ & చర్చలు",
+        "coaching_personal": "కోచింగ్ & వ్యక్తిగత అభివృద్ధి",
+        "relationships_family": "సంబంధాలు & కుటుంబం",
+        "culture_inclusion": "సంస్కృతి, చేర్పు & అనుభవాలు"
       },
       "settings_page": {
         "title": "సెట్టింగ్లు",
@@ -1442,6 +1469,10 @@
         "policy_updated": "ధర విధాన విజయవంతంగా నవీకరించబడింది",
         "no_policies": "ప్రైసింగ్ పాలసీలు లేవు",
         "no_policies_description": "ఏ మార్కెట్‌కు సంబంధించిన pricing policies కనుగొనబడలేదు"
+      },
+      "marketplace": {
+        "all_countries": "అన్ని దేశాలు",
+        "filter_by_country": "దేశం ద్వారా ఫిల్టర్ చేయండి"
       }
     },
     "edit_profile": {
@@ -1777,7 +1808,20 @@
         "profile_hidden": "మీ ప్రొఫైల్ దాచబడింది",
         "published": "ప్రచురించబడింది",
         "publish": "ప్రచురించు",
-        "grow_business": "మీ వ్యాపారాన్ని అభివృద్ధి చేయండి"
+        "grow_business": "మీ వ్యాపారాన్ని అభివృద్ధి చేయండి",
+        "save_link": "లింక్ సేవ్ చేయండి",
+        "zoom_link": "జూమ్ లింక్",
+        "zoom_link_placeholder": "మీ Zoom లింక్‌ను నమోదు చేయండి",
+        "meeting_link": "మీటింగ్ లింక్",
+        "video_call_link": "వీడియో కాల్ లింక్",
+        "category": "వర్గం",
+        "subcategory": "ఉపవర్గం",
+        "teaching_medium": "బోధనా మాధ్యమం",
+        "select_category": "వర్గం ఎంచుకోండి",
+        "select_subcategory": "ఉపవర్గాన్ని ఎంచుకోండి",
+        "select_medium": "మీడియం ఎంచుకోండి",
+        "add_stripe_account": "Stripe ఖాతాను జోడించండి",
+        "stripe_not_connected": "Stripe కనెక్ట్ చేయబడలేదు"
       },
       "billing": {
         "title": "బిల్లింగ్",
@@ -1836,7 +1880,10 @@
         "write_response": "రెస్పాన్స్ వ్రాయండి",
         "respond_to_review": "రివ్యూకు స్పందించండి",
         "response_placeholder": "సమీక్షకుడికి కృతజ్ఞతలు తెలిపి, ఏదైనా అభిప్రాయాన్ని వృత్తిపరంగా పరిష్కరించండి...",
-        "response_tip": "చిట్కా: క్లయింట్‌కు కృతజ్ఞతలు తెలిపండి, ఫీడ్‌బ్యాక్‌ను అంగీకరించండి, మరియు నాణ్యత పట్ల మీ నిబద్ధతను హైలైట్ చేయండి."
+        "response_tip": "చిట్కా: క్లయింట్‌కు కృతజ్ఞతలు తెలిపండి, ఫీడ్‌బ్యాక్‌ను అంగీకరించండి, మరియు నాణ్యత పట్ల మీ నిబద్ధతను హైలైట్ చేయండి.",
+        "no_reviews_text": "మీకు ఇంకా ఎలాంటి రివ్యూలు రాలేదు",
+        "average_rating": "సగటు రేటింగ్",
+        "rating_breakdown": "రేటింగ్ వివరణ"
       },
       "packages": {
         "title": "ప్యాకేజీలు",
@@ -1875,7 +1922,16 @@
         "preview": "ప్యాకేజ్ Preview",
         "regular_price": "సాధారణ ధర",
         "package_price": "ప్యాకేజ్ ధర",
-        "client_saves": "క్లయింట్ సేవ్‌లు"
+        "client_saves": "క్లయింట్ సేవ్‌లు",
+        "delete_package": "ప్యాకేజీని తొలగించు",
+        "package_description": "వివరణ",
+        "sessions_count": "సెషన్‌ల సంఖ్య",
+        "set_available_times": "అందుబాటు సమయాలను సెట్ చేయండి",
+        "select_category": "వర్గం ఎంచుకోండి",
+        "select_subcategory": "సబ్‌కేటగిరీని ఎంచుకోండి",
+        "no_packages_text": "మీరు ఇంకా ఎలాంటి packages సృష్టించలేదు",
+        "publish": "ప్రచురించు",
+        "unpublish": "ప్రచురణ రద్దు చేయండి"
       },
       "invites": {
         "title": "ఆహ్వానాలు",
@@ -2063,7 +2119,22 @@
         "start_time": "ప్రారంభ సమయం",
         "end_time": "ముగింపు సమయం",
         "enabled": "ప్రారంభించబడింది",
-        "disabled": "నిష్క్రియం చేయబడింది"
+        "disabled": "నిష్క్రియం చేయబడింది",
+        "vacation_mode": "వేకేషన్ మోడ్",
+        "set_vacation_days": "సెలవు దినాలను సెట్ చేయండి",
+        "available": "అందుబాటులో ఉంది",
+        "unavailable": "అందుబాటులో లేదు",
+        "vacation": "వెకేషన్",
+        "set_recurring_schedule": "పునరావృత షెడ్యూల్ సెట్ చేయండి",
+        "quick_actions": "త్వరిత చర్యలు",
+        "tap_calendar_hint": "క్యాలెండర్‌లోని ఏదైనా తేదీని టాప్ చేసి మీ availability సెట్ చేయండి",
+        "add_time_slot": "టైమ్ స్లాట్ జోడించు",
+        "remove_time_slot": "టైమ్ స్లాట్ తీసివేయండి",
+        "daily": "రోజువారీ",
+        "weekly": "వారానికోసారి",
+        "monthly": "మాసిక",
+        "calendar": "క్యాలెండర్",
+        "availability": "అందుబాటు"
       },
       "faq": {
         "frequently_asked": "తరచుగా అడిగే ప్రశ్నలు",
@@ -2076,7 +2147,14 @@
         "title": "కోచ్ FAQ",
         "help_center": "సహాయ కేంద్రం",
         "subtitle": "Maestro Habitat లో కోచింగ్ గురించి సాధారణ ప్రశ్నలకు సమాధానాలు కనుగొనండి",
-        "still_have_questions": "ఇంకా ప్రశ్నలు ఉన్నాయా?"
+        "still_have_questions": "ఇంకా ప్రశ్నలు ఉన్నాయా?",
+        "categories": {
+          "getting_started": "ప్రారంభించడం",
+          "managing_availability": "అందుబాటులోని నిర్వహణ",
+          "bookings_sessions": "బుకింగ్స్ & సెషన్స్",
+          "payments_earnings": "చెల్లింపులు & ఆదాయాలు",
+          "account_support": "ఖాతా & మద్దతు"
+        }
       },
       "notifications": {
         "title": "నోటిఫికేషన్లు",
@@ -2087,7 +2165,14 @@
         "new_booking": "కొత్త బుకింగ్",
         "booking_cancelled": "బుకింగ్ రద్దు చేయబడింది",
         "review_received": "సమీక్ష అందింది",
-        "payout_completed": "చెల్లింపు పూర్తయింది"
+        "payout_completed": "చెల్లింపు పూర్తయింది",
+        "no_notifications_text": "మీకు కొత్త నోటిఫికేషన్లు లేవు",
+        "clear_all": "అన్నింటినీ క్లియర్ చేయండి",
+        "booking_confirmed": "బుకింగ్ ధృవీకరించబడింది",
+        "new_message": "కొత్త సందేశం",
+        "payment_received": "చెల్లింపు అందింది",
+        "profile_approved": "ప్రొఫైల్ ఆమోదించబడింది",
+        "profile_update": "ప్రొఫైల్ అప్డేట్ అవసరం"
       },
       "every_week": "ప్రతి వారం",
       "select_days": "రోజులను ఎంచుకోండి",

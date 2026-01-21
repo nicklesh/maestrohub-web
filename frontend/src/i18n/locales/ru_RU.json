@@ -790,7 +790,11 @@
         "when_get_paid": "Когда и как я получаю оплату?",
         "app_not_working": "Приложение не работает правильно. Что делать?",
         "update_profile": "Как обновить информацию в профиле?",
-        "contact_support": "Как связаться с поддержкой?"
+        "contact_support": "Как связаться с поддержкой?",
+        "how_become_coach": {
+          "question": "Как мне стать тренером?",
+          "answer": "Зарегистрируйтесь как тренер, заполните свой профиль, установите свои тарифы и пройдите верификацию."
+        }
       },
       "answers": {
         "how_create_account": "Чтобы создать аккаунт, нажмите «Зарегистрироваться» на экране входа. Вы можете зарегистрироваться, используя свой email или войти через Google. Выберите, хотите ли вы присоединиться как родитель/ученик (для поиска тренера) или как тренер/репетитор (для предоставления услуг).",
@@ -1184,7 +1188,14 @@
         "message_details": "Детали сообщения",
         "status": "Статус",
         "update_failed": "Не удалось обновить статус",
-        "close": "Закрыть"
+        "close": "Закрыть",
+        "categories": {
+          "general": "Общий",
+          "billing": "Выставление счетов",
+          "technical": "Технический",
+          "feedback": "Обратная связь",
+          "other": "Другое"
+        }
       },
       "coaches_page": {
         "title": "Управление тренерами",
@@ -1323,7 +1334,23 @@
         "revenue_trend": "Тренд выручки",
         "gross_revenue": "Валовая выручка",
         "net_to_coaches": "Нетто тренерам",
-        "bookings_count": "Бронирования"
+        "bookings_count": "Бронирования",
+        "auto_refresh_on": "Автообновление включено",
+        "auto_refresh_off": "Авто-обновление отключено",
+        "growth_visualization": "Визуализация роста",
+        "new_coaches_trend": "Тренд новых тренеров",
+        "new_consumers_trend": "Новые тенденции потребителей",
+        "top_categories": "Топ категорий по тренерам",
+        "performance_arts": "Исполнительское искусство и творчество",
+        "academics": "Академики",
+        "activities_hobbies": "Деятельность и хобби",
+        "fitness_nutrition": "Фитнес и питание",
+        "health_mindfulness": "Здоровье, осознанность и благополучие",
+        "business_communication": "Бизнес, Коммуникации и Лидерство",
+        "finance_legal": "Финансы, Юридические вопросы и Переговоры",
+        "coaching_personal": "Коучинг и личностный рост",
+        "relationships_family": "Отношения и семья",
+        "culture_inclusion": "Культура, инклюзивность и опыт"
       },
       "settings_page": {
         "title": "Настройки",
@@ -1442,6 +1469,10 @@
         "policy_updated": "Ценовая политика успешно обновлена",
         "no_policies": "Нет политик ценообразования",
         "no_policies_description": "Политики ценообразования не найдены ни для одного рынка"
+      },
+      "marketplace": {
+        "all_countries": "Все страны",
+        "filter_by_country": "Фильтр по стране"
       }
     },
     "edit_profile": {
@@ -1777,7 +1808,20 @@
         "profile_hidden": "Ваш профиль скрыт",
         "published": "Опубликовано",
         "publish": "Опубликовать",
-        "grow_business": "Развивайте Свой Бизнес"
+        "grow_business": "Развивайте Свой Бизнес",
+        "save_link": "Сохранить ссылку",
+        "zoom_link": "Ссылка Zoom",
+        "zoom_link_placeholder": "Введите вашу ссылку Zoom",
+        "meeting_link": "Ссылка на встречу",
+        "video_call_link": "Ссылка на видеозвонок",
+        "category": "Категория",
+        "subcategory": "Подкатегория",
+        "teaching_medium": "Средство обучения",
+        "select_category": "Выберите категорию",
+        "select_subcategory": "Выберите подкатегорию",
+        "select_medium": "Выбрать Medium",
+        "add_stripe_account": "Добавить аккаунт Stripe",
+        "stripe_not_connected": "Stripe не подключен"
       },
       "billing": {
         "title": "Биллинг",
@@ -1836,7 +1880,10 @@
         "write_response": "Написать Ответ",
         "respond_to_review": "Ответить на отзыв",
         "response_placeholder": "Поблагодарите рецензента и профессионально отреагируйте на любые отзывы...",
-        "response_tip": "Совет: Поблагодарите клиента, признайте обратную связь и подчеркните вашу приверженность качеству."
+        "response_tip": "Совет: Поблагодарите клиента, признайте обратную связь и подчеркните вашу приверженность качеству.",
+        "no_reviews_text": "Вы еще не получили ни одного отзыва",
+        "average_rating": "Средний рейтинг",
+        "rating_breakdown": "Разбивка рейтинга"
       },
       "packages": {
         "title": "Пакеты",
@@ -1875,7 +1922,16 @@
         "preview": "Предварительный просмотр пакета",
         "regular_price": "Обычная цена",
         "package_price": "Цена пакета",
-        "client_saves": "Клиент сохраняет"
+        "client_saves": "Клиент сохраняет",
+        "delete_package": "Удалить пакет",
+        "package_description": "Описание",
+        "sessions_count": "Количество сессий",
+        "set_available_times": "Установить доступное время",
+        "select_category": "Выбрать категорию",
+        "select_subcategory": "Выберите подкатегорию",
+        "no_packages_text": "Вы еще не создали ни одного пакета",
+        "publish": "Опубликовать",
+        "unpublish": "Снять с публикации"
       },
       "invites": {
         "title": "Приглашения",
@@ -2063,7 +2119,22 @@
         "start_time": "Время начала",
         "end_time": "Время окончания",
         "enabled": "Включено",
-        "disabled": "Отключено"
+        "disabled": "Отключено",
+        "vacation_mode": "Режим отпуска",
+        "set_vacation_days": "Установить дни отпуска",
+        "available": "Доступно",
+        "unavailable": "Недоступно",
+        "vacation": "Отпуск",
+        "set_recurring_schedule": "Установить повторяющееся расписание",
+        "quick_actions": "Быстрые действия",
+        "tap_calendar_hint": "Нажмите на любую дату в календаре, чтобы установить свою доступность",
+        "add_time_slot": "Добавить временной слот",
+        "remove_time_slot": "Удалить временной слот",
+        "daily": "Ежедневно",
+        "weekly": "Еженедельно",
+        "monthly": "Ежемесячно",
+        "calendar": "Календарь",
+        "availability": "Доступность"
       },
       "faq": {
         "frequently_asked": "Часто задаваемые вопросы",
@@ -2076,7 +2147,14 @@
         "title": "ЧаВо",
         "help_center": "Центр помощи",
         "subtitle": "Найдите ответы на часто задаваемые вопросы о коучинге на Maestro Habitat",
-        "still_have_questions": "Остались вопросы?"
+        "still_have_questions": "Остались вопросы?",
+        "categories": {
+          "getting_started": "Начало работы",
+          "managing_availability": "Управление доступностью",
+          "bookings_sessions": "Бронирования и сессии",
+          "payments_earnings": "Платежи и доходы",
+          "account_support": "Аккаунт и поддержка"
+        }
       },
       "notifications": {
         "title": "Уведомления",
@@ -2087,7 +2165,14 @@
         "new_booking": "Новое бронирование",
         "booking_cancelled": "Бронирование отменено",
         "review_received": "Отзыв получен",
-        "payout_completed": "Выплата завершена"
+        "payout_completed": "Выплата завершена",
+        "no_notifications_text": "У вас нет новых уведомлений",
+        "clear_all": "Очистить все",
+        "booking_confirmed": "Бронирование подтверждено",
+        "new_message": "Новое сообщение",
+        "payment_received": "Платеж получен",
+        "profile_approved": "Профиль одобрен",
+        "profile_update": "Требуется обновление профиля"
       },
       "every_week": "Каждую неделю",
       "select_days": "Выберите дни",

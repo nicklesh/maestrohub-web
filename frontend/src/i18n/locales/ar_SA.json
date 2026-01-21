@@ -790,7 +790,11 @@
         "when_get_paid": "متى وكيف أتلقى المدفوعات؟",
         "app_not_working": "التطبيق لا يعمل بشكل صحيح. ماذا يجب أن أفعل؟",
         "update_profile": "كيف أحدث معلومات ملفي الشخصي؟",
-        "contact_support": "كيف أتواصل مع الدعم؟"
+        "contact_support": "كيف أتواصل مع الدعم؟",
+        "how_become_coach": {
+          "question": "كيف أصبح مدرباً؟",
+          "answer": "اشترك كمدرب، أكمل ملفك الشخصي، حدد أسعارك، واحصل على التحقق."
+        }
       },
       "answers": {
         "how_create_account": "لإنشاء حساب، اضغط على 'التسجيل' في شاشة الدخول. يمكنك التسجيل باستخدام بريدك الإلكتروني أو تسجيل الدخول عبر Google. اختر الانضمام كولي أمر/طالب (للبحث عن مدرب) أو كمدرب/معلم (لتقديم خدماتك).",
@@ -1184,7 +1188,14 @@
         "message_details": "تفاصيل الرسالة",
         "status": "الحالة",
         "update_failed": "فشل تحديث الحالة",
-        "close": "إغلاق"
+        "close": "إغلاق",
+        "categories": {
+          "general": "عام",
+          "billing": "الفوترة",
+          "technical": "تقني",
+          "feedback": "ملاحظات",
+          "other": "آخر"
+        }
       },
       "coaches_page": {
         "title": "إدارة المدربين",
@@ -1323,7 +1334,23 @@
         "revenue_trend": "اتجاه الإيرادات",
         "gross_revenue": "الإيرادات الإجمالية",
         "net_to_coaches": "صافي للمدربين",
-        "bookings_count": "الحجوزات"
+        "bookings_count": "الحجوزات",
+        "auto_refresh_on": "التحديث التلقائي مُفعَّل",
+        "auto_refresh_off": "التحديث التلقائي معطل",
+        "growth_visualization": "تصور النمو",
+        "new_coaches_trend": "اتجاه المدربين الجدد",
+        "new_consumers_trend": "اتجاه المستهلكين الجدد",
+        "top_categories": "أهم الفئات حسب المدربين",
+        "performance_arts": "الأداء والفنون الإبداعية",
+        "academics": "الأكاديميون",
+        "activities_hobbies": "الأنشطة والهوايات",
+        "fitness_nutrition": "اللياقة البدنية والتغذية",
+        "health_mindfulness": "الصحة والوعي الذهني والعافية",
+        "business_communication": "الأعمال والتواصل والقيادة",
+        "finance_legal": "المالية والقانونية والتفاوض",
+        "coaching_personal": "التدريب والنمو الشخصي",
+        "relationships_family": "العلاقات والعائلة",
+        "culture_inclusion": "الثقافة والشمول والتجارب"
       },
       "settings_page": {
         "title": "الإعدادات",
@@ -1442,6 +1469,10 @@
         "policy_updated": "تم تحديث سياسة التسعير بنجاح",
         "no_policies": "لا توجد سياسات تسعير",
         "no_policies_description": "لم يتم العثور على سياسات تسعير لأي سوق"
+      },
+      "marketplace": {
+        "all_countries": "جميع البلدان",
+        "filter_by_country": "تصفية حسب البلد"
       }
     },
     "edit_profile": {
@@ -1777,7 +1808,21 @@
         "profile_hidden": "ملفك الشخصي مخفي",
         "published": "منشور",
         "publish": "نشر",
-        "grow_business": "نمّي عملك"
+        "grow_business": "نمّي عملك",
+        "save_link": "حفظ الرابط",
+        "zoom_link": "رابط Zoom",
+        "zoom_link_placeholder": "أدخل رابط Zoom الخاص بك",
+        "meeting_link": "رابط الاجتماع",
+        "video_call_link": "رابط مكالمة الفيديو",
+        "category": "فئة",
+        "subcategory": "فئة فرعية",
+        "teaching_medium": "وسيلة التدريس",
+        "select_category": "اختر الفئة",
+        "select_subcategory": "اختر الفئة الفرعية",
+        "select_medium": "اختر الوسط",
+        "add_stripe_account": "إضافة حساب Stripe",
+        "stripe_connected": "Stripe متصل",
+        "stripe_not_connected": "Stripe غير متصل"
       },
       "billing": {
         "title": "الفواتير",
@@ -1837,7 +1882,10 @@
         "write_response": "اكتب الاستجابة",
         "respond_to_review": "الرد على المراجعة",
         "response_placeholder": "شكر المراجع وتناول أي ملاحظات بشكل مهني...",
-        "response_tip": "نصيحة: اشكر العميل، واعترف بالملاحظات، وأبرز التزامك بالجودة."
+        "response_tip": "نصيحة: اشكر العميل، واعترف بالملاحظات، وأبرز التزامك بالجودة.",
+        "no_reviews_text": "لم تتلق أي مراجعات بعد",
+        "average_rating": "التقييم المتوسط",
+        "rating_breakdown": "تفصيل التقييم"
       },
       "packages": {
         "title": "الحزم",
@@ -1876,7 +1924,16 @@
         "preview": "معاينة الحزمة",
         "regular_price": "السعر العادي",
         "package_price": "سعر الباقة",
-        "client_saves": "حفظ العميل"
+        "client_saves": "حفظ العميل",
+        "delete_package": "حذف الحزمة",
+        "package_description": "وصف",
+        "sessions_count": "عدد الجلسات",
+        "set_available_times": "تحديد الأوقات المتاحة",
+        "select_category": "اختر الفئة",
+        "select_subcategory": "اختر الفئة الفرعية",
+        "no_packages_text": "لم تقم بإنشاء أي حزم بعد",
+        "publish": "نشر",
+        "unpublish": "إلغاء النشر"
       },
       "invites": {
         "title": "دعوات",
@@ -2064,7 +2121,22 @@
         "start_time": "وقت البداية",
         "end_time": "وقت الانتهاء",
         "enabled": "مُفعّل",
-        "disabled": "معطل"
+        "disabled": "معطل",
+        "vacation_mode": "وضع الإجازة",
+        "set_vacation_days": "تعيين أيام الإجازة",
+        "available": "متاح",
+        "unavailable": "غير متاح",
+        "vacation": "إجازة",
+        "set_recurring_schedule": "تعيين جدول متكرر",
+        "quick_actions": "الإجراءات السريعة",
+        "tap_calendar_hint": "اضغط على أي تاريخ في التقويم لتحديد توفرك",
+        "add_time_slot": "إضافة فترة زمنية",
+        "remove_time_slot": "إزالة الفترة الزمنية",
+        "daily": "يومي",
+        "weekly": "أسبوعياً",
+        "monthly": "شهري",
+        "calendar": "التقويم",
+        "availability": "التوفر"
       },
       "faq": {
         "title": "الأسئلة الشائعة",
@@ -2077,7 +2149,14 @@
         "still_need_help": "لا تزال بحاجة إلى مساعدة؟",
         "help_center": "مركز المساعدة",
         "subtitle": "ابحث عن إجابات للأسئلة الشائعة حول التدريب على Maestro Habitat",
-        "still_have_questions": "هل لا تزال لديك أسئلة؟"
+        "still_have_questions": "هل لا تزال لديك أسئلة؟",
+        "categories": {
+          "getting_started": "البدء",
+          "managing_availability": "إدارة التوفر",
+          "bookings_sessions": "الحجوزات والجلسات",
+          "payments_earnings": "المدفوعات والأرباح",
+          "account_support": "الحساب والدعم"
+        }
       },
       "notifications": {
         "title": "الإشعارات",
@@ -2088,7 +2167,14 @@
         "new_booking": "حجز جديد",
         "booking_cancelled": "تم إلغاء الحجز",
         "review_received": "مراجعة مستلمة",
-        "payout_completed": "تم إكمال الدفع"
+        "payout_completed": "تم إكمال الدفع",
+        "no_notifications_text": "ليس لديك إشعارات جديدة",
+        "clear_all": "مسح الكل",
+        "booking_confirmed": "تم تأكيد الحجز",
+        "new_message": "رسالة جديدة",
+        "payment_received": "تم استلام الدفعة",
+        "profile_approved": "تم اعتماد الملف الشخصي",
+        "profile_update": "مطلوب تحديث الملف الشخصي"
       },
       "every_week": "كل أسبوع",
       "select_days": "اختر الأيام",
