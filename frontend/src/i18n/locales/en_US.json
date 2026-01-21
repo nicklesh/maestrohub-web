@@ -2088,7 +2088,7 @@
         "time_slot": "Time Slot",
         "repeat": "Repeat",
         "save_schedule": "Save Schedule",
-        "schedule_saved": "Your schedule has been saved!",
+        "schedule_saved": "Schedule saved successfully",
         "save_failed": "Failed to save schedule",
         "schedule_duration": "Schedule Duration",
         "auto_renew": "Auto-Renew",
@@ -2113,7 +2113,21 @@
         "monthly": "Monthly",
         "select_days": "Select Days",
         "calendar": "Calendar",
-        "availability": "Availability"
+        "availability": "Availability",
+        "duration_month": "1 Month",
+        "duration_quarter": "3 Months (Quarter)",
+        "duration_year": "1 Year",
+        "months": "Months",
+        "schedule_active_until": "Schedule active until",
+        "auto_renewal": "Auto-Renewal",
+        "auto_renewal_hint": "Automatically renew when schedule expires",
+        "reminder_before_expiry": "Reminder before expiry",
+        "days": "days",
+        "weekly_hours": "Weekly Hours",
+        "apply_to_all": "Apply to All",
+        "to": "to",
+        "no_schedule": "No schedule set",
+        "schedule_error": "Failed to save schedule"
       },
       "every_week": "Every Week",
       "select_days": "Select Days",
@@ -2130,17 +2144,22 @@
       "reset": "Reset",
       "notifications": {
         "title": "Notifications",
-        "no_notifications": "No notifications",
+        "no_notifications": "No Notifications",
         "no_notifications_text": "You have no new notifications",
         "mark_all_read": "Mark all as read",
         "clear_all": "Clear all",
         "booking_confirmed": "Booking confirmed",
         "booking_cancelled": "Booking cancelled",
         "new_message": "New message",
-        "payment_received": "Payment received",
+        "payment_received": "Payment Received",
         "review_received": "New review received",
-        "profile_approved": "Profile approved",
-        "profile_update": "Profile update required"
+        "profile_approved": "Profile Approved",
+        "profile_update": "Profile update required",
+        "all_caught_up": "You're all caught up!",
+        "new_booking_request": "New Booking Request",
+        "booking_message": "You have a new booking request for your session.",
+        "payment_message": "You received a payment for your session.",
+        "profile_approved_message": "Congratulations! Your coach profile has been approved."
       }
     },
     "packages": {
@@ -2292,13 +2311,15 @@
     "hours": "hours",
     "minute": "minute",
     "minutes": "minutes",
-    "hr": "hr",
+    "hr": "h",
     "min": "min",
     "am": "AM",
     "pm": "PM",
     "today": "Today",
     "tomorrow": "Tomorrow",
     "yesterday": "Yesterday",
-    "now": "Now"
+    "now": "Now",
+    "day_short": "d",
+    "just_now": "Just now"
   }
 }
