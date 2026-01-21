@@ -298,4 +298,18 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
   },
+  contactButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+    marginTop: 16,
+    gap: 8,
+  },
+  contactButtonText: {
+    color: '#fff',
+    fontSize: 15,
+    fontWeight: '600',
+  },
 });
