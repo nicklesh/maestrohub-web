@@ -7141,6 +7141,202 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+# ============== IMAGE UPLOAD ENDPOINTS ==============
+
+class ImageUploadRequest(BaseModel):
+    image_data: str  # Base64 encoded image or URL
+    folder: Optional[str] = "profiles"
+    old_public_id: Optional[str] = None  # For update operations
+
+@api_router.post("/images/upload")
+@limiter.limit("10/minute")
+async def upload_image(request: Request, data: ImageUploadRequest):
+    """
+    Upload an image to Cloudinary (or fallback to base64 storage)
+    """
+    user = await require_auth(request)
+    
+    try:
+        # Track upload event
+        await track_event("image_upload", user["user_id"], {"folder": data.folder})
+        
+        result = await cloudinary_service.upload_image(
+            image_data=data.image_data,
+            folder=f"maestrohub/{data.folder}",
+            public_id=f"{user['user_id']}_{datetime.now().timestamp()}"
+        )
+        
+        if "error" in result:
+            raise HTTPException(status_code=400, detail=result["error"])
+        
+        return {
+            "success": True,
+            "url": result.get("secure_url") or result.get("url"),
+            "public_id": result.get("public_id"),
+            "provider": result.get("provider", "cloudinary")
+        }
+    except Exception as e:
+        capture_error(e, {"user_id": user["user_id"], "action": "image_upload"})
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.delete("/images/{public_id:path}")
+@limiter.limit("10/minute")
+async def delete_image(request: Request, public_id: str):
+    """
+    Delete an image from Cloudinary
+    """
+    user = await require_auth(request)
+    
+    try:
+        await track_event("image_delete", user["user_id"], {"public_id": public_id})
+        
+        success = await cloudinary_service.delete_image(public_id)
+        
+        if not success:
+            raise HTTPException(status_code=400, detail="Failed to delete image")
+        
+        return {"success": True, "message": "Image deleted"}
+    except Exception as e:
+        capture_error(e, {"user_id": user["user_id"], "action": "image_delete"})
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.put("/images/update")
+@limiter.limit("10/minute")
+async def update_image(request: Request, data: ImageUploadRequest):
+    """
+    Update an image (delete old and upload new)
+    """
+    user = await require_auth(request)
+    
+    try:
+        await track_event("image_update", user["user_id"], {"folder": data.folder})
+        
+        result = await cloudinary_service.update_image(
+            old_public_id=data.old_public_id,
+            new_image_data=data.image_data,
+            folder=f"maestrohub/{data.folder}"
+        )
+        
+        if "error" in result:
+            raise HTTPException(status_code=400, detail=result["error"])
+        
+        return {
+            "success": True,
+            "url": result.get("secure_url") or result.get("url"),
+            "public_id": result.get("public_id"),
+            "provider": result.get("provider", "cloudinary")
+        }
+    except Exception as e:
+        capture_error(e, {"user_id": user["user_id"], "action": "image_update"})
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.put("/users/profile-picture")
+@limiter.limit("5/minute")
+async def update_profile_picture(request: Request, data: ImageUploadRequest):
+    """
+    Update user's profile picture
+    """
+    user = await require_auth(request)
+    user_id = user["user_id"]
+    
+    try:
+        # Get current user to check for existing picture
+        current_user = await db.users.find_one({"user_id": user_id})
+        old_public_id = current_user.get("picture_public_id") if current_user else None
+        
+        # Upload new image
+        result = await cloudinary_service.update_image(
+            old_public_id=old_public_id,
+            new_image_data=data.image_data,
+            folder="maestrohub/profiles"
+        )
+        
+        if "error" in result:
+            raise HTTPException(status_code=400, detail=result["error"])
+        
+        # Update user record
+        new_picture_url = result.get("secure_url") or result.get("url")
+        await db.users.update_one(
+            {"user_id": user_id},
+            {"$set": {
+                "picture": new_picture_url,
+                "picture_public_id": result.get("public_id"),
+                "updated_at": datetime.now(timezone.utc)
+            }}
+        )
+        
+        # Also update tutor profile if exists
+        await db.tutors.update_one(
+            {"user_id": user_id},
+            {"$set": {
+                "profile_picture": new_picture_url,
+                "picture_public_id": result.get("public_id"),
+                "updated_at": datetime.now(timezone.utc)
+            }}
+        )
+        
+        await track_event("profile_picture_updated", user_id)
+        
+        return {
+            "success": True,
+            "picture": new_picture_url,
+            "public_id": result.get("public_id")
+        }
+    except Exception as e:
+        capture_error(e, {"user_id": user_id, "action": "profile_picture_update"})
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.delete("/users/profile-picture")
+@limiter.limit("5/minute")
+async def delete_profile_picture(request: Request):
+    """
+    Delete user's profile picture
+    """
+    user = await require_auth(request)
+    user_id = user["user_id"]
+    
+    try:
+        # Get current user
+        current_user = await db.users.find_one({"user_id": user_id})
+        if not current_user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        old_public_id = current_user.get("picture_public_id")
+        
+        # Delete from Cloudinary
+        if old_public_id:
+            await cloudinary_service.delete_image(old_public_id)
+        
+        # Update user record
+        await db.users.update_one(
+            {"user_id": user_id},
+            {"$set": {
+                "picture": None,
+                "picture_public_id": None,
+                "updated_at": datetime.now(timezone.utc)
+            }}
+        )
+        
+        # Also update tutor profile if exists
+        await db.tutors.update_one(
+            {"user_id": user_id},
+            {"$set": {
+                "profile_picture": None,
+                "picture_public_id": None,
+                "updated_at": datetime.now(timezone.utc)
+            }}
+        )
+        
+        await track_event("profile_picture_deleted", user_id)
+        
+        return {"success": True, "message": "Profile picture deleted"}
+    except Exception as e:
+        capture_error(e, {"user_id": user_id, "action": "profile_picture_delete"})
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
