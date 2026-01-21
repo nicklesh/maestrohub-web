@@ -1163,7 +1163,36 @@
             "description": "Ausstehende Empfehlungsguthaben und Boni verarbeiten",
             "schedule_display": "Täglich um Mitternacht"
           }
-        }
+        },
+        "1099_equivalent": "1099-Äquivalent",
+        "tax_documents": "Steuerdokumente",
+        "generate_tax_docs": "Erstellen Sie jährliche Steuerdokumente (1099-Äquivalent) für alle Anbieter",
+        "monthly_reports": "Monatliche Steuerberichte",
+        "monthly_reports_desc": "Erstelle monatliche Zahlungsübersichtsberichte für alle Benutzer mit Transaktionen",
+        "annual_1099_reports": "Jährliche 1099-Berichte",
+        "annual_1099_reports_desc": "Erstellen Sie jährliche Steuerdokumente (1099-Äquivalent) für alle Anbieter",
+        "parent_updates": "Eltern-Session-Updates",
+        "parent_updates_desc": "Sende Updates an Eltern über die Aktivitäten ihrer Kinder in den Sitzungen",
+        "success": "Erfolg",
+        "hour": "Stunde",
+        "save_settings": "Einstellungen speichern",
+        "job_triggered": "Auftrag erfolgreich ausgelöst",
+        "job_error": "Fehler beim Ausführen des Jobs",
+        "1st_of_month": "1. jeden Monats",
+        "jan_15": "15. Januar",
+        "every_sunday": "Jeden Sonntag",
+        "payment_summary": "Zahlungsübersicht",
+        "transactions": "Transaktionen",
+        "session": "Sitzung",
+        "sessions": "Sitzungen",
+        "activities": "Aktivitäten",
+        "session_reminders": "Sitzungserinnerungen",
+        "session_reminders_desc": "Erinnerungsbenachrichtigungen für bevorstehende Sitzungen senden (24h und 1h vorher)",
+        "kid_notifications": "Aktivitätsupdates für Kinder",
+        "kid_notifications_desc": "Senden Sie Eltern Updates über die Aktivitäten ihrer Kinder in den Sitzungen",
+        "referral_check": "Empfehlungskredit-Verarbeitung",
+        "referral_check_desc": "Ausstehende Empfehlungsguthaben und Boni verarbeiten",
+        "every_hour": "Jede Stunde"
       },
       "inbox_page": {
         "title": "Posteingang",
@@ -1346,7 +1375,13 @@
         "finance_legal": "Finanzen, Recht & Verhandlung",
         "coaching_personal": "Coaching & Persönliche Entwicklung",
         "relationships_family": "Beziehungen & Familie",
-        "culture_inclusion": "Kultur, Inklusion & Erfahrungen"
+        "culture_inclusion": "Kultur, Inklusion & Erfahrungen",
+        "total_users": "Gesamte Benutzer",
+        "total_parents": "Eltern insgesamt",
+        "total_bookings": "Gesamtbuchungen",
+        "monthly_revenue": "Monatlicher Umsatz",
+        "monthly_growth": "Monatliches Wachstum",
+        "user_breakdown": "Benutzeraufschlüsselung"
       },
       "settings_page": {
         "title": "Einstellungen",
@@ -1849,7 +1884,8 @@
         "want_more_bookings": "Möchten Sie mehr Buchungen?",
         "get_featured": "In den Suchergebnissen ganz oben erscheinen",
         "more_visibility": "3x mehr Sichtbarkeit",
-        "top_placement": "Top-Suchplatzierung"
+        "top_placement": "Top-Suchplatzierung",
+        "stripe_coming_soon": "Stripe-Integration kommt bald. Kontaktieren Sie den Support für die manuelle Auszahlungseinrichtung."
       },
       "reviews": {
         "title": "Bewertungen",
@@ -1926,7 +1962,21 @@
         "select_subcategory": "Unterkategorie auswählen",
         "no_packages_text": "Sie haben noch keine Pakete erstellt",
         "publish": "Veröffentlichen",
-        "unpublish": "Veröffentlichung rückgängig machen"
+        "unpublish": "Veröffentlichung rückgängig machen",
+        "package_name_placeholder": "z.B. Premium Tutoring Paket",
+        "discount": "Rabatt",
+        "validity_1_month": "1 Monat",
+        "validity_2_months": "2 Monate",
+        "validity_3_months": "3 Monate",
+        "validity_6_months": "6 Monate",
+        "validity_1_year": "1 Jahr",
+        "total_price": "Gesamtpreis",
+        "price_per_session": "Preis pro Sitzung",
+        "set_base_price": "Legen Sie zuerst Ihren Grundstundensatz fest",
+        "package_created": "Paket erfolgreich erstellt",
+        "confirm_delete": "Sind Sie sicher, dass Sie dieses Paket löschen möchten?",
+        "off": "aus",
+        "no_packages_yet": "Noch keine Pakete erstellt"
       },
       "invites": {
         "title": "Einladungen",
@@ -1951,7 +2001,11 @@
         "email_required": "E-Mail *",
         "name_placeholder": "Name des Studenten",
         "message_optional": "Persönliche Nachricht (optional)",
-        "message_placeholder": "Hallo! Ich würde Ihnen gerne helfen mit..."
+        "message_placeholder": "Hallo! Ich würde Ihnen gerne helfen mit...",
+        "email_placeholder": "E-Mail-Adresse eingeben",
+        "pending": "Ausstehend",
+        "expired": "Abgelaufen",
+        "invite_error": "Einladung konnte nicht gesendet werden"
       },
       "sponsorship": {
         "title": "Sponsoring",
@@ -2081,7 +2135,29 @@
         "currently_active": "Derzeit aktiv",
         "no_sponsorships": "Noch keine Sponsorings",
         "boost_visibility": "Steigern Sie Ihre Sichtbarkeit, indem Sie ein gesponserter Coach werden",
-        "get_sponsored": "Gesponsert werden"
+        "get_sponsored": "Gesponsert werden",
+        "earnings_summary": "Ergebniszusammenfassung",
+        "pending_payout": "Ausstehende Auszahlung",
+        "platform_fees": "Plattformgebühren",
+        "sessions_summary": "Sitzungen Zusammenfassung",
+        "completed_sessions": "Abgeschlossene Sitzungen",
+        "upcoming_sessions": "Anstehende Sessions",
+        "canceled_sessions": "Abgebrochene Sessions",
+        "completion_rate": "Abschlussrate",
+        "earnings_by_month": "Einnahmen nach Monat",
+        "earnings_by_student": "Einnahmen nach Student",
+        "download_pdf": "PDF herunterladen",
+        "downloading": "Wird heruntergeladen...",
+        "report_downloaded": "Bericht erfolgreich heruntergeladen",
+        "download_error": "Fehler beim Herunterladen des Berichts",
+        "no_data": "Noch keine Daten verfügbar",
+        "sponsorship_summary": "Sponsoring-Zusammenfassung",
+        "active_sponsorships": "Aktive Sponsorings",
+        "total_purchases": "Gesamteinkäufe",
+        "current_plan": "Aktueller Plan",
+        "expires": "Läuft ab",
+        "weeks": "Wochen",
+        "no_sponsorship": "Keine aktive Patenschaft"
       },
       "schedule_builder": {
         "title": "Terminplaner",
@@ -2124,7 +2200,22 @@
         "weekly": "Wöchentlich",
         "monthly": "Monatlich",
         "calendar": "Kalender",
-        "availability": "Verfügbarkeit"
+        "availability": "Verfügbarkeit",
+        "duration_month": "1 Monat",
+        "duration_quarter": "3 Monate (Quartal)",
+        "duration_year": "1 Jahr",
+        "months": "Monate",
+        "schedule_active_until": "Zeitplan aktiv bis",
+        "auto_renewal": "Auto-Verlängerung",
+        "auto_renewal_hint": "Automatisch erneuern, wenn der Zeitplan abläuft",
+        "reminder_before_expiry": "Erinnerung vor Ablauf",
+        "days": "Tage",
+        "weekly_hours": "Wochenstunden",
+        "apply_to_all": "Auf alle anwenden",
+        "no_schedule": "Kein Zeitplan festgelegt",
+        "schedule_error": "Zeitplan konnte nicht gespeichert werden",
+        "auto_renew_message": "Ihr Zeitplan wird am {date} automatisch verlängert. Sie erhalten {days} Tage vorher eine Erinnerung.",
+        "schedule_expires_message": "Ihr Zeitplan läuft am {date} ab. Aktivieren Sie die automatische Verlängerung, um fortzufahren."
       },
       "faq": {
         "frequently_asked": "Häufig gestellte Fragen",
@@ -2144,7 +2235,27 @@
           "bookings_sessions": "Buchungen & Sessions",
           "payments_earnings": "Zahlungen & Einnahmen",
           "account_support": "Konto & Support"
-        }
+        },
+        "q1_question": "Wie fange ich als Coach an?",
+        "q1_answer": "Vervollständigen Sie Ihr Profil, indem Sie Ihre Expertise, Preise und Verfügbarkeit hinzufügen. Nach der Genehmigung durch unser Team erscheinen Sie in den Suchergebnissen und Studenten können Sitzungen mit Ihnen buchen.",
+        "q2_question": "Wie stelle ich meinen Stundensatz ein?",
+        "q2_answer": "Gehen Sie zu Einstellungen > Profil und scrollen Sie zum Abschnitt Tarife. Sie können verschiedene Tarife für verschiedene Fächer festlegen. Berücksichtigen Sie Ihr Erfahrungsniveau und die lokalen Marktpreise bei der Preisgestaltung.",
+        "q3_question": "Wie stelle ich meine Verfügbarkeit ein?",
+        "q3_answer": "Gehen Sie zum Kalender-Tab und tippen Sie auf ein beliebiges Datum, um Zeitfenster hinzuzufügen. Sie können wiederkehrende wöchentliche Verfügbarkeit einstellen oder bestimmte Daten für Urlaub blockieren.",
+        "q4_question": "Wie kann ich Zeit für den Urlaub blockieren?",
+        "q4_answer": "Im Kalender-Tab tippen Sie auf „Urlaub hinzufügen\" und wählen Sie Ihr Start- und Enddatum aus. Alle Buchungen während dieser Zeit werden automatisch blockiert.",
+        "q5_question": "Wie kann ich meine bevorstehenden Sessions anzeigen?",
+        "q5_answer": "Ihr Dashboard zeigt bevorstehende Termine auf einen Blick. Für eine vollständige Liste gehen Sie zum Buchungen-Tab, wo Sie nach Status filtern können.",
+        "q6_question": "Wie führe ich eine Online-Session durch?",
+        "q6_answer": "Für Online-Sitzungen erhalten Sie vor dem geplanten Termin einen Videoanruf-Link. Stellen Sie sicher, dass Sie eine stabile Internetverbindung haben.",
+        "q7_question": "Wann werde ich bezahlt?",
+        "q7_answer": "Zahlungen werden wöchentlich für alle abgeschlossenen Sessions verarbeitet. Die Gelder treffen normalerweise innerhalb von 2-3 Werktagen auf Ihrem Bankkonto ein.",
+        "q8_question": "Wie kann ich meine Einnahmen einsehen?",
+        "q8_answer": "Gehen Sie zum Berichte-Tab, um Ihre Verdienstübersicht zu sehen, einschließlich Gesamtverdienst, abgeschlossene Sitzungen und Zahlungshistorie.",
+        "q9_question": "Wie kontaktiere ich den Support?",
+        "q9_answer": "Tippen Sie auf die Schaltfläche \"Kontakt\" unten oder verwenden Sie die Option \"Kontakt\" in den Einstellungen. Wir bemühen uns, innerhalb von 24 Stunden zu antworten.",
+        "q10_question": "Wie aktualisiere ich meine Auszahlungsinformationen?",
+        "q10_answer": "Gehen Sie zu Einstellungen > Abrechnung, um Ihr Bankkonto oder Zahlungsdetails zu aktualisieren. Änderungen werden im nächsten Zahlungszyklus wirksam."
       },
       "notifications": {
         "title": "Benachrichtigungen",
@@ -2162,7 +2273,12 @@
         "new_message": "Neue Nachricht",
         "payment_received": "Zahlung erhalten",
         "profile_approved": "Profil genehmigt",
-        "profile_update": "Profilaktualisierung erforderlich"
+        "profile_update": "Profilaktualisierung erforderlich",
+        "all_caught_up": "Du bist auf dem neuesten Stand!",
+        "new_booking_request": "Neue Buchungsanfrage",
+        "booking_message": "Sie haben eine neue Buchungsanfrage für Ihre Session.",
+        "payment_message": "Sie haben eine Zahlung für Ihre Sitzung erhalten.",
+        "profile_approved_message": "Herzlichen Glückwunsch! Ihr Coach-Profil wurde genehmigt."
       },
       "every_week": "Jede Woche",
       "select_days": "Tage auswählen",
@@ -2312,7 +2428,8 @@
     "per": "Pro",
     "on": "Ein",
     "off": "Aus",
-    "hour_short": "hr"
+    "hour_short": "hr",
+    "admin_access_required": "Administratorzugriff erforderlich"
   },
   "faq": {
     "consumer": [

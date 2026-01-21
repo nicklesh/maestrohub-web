@@ -1166,7 +1166,37 @@
             "description": "लंबित रेफरल क्रेडिट और बोनस को प्रोसेस करें",
             "schedule_display": "दैनिक आधी रात को"
           }
-        }
+        },
+        "1099_equivalent": "1099 समतुल्य",
+        "tax_documents": "कर दस्तावेज़",
+        "generate_tax_docs": "सभी प्रदाताओं के लिए वार्षिक कर दस्तावेज़ (1099 equivalent) तैयार करें",
+        "monthly_reports": "मासिक कर रिपोर्ट",
+        "monthly_reports_desc": "सभी लेनदेन वाले उपयोगकर्ताओं के लिए मासिक भुगतान सारांश रिपोर्ट जेनरेट करें",
+        "annual_1099_reports": "वार्षिक 1099 रिपोर्ट्स",
+        "annual_1099_reports_desc": "सभी प्रदाताओं के लिए वार्षिक कर दस्तावेज़ (1099 equivalent) तैयार करें",
+        "parent_updates": "पैरेंट सेशन अपडेट्स",
+        "parent_updates_desc": "अभिभावकों को उनके बच्चों की सत्र गतिविधियों के बारे में अपडेट भेजें",
+        "success": "सफलता",
+        "hour": "घंटा",
+        "minute": "मिनट",
+        "save_settings": "सेटिंग्स सहेजें",
+        "job_triggered": "कार्य सफलतापूर्वक ट्रिगर हुआ",
+        "job_error": "जॉब चलाने में विफल",
+        "1st_of_month": "हर महीने की 1 तारीख",
+        "jan_15": "15 जनवरी",
+        "every_sunday": "हर रविवार",
+        "payment_summary": "भुगतान सारांश",
+        "transactions": "लेनदेन",
+        "session": "सत्र",
+        "sessions": "सत्र",
+        "activities": "गतिविधियाँ",
+        "session_reminders": "सत्र अनुस्मारक",
+        "session_reminders_desc": "आगामी सेशन के लिए रिमाइंडर नोटिफिकेशन भेजें (24 घंटे और 1 घंटे पहले)",
+        "kid_notifications": "बच्चों की गतिविधि अपडेट",
+        "kid_notifications_desc": "माता-पिता को उनके बच्चों की session गतिविधियों के बारे में अपडेट भेजें",
+        "referral_check": "रेफरल क्रेडिट प्रोसेसिंग",
+        "referral_check_desc": "लंबित रेफरल क्रेडिट और बोनस को प्रोसेस करें",
+        "every_hour": "हर घंटे"
       },
       "inbox_page": {
         "title": "इनबॉक्स",
@@ -1350,7 +1380,13 @@
         "finance_legal": "वित्त, कानूनी और बातचीत",
         "coaching_personal": "कोचिंग और व्यक्तिगत विकास",
         "relationships_family": "रिश्ते और परिवार",
-        "culture_inclusion": "संस्कृति, समावेश और अनुभव"
+        "culture_inclusion": "संस्कृति, समावेश और अनुभव",
+        "total_users": "कुल उपयोगकर्ता",
+        "total_parents": "कुल माता-पिता",
+        "total_bookings": "कुल बुकिंग",
+        "monthly_revenue": "मासिक राजस्व",
+        "monthly_growth": "मासिक वृद्धि",
+        "user_breakdown": "उपयोगकर्ता विवरण"
       },
       "settings_page": {
         "title": "सेटिंग्स",
@@ -1820,7 +1856,8 @@
         "select_subcategory": "उपश्रेणी चुनें",
         "select_medium": "मीडियम चुनें",
         "add_stripe_account": "Stripe अकाउंट जोड़ें",
-        "stripe_not_connected": "Stripe कनेक्ट नहीं है"
+        "stripe_not_connected": "Stripe कनेक्ट नहीं है",
+        "zoom_link": "ज़ूम लिंक"
       },
       "billing": {
         "title": "बिलिंग",
@@ -1854,7 +1891,8 @@
         "get_featured": "खोज परिणामों के शीर्ष पर फीचर हों",
         "more_visibility": "3x अधिक दृश्यता",
         "top_placement": "शीर्ष खोज स्थान",
-        "paypal": "पेपैल"
+        "paypal": "पेपैल",
+        "stripe_coming_soon": "Stripe integration जल्द आ रहा है। manual payout setup के लिए support से संपर्क करें।"
       },
       "reviews": {
         "title": "समीक्षाएं",
@@ -1931,7 +1969,21 @@
         "select_subcategory": "उपश्रेणी चुनें",
         "no_packages_text": "आपने अभी तक कोई पैकेज नहीं बनाया है",
         "publish": "प्रकाशित करें",
-        "unpublish": "अप्रकाशित करें"
+        "unpublish": "अप्रकाशित करें",
+        "package_name_placeholder": "उदाहरण के लिए, प्रीमियम ट्यूटरिंग पैकेज",
+        "discount": "छूट",
+        "validity_1_month": "1 महीना",
+        "validity_2_months": "2 महीने",
+        "validity_3_months": "3 महीने",
+        "validity_6_months": "6 महीने",
+        "validity_1_year": "1 साल",
+        "total_price": "कुल मूल्य",
+        "price_per_session": "प्रति सत्र मूल्य",
+        "set_base_price": "पहले अपनी आधारभूत घंटेवार दर निर्धारित करें",
+        "package_created": "पैकेज सफलतापूर्वक बनाया गया",
+        "confirm_delete": "क्या आप वाकई इस package को delete करना चाहते हैं?",
+        "off": "बंद",
+        "no_packages_yet": "अभी तक कोई पैकेज नहीं बनाया गया"
       },
       "invites": {
         "title": "आमंत्रण",
@@ -1957,7 +2009,11 @@
         "name_optional": "नाम (वैकल्पिक)",
         "name_placeholder": "छात्र का नाम",
         "message_optional": "व्यक्तिगत संदेश (वैकल्पिक)",
-        "message_placeholder": "नमस्ते! मैं आपकी मदद करना चाहूंगा..."
+        "message_placeholder": "नमस्ते! मैं आपकी मदद करना चाहूंगा...",
+        "email_placeholder": "ईमेल पता दर्ज करें",
+        "pending": "लंबित",
+        "expired": "समाप्त",
+        "invite_error": "आमंत्रण भेजने में असफल"
       },
       "sponsorship": {
         "title": "प्रायोजन",
@@ -2091,7 +2147,29 @@
         "currently_active": "वर्तमान में सक्रिय",
         "no_sponsorships": "अभी तक कोई प्रायोजन नहीं",
         "boost_visibility": "अपनी visibility बढ़ाएं sponsored coach बनकर",
-        "get_sponsored": "प्रायोजन प्राप्त करें"
+        "get_sponsored": "प्रायोजन प्राप्त करें",
+        "earnings_summary": "आय सारांश",
+        "pending_payout": "लंबित भुगतान",
+        "platform_fees": "प्लेटफॉर्म शुल्क",
+        "sessions_summary": "सत्र सारांश",
+        "completed_sessions": "पूर्ण किए गए सत्र",
+        "upcoming_sessions": "आगामी सत्र",
+        "canceled_sessions": "रद्द किए गए सत्र",
+        "completion_rate": "पूर्णता दर",
+        "earnings_by_month": "महीने के अनुसार कमाई",
+        "earnings_by_student": "छात्र द्वारा कमाई",
+        "download_pdf": "PDF डाउनलोड करें",
+        "downloading": "डाउनलोड हो रहा है...",
+        "report_downloaded": "रिपोर्ट सफलतापूर्वक डाउनलोड की गई",
+        "download_error": "रिपोर्ट डाउनलोड करने में विफल",
+        "no_data": "अभी तक कोई डेटा उपलब्ध नहीं है",
+        "sponsorship_summary": "प्रायोजन सारांश",
+        "active_sponsorships": "सक्रिय प्रायोजन",
+        "total_purchases": "कुल खरीदारी",
+        "current_plan": "वर्तमान योजना",
+        "expires": "समाप्त होता है",
+        "weeks": "सप्ताह",
+        "no_sponsorship": "कोई सक्रिय प्रायोजन नहीं"
       },
       "schedule_builder": {
         "title": "शेड्यूल बिल्डर",
@@ -2134,7 +2212,22 @@
         "weekly": "साप्ताहिक",
         "monthly": "मासिक",
         "calendar": "कैलेंडर",
-        "availability": "उपलब्धता"
+        "availability": "उपलब्धता",
+        "duration_month": "1 महीना",
+        "duration_quarter": "3 महीने (तिमाही)",
+        "duration_year": "1 वर्ष",
+        "months": "महीने",
+        "schedule_active_until": "निर्धारित समय तक सक्रिय",
+        "auto_renewal": "स्वचालित नवीनीकरण",
+        "auto_renewal_hint": "शेड्यूल समाप्त होने पर स्वचालित रूप से नवीनीकृत करें",
+        "reminder_before_expiry": "समाप्ति से पहले अनुस्मारक",
+        "days": "दिन",
+        "weekly_hours": "साप्ताहिक घंटे",
+        "apply_to_all": "सभी पर लागू करें",
+        "no_schedule": "कोई शेड्यूल सेट नहीं किया गया",
+        "schedule_error": "शेड्यूल सेव करने में विफल",
+        "auto_renew_message": "आपका शेड्यूल {date} को अपने आप रिन्यू हो जाएगा। आपको {days} दिन पहले एक रिमाइंडर मिलेगा।",
+        "schedule_expires_message": "आपका शेड्यूल {date} को समाप्त हो जाएगा। जारी रखने के लिए auto-renewal सक्षम करें।"
       },
       "faq": {
         "frequently_asked": "अक्सर पूछे जाने वाले प्रश्न",
@@ -2154,7 +2247,27 @@
           "bookings_sessions": "बुकिंग और सेशन",
           "payments_earnings": "भुगतान और आय",
           "account_support": "खाता और सहायता"
-        }
+        },
+        "q1_question": "कोच के रूप में शुरुआत कैसे करूं?",
+        "q1_answer": "अपनी विशेषज्ञता, दरें और उपलब्धता जोड़कर अपनी प्रोफ़ाइल को पूरा करें। हमारी टीम द्वारा अनुमोदित होने के बाद, आप खोज परिणामों में दिखाई देंगे और छात्र आपके साथ सत्र बुक कर सकेंगे।",
+        "q2_question": "मैं अपनी घंटे की दर कैसे निर्धारित करूं?",
+        "q2_answer": "Settings > Profile पर जाएं और Rates section तक स्क्रॉल करें। आप विभिन्न विषयों के लिए अलग-अलग दरें सेट कर सकते हैं। कीमतें निर्धारित करते समय अपने अनुभव स्तर और स्थानीय बाज़ार की दरों पर विचार करें।",
+        "q3_question": "मैं अपनी उपलब्धता कैसे सेट करूं?",
+        "q3_answer": "Calendar tab पर जाएं और time slots जोड़ने के लिए किसी भी तारीख पर tap करें। आप साप्ताहिक recurring availability सेट कर सकते हैं या छुट्टियों के लिए विशिष्ट तारीखों को block कर सकते हैं।",
+        "q4_question": "मैं छुट्टी के लिए समय कैसे ब्लॉक करूं?",
+        "q4_answer": "Calendar टैब में, \"Add Vacation\" पर टैप करें और अपनी शुरुआत और समाप्ति की तारीखें चुनें। इस अवधि के दौरान सभी bookings स्वचालित रूप से block हो जाएंगी।",
+        "q5_question": "मैं अपने आगामी सत्र कैसे देखूं?",
+        "q5_answer": "आपका Dashboard आगामी sessions को एक नज़र में दिखाता है। पूरी सूची के लिए, Bookings tab पर जाएं जहां आप status के आधार पर filter कर सकते हैं।",
+        "q6_question": "मैं ऑनलाइन सेशन कैसे आयोजित करूं?",
+        "q6_answer": "ऑनलाइन sessions के लिए, आपको scheduled समय से पहले एक video call link मिलेगा। सुनिश्चित करें कि आपके पास स्थिर internet connection है।",
+        "q7_question": "मुझे पैसे कब मिलेंगे?",
+        "q7_answer": "भुगतान सभी पूर्ण सत्रों के लिए साप्ताहिक रूप से प्रसंस्कृत किए जाते हैं। धनराशि आमतौर पर 2-3 व्यावसायिक दिनों में आपके बैंक खाते में पहुंच जाती है।",
+        "q8_question": "मैं अपनी कमाई कैसे देखूं?",
+        "q8_answer": "Reports टैब पर जाएं अपनी कमाई का सारांश देखने के लिए, जिसमें कुल कमाई, पूर्ण किए गए sessions, और payment history शामिल है।",
+        "q9_question": "मैं सपोर्ट से कैसे संपर्क करूं?",
+        "q9_answer": "नीचे Contact Us बटन को टैप करें या Settings में Contact Us विकल्प का उपयोग करें। हमारा लक्ष्य 24 घंटे के भीतर जवाब देने का है।",
+        "q10_question": "मैं अपनी payout जानकारी को कैसे अपडेट करूं?",
+        "q10_answer": "सेटिंग्स > Billing में जाकर अपना बैंक खाता या भुगतान विवरण अपडेट करें। परिवर्तन अगले भुगतान चक्र से प्रभावी होंगे।"
       },
       "notifications": {
         "title": "सूचनाएं",
@@ -2172,7 +2285,12 @@
         "new_message": "नया संदेश",
         "payment_received": "भुगतान प्राप्त हुआ",
         "profile_approved": "प्रोफाइल अप्रूव हो गया",
-        "profile_update": "प्रोफ़ाइल अपडेट आवश्यक है"
+        "profile_update": "प्रोफ़ाइल अपडेट आवश्यक है",
+        "all_caught_up": "आप सभी अपडेट हैं!",
+        "new_booking_request": "नया बुकिंग अनुरोध",
+        "booking_message": "आपके सत्र के लिए एक नई बुकिंग रिक्वेस्ट है।",
+        "payment_message": "आपको अपने सेशन के लिए भुगतान प्राप्त हुआ है।",
+        "profile_approved_message": "बधाई हो! आपका कोच प्रोफाइल स्वीकृत हो गया है।"
       },
       "every_week": "हर सप्ताह",
       "select_days": "दिन चुनें",
@@ -2322,7 +2440,8 @@
     "per": "प्रति",
     "on": "चालू",
     "off": "बंद",
-    "hour_short": "hr"
+    "hour_short": "hr",
+    "admin_access_required": "प्रशासक पहुंच आवश्यक"
   },
   "faq": {
     "consumer": [
