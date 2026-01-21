@@ -97,12 +97,10 @@ const BarChart = ({
 const DonutChart = ({
   data,
   size = 120,
-  colors: chartColors,
   themeColors,
 }: {
   data: { label: string; value: number; color: string }[];
   size?: number;
-  colors: string[];
   themeColors: ThemeColors;
 }) => {
   const total = data.reduce((sum, d) => sum + d.value, 0);
@@ -122,7 +120,8 @@ const DonutChart = ({
         {/* Segments represented as overlapping progress bars */}
         {data.map((segment, index) => {
           const percentage = total > 0 ? (segment.value / total) * 100 : 0;
-          const segmentColor = chartColors[index % chartColors.length];
+          const startAngle = currentAngle;
+          currentAngle += (percentage / 100) * 360;
           return (
             <View key={index} style={{
               position: 'absolute',
@@ -131,11 +130,9 @@ const DonutChart = ({
               borderRadius: size / 2,
               borderWidth: size / 5,
               borderColor: 'transparent',
-              borderTopColor: segmentColor,
-              transform: [{ rotate: `${currentAngle}deg` }],
-            }}>
-              {(() => { currentAngle += (percentage / 100) * 360; return null; })()}
-            </View>
+              borderTopColor: segment.color,
+              transform: [{ rotate: `${startAngle}deg` }],
+            }} />
           );
         })}
         {/* Center hole */}
@@ -158,7 +155,7 @@ const DonutChart = ({
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', marginTop: 12, gap: 12 }}>
         {data.map((segment, index) => (
           <View key={index} style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: chartColors[index % chartColors.length], marginRight: 4 }} />
+            <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: segment.color, marginRight: 4 }} />
             <Text style={{ fontSize: 11, color: themeColors.textMuted }}>{segment.label}: {segment.value}</Text>
           </View>
         ))}
