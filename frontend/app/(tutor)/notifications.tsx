@@ -150,16 +150,16 @@ export default function TutorNotificationsScreen() {
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-    if (diffHours < 1) return 'Just now';
-    if (diffHours < 24) return `${diffHours}h ago`;
-    if (diffDays < 7) return `${diffDays}d ago`;
+    if (diffHours < 1) return t('time.just_now') || 'Just now';
+    if (diffHours < 24) return `${diffHours}${t('time.hr') || 'h'} ${t('common.ago') || 'ago'}`;
+    if (diffDays < 7) return `${diffDays}${t('time.day_short') || 'd'} ${t('common.ago') || 'ago'}`;
     return date.toLocaleDateString();
   };
 
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
-        <AppHeader title="Notifications" showBack />
+        <AppHeader title={t('pages.coach.notifications.title') || 'Notifications'} showBack />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -169,7 +169,7 @@ export default function TutorNotificationsScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <AppHeader title="Notifications" showBack />
+      <AppHeader title={t('pages.coach.notifications.title') || 'Notifications'} showBack />
       <ScrollView
         contentContainerStyle={[styles.scrollContent, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
