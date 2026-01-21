@@ -62,7 +62,8 @@ interface ByMonth {
 export default function TutorReportsScreen() {
   const { token } = useAuth();
   const { colors } = useTheme();
-  const { showSuccess, showError } = useToast();
+  const { showSuccess, showError, showInfo } = useToast();
+  const { t } = useTranslation();
   const { width } = useWindowDimensions();
   const router = useRouter();
   const isTablet = width >= 768;
