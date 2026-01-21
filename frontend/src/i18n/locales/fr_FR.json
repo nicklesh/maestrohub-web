@@ -1312,7 +1312,17 @@
         "promote_categories": "Promouvoir les principales catégories",
         "promote_categories_desc": "Le tutorat académique a la plus forte demande. Envisagez des campagnes marketing pour attirer plus de coachs.",
         "freemium_conversion": "Conversion du Freemium vers le Payant",
-        "freemium_conversion_desc": "73% des utilisateurs sont freemium. Offrir des remises à durée limitée pour convertir vers des abonnements payants."
+        "freemium_conversion_desc": "73% des utilisateurs sont freemium. Offrir des remises à durée limitée pour convertir vers des abonnements payants.",
+        "no_data": "Aucune donnée disponible",
+        "coaches": "Entraîneurs",
+        "monthly_revenue_chart": "Tendance des revenus mensuels",
+        "user_breakdown_chart": "Répartition des utilisateurs",
+        "category_distribution": "Répartition des catégories",
+        "booking_by_category": "Réservations par catégorie",
+        "revenue_trend": "Tendance des revenus",
+        "gross_revenue": "Chiffre d'affaires brut",
+        "net_to_coaches": "Net aux Coaches",
+        "bookings_count": "Réservations"
       },
       "settings_page": {
         "title": "Paramètres",
@@ -1412,6 +1422,25 @@
         "7_desc": "Erreurs système et problèmes critiques",
         "8": "Demandes d'assistance",
         "8_desc": "Notifications de nouveaux tickets de support"
+      },
+      "pricing_page": {
+        "title": "Politiques de tarification",
+        "subtitle": "Gérer les frais de plateforme par marché",
+        "trial_days": "Jours d'essai",
+        "days": "jours",
+        "provider_fee_percent": "Frais du fournisseur (%)",
+        "consumer_fee_percent": "Frais de consommateur (%)",
+        "provider_fee": "Frais du fournisseur",
+        "consumer_fee": "Frais de consommateur",
+        "nsf_amount": "Montant NSF",
+        "nsf_fee": "Frais NSF",
+        "active": "Actif",
+        "inactive": "Inactif",
+        "load_failed": "Échec du chargement des politiques de tarification",
+        "save_failed": "Échec de l'enregistrement de la politique de tarification",
+        "policy_updated": "Politique de tarification mise à jour avec succès",
+        "no_policies": "Aucune politique de tarification",
+        "no_policies_description": "Aucune politique de tarification trouvée pour aucun marché"
       }
     },
     "edit_profile": {

@@ -1313,7 +1313,17 @@
         "promote_categories": "Promocionar Categorías Principales",
         "promote_categories_desc": "La tutoría académica tiene la mayor demanda. Considera campañas de marketing para atraer más tutores.",
         "freemium_conversion": "Conversión de Freemium a Pago",
-        "freemium_conversion_desc": "El 73% de los usuarios son freemium. Ofrece descuentos por tiempo limitado para convertirlos a suscripciones de pago."
+        "freemium_conversion_desc": "El 73% de los usuarios son freemium. Ofrece descuentos por tiempo limitado para convertirlos a suscripciones de pago.",
+        "no_data": "No hay datos disponibles",
+        "coaches": "Entrenadores",
+        "monthly_revenue_chart": "Tendencia de Ingresos Mensuales",
+        "user_breakdown_chart": "Distribución de Usuarios",
+        "category_distribution": "Distribución por Categorías",
+        "booking_by_category": "Reservas por Categoría",
+        "revenue_trend": "Tendencia de Ingresos",
+        "gross_revenue": "Ingresos Brutos",
+        "net_to_coaches": "Neto para Entrenadores",
+        "bookings_count": "Reservas"
       },
       "settings_page": {
         "title": "Configuración",
@@ -1413,6 +1423,25 @@
         "7_desc": "Errores del sistema y problemas críticos",
         "8": "Solicitudes de Soporte",
         "8_desc": "Notificaciones de nuevos tickets de soporte"
+      },
+      "pricing_page": {
+        "title": "Políticas de Precios",
+        "subtitle": "Gestionar tarifas de plataforma por mercado",
+        "trial_days": "Días de Prueba",
+        "days": "días",
+        "provider_fee_percent": "Tarifa del Proveedor (%)",
+        "consumer_fee_percent": "Tarifa del Consumidor (%)",
+        "provider_fee": "Tarifa del Proveedor",
+        "consumer_fee": "Tarifa del Consumidor",
+        "nsf_amount": "Monto NSF",
+        "nsf_fee": "Tarifa NSF",
+        "active": "Activo",
+        "inactive": "Inactivo",
+        "load_failed": "No se pudieron cargar las políticas de precios",
+        "save_failed": "Error al guardar la política de precios",
+        "policy_updated": "Política de precios actualizada exitosamente",
+        "no_policies": "Ninguna Política de Precios",
+        "no_policies_description": "No se encontraron políticas de precios para ningún mercado"
       }
     },
     "edit_profile": {

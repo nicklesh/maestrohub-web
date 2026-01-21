@@ -1313,7 +1313,17 @@
         "promote_categories": "शीर्ष श्रेणियों को बढ़ावा दें",
         "promote_categories_desc": "शैक्षणिक शिक्षण की सबसे अधिक मांग है। अधिक कोच आकर्षित करने के लिए मार्केटिंग अभियानों पर विचार करें।",
         "freemium_conversion": "Freemium से Paid Conversion",
-        "freemium_conversion_desc": "73% उपयोगकर्ता freemium हैं। पेड subscription में convert करने के लिए सीमित समय के discount ऑफर करें।"
+        "freemium_conversion_desc": "73% उपयोगकर्ता freemium हैं। पेड subscription में convert करने के लिए सीमित समय के discount ऑफर करें।",
+        "no_data": "कोई डेटा उपलब्ध नहीं है",
+        "coaches": "कोच",
+        "monthly_revenue_chart": "मासिक आय प्रवृत्ति",
+        "user_breakdown_chart": "उपयोगकर्ता वितरण",
+        "category_distribution": "श्रेणी वितरण",
+        "booking_by_category": "श्रेणी के अनुसार बुकिंग",
+        "revenue_trend": "राजस्व प्रवृत्ति",
+        "gross_revenue": "सकल आय",
+        "net_to_coaches": "कोचों के लिए शुद्ध",
+        "bookings_count": "बुकिंग"
       },
       "settings_page": {
         "title": "सेटिंग्स",
@@ -1413,6 +1423,25 @@
         "7_desc": "सिस्टम त्रुटियां और गंभीर समस्याएं",
         "8": "सहायता अनुरोध",
         "8_desc": "नई सपोर्ट टिकट सूचनाएं"
+      },
+      "pricing_page": {
+        "title": "मूल्य निर्धारण नीतियां",
+        "subtitle": "मार्केट के अनुसार प्लेटफॉर्म फीस का प्रबंधन करें",
+        "trial_days": "ट्रायल दिन",
+        "days": "दिन",
+        "provider_fee_percent": "प्रदाता शुल्क (%)",
+        "consumer_fee_percent": "उपभोक्ता शुल्क (%)",
+        "provider_fee": "प्रदाता शुल्क",
+        "consumer_fee": "उपभोक्ता शुल्क",
+        "nsf_amount": "NSF राशि",
+        "nsf_fee": "NSF शुल्क",
+        "active": "सक्रिय",
+        "inactive": "निष्क्रिय",
+        "load_failed": "प्राइसिंग पॉलिसी लोड करने में असफल",
+        "save_failed": "मूल्य निर्धारण नीति सहेजने में असफल",
+        "policy_updated": "मूल्य निर्धारण नीति सफलतापूर्वक अपडेट की गई",
+        "no_policies": "कोई मूल्य निर्धारण नीतियां नहीं",
+        "no_policies_description": "किसी भी बाज़ार के लिए कोई मूल्य निर्धारण नीतियां नहीं मिलीं"
       }
     },
     "edit_profile": {
