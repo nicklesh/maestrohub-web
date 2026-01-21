@@ -62,7 +62,8 @@
     "coach_sponsorship": "Patrocínio",
     "coach_reports": "Relatórios",
     "coach_schedule": "Cronograma",
-    "coach_onboarding": "Integração"
+    "coach_onboarding": "Integração",
+    "coach_faq": "Perguntas Frequentes"
   },
   "categories": {
     "academics": "Acadêmico",
@@ -1312,7 +1313,17 @@
         "promote_categories": "Promover Categorias Principais",
         "promote_categories_desc": "Tutoria acadêmica tem maior demanda. Considere campanhas de marketing para atrair mais tutores.",
         "freemium_conversion": "Conversão de Freemium para Pago",
-        "freemium_conversion_desc": "73% dos usuários são freemium. Ofereça descontos por tempo limitado para converter em assinaturas pagas."
+        "freemium_conversion_desc": "73% dos usuários são freemium. Ofereça descontos por tempo limitado para converter em assinaturas pagas.",
+        "no_data": "Nenhum dado disponível",
+        "coaches": "Treinadores",
+        "monthly_revenue_chart": "Tendência de Receita Mensal",
+        "user_breakdown_chart": "Distribuição de Usuários",
+        "category_distribution": "Distribuição de Categorias",
+        "booking_by_category": "Reservas por Categoria",
+        "revenue_trend": "Tendência de Receita",
+        "gross_revenue": "Receita Bruta",
+        "net_to_coaches": "Líquido para Treinadores",
+        "bookings_count": "Reservas"
       },
       "settings_page": {
         "title": "Configurações",
@@ -1412,6 +1423,25 @@
         "7_desc": "Erros do sistema e problemas críticos",
         "8": "Solicitações de Suporte",
         "8_desc": "Notificações de novos tickets de suporte"
+      },
+      "pricing_page": {
+        "title": "Políticas de Preços",
+        "subtitle": "Gerenciar taxas da plataforma por mercado",
+        "trial_days": "Dias de Teste",
+        "days": "dias",
+        "provider_fee_percent": "Taxa do Provedor (%)",
+        "consumer_fee_percent": "Taxa do Consumidor (%)",
+        "provider_fee": "Taxa do Provedor",
+        "consumer_fee": "Taxa do Consumidor",
+        "nsf_amount": "Valor NSF",
+        "nsf_fee": "Taxa NSF",
+        "active": "Ativo",
+        "inactive": "Inativo",
+        "load_failed": "Falha ao carregar políticas de preços",
+        "save_failed": "Falha ao salvar política de preços",
+        "policy_updated": "Política de preços atualizada com sucesso",
+        "no_policies": "Nenhuma Política de Preços",
+        "no_policies_description": "Nenhuma política de preços encontrada para qualquer mercado"
       }
     },
     "edit_profile": {

@@ -1310,7 +1310,17 @@
         "promote_categories": "Top-Kategorien bewerben",
         "promote_categories_desc": "Akademisches Tutoring hat die höchste Nachfrage. Erwägen Sie Marketingkampagnen, um mehr Coaches anzuziehen.",
         "freemium_conversion": "Freemium zu Bezahlt Conversion",
-        "freemium_conversion_desc": "73% der Nutzer sind Freemium. Bieten Sie zeitlich begrenzte Rabatte an, um sie zu kostenpflichtigen Abonnements zu konvertieren."
+        "freemium_conversion_desc": "73% der Nutzer sind Freemium. Bieten Sie zeitlich begrenzte Rabatte an, um sie zu kostenpflichtigen Abonnements zu konvertieren.",
+        "no_data": "Keine Daten verfügbar",
+        "coaches": "Trainer",
+        "monthly_revenue_chart": "Monatlicher Umsatztrend",
+        "user_breakdown_chart": "Benutzerverteilung",
+        "category_distribution": "Kategorieverteilung",
+        "booking_by_category": "Buchungen nach Kategorie",
+        "revenue_trend": "Umsatztrend",
+        "gross_revenue": "Bruttoumsatz",
+        "net_to_coaches": "Netto an Trainer",
+        "bookings_count": "Buchungen"
       },
       "settings_page": {
         "title": "Einstellungen",
@@ -1409,6 +1419,25 @@
         "7_desc": "Systemfehler und kritische Probleme",
         "8": "Support-Anfragen",
         "8_desc": "Neue Support-Ticket-Benachrichtigungen"
+      },
+      "pricing_page": {
+        "title": "Preisrichtlinien",
+        "subtitle": "Plattformgebühren nach Markt verwalten",
+        "trial_days": "Testtage",
+        "days": "Tage",
+        "provider_fee_percent": "Anbietergebühr (%)",
+        "consumer_fee_percent": "Verbrauchergebühr (%)",
+        "provider_fee": "Anbietergebühr",
+        "consumer_fee": "Verbrauchergebühr",
+        "nsf_amount": "NSF-Betrag",
+        "nsf_fee": "NSF-Gebühr",
+        "active": "Aktiv",
+        "inactive": "Inaktiv",
+        "load_failed": "Fehler beim Laden der Preisrichtlinien",
+        "save_failed": "Fehler beim Speichern der Preisrichtlinie",
+        "policy_updated": "Preisrichtlinie erfolgreich aktualisiert",
+        "no_policies": "Keine Preisrichtlinien",
+        "no_policies_description": "Keine Preisrichtlinien für irgendeinen Markt gefunden"
       }
     },
     "edit_profile": {

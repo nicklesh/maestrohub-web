@@ -1313,7 +1313,17 @@
         "promote_categories": "トップカテゴリーを宣伝",
         "promote_categories_desc": "学習指導の需要が最も高いです。より多くのコーチを引きつけるためのマーケティングキャンペーンを検討してください。",
         "freemium_conversion": "フリーミアムから有料への転換",
-        "freemium_conversion_desc": "73%のユーザーがfreemiumです。有料サブスクリプションに転換するため、期間限定割引を提供してください。"
+        "freemium_conversion_desc": "73%のユーザーがfreemiumです。有料サブスクリプションに転換するため、期間限定割引を提供してください。",
+        "no_data": "データがありません",
+        "coaches": "コーチ",
+        "monthly_revenue_chart": "月次収益推移",
+        "user_breakdown_chart": "ユーザー分布",
+        "category_distribution": "カテゴリ分布",
+        "booking_by_category": "カテゴリ別予約",
+        "revenue_trend": "売上高トレンド",
+        "gross_revenue": "総売上",
+        "net_to_coaches": "コーチへの正味額",
+        "bookings_count": "予約"
       },
       "settings_page": {
         "title": "設定",
@@ -1413,6 +1423,25 @@
         "7_desc": "システムエラーおよび重要な問題",
         "8": "サポートリクエスト",
         "8_desc": "新しいサポートチケット通知"
+      },
+      "pricing_page": {
+        "title": "価格ポリシー",
+        "subtitle": "マーケット別にプラットフォーム手数料を管理する",
+        "trial_days": "トライアル日数",
+        "days": "日",
+        "provider_fee_percent": "プロバイダー手数料 (%)",
+        "consumer_fee_percent": "消費者手数料 (%)",
+        "provider_fee": "プロバイダー手数料",
+        "consumer_fee": "消費者手数料",
+        "nsf_amount": "NSF金額",
+        "nsf_fee": "NSF手数料",
+        "active": "アクティブ",
+        "inactive": "非アクティブ",
+        "load_failed": "価格ポリシーの読み込みに失敗しました",
+        "save_failed": "価格ポリシーの保存に失敗しました",
+        "policy_updated": "価格ポリシーが正常に更新されました",
+        "no_policies": "料金ポリシーなし",
+        "no_policies_description": "いずれのマーケットにも価格ポリシーが見つかりませんでした"
       }
     },
     "edit_profile": {

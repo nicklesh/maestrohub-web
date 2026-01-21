@@ -1313,7 +1313,17 @@
         "promote_categories": "상위 카테고리 홍보",
         "promote_categories_desc": "학업 과외가 가장 높은 수요를 보입니다. 더 많은 코치를 유치하기 위한 마케팅 캠페인을 고려하세요.",
         "freemium_conversion": "프리미엄에서 유료 전환",
-        "freemium_conversion_desc": "73%의 사용자가 프리미엄 사용자입니다. 유료 구독으로 전환하기 위해 기간 한정 할인을 제공하세요."
+        "freemium_conversion_desc": "73%의 사용자가 프리미엄 사용자입니다. 유료 구독으로 전환하기 위해 기간 한정 할인을 제공하세요.",
+        "no_data": "사용 가능한 데이터가 없습니다",
+        "coaches": "코치들",
+        "monthly_revenue_chart": "월별 수익 동향",
+        "user_breakdown_chart": "사용자 분포",
+        "category_distribution": "카테고리 분포",
+        "booking_by_category": "카테고리별 예약",
+        "revenue_trend": "수익 추세",
+        "gross_revenue": "총매출",
+        "net_to_coaches": "코치들에게 순액",
+        "bookings_count": "예약"
       },
       "settings_page": {
         "title": "설정",
@@ -1413,6 +1423,25 @@
         "7_desc": "시스템 오류 및 중대한 문제",
         "8": "지원 요청",
         "8_desc": "새 지원 티켓 알림"
+      },
+      "pricing_page": {
+        "title": "가격 정책",
+        "subtitle": "시장별 플랫폼 수수료 관리",
+        "trial_days": "체험 기간",
+        "days": "일",
+        "provider_fee_percent": "제공업체 수수료 (%)",
+        "consumer_fee_percent": "소비자 수수료 (%)",
+        "provider_fee": "제공업체 수수료",
+        "consumer_fee": "소비자 수수료",
+        "nsf_amount": "NSF 금액",
+        "nsf_fee": "NSF 수수료",
+        "active": "활성",
+        "inactive": "비활성",
+        "load_failed": "가격 정책을 불러오는 데 실패했습니다",
+        "save_failed": "가격 정책 저장에 실패했습니다",
+        "policy_updated": "가격 정책이 성공적으로 업데이트되었습니다",
+        "no_policies": "가격 정책 없음",
+        "no_policies_description": "어떤 시장에 대해서도 가격 정책을 찾을 수 없습니다"
       }
     },
     "edit_profile": {

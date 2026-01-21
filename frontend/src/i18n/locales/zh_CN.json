@@ -1313,7 +1313,17 @@
         "promote_categories": "推广热门分类",
         "promote_categories_desc": "学术辅导需求最高。考虑开展营销活动以吸引更多教练。",
         "freemium_conversion": "免费增值到付费转换",
-        "freemium_conversion_desc": "73%的用户是freemium用户。提供限时折扣以转化为付费订阅。"
+        "freemium_conversion_desc": "73%的用户是freemium用户。提供限时折扣以转化为付费订阅。",
+        "no_data": "暂无数据",
+        "coaches": "教练",
+        "monthly_revenue_chart": "月收入趋势",
+        "user_breakdown_chart": "用户分布",
+        "category_distribution": "类别分布",
+        "booking_by_category": "按类别预订",
+        "revenue_trend": "收入趋势",
+        "gross_revenue": "总收入",
+        "net_to_coaches": "教练净收入",
+        "bookings_count": "预订"
       },
       "settings_page": {
         "title": "设置",
@@ -1406,6 +1416,25 @@
         "7_desc": "系统错误和严重问题",
         "8": "支持请求",
         "8_desc": "新的支持工单通知"
+      },
+      "pricing_page": {
+        "title": "定价政策",
+        "subtitle": "按市场管理平台费用",
+        "trial_days": "试用天数",
+        "days": "天",
+        "provider_fee_percent": "提供商费用 (%)",
+        "consumer_fee_percent": "消费者费用 (%)",
+        "provider_fee": "服务商费用",
+        "consumer_fee": "消费者费用",
+        "nsf_amount": "NSF金额",
+        "nsf_fee": "NSF费用",
+        "active": "活跃",
+        "inactive": "非活跃",
+        "load_failed": "加载定价策略失败",
+        "save_failed": "保存定价策略失败",
+        "policy_updated": "定价政策更新成功",
+        "no_policies": "无定价政策",
+        "no_policies_description": "未找到任何市场的定价政策"
       }
     },
     "edit_profile": {
