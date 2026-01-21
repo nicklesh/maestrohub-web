@@ -11,7 +11,7 @@ import sys
 from datetime import datetime, timezone
 
 # Configuration
-BASE_URL = "https://coach-translate.preview.emergentagent.com/api"
+BASE_URL = "https://datachart.preview.emergentagent.com/api"
 TEST_CREDENTIALS = {
     "consumer": {"email": "parent2@test.com", "password": "password123"},
     "tutor": {"email": "tutor3@test.com", "password": "password123"}

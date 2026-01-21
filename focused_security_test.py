@@ -10,7 +10,7 @@ import uuid
 from datetime import datetime, timezone, timedelta
 
 # Configuration
-BASE_URL = "https://coach-translate.preview.emergentagent.com/api"
+BASE_URL = "https://datachart.preview.emergentagent.com/api"
 TIMEOUT = 30
 
 # Test credentials
