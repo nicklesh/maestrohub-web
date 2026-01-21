@@ -106,6 +106,7 @@ const faqData: FAQItem[] = [
 export default function TutorFAQScreen() {
   const { colors } = useTheme();
   const { width } = useWindowDimensions();
+  const { t } = useTranslation();
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   
   const isTablet = width >= 768;
@@ -151,13 +152,13 @@ export default function TutorFAQScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <AppHeader title="Help Center" showBack />
+      <AppHeader title={t('pages.coach.faq.help_center')} showBack />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
           <View style={styles.header}>
-            <Text style={[styles.title, { color: colors.text }]}>Tutor FAQ</Text>
+            <Text style={[styles.title, { color: colors.text }]}>{t('pages.coach.faq.title')}</Text>
             <Text style={[styles.subtitle, { color: colors.textMuted }]}>
-              Find answers to common questions about tutoring on Maestro Habitat
+              {t('pages.coach.faq.subtitle')}
             </Text>
           </View>
 
