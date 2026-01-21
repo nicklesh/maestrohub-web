@@ -196,6 +196,15 @@ export default function TutorFAQScreen() {
             <Text style={[styles.contactText, { color: colors.textMuted }]}>
               {t('pages.coach.faq.contact_support')}
             </Text>
+            <TouchableOpacity
+              style={[styles.contactButton, { backgroundColor: colors.primary }]}
+              onPress={() => {
+                // Navigate to contact us or open email
+              }}
+            >
+              <Ionicons name="mail-outline" size={18} color="#fff" />
+              <Text style={styles.contactButtonText}>{t('modals.contact_us.title') || 'Contact Us'}</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
