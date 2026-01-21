@@ -4776,6 +4776,335 @@ async def admin_get_market_analytics(request: Request, market_id: Optional[str] 
     
     return {"analytics": analytics}
 
+# ============== ADMIN REPORTS ==============
+
+@api_router.get("/admin/reports/overview")
+async def admin_get_reports_overview(request: Request):
+    """Admin: Get comprehensive reports overview with trends"""
+    await require_admin(request)
+    
+    now = datetime.now(timezone.utc)
+    
+    # Get total counts
+    total_users = await db.users.count_documents({})
+    total_tutors = await db.tutors.count_documents({})
+    approved_tutors = await db.tutors.count_documents({"status": "approved"})
+    total_consumers = await db.users.count_documents({"role": "consumer"})
+    total_bookings = await db.bookings.count_documents({})
+    completed_bookings = await db.bookings.count_documents({"status": "completed"})
+    
+    # Revenue calculation
+    revenue_pipeline = [
+        {"$match": {"status": "completed"}},
+        {"$group": {"_id": None, "total": {"$sum": "$price_snapshot"}, "fees": {"$sum": "$platform_fee_cents"}}}
+    ]
+    revenue_result = await db.bookings.aggregate(revenue_pipeline).to_list(1)
+    total_revenue = revenue_result[0]["total"] if revenue_result else 0
+    platform_fees = revenue_result[0]["fees"] if revenue_result else 0
+    
+    # Pending payouts
+    pending_pipeline = [
+        {"$match": {"status": "pending"}},
+        {"$group": {"_id": None, "total": {"$sum": "$amount_cents"}}}
+    ]
+    pending_result = await db.payments.aggregate(pending_pipeline).to_list(1)
+    pending_payouts = pending_result[0]["total"] if pending_result else 0
+    
+    return {
+        "stats": {
+            "total_users": total_users,
+            "total_tutors": total_tutors,
+            "approved_tutors": approved_tutors,
+            "total_consumers": total_consumers,
+            "total_bookings": total_bookings,
+            "completed_bookings": completed_bookings,
+            "total_revenue_cents": total_revenue,
+            "platform_fees_cents": platform_fees,
+            "pending_payouts_cents": pending_payouts
+        },
+        "generated_at": now.isoformat()
+    }
+
+@api_router.get("/admin/reports/trends")
+async def admin_get_reports_trends(
+    request: Request,
+    period: str = Query("weekly", description="weekly, monthly, quarterly, yearly"),
+    num_periods: int = Query(4, ge=1, le=12)
+):
+    """Admin: Get trend data for WoW/MoM/QoQ/YoY comparisons"""
+    await require_admin(request)
+    
+    now = datetime.now(timezone.utc)
+    trends = []
+    
+    if period == "weekly":
+        for i in range(num_periods - 1, -1, -1):
+            start_date = now - timedelta(weeks=i+1)
+            end_date = now - timedelta(weeks=i)
+            
+            # Count new users in period
+            new_tutors = await db.tutors.count_documents({
+                "created_at": {"$gte": start_date.isoformat(), "$lt": end_date.isoformat()}
+            })
+            new_consumers = await db.users.count_documents({
+                "role": "consumer",
+                "created_at": {"$gte": start_date.isoformat(), "$lt": end_date.isoformat()}
+            })
+            
+            # Revenue in period
+            revenue_pipeline = [
+                {"$match": {
+                    "status": "completed",
+                    "completed_at": {"$gte": start_date.isoformat(), "$lt": end_date.isoformat()}
+                }},
+                {"$group": {"_id": None, "total": {"$sum": "$price_snapshot"}}}
+            ]
+            revenue_result = await db.bookings.aggregate(revenue_pipeline).to_list(1)
+            revenue = revenue_result[0]["total"] if revenue_result else 0
+            
+            trends.append({
+                "period": f"Week {num_periods - i}",
+                "start_date": start_date.isoformat(),
+                "end_date": end_date.isoformat(),
+                "new_tutors": new_tutors,
+                "new_consumers": new_consumers,
+                "revenue_cents": revenue
+            })
+    
+    elif period == "monthly":
+        for i in range(num_periods - 1, -1, -1):
+            # Calculate month boundaries
+            target_month = now.month - i
+            target_year = now.year
+            while target_month <= 0:
+                target_month += 12
+                target_year -= 1
+            
+            start_date = datetime(target_year, target_month, 1, tzinfo=timezone.utc)
+            if target_month == 12:
+                end_date = datetime(target_year + 1, 1, 1, tzinfo=timezone.utc)
+            else:
+                end_date = datetime(target_year, target_month + 1, 1, tzinfo=timezone.utc)
+            
+            new_tutors = await db.tutors.count_documents({
+                "created_at": {"$gte": start_date.isoformat(), "$lt": end_date.isoformat()}
+            })
+            new_consumers = await db.users.count_documents({
+                "role": "consumer",
+                "created_at": {"$gte": start_date.isoformat(), "$lt": end_date.isoformat()}
+            })
+            
+            revenue_pipeline = [
+                {"$match": {
+                    "status": "completed",
+                    "completed_at": {"$gte": start_date.isoformat(), "$lt": end_date.isoformat()}
+                }},
+                {"$group": {"_id": None, "total": {"$sum": "$price_snapshot"}}}
+            ]
+            revenue_result = await db.bookings.aggregate(revenue_pipeline).to_list(1)
+            revenue = revenue_result[0]["total"] if revenue_result else 0
+            
+            month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            trends.append({
+                "period": month_names[target_month - 1],
+                "start_date": start_date.isoformat(),
+                "end_date": end_date.isoformat(),
+                "new_tutors": new_tutors,
+                "new_consumers": new_consumers,
+                "revenue_cents": revenue
+            })
+    
+    elif period == "quarterly":
+        for i in range(num_periods - 1, -1, -1):
+            current_quarter = (now.month - 1) // 3 + 1
+            target_quarter = current_quarter - i
+            target_year = now.year
+            while target_quarter <= 0:
+                target_quarter += 4
+                target_year -= 1
+            
+            start_month = (target_quarter - 1) * 3 + 1
+            start_date = datetime(target_year, start_month, 1, tzinfo=timezone.utc)
+            end_month = start_month + 3
+            end_year = target_year
+            if end_month > 12:
+                end_month = 1
+                end_year += 1
+            end_date = datetime(end_year, end_month, 1, tzinfo=timezone.utc)
+            
+            new_tutors = await db.tutors.count_documents({
+                "created_at": {"$gte": start_date.isoformat(), "$lt": end_date.isoformat()}
+            })
+            new_consumers = await db.users.count_documents({
+                "role": "consumer",
+                "created_at": {"$gte": start_date.isoformat(), "$lt": end_date.isoformat()}
+            })
+            
+            revenue_pipeline = [
+                {"$match": {
+                    "status": "completed",
+                    "completed_at": {"$gte": start_date.isoformat(), "$lt": end_date.isoformat()}
+                }},
+                {"$group": {"_id": None, "total": {"$sum": "$price_snapshot"}}}
+            ]
+            revenue_result = await db.bookings.aggregate(revenue_pipeline).to_list(1)
+            revenue = revenue_result[0]["total"] if revenue_result else 0
+            
+            trends.append({
+                "period": f"Q{target_quarter} {target_year}",
+                "start_date": start_date.isoformat(),
+                "end_date": end_date.isoformat(),
+                "new_tutors": new_tutors,
+                "new_consumers": new_consumers,
+                "revenue_cents": revenue
+            })
+    
+    elif period == "yearly":
+        for i in range(num_periods - 1, -1, -1):
+            target_year = now.year - i
+            start_date = datetime(target_year, 1, 1, tzinfo=timezone.utc)
+            end_date = datetime(target_year + 1, 1, 1, tzinfo=timezone.utc)
+            
+            new_tutors = await db.tutors.count_documents({
+                "created_at": {"$gte": start_date.isoformat(), "$lt": end_date.isoformat()}
+            })
+            new_consumers = await db.users.count_documents({
+                "role": "consumer",
+                "created_at": {"$gte": start_date.isoformat(), "$lt": end_date.isoformat()}
+            })
+            
+            revenue_pipeline = [
+                {"$match": {
+                    "status": "completed",
+                    "completed_at": {"$gte": start_date.isoformat(), "$lt": end_date.isoformat()}
+                }},
+                {"$group": {"_id": None, "total": {"$sum": "$price_snapshot"}}}
+            ]
+            revenue_result = await db.bookings.aggregate(revenue_pipeline).to_list(1)
+            revenue = revenue_result[0]["total"] if revenue_result else 0
+            
+            trends.append({
+                "period": str(target_year),
+                "start_date": start_date.isoformat(),
+                "end_date": end_date.isoformat(),
+                "new_tutors": new_tutors,
+                "new_consumers": new_consumers,
+                "revenue_cents": revenue
+            })
+    
+    return {"period": period, "trends": trends}
+
+@api_router.get("/admin/reports/categories")
+async def admin_get_reports_by_category(request: Request):
+    """Admin: Get breakdown by category"""
+    await require_admin(request)
+    
+    # Aggregate tutors by category
+    category_pipeline = [
+        {"$unwind": "$categories"},
+        {"$group": {
+            "_id": "$categories",
+            "tutor_count": {"$sum": 1}
+        }},
+        {"$sort": {"tutor_count": -1}}
+    ]
+    category_results = await db.tutors.aggregate(category_pipeline).to_list(20)
+    
+    categories = []
+    for cat in category_results:
+        category_name = cat["_id"]
+        
+        # Get bookings for this category
+        bookings_count = await db.bookings.count_documents({"category": category_name})
+        
+        # Get unique consumers for this category
+        consumer_pipeline = [
+            {"$match": {"category": category_name}},
+            {"$group": {"_id": "$consumer_id"}},
+            {"$count": "count"}
+        ]
+        consumer_result = await db.bookings.aggregate(consumer_pipeline).to_list(1)
+        consumers_count = consumer_result[0]["count"] if consumer_result else 0
+        
+        categories.append({
+            "category": category_name,
+            "tutors": cat["tutor_count"],
+            "consumers": consumers_count,
+            "bookings": bookings_count
+        })
+    
+    return {"categories": categories}
+
+@api_router.get("/admin/reports/revenue")
+async def admin_get_revenue_report(
+    request: Request,
+    period: str = Query("monthly", description="daily, weekly, monthly"),
+    num_periods: int = Query(6, ge=1, le=12)
+):
+    """Admin: Get detailed revenue breakdown"""
+    await require_admin(request)
+    
+    now = datetime.now(timezone.utc)
+    revenue_data = []
+    
+    for i in range(num_periods - 1, -1, -1):
+        if period == "daily":
+            start_date = now - timedelta(days=i+1)
+            end_date = now - timedelta(days=i)
+            period_label = start_date.strftime("%b %d")
+        elif period == "weekly":
+            start_date = now - timedelta(weeks=i+1)
+            end_date = now - timedelta(weeks=i)
+            period_label = f"Week {num_periods - i}"
+        else:  # monthly
+            target_month = now.month - i
+            target_year = now.year
+            while target_month <= 0:
+                target_month += 12
+                target_year -= 1
+            start_date = datetime(target_year, target_month, 1, tzinfo=timezone.utc)
+            if target_month == 12:
+                end_date = datetime(target_year + 1, 1, 1, tzinfo=timezone.utc)
+            else:
+                end_date = datetime(target_year, target_month + 1, 1, tzinfo=timezone.utc)
+            month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            period_label = month_names[target_month - 1]
+        
+        # Get revenue breakdown
+        revenue_pipeline = [
+            {"$match": {
+                "status": "completed",
+                "completed_at": {"$gte": start_date.isoformat(), "$lt": end_date.isoformat()}
+            }},
+            {"$group": {
+                "_id": None,
+                "gross_revenue": {"$sum": "$price_snapshot"},
+                "platform_fees": {"$sum": "$platform_fee_cents"},
+                "booking_count": {"$sum": 1}
+            }}
+        ]
+        revenue_result = await db.bookings.aggregate(revenue_pipeline).to_list(1)
+        
+        if revenue_result:
+            data = revenue_result[0]
+            revenue_data.append({
+                "period": period_label,
+                "gross_revenue_cents": data["gross_revenue"],
+                "platform_fees_cents": data["platform_fees"],
+                "net_to_coaches_cents": data["gross_revenue"] - data["platform_fees"],
+                "booking_count": data["booking_count"]
+            })
+        else:
+            revenue_data.append({
+                "period": period_label,
+                "gross_revenue_cents": 0,
+                "platform_fees_cents": 0,
+                "net_to_coaches_cents": 0,
+                "booking_count": 0
+            })
+    
+    return {"period_type": period, "revenue": revenue_data}
+
 # ============== TAX REPORTS ==============
 
 @api_router.get("/tax-reports/available-years")
