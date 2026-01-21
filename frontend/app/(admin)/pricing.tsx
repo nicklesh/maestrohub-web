@@ -326,6 +326,7 @@ export default function AdminPricingScreen() {
 }
 const getStyles = (colors: ThemeColors) => StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
+  content: { padding: 20, paddingBottom: 40 },
   scrollContent: { padding: 20, paddingBottom: 40 },
   scrollContentTablet: { padding: 32 },
   contentWrapper: { flex: 1 },
