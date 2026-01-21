@@ -143,10 +143,10 @@ export default function ScheduleBuilderScreen() {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      showSuccess('Your schedule has been saved!');
+      showSuccess(t('pages.coach.schedule_builder.schedule_saved'));
       setExistingSchedule(scheduleData);
     } catch (error: any) {
-      showError(error.response?.data?.detail || 'Failed to save schedule');
+      showError(error.response?.data?.detail || t('pages.coach.schedule_builder.save_failed'));
     } finally {
       setSaving(false);
     }
