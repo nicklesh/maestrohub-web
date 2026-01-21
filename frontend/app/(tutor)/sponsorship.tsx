@@ -206,7 +206,7 @@ export default function SponsorshipScreen() {
   if (loading) {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-        <AppHeader showBack title="Sponsorship" />
+        <AppHeader showBack title={t('pages.coach.sponsorship.title')} />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -216,7 +216,7 @@ export default function SponsorshipScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <AppHeader showBack title="Become a Sponsored Coach" />
+      <AppHeader showBack title={t('pages.coach.sponsorship.become_sponsored')} />
 
       <ScrollView
         style={styles.content}
@@ -229,9 +229,9 @@ export default function SponsorshipScreen() {
         <View style={[styles.banner, { backgroundColor: colors.primaryLight }]}>
           <Ionicons name="star" size={32} color={colors.primary} />
           <View style={styles.bannerContent}>
-            <Text style={[styles.bannerTitle, { color: colors.primary }]}>Get More Visibility</Text>
+            <Text style={[styles.bannerTitle, { color: colors.primary }]}>{t('pages.coach.sponsorship.get_visibility')}</Text>
             <Text style={[styles.bannerText, { color: colors.primary }]}>
-              Sponsored coaches appear at the top of search results with a "Sponsored" badge, helping you reach more students.
+              {t('pages.coach.sponsorship.banner_description')}
             </Text>
           </View>
         </View>
@@ -239,7 +239,7 @@ export default function SponsorshipScreen() {
         {/* Active Sponsorships */}
         {activeSponsorships.length > 0 && (
           <View style={styles.section}>
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>Active Sponsorships</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.coach.sponsorship.active_sponsorships')}</Text>
             {activeSponsorships.map((sponsorship) => (
               <View key={sponsorship.sponsorship_id} style={[styles.activeCard, { backgroundColor: colors.surface, borderColor: colors.success }]}>
                 <View style={styles.activeHeader}>
