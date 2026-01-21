@@ -405,15 +405,15 @@ export default function SponsorshipScreen() {
 
               {/* Pricing Summary */}
               <View style={[styles.pricingSummary, { backgroundColor: colors.background }]}>
-                <Text style={[styles.pricingTitle, { color: colors.text }]}>Payment Summary</Text>
+                <Text style={[styles.pricingTitle, { color: colors.text }]}>{t('pages.coach.sponsorship.payment_summary')}</Text>
                 <View style={styles.pricingRow}>
                   <Text style={[styles.pricingLabel, { color: colors.textMuted }]}>
-                    {selectedPlan?.name} ({selectedPlan?.weeks} {selectedPlan?.weeks === 1 ? 'week' : 'weeks'})
+                    {selectedPlan?.name} ({selectedPlan?.weeks} {selectedPlan?.weeks === 1 ? t('pages.coach.sponsorship.week') : t('pages.coach.sponsorship.weeks')})
                   </Text>
                   <Text style={[styles.pricingValue, { color: colors.text }]}>{formatPrice(pricing.base)}</Text>
                 </View>
                 <View style={[styles.pricingRow, styles.pricingTotal]}>
-                  <Text style={[styles.pricingTotalLabel, { color: colors.text }]}>Total</Text>
+                  <Text style={[styles.pricingTotalLabel, { color: colors.text }]}>{t('pages.coach.sponsorship.total')}</Text>
                   <Text style={[styles.pricingTotalValue, { color: colors.primary }]}>{formatPrice(pricing.total)}</Text>
                 </View>
               </View>
@@ -430,7 +430,7 @@ export default function SponsorshipScreen() {
                 ) : (
                   <>
                     <Ionicons name="card" size={20} color="#fff" />
-                    <Text style={styles.purchaseButtonText}>Pay {formatPrice(pricing.total)}</Text>
+                    <Text style={styles.purchaseButtonText}>{t('pages.coach.sponsorship.pay')} {formatPrice(pricing.total)}</Text>
                   </>
                 )}
               </TouchableOpacity>
