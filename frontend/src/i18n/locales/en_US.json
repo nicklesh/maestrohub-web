@@ -1170,7 +1170,14 @@
         "transactions": "Transactions",
         "session": "Session",
         "sessions": "Sessions",
-        "activities": "Activities"
+        "activities": "Activities",
+        "session_reminders": "Session Reminders",
+        "session_reminders_desc": "Send reminder notifications for upcoming sessions (24h and 1h before)",
+        "kid_notifications": "Kid Activity Updates",
+        "kid_notifications_desc": "Send parents updates about their children's session activities",
+        "referral_check": "Referral Credit Processing",
+        "referral_check_desc": "Process pending referral credits and bonuses",
+        "every_hour": "Every hour"
       },
       "inbox_page": {
         "title": "Inbox",
