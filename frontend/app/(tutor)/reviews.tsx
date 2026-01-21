@@ -253,7 +253,7 @@ export default function CoachReviewsScreen() {
                   marginLeft: 4,
                   fontWeight: '500'
                 }}>
-                  {review.would_recommend ? 'Would recommend' : 'Would not recommend'}
+                  {review.would_recommend ? t('pages.coach.reviews.would_recommend') : t('pages.coach.reviews.would_not_recommend')}
                 </Text>
               </View>
 
@@ -262,7 +262,7 @@ export default function CoachReviewsScreen() {
                 <View style={[styles.responseBox, { backgroundColor: colors.primary + '10', borderColor: colors.primary + '30' }]}>
                   <View style={styles.responseHeader}>
                     <Ionicons name="chatbubble-ellipses" size={16} color={colors.primary} />
-                    <Text style={[styles.responseLabel, { color: colors.primary }]}>Your Response</Text>
+                    <Text style={[styles.responseLabel, { color: colors.primary }]}>{t('pages.coach.reviews.your_response')}</Text>
                     <Text style={[styles.responseDate, { color: colors.textMuted }]}>
                       {review.coach_response_at ? formatDate(review.coach_response_at) : ''}
                     </Text>
@@ -275,9 +275,9 @@ export default function CoachReviewsScreen() {
                   onPress={() => handleStartResponse(review)}
                 >
                   <Ionicons name="chatbubble-outline" size={18} color={colors.primary} />
-                  <Text style={[styles.respondButtonText, { color: colors.primary }]}>Write Response</Text>
+                  <Text style={[styles.respondButtonText, { color: colors.primary }]}>{t('pages.coach.reviews.write_response')}</Text>
                 </TouchableOpacity>
-              )}
+              )}}
             </View>
           ))
         )}
@@ -289,7 +289,7 @@ export default function CoachReviewsScreen() {
           <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
             <View style={styles.modalHeader}>
               <Text style={[styles.modalTitle, { color: colors.text }]}>
-                Respond to Review
+                {t('pages.coach.reviews.respond_to_review')}
               </Text>
               <TouchableOpacity onPress={() => setShowResponseModal(false)}>
                 <Ionicons name="close" size={24} color={colors.text} />
@@ -319,7 +319,7 @@ export default function CoachReviewsScreen() {
                 </View>
               )}
 
-              <Text style={[styles.inputLabel, { color: colors.text }]}>Your Response</Text>
+              <Text style={[styles.inputLabel, { color: colors.text }]}>{t('pages.coach.reviews.your_response')}</Text>
               <TextInput
                 style={[styles.responseInput, { 
                   backgroundColor: colors.background, 
@@ -328,7 +328,7 @@ export default function CoachReviewsScreen() {
                 }]}
                 multiline
                 numberOfLines={5}
-                placeholder="Thank the reviewer and address any feedback professionally..."
+                placeholder={t('pages.coach.reviews.response_placeholder')}
                 placeholderTextColor={colors.textMuted}
                 value={responseText}
                 onChangeText={setResponseText}
@@ -341,7 +341,7 @@ export default function CoachReviewsScreen() {
               <View style={[styles.tipBox, { backgroundColor: colors.primaryLight }]}>
                 <Ionicons name="bulb" size={18} color={colors.primary} />
                 <Text style={[styles.tipText, { color: colors.primary }]}>
-                  Tip: Thank the client, acknowledge feedback, and highlight your commitment to quality.
+                  {t('pages.coach.reviews.response_tip')}
                 </Text>
               </View>
             </View>
@@ -361,7 +361,7 @@ export default function CoachReviewsScreen() {
                 {submitting ? (
                   <ActivityIndicator size="small" color="#fff" />
                 ) : (
-                  <Text style={styles.submitButtonText}>Submit Response</Text>
+                  <Text style={styles.submitButtonText}>{t('pages.coach.reviews.submit_response')}</Text>
                 )}
               </TouchableOpacity>
             </View>
