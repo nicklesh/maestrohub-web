@@ -15,12 +15,12 @@ function AppContent() {
   const { colors, isDark } = useTheme();
   
   return (
-    <>
+    <GlobalBackground>
       <StatusBar style={isDark ? 'light' : 'dark'} />
       <Stack
         screenOptions={{
           headerShown: false,
-          contentStyle: { backgroundColor: colors.background },
+          contentStyle: { backgroundColor: 'transparent' },
         }}
       >
         <Stack.Screen name="index" />
@@ -29,7 +29,7 @@ function AppContent() {
         <Stack.Screen name="(tutor)" />
         <Stack.Screen name="(admin)" />
       </Stack>
-    </>
+    </GlobalBackground>
   );
 }
 
