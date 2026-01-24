@@ -1,0 +1,43 @@
+{
+  "summary": {
+    "total_tests": 4,
+    "passed": 0,
+    "failed": 4,
+    "success_rate": "0.0%"
+  },
+  "test_results": [
+    {
+      "test": "Scenario 1 - Setup",
+      "success": false,
+      "message": "Failed to create initial booking hold: {'detail': 'Coach not found'}",
+      "details": {},
+      "timestamp": "2026-01-24T23:56:53.331932"
+    },
+    {
+      "test": "Scenario 2 - Prerequisites",
+      "success": false,
+      "message": "Scenario 1 must complete successfully first",
+      "details": {},
+      "timestamp": "2026-01-24T23:56:53.331962"
+    },
+    {
+      "test": "Scenario 3 - Setup",
+      "success": false,
+      "message": "Failed to create second booking hold: {'detail': 'Coach not found'}",
+      "details": {},
+      "timestamp": "2026-01-24T23:56:53.345460"
+    },
+    {
+      "test": "Edge Case - Different Consumer Same Tutor",
+      "success": false,
+      "message": "Unexpected error message: Coach not found",
+      "details": {
+        "actual_error": {
+          "detail": "Coach not found"
+        }
+      },
+      "timestamp": "2026-01-24T23:56:53.395279"
+    }
+  ],
+  "timestamp": "2026-01-24T23:56:53.395605"
+}
