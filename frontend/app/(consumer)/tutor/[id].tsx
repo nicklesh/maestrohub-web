@@ -159,12 +159,41 @@ export default function TutorDetailScreen() {
     }
   };
 
-  const handleBook = () => {
+  const { token } = useAuth();
+  const { showSuccess, showError } = useToast();
+  const [updating, setUpdating] = useState(false);
+
+  const handleBook = async () => {
     if (!selectedSlot || !tutor) return;
+    
     const dateStr = format(selectedDate, 'yyyy-MM-dd');
-    // Create full ISO datetime strings
     const startAt = `${dateStr}T${selectedSlot.start_time}:00`;
     const endAt = `${dateStr}T${selectedSlot.end_time}:00`;
+    
+    // If in update mode, directly update the booking time slot (no payment needed)
+    if (isUpdateMode && bookingId) {
+      setUpdating(true);
+      try {
+        await api.put(`/bookings/${bookingId}/timeslot`, {
+          start_at: startAt,
+          end_at: endAt,
+        }, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        showSuccess(t('messages.success.booking_updated'));
+        router.replace('/(consumer)/bookings');
+      } catch (error: any) {
+        console.error('Failed to update booking:', error);
+        const errorMsg = error.response?.data?.detail || t('messages.error.update_failed');
+        showError(errorMsg);
+      } finally {
+        setUpdating(false);
+      }
+      return;
+    }
+    
+    // New booking flow - go to booking wizard with full payment process
     router.push({
       pathname: '/(consumer)/book/[tutorId]',
       params: {
