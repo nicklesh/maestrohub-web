@@ -471,7 +471,9 @@
       "how_it_works": "Como funciona",
       "reminders": "Lembretes",
       "subjects_count": "{count} assuntos",
-      "search_placeholder": "Pesquisar tutor, assunto..."
+      "search_placeholder": "Pesquisar tutor, assunto...",
+      "card_search_coach": "Procurar um Coach",
+      "card_search_coach_desc": "Navegar e encontrar o coach perfeito para suas necessidades"
     },
     "search": {
       "title": "Buscar treinador",
@@ -2009,7 +2011,8 @@
         "email_placeholder": "Digite o endereço de email",
         "pending": "Pendente",
         "expired": "Expirado",
-        "invite_error": "Falha ao enviar convite"
+        "invite_error": "Falha ao enviar convite",
+        "email_required": "E-mail *"
       },
       "sponsorship": {
         "title": "Patrocínio",

@@ -471,7 +471,9 @@
       "how_it_works": "كيف يعمل",
       "reminders": "التذكيرات",
       "subjects_count": "{count} مواضيع",
-      "search_placeholder": "ابحث عن مدرس أو موضوع..."
+      "search_placeholder": "ابحث عن مدرس أو موضوع...",
+      "card_search_coach": "ابحث عن مدرب",
+      "card_search_coach_desc": "تصفح واعثر على المدرب المثالي لاحتياجاتك"
     },
     "search": {
       "title": "ابحث عن مدرب",

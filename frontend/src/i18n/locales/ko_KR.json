@@ -471,7 +471,9 @@
       "how_it_works": "작동 방식",
       "reminders": "알림",
       "subjects_count": "{count} 과목",
-      "search_placeholder": "튜터, 과목 검색..."
+      "search_placeholder": "튜터, 과목 검색...",
+      "card_search_coach": "코치 검색",
+      "card_search_coach_desc": "귀하의 필요에 맞는 완벽한 코치를 찾아보세요"
     },
     "search": {
       "title": "코치 검색",

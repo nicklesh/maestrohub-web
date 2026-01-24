@@ -471,7 +471,9 @@
       "how_it_works": "使用说明",
       "reminders": "提醒",
       "subjects_count": "{count} 科目",
-      "search_placeholder": "搜索导师、科目..."
+      "search_placeholder": "搜索导师、科目...",
+      "card_search_coach": "搜索教练",
+      "card_search_coach_desc": "浏览并找到满足您需求的完美教练"
     },
     "search": {
       "title": "查找教练",

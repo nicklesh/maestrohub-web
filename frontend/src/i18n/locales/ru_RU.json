@@ -471,7 +471,9 @@
       "how_it_works": "Как это работает",
       "reminders": "Напоминания",
       "subjects_count": "{count} предметов",
-      "search_placeholder": "Ищите репетитора, предмет..."
+      "search_placeholder": "Ищите репетитора, предмет...",
+      "card_search_coach": "Найти тренера",
+      "card_search_coach_desc": "Просматривайте и найдите идеального тренера для ваших потребностей"
     },
     "search": {
       "title": "Поиск тренера",

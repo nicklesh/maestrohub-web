@@ -471,7 +471,9 @@
       "how_it_works": "仕組み",
       "reminders": "リマインダー",
       "subjects_count": "{count} 教科",
-      "search_placeholder": "チューター、教科を検索..."
+      "search_placeholder": "チューター、教科を検索...",
+      "card_search_coach": "コーチを検索",
+      "card_search_coach_desc": "あなたのニーズにぴったりのコーチを検索・発見"
     },
     "search": {
       "title": "コーチ検索",
