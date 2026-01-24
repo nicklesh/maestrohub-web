@@ -186,289 +186,133 @@ export default function HomeScreen() {
   );
 }
 
-const getStyles = (colors: ThemeColors) => StyleSheet.create({
+const getStyles = (colors: ThemeColors, isDark: boolean) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   scrollContent: {
-    paddingBottom: 24,
+    paddingBottom: 40,
+    flexGrow: 1,
   },
   scrollContentTablet: {
-    alignItems: 'center',
+    paddingHorizontal: 20,
   },
   contentWrapper: {
     width: '100%',
-    alignSelf: 'center',
+    paddingHorizontal: 16,
   },
-  // Reminders Card (matches Account page style)
-  remindersCard: {
-    backgroundColor: colors.surface,
-    marginHorizontal: 20,
-    marginTop: 16,
-    borderRadius: 12,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: colors.border,
+  // Welcome Section
+  welcomeSection: {
+    marginTop: 20,
+    marginBottom: 24,
+    paddingHorizontal: 4,
   },
-  remindersCardTablet: {
-    borderRadius: 16,
-    padding: 20,
-  },
-  remindersHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 12,
-  },
-  remindersTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  reminderBadge: {
-    backgroundColor: '#F97316',
-    minWidth: 20,
-    height: 20,
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 6,
-  },
-  reminderBadgeText: {
-    color: '#fff',
-    fontSize: 12,
+  welcomeText: {
+    fontSize: 26,
     fontWeight: '700',
+    color: colors.text,
+    marginBottom: 6,
   },
-  reminderItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
+  welcomeTextTablet: {
+    fontSize: 32,
   },
-  reminderCalendarIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: 8,
-    backgroundColor: '#FEE2E2',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  reminderItemText: {
-    flex: 1,
-    fontSize: 14,
-  },
-  searchBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.surface,
-    marginHorizontal: 20,
-    marginTop: 16,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: colors.border,
-    gap: 12,
-  },
-  searchBarTablet: {
-    marginHorizontal: 20,
-    paddingVertical: 16,
-    borderRadius: 16,
-  },
-  searchPlaceholder: {
-    color: colors.textMuted,
+  welcomeSubtext: {
     fontSize: 16,
+    color: colors.textMuted,
+    lineHeight: 22,
   },
-  section: {
-    marginTop: 24,
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    marginBottom: 16,
-  },
-  sectionHeaderTablet: {
-    marginBottom: 20,
-  },
-  sectionTitle: {
+  welcomeSubtextTablet: {
     fontSize: 18,
-    fontWeight: '600',
-    color: colors.text,
-    paddingHorizontal: 20,
-    marginBottom: 16,
   },
-  sectionTitleDesktop: {
-    fontSize: 22,
-  },
-  seeAll: {
-    fontSize: 14,
-    color: colors.primary,
-    fontWeight: '500',
-  },
-  categoriesGrid: {
-    paddingHorizontal: 20,
-    gap: 12,
+  // Navigation Grid (2x2)
+  navGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-  },
-  categoriesGridTablet: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
-  categoryCard: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    backgroundColor: colors.surface,
-    borderRadius: 16,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: colors.border,
-    marginBottom: 12,
-  },
-  categoryCardTablet: {
-    padding: 20,
-    borderRadius: 20,
-    marginBottom: 16,
-  },
-  categoryIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 14,
-    backgroundColor: colors.primaryLight,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  categoryIconTablet: {
-    width: 56,
-    height: 56,
-    borderRadius: 16,
-  },
-  categoryInfo: {
-    flex: 1,
-  },
-  categoryName: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: colors.text,
-    textAlign: 'center',
-    lineHeight: 18,
-  },
-  categoryNameTablet: {
-    fontSize: 15,
-  },
-  categorySubjects: {
-    fontSize: 11,
-    color: colors.textMuted,
-    marginTop: 4,
-    textAlign: 'center',
-  },
-  tutorList: {
-    paddingHorizontal: 16,
     gap: 12,
   },
-  tutorsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingHorizontal: 20,
-    justifyContent: 'space-between',
+  navGridTablet: {
+    gap: 16,
   },
-  tutorCard: {
+  // Navigation Card
+  navCard: {
     backgroundColor: colors.surface,
-    borderRadius: 16,
-    padding: 16,
-    width: 160,
+    borderRadius: 20,
+    padding: 20,
     borderWidth: 1,
     borderColor: colors.border,
-    marginHorizontal: 4,
+    minHeight: 160,
+    justifyContent: 'flex-start',
   },
-  tutorCardTablet: {
-    width: '100%',
-    padding: 20,
-    borderRadius: 20,
-    marginHorizontal: 0,
-  },
-  tutorCardDesktop: {
+  navCardTablet: {
     padding: 24,
+    minHeight: 180,
+    borderRadius: 24,
   },
-  tutorAvatar: {
+  navCardIconContainer: {
     width: 56,
     height: 56,
-    borderRadius: 28,
-    backgroundColor: colors.primaryLight,
+    borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 14,
   },
-  tutorAvatarTablet: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    marginBottom: 16,
-  },
-  tutorInitial: {
-    fontSize: 24,
+  navCardTitle: {
+    fontSize: 17,
     fontWeight: '600',
-    color: colors.primary,
+    color: colors.text,
+    marginBottom: 6,
   },
-  tutorInitialTablet: {
-    fontSize: 28,
+  navCardTitleTablet: {
+    fontSize: 19,
   },
-  tutorInfo: {
+  navCardDescription: {
+    fontSize: 13,
+    color: colors.textMuted,
+    lineHeight: 18,
     flex: 1,
   },
-  tutorName: {
+  navCardDescriptionTablet: {
     fontSize: 14,
+    lineHeight: 20,
+  },
+  navCardArrow: {
+    position: 'absolute',
+    bottom: 16,
+    right: 16,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: colors.gray100,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  // Info Section
+  infoSection: {
+    marginTop: 28,
+    paddingHorizontal: 4,
+  },
+  infoCard: {
+    backgroundColor: isDark ? colors.primaryLight : colors.primaryLight,
+    borderRadius: 16,
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 14,
+  },
+  infoTextContainer: {
+    flex: 1,
+  },
+  infoTitle: {
+    fontSize: 15,
     fontWeight: '600',
     color: colors.text,
+    marginBottom: 4,
   },
-  tutorNameTablet: {
-    fontSize: 16,
-  },
-  tutorSubjects: {
-    fontSize: 12,
+  infoText: {
+    fontSize: 13,
     color: colors.textMuted,
-    marginTop: 4,
-  },
-  tutorMeta: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  ratingContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  rating: {
-    fontSize: 12,
-    fontWeight: '500',
-    color: colors.text,
-  },
-  price: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: colors.primary,
-  },
-  priceTablet: {
-    fontSize: 14,
-  },
-  emptyState: {
-    alignItems: 'center',
-    paddingVertical: 32,
-  },
-  emptyText: {
-    fontSize: 14,
-    color: colors.textMuted,
-    marginTop: 8,
+    lineHeight: 19,
   },
 });
