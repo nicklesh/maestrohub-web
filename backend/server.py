@@ -2684,6 +2684,25 @@ async def create_booking(data: BookingCreate, request: Request):
     if hold["consumer_id"] != user.user_id:
         raise HTTPException(status_code=403, detail="Hold does not belong to you")
     
+    # Double-check that the slot is still available (not already booked)
+    hold_start = hold["start_at"]
+    hold_end = hold["end_at"]
+    if hold_start.tzinfo is None:
+        hold_start = hold_start.replace(tzinfo=timezone.utc)
+    if hold_end.tzinfo is None:
+        hold_end = hold_end.replace(tzinfo=timezone.utc)
+    
+    existing_booking = await db.bookings.find_one({
+        "tutor_id": hold["tutor_id"],
+        "status": {"$in": ["booked", "confirmed"]},
+        "start_at": {"$lt": hold_end},
+        "end_at": {"$gt": hold_start}
+    })
+    if existing_booking:
+        # Slot was booked by someone else, remove the stale hold
+        await db.booking_holds.delete_one({"hold_id": data.hold_id})
+        raise HTTPException(status_code=409, detail="This slot is no longer available")
+    
     # Get tutor and student
     tutor = await db.tutors.find_one({"tutor_id": hold["tutor_id"]}, {"_id": 0})
     student = await db.students.find_one({"student_id": data.student_id}, {"_id": 0})
