@@ -402,7 +402,7 @@ class BookingConflictTester:
         third_time = datetime.now(timezone.utc) + timedelta(hours=72)  # 72 hours from now
         
         success, hold_id3, hold_data3 = await self.create_booking_hold(
-            self.consumer1_token, self.tutor1_id, third_time
+            self.consumer1_token, self.actual_tutor1_id, third_time
         )
         
         if not success:
