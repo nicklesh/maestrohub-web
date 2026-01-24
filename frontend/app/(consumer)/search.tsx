@@ -166,6 +166,7 @@ export default function SearchScreen() {
     if (params.category && typeof params.category === 'string') {
       setSelectedCategory(params.category);
       setSelectedSubject('all');
+      setShowResults(true);
     }
   }, [params.category]);
 
@@ -173,12 +174,12 @@ export default function SearchScreen() {
     loadCategories();
   }, []);
 
-  // Search tutors when filters change
+  // Search tutors when filters change - only if showResults is true
   useEffect(() => {
-    if (!loading || tutors.length === 0) {
+    if (showResults && (!loading || tutors.length === 0)) {
       searchTutors(true);
     }
-  }, [selectedCategory, selectedSubject]);
+  }, [selectedCategory, selectedSubject, showResults]);
 
   const loadCategories = async () => {
     try {
