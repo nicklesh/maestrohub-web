@@ -347,7 +347,10 @@ export default function BookingDetailScreen() {
             <Text style={styles.cardTitle}>{t('pages.booking_detail.tutor')}</Text>
             <TouchableOpacity
               style={styles.personRow}
-              onPress={() => router.push(`/(consumer)/tutor/${booking.tutor_id}`)}
+              onPress={() => router.push({
+                pathname: `/(consumer)/tutor/${booking.tutor_id}`,
+                params: { source: 'booking' }
+              })}
             >
               <View style={styles.personAvatar}>
                 <Text style={styles.personInitial}>
