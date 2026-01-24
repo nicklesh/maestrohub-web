@@ -106,10 +106,19 @@ export default function BookingDetailScreen() {
   };
 
   useEffect(() => {
-    loadBooking();
+    if (id && id !== 'undefined') {
+      loadBooking();
+    } else {
+      // If no valid ID, navigate back to bookings list
+      router.replace('/(consumer)/bookings');
+    }
   }, [id]);
 
   const loadBooking = async () => {
+    if (!id || id === 'undefined') {
+      router.replace('/(consumer)/bookings');
+      return;
+    }
     try {
       const response = await api.get(`/bookings/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -117,11 +126,8 @@ export default function BookingDetailScreen() {
       setBooking(response.data);
     } catch (error) {
       console.error('Failed to load booking:', error);
-      if (Platform.OS === 'web') {
-        showError('Failed to load booking details');
-      } else {
-        showError('Failed to load booking details');
-      }
+      showError(t('messages.error.load_booking_failed'));
+      router.back();
     } finally {
       setLoading(false);
     }
