@@ -195,6 +195,7 @@ export default function SearchScreen() {
   // Handler when a category card is clicked
   const handleCategorySelect = (categoryId: string) => {
     console.log('Category selected:', categoryId);
+    console.log('Setting showResults to true');
     setSelectedCategory(categoryId);
     setSelectedSubject('all');
     setShowResults(true);
@@ -203,6 +204,7 @@ export default function SearchScreen() {
   };
 
   const searchTutorsWithCategory = async (categoryId: string) => {
+    console.log('searchTutorsWithCategory called with:', categoryId);
     setPage(1);
     setTutors([]);
     setLoading(true);
@@ -220,15 +222,19 @@ export default function SearchScreen() {
         queryParams.append('query', searchQuery);
       }
 
+      console.log('Making API call to:', `/tutors/search?${queryParams}`);
       const response = await api.get(`/tutors/search?${queryParams}`);
       const newTutors = response.data.tutors || [];
+      console.log('Received tutors:', newTutors.length);
       
       setTutors(newTutors);
       setHasMore(newTutors.length === 20);
+      console.log('State updated - tutors count:', newTutors.length);
     } catch (error) {
       console.error('Failed to search tutors:', error);
     } finally {
       setLoading(false);
+      console.log('Loading set to false');
     }
   };
 
