@@ -194,9 +194,12 @@ export default function SearchScreen() {
 
   // Handler when a category card is clicked
   const handleCategorySelect = (categoryId: string) => {
+    console.log('Category selected:', categoryId);
     setSelectedCategory(categoryId);
     setSelectedSubject('all');
     setShowResults(true);
+    // Trigger search immediately
+    searchTutors(true);
   };
 
   const searchTutors = async (reset = false) => {
