@@ -816,4 +816,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 18,
   },
+  bookButtonDisabled: {
+    opacity: 0.6,
+  },
 });
