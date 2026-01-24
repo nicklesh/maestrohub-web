@@ -9,6 +9,7 @@ import { I18nProvider } from '@/src/i18n';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StyleSheet } from 'react-native';
+import { GlobalBackground } from '@/src/components/GlobalBackground';
 
 function AppContent() {
   const { colors, isDark } = useTheme();
