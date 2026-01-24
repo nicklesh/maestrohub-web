@@ -434,9 +434,10 @@ export default function TutorDetailScreen() {
           </View>
         )}
 
-        {/* Date Selection */}
-        <View style={[styles.section, { backgroundColor: colors.surface }]}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.tutor_detail.select_date')}</Text>
+        {/* Date Selection - Only show when booking UI is enabled */}
+        {showBookingUI && (
+          <View style={[styles.section, { backgroundColor: colors.surface }]}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.tutor_detail.select_date')}</Text>
           <FlatList
             horizontal
             showsHorizontalScrollIndicator={false}
