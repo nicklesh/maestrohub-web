@@ -2711,7 +2711,18 @@ async def create_booking(data: BookingCreate, request: Request):
     if existing_booking:
         # Slot was booked by someone else, remove the stale hold
         await db.booking_holds.delete_one({"hold_id": data.hold_id})
-        raise HTTPException(status_code=409, detail="This slot is no longer available")
+        raise HTTPException(status_code=409, detail="This coach is already booked at this time")
+    
+    # Check if consumer already has a booking at this time with any tutor
+    consumer_conflict = await db.bookings.find_one({
+        "consumer_id": user.user_id,
+        "status": {"$in": ["booked", "confirmed"]},
+        "start_at": {"$lt": hold_end},
+        "end_at": {"$gt": hold_start}
+    })
+    if consumer_conflict:
+        await db.booking_holds.delete_one({"hold_id": data.hold_id})
+        raise HTTPException(status_code=409, detail="You already have a session booked at this time")
     
     # Get tutor and student
     tutor = await db.tutors.find_one({"tutor_id": hold["tutor_id"]}, {"_id": 0})
