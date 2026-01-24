@@ -335,6 +335,7 @@
       "booking_confirmed": "Booking confirmed!",
       "booking_cancelled": "Booking cancelled successfully",
       "booking_rescheduled": "Booking rescheduled successfully!",
+      "booking_updated": "Session time updated successfully!",
       "profile_updated": "Profile updated successfully",
       "password_changed": "Password changed successfully",
       "logged_out": "You have been logged out",
