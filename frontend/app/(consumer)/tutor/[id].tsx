@@ -103,6 +103,9 @@ export default function TutorDetailScreen() {
   const isDesktop = width >= 1024;
 
   useEffect(() => {
+    // Reset selected slot when component loads or id changes
+    setSelectedSlot(null);
+    setSelectedDate(new Date());
     loadTutor();
   }, [id]);
 
