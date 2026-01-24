@@ -472,20 +472,38 @@ export default function BookingDetailScreen() {
 
           {/* Actions */}
           {isUpcoming && (
-            <TouchableOpacity
-              style={[styles.cancelButton, isTablet && styles.cancelButtonTablet]}
-              onPress={handleCancel}
-              disabled={canceling}
-            >
-              {canceling ? (
-                <ActivityIndicator color={colors.error} />
-              ) : (
-                <>
-                  <Ionicons name="close-circle-outline" size={20} color={colors.error} />
-                  <Text style={styles.cancelButtonText}>{t('pages.booking_detail.cancel_booking')}</Text>
-                </>
-              )}
-            </TouchableOpacity>
+            <View style={styles.actionsContainer}>
+              {/* Reschedule Button */}
+              <TouchableOpacity
+                style={[styles.rescheduleButton, isTablet && styles.rescheduleButtonTablet]}
+                onPress={() => router.push({
+                  pathname: `/(consumer)/tutor/${booking.tutor_id}`,
+                  params: {
+                    bookingId: booking.booking_id,
+                    mode: 'update'
+                  }
+                })}
+              >
+                <Ionicons name="calendar-outline" size={20} color={colors.primary} />
+                <Text style={[styles.rescheduleButtonText, { color: colors.primary }]}>{t('pages.booking_detail.reschedule')}</Text>
+              </TouchableOpacity>
+              
+              {/* Cancel Button */}
+              <TouchableOpacity
+                style={[styles.cancelButton, isTablet && styles.cancelButtonTablet]}
+                onPress={handleCancel}
+                disabled={canceling}
+              >
+                {canceling ? (
+                  <ActivityIndicator color={colors.error} />
+                ) : (
+                  <>
+                    <Ionicons name="close-circle-outline" size={20} color={colors.error} />
+                    <Text style={styles.cancelButtonText}>{t('pages.booking_detail.cancel_booking')}</Text>
+                  </>
+                )}
+              </TouchableOpacity>
+            </View>
           )}
 
           {/* Review Section */}
