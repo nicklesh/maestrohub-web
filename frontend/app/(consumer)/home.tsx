@@ -5,10 +5,8 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  FlatList,
-  ActivityIndicator,
-  RefreshControl,
   useWindowDimensions,
+  RefreshControl,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -16,265 +14,124 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
 import { useMarket } from '@/src/context/MarketContext';
 import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
-import { useToast } from '@/src/context/ToastContext';
 import { useTranslation } from '@/src/i18n';
 import MarketSelectionModal from '@/src/components/MarketSelectionModal';
 import AppHeader from '@/src/components/AppHeader';
-import { api } from '@/src/services/api';
 
-interface Category {
+// Navigation card configuration
+interface NavCard {
   id: string;
-  name: string;
-  subjects: string[];
+  titleKey: string;
+  descriptionKey: string;
+  icon: keyof typeof Ionicons.glyphMap;
+  route: string;
+  gradient: string[];
 }
 
-interface Tutor {
-  tutor_id: string;
-  user_name: string;
-  user_picture?: string;
-  bio: string;
-  categories: string[];
-  subjects: string[];
-  base_price: number;
-  rating_avg: number;
-  rating_count: number;
-  modality: string[];
-  currency?: string;
-  currency_symbol?: string;
-}
-
-interface UpcomingReminder {
-  booking_id: string;
-  tutor_name: string;
-  start_at: string;
-  hours_until: number;
-}
+const NAV_CARDS: NavCard[] = [
+  {
+    id: 'search',
+    titleKey: 'pages.home.card_search_coach',
+    descriptionKey: 'pages.home.card_search_coach_desc',
+    icon: 'search',
+    route: '/(consumer)/search',
+    gradient: ['#3B82F6', '#2563EB'],
+  },
+  {
+    id: 'book',
+    titleKey: 'pages.home.card_book_session',
+    descriptionKey: 'pages.home.card_book_session_desc',
+    icon: 'calendar',
+    route: '/(consumer)/search',
+    gradient: ['#10B981', '#059669'],
+  },
+  {
+    id: 'sessions',
+    titleKey: 'pages.home.card_view_sessions',
+    descriptionKey: 'pages.home.card_view_sessions_desc',
+    icon: 'people',
+    route: '/(consumer)/bookings',
+    gradient: ['#8B5CF6', '#7C3AED'],
+  },
+  {
+    id: 'account',
+    titleKey: 'pages.home.card_view_account',
+    descriptionKey: 'pages.home.card_view_account_desc',
+    icon: 'person-circle',
+    route: '/(consumer)/profile',
+    gradient: ['#F59E0B', '#D97706'],
+  },
+];
 
 export default function HomeScreen() {
-  const { user, token } = useAuth();
-  const { currentMarket, needsSelection } = useMarket();
-  const { colors } = useTheme();
-  const { t, formatNumber } = useTranslation();
+  const { user } = useAuth();
+  const { needsSelection } = useMarket();
+  const { colors, isDark } = useTheme();
+  const { t } = useTranslation();
   const router = useRouter();
   const { width } = useWindowDimensions();
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [featuredTutors, setFeaturedTutors] = useState<Tutor[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
   const [showMarketModal, setShowMarketModal] = useState(false);
-  const [upcomingReminder, setUpcomingReminder] = useState<UpcomingReminder | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
 
   // Responsive breakpoints
   const isTablet = width >= 768;
   const isDesktop = width >= 1024;
-  const isWide = width >= 1280;
-  const containerMaxWidth = isWide ? 1200 : isDesktop ? 960 : isTablet ? 720 : undefined;
+  const containerMaxWidth = isDesktop ? 800 : isTablet ? 600 : undefined;
 
   // Dynamic styles
-  const styles = getStyles(colors);
+  const styles = getStyles(colors, isDark);
 
   useEffect(() => {
-    loadData();
     // Show market selection modal if needed
     if (needsSelection) {
       setShowMarketModal(true);
     }
   }, [needsSelection]);
 
-  const loadData = async () => {
-    try {
-      const [catRes, tutorRes] = await Promise.all([
-        api.get('/categories'),
-        api.get('/tutors/search?limit=8'),
-      ]);
-      setCategories(catRes.data.categories);
-      setFeaturedTutors(tutorRes.data.tutors);
-      
-      // Fetch upcoming reminders if logged in
-      if (token) {
-        try {
-          const remindersRes = await api.get('/reminders', {
-            headers: { Authorization: `Bearer ${token}` }
-          });
-          const reminders = remindersRes.data.reminders || [];
-          
-          // Find the nearest upcoming session reminder
-          const now = new Date();
-          const sessionReminders = reminders.filter((r: any) => r.type === 'upcoming_session');
-          
-          if (sessionReminders.length > 0) {
-            // Sort by due_at to get the nearest one
-            sessionReminders.sort((a: any, b: any) => 
-              new Date(a.due_at).getTime() - new Date(b.due_at).getTime()
-            );
-            
-            const nearest = sessionReminders[0];
-            const dueAt = new Date(nearest.due_at);
-            const hoursUntil = Math.round((dueAt.getTime() - now.getTime()) / (1000 * 60 * 60));
-            
-            // Only show if within 48 hours
-            if (hoursUntil > 0 && hoursUntil <= 48) {
-              // Extract tutor name from message
-              const tutorName = nearest.message?.match(/Session with (.+) in/)?.[1] || 'Coach';
-              
-              setUpcomingReminder({
-                booking_id: nearest.data?.booking_id || '',
-                tutor_name: tutorName,
-                start_at: nearest.due_at,
-                hours_until: hoursUntil
-              });
-            } else {
-              setUpcomingReminder(null);
-            }
-          } else {
-            setUpcomingReminder(null);
-          }
-        } catch (e) {
-          // Silently fail - reminders are optional
-          console.log('Failed to fetch reminders:', e);
-        }
-      }
-    } catch (error) {
-      console.error('Failed to load data:', error);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  };
-
   const onRefresh = () => {
     setRefreshing(true);
-    loadData();
+    // Just simulate a refresh since this page is mostly static navigation
+    setTimeout(() => setRefreshing(false), 500);
   };
 
-  const getCategoryIcon = (categoryId: string): string => {
-    switch (categoryId) {
-      case 'coaching_personal': return 'rocket';
-      case 'health_mindfulness': return 'leaf';
-      case 'fitness_nutrition': return 'fitness';
-      case 'relationships_family': return 'heart';
-      case 'business_communication': return 'briefcase';
-      case 'finance_legal': return 'cash';
-      case 'culture_inclusion': return 'globe';
-      case 'performance_arts': return 'mic';
-      case 'academics': return 'school';
-      case 'activities_hobbies': return 'color-palette';
-      case 'academic': return 'school';
-      case 'music': return 'musical-notes';
-      default: return 'apps';
-    }
+  const handleCardPress = (route: string) => {
+    router.push(route as any);
   };
 
-  // Helper function to translate category names
-  const getCategoryName = (categoryId: string, originalName: string): string => {
-    // Normalize the ID for lookup (lowercase, replace spaces with underscores)
-    const normalizedId = categoryId?.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
-    const key = `categories.${normalizedId}`;
-    const translated = t(key);
-    // If translation key doesn't exist, try the original name as key
-    if (translated === key) {
-      const nameKey = `categories.${originalName?.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '')}`;
-      const nameTranslated = t(nameKey);
-      return nameTranslated === nameKey ? originalName : nameTranslated;
-    }
-    return translated;
-  };
-
-  const renderCategoryCard = (category: Category, index: number) => (
-    <TouchableOpacity
-      key={category.id}
-      style={[
-        styles.categoryCard,
-        isTablet && styles.categoryCardTablet,
-        { width: isDesktop ? '31%' : isTablet ? '48%' : '48%' },
-      ]}
-      onPress={() => router.push(`/(consumer)/search?category=${category.id}`)}
-    >
-      <View style={[styles.categoryIcon, isTablet && styles.categoryIconTablet]}>
-        <Ionicons
-          name={getCategoryIcon(category.id) as any}
-          size={isTablet ? 36 : 28}
-          color={colors.primary}
-        />
-      </View>
-      <Text style={[styles.categoryName, isTablet && styles.categoryNameTablet]} numberOfLines={2}>
-        {getCategoryName(category.id, category.name)}
-      </Text>
-      <Text style={styles.categorySubjects}>
-        {t('pages.home.subjects_count', { count: formatNumber(category.subjects.length) })}
-      </Text>
-    </TouchableOpacity>
-  );
-
-  // Helper function to translate subject names
-  const getSubjectName = (subjectId: string): string => {
-    // Normalize the ID for lookup
-    const normalizedId = subjectId?.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
-    const key = `subjects.${normalizedId}`;
-    const translated = t(key);
-    // If translation key doesn't exist, try formatting the original ID nicely
-    if (translated === key) {
-      // Also try common mappings
-      const mappings: Record<string, string> = {
-        'mathematics': t('subjects.mathematics'),
-        'sat_prep': t('subjects.sat_prep'),
-        'sat prep': t('subjects.sat_prep'),
-        'music': t('subjects.music'),
-        'piano': t('subjects.piano'),
-        'homework_support': t('subjects.homework_support'),
-        'homework support': t('subjects.homework_support'),
-      };
-      return mappings[normalizedId] || mappings[subjectId?.toLowerCase()] || 
-             subjectId?.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || '';
-    }
-    return translated;
-  };
-
-  const renderTutorCard = ({ item }: { item: Tutor }) => (
-    <TouchableOpacity
-      style={[
-        styles.tutorCard,
-        isTablet && styles.tutorCardTablet,
-        isDesktop && styles.tutorCardDesktop,
-      ]}
-      onPress={() => router.push(`/(consumer)/tutor/${item.tutor_id}`)}
-    >
-      <View style={[styles.tutorAvatar, isTablet && styles.tutorAvatarTablet]}>
-        <Text style={[styles.tutorInitial, isTablet && styles.tutorInitialTablet]}>
-          {item.user_name?.charAt(0)?.toUpperCase() || 'T'}
-        </Text>
-      </View>
-      <View style={styles.tutorInfo}>
-        <Text style={[styles.tutorName, isTablet && styles.tutorNameTablet]} numberOfLines={1}>
-          {item.user_name}
-        </Text>
-        <Text style={styles.tutorSubjects} numberOfLines={1}>
-          {item.subjects?.slice(0, 2).map(s => getSubjectName(s)).join(', ')}
-        </Text>
-        <View style={styles.tutorMeta}>
-          <View style={styles.ratingContainer}>
-            <Ionicons name="star" size={14} color={colors.accent} />
-            <Text style={styles.rating}>
-              {item.rating_avg > 0 ? formatNumber(item.rating_avg.toFixed(1)) : t('common.new')}
-            </Text>
-          </View>
-          <Text style={[styles.price, isTablet && styles.priceTablet]}>
-            {item.currency_symbol || currentMarket?.currency_symbol || '$'}{formatNumber(item.base_price)}{t('pages.search.per_hour')}
-          </Text>
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
-
-  if (loading) {
+  const renderNavigationCard = (card: NavCard, index: number) => {
+    // Calculate card width for 2x2 grid
+    const cardWidth = isDesktop ? '48%' : isTablet ? '48%' : '47%';
+    
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={colors.primary} />
+      <TouchableOpacity
+        key={card.id}
+        style={[
+          styles.navCard,
+          { width: cardWidth },
+          isTablet && styles.navCardTablet,
+        ]}
+        onPress={() => handleCardPress(card.route)}
+        activeOpacity={0.85}
+      >
+        <View style={[styles.navCardIconContainer, { backgroundColor: card.gradient[0] + '20' }]}>
+          <Ionicons
+            name={card.icon}
+            size={isTablet ? 36 : 32}
+            color={isDark ? colors.primary : card.gradient[0]}
+          />
         </View>
-      </SafeAreaView>
+        <Text style={[styles.navCardTitle, isTablet && styles.navCardTitleTablet]}>
+          {t(card.titleKey)}
+        </Text>
+        <Text style={[styles.navCardDescription, isTablet && styles.navCardDescriptionTablet]} numberOfLines={2}>
+          {t(card.descriptionKey)}
+        </Text>
+        <View style={styles.navCardArrow}>
+          <Ionicons name="arrow-forward" size={18} color={colors.textMuted} />
+        </View>
+      </TouchableOpacity>
     );
-  }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -290,88 +147,31 @@ export default function HomeScreen() {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        <View style={[styles.contentWrapper, containerMaxWidth ? { maxWidth: containerMaxWidth } : undefined]}>
-          {/* Reminders Section - same style as Account page */}
-          {upcomingReminder && (
-            <TouchableOpacity
-              style={[styles.remindersCard, isTablet && styles.remindersCardTablet]}
-              onPress={() => router.push('/(consumer)/reminders')}
-              activeOpacity={0.7}
-            >
-              <View style={styles.remindersHeader}>
-                <Text style={[styles.remindersTitle, { color: colors.text }]}>{t('pages.home.reminders')}</Text>
-                <View style={styles.reminderBadge}>
-                  <Text style={styles.reminderBadgeText}>1</Text>
-                </View>
-              </View>
-              <View style={styles.reminderItem}>
-                <View style={styles.reminderCalendarIcon}>
-                  <Ionicons name="calendar" size={18} color="#DC2626" />
-                </View>
-                <Text style={[styles.reminderItemText, { color: colors.text }]}>
-                  {t('pages.bookings.session_with', { name: upcomingReminder.tutor_name })} {t('time.in')} {upcomingReminder.hours_until} {t('time.hours')}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          )}
-
-          {/* Search Bar */}
-          <TouchableOpacity
-            style={[styles.searchBar, isTablet && styles.searchBarTablet, upcomingReminder && { marginTop: 12 }]}
-            onPress={() => router.push('/(consumer)/search')}
-          >
-            <Ionicons name="search" size={20} color={colors.textMuted} />
-            <Text style={styles.searchPlaceholder}>{t('forms.placeholders.search_subjects')}</Text>
-          </TouchableOpacity>
-
-          {/* Categories */}
-          <View style={styles.section}>
-            <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>
-              {t('pages.home.browse_categories')}
+        <View style={[styles.contentWrapper, containerMaxWidth ? { maxWidth: containerMaxWidth, alignSelf: 'center' } : undefined]}>
+          {/* Welcome Section */}
+          <View style={styles.welcomeSection}>
+            <Text style={[styles.welcomeText, isTablet && styles.welcomeTextTablet]}>
+              {t('pages.home.welcome_back')}{user?.name ? `, ${user.name.split(' ')[0]}` : ''}! 👋
             </Text>
-            <View style={[styles.categoriesGrid, isTablet && styles.categoriesGridTablet]}>
-              {categories.map((cat, index) => renderCategoryCard(cat, index))}
-            </View>
+            <Text style={[styles.welcomeSubtext, isTablet && styles.welcomeSubtextTablet]}>
+              {t('pages.home.what_would_you_like')}
+            </Text>
           </View>
 
-          {/* Featured Coaches */}
-          <View style={styles.section}>
-            <View style={[styles.sectionHeader, isTablet && styles.sectionHeaderTablet]}>
-              <Text style={[styles.sectionTitle, isDesktop && styles.sectionTitleDesktop]}>
-                {t('pages.home.featured_coaches')}
-              </Text>
-              <TouchableOpacity onPress={() => router.push('/(consumer)/search')}>
-                <Text style={styles.seeAll}>{t('buttons.see_all')}</Text>
-              </TouchableOpacity>
-            </View>
-            {featuredTutors.length > 0 ? (
-              isTablet ? (
-                <View style={styles.tutorsGrid}>
-                  {featuredTutors.map((tutor) => (
-                    <View 
-                      key={tutor.tutor_id} 
-                      style={{ width: isDesktop ? '24%' : '48%', marginBottom: 16 }}
-                    >
-                      {renderTutorCard({ item: tutor })}
-                    </View>
-                  ))}
-                </View>
-              ) : (
-                <FlatList
-                  data={featuredTutors}
-                  renderItem={renderTutorCard}
-                  keyExtractor={(item) => item.tutor_id}
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  contentContainerStyle={styles.tutorList}
-                />
-              )
-            ) : (
-              <View style={styles.emptyState}>
-                <Ionicons name="people-outline" size={48} color={colors.textMuted} />
-                <Text style={styles.emptyText}>{t('empty_states.no_tutors')}</Text>
+          {/* 2x2 Navigation Grid */}
+          <View style={[styles.navGrid, isTablet && styles.navGridTablet]}>
+            {NAV_CARDS.map((card, index) => renderNavigationCard(card, index))}
+          </View>
+
+          {/* Quick Tips or Info Section */}
+          <View style={styles.infoSection}>
+            <View style={styles.infoCard}>
+              <Ionicons name="bulb-outline" size={24} color={colors.primary} />
+              <View style={styles.infoTextContainer}>
+                <Text style={styles.infoTitle}>{t('pages.home.quick_tip_title')}</Text>
+                <Text style={styles.infoText}>{t('pages.home.quick_tip_text')}</Text>
               </View>
-            )}
+            </View>
           </View>
         </View>
       </ScrollView>
