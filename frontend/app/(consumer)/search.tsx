@@ -56,10 +56,30 @@ export default function SearchScreen() {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [showResults, setShowResults] = useState(false);
   
   // Dropdown modal states
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [showSubjectDropdown, setShowSubjectDropdown] = useState(false);
+
+  // Get category icon
+  const getCategoryIcon = (categoryId: string): keyof typeof Ionicons.glyphMap => {
+    switch (categoryId) {
+      case 'coaching_personal': return 'rocket';
+      case 'health_mindfulness': return 'leaf';
+      case 'fitness_nutrition': return 'fitness';
+      case 'relationships_family': return 'heart';
+      case 'business_communication': return 'briefcase';
+      case 'finance_legal': return 'cash';
+      case 'culture_inclusion': return 'globe';
+      case 'performance_arts': return 'mic';
+      case 'academics': return 'school';
+      case 'activities_hobbies': return 'color-palette';
+      case 'academic': return 'school';
+      case 'music': return 'musical-notes';
+      default: return 'apps';
+    }
+  };
 
   // Helper function to translate category names
   const getCategoryName = (categoryId: string | undefined | null, originalName?: string): string => {
