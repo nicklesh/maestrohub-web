@@ -365,11 +365,23 @@ export default function BookingScreen() {
   };
 
   const handleConfirmBooking = async () => {
-    if (!holdId || !selectedStudent) return;
+    console.log('handleConfirmBooking called', { holdId, selectedStudent: selectedStudent?.student_id, paymentId });
+    
+    if (!holdId || !selectedStudent) {
+      console.log('Missing required data:', { holdId, selectedStudent });
+      showError('Missing booking information. Please try again.');
+      return;
+    }
     
     setSubmitting(true);
     try {
-      await api.post('/bookings', {
+      console.log('Creating booking with:', {
+        hold_id: holdId,
+        student_id: selectedStudent.student_id,
+        payment_id: paymentId,
+      });
+      
+      const response = await api.post('/bookings', {
         hold_id: holdId,
         student_id: selectedStudent.student_id,
         intake: {
@@ -383,11 +395,14 @@ export default function BookingScreen() {
         headers: { Authorization: `Bearer ${token}` }
       });
       
+      console.log('Booking created successfully:', response.data);
+      
       // Navigate directly to bookings page
       router.replace('/(consumer)/bookings');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Booking failed:', error);
-      showError('Failed to confirm booking. Please try again.');
+      const errorMsg = error.response?.data?.detail || 'Failed to confirm booking. Please try again.';
+      showError(errorMsg);
       setSubmitting(false);
     }
   };
