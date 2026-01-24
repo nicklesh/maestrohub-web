@@ -396,6 +396,7 @@ export default function BookingScreen() {
       });
       
       console.log('Booking created successfully:', response.data);
+      setSubmitting(false);
       
       // Navigate directly to bookings page
       router.replace('/(consumer)/bookings');
