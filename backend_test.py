@@ -97,11 +97,17 @@ class BookingConflictTester:
         try:
             headers = {"Authorization": f"Bearer {token}"}
             
+            # First check who we are authenticated as
+            me_response = await self.client.get(f"{API_BASE}/auth/me", headers=headers)
+            if me_response.status_code == 200:
+                me_data = me_response.json()
+                print(f"   Authenticated as user: {me_data.get('user_id', 'unknown')} (expected: {user_id})")
+            
             # First try to get existing profile
             get_response = await self.client.get(f"{API_BASE}/tutors/profile", headers=headers)
             if get_response.status_code == 200:
                 data = get_response.json()
-                print(f"   Found existing tutor profile for user {user_id}: {data.get('tutor_id', '')}")
+                print(f"   Found existing tutor profile for user {user_id}: {data.get('tutor_id', '')} (profile user_id: {data.get('user_id', 'unknown')})")
                 return data.get("tutor_id", "")
             
             # If no existing profile, create new one
@@ -121,7 +127,7 @@ class BookingConflictTester:
             )
             if response.status_code == 200:
                 data = response.json()
-                print(f"   Created new tutor profile for user {user_id}: {data.get('tutor_id', '')}")
+                print(f"   Created new tutor profile for user {user_id}: {data.get('tutor_id', '')} (profile user_id: {data.get('user_id', 'unknown')})")
                 return data.get("tutor_id", "")
             else:
                 print(f"Tutor profile creation failed for user {user_id}: {response.status_code} - {response.text}")
