@@ -31,12 +31,12 @@ class BookingConflictTester:
         self.consumer2_token = None
         self.consumer2_id = None
         
-        self.tutor1_email = "tutor1@testbooking.com"
+        self.tutor1_email = "tutor1conflict@testbooking.com"
         self.tutor1_password = "TestPass123!"
         self.tutor1_token = None
         self.tutor1_id = None
         
-        self.tutor2_email = "tutor2@testbooking.com"
+        self.tutor2_email = "tutor2conflict@testbooking.com"
         self.tutor2_password = "TestPass123!"
         self.tutor2_token = None
         self.tutor2_id = None
