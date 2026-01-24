@@ -94,7 +94,7 @@ class BookingConflictTester:
         """Create tutor profile"""
         try:
             headers = {"Authorization": f"Bearer {token}"}
-            response = await self.client.post(f"{API_BASE}/tutors", 
+            response = await self.client.post(f"{API_BASE}/tutors/profile", 
                 headers=headers,
                 json={
                     "bio": "Test tutor for booking conflict testing",
@@ -103,10 +103,15 @@ class BookingConflictTester:
                     "levels": ["elementary", "middle_school"],
                     "modality": ["online"],
                     "base_price": 50.0,
-                    "duration_minutes": 60
+                    "duration_minutes": 60,
+                    "payout_country": "US"
                 }
             )
-            return response.status_code == 200
+            if response.status_code == 200:
+                return True
+            else:
+                print(f"Tutor profile creation failed: {response.status_code} - {response.text}")
+                return False
         except Exception as e:
             print(f"Failed to create tutor profile: {e}")
             return False
