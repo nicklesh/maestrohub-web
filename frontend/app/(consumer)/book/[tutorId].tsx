@@ -62,6 +62,9 @@ export default function BookingScreen() {
   const startAt = params.startAt;
   const endAt = params.endAt;
 
+  // Track the time slot that was used to create the current hold
+  const [holdTimeSlot, setHoldTimeSlot] = useState<string | null>(null);
+
   // Responsive breakpoints
   const isTablet = width >= 768;
   const isDesktop = width >= 1024;
