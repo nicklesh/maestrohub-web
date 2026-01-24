@@ -31,6 +31,7 @@ export default function MarketSelectionModal({
 }: MarketSelectionModalProps) {
   const { width } = useWindowDimensions();
   const { colors } = useTheme();
+  const { t } = useTranslation();
   const { markets, suggestedMarketId, selectMarket, loading } = useMarket();
   const [selectedId, setSelectedId] = useState<string | null>(suggestedMarketId);
   const [submitting, setSubmitting] = useState(false);
