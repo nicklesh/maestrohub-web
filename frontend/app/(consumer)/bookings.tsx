@@ -74,6 +74,13 @@ export default function BookingsScreen() {
   const contentMaxWidth = isDesktop ? 960 : isTablet ? 720 : undefined;
   const numColumns = isDesktop ? 2 : 1;
 
+  // Refresh bookings when screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      loadBookings();
+    }, [])
+  );
+
   useEffect(() => {
     loadBookings();
   }, []);
