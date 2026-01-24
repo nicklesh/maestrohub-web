@@ -2912,6 +2912,84 @@ async def update_booking_meeting_link(booking_id: str, data: BookingMeetingLinkU
     
     return {"success": True, "message": "Meeting link updated", "meeting_link": data.meeting_link}
 
+class BookingTimeSlotUpdate(BaseModel):
+    start_at: str
+    end_at: str
+
+@api_router.put("/bookings/{booking_id}/timeslot")
+async def update_booking_timeslot(booking_id: str, data: BookingTimeSlotUpdate, request: Request):
+    """Allow consumer to update the time slot of an existing booking (no payment required)"""
+    user = await require_auth(request)
+    booking = await db.bookings.find_one({"booking_id": booking_id}, {"_id": 0})
+    if not booking:
+        raise HTTPException(status_code=404, detail="Booking not found")
+    
+    # Only the consumer who created the booking can update it
+    if booking["consumer_id"] != user.user_id:
+        raise HTTPException(status_code=403, detail="Only the booking owner can update the time slot")
+    
+    # Booking must be active (booked or confirmed)
+    if booking["status"] not in ["booked", "confirmed"]:
+        raise HTTPException(status_code=400, detail="Cannot update time slot for this booking")
+    
+    # Parse the new time slot
+    try:
+        new_start = datetime.fromisoformat(data.start_at.replace('Z', '+00:00'))
+        new_end = datetime.fromisoformat(data.end_at.replace('Z', '+00:00'))
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid datetime format")
+    
+    # Make sure new time is in the future
+    now = datetime.now(timezone.utc)
+    if new_start < now:
+        raise HTTPException(status_code=400, detail="Cannot update to a past time slot")
+    
+    # Check that the new slot is available (not already booked by someone else)
+    tutor_id = booking["tutor_id"]
+    conflicting_booking = await db.bookings.find_one({
+        "tutor_id": tutor_id,
+        "booking_id": {"$ne": booking_id},  # Exclude current booking
+        "status": {"$in": ["booked", "confirmed"]},
+        "$or": [
+            {"start_at": {"$lt": new_end}, "end_at": {"$gt": new_start}}
+        ]
+    })
+    
+    if conflicting_booking:
+        raise HTTPException(status_code=400, detail="This time slot is already booked")
+    
+    # Check for active holds on this slot
+    conflicting_hold = await db.booking_holds.find_one({
+        "tutor_id": tutor_id,
+        "expires_at": {"$gt": now},
+        "$or": [
+            {"start_at": {"$lt": new_end}, "end_at": {"$gt": new_start}}
+        ]
+    })
+    
+    if conflicting_hold:
+        raise HTTPException(status_code=400, detail="This time slot is currently being held by another user")
+    
+    # Update the booking time slot
+    await db.bookings.update_one(
+        {"booking_id": booking_id},
+        {"$set": {
+            "start_at": new_start,
+            "end_at": new_end,
+            "updated_at": now
+        }}
+    )
+    
+    logger.info(f"Booking {booking_id} time slot updated from {booking['start_at']} to {new_start}")
+    
+    return {
+        "success": True, 
+        "message": "Time slot updated successfully",
+        "booking_id": booking_id,
+        "start_at": new_start.isoformat(),
+        "end_at": new_end.isoformat()
+    }
+
 @api_router.post("/bookings/{booking_id}/cancel")
 async def cancel_booking(booking_id: str, request: Request):
     user = await require_auth(request)
