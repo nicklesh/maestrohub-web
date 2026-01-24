@@ -88,8 +88,8 @@ export default function LoginScreen() {
       <Image
         source={require('../../assets/images/login_background.png')}
         style={styles.backgroundImage}
-        resizeMode="contain"
-        blurRadius={Platform.OS === 'ios' ? 15 : 8}
+        resizeMode="cover"
+        blurRadius={Platform.OS === 'ios' ? 20 : 10}
       />
       {/* Overlay for better readability */}
       <View style={[styles.backgroundOverlay, { backgroundColor: colors.background }]} />
