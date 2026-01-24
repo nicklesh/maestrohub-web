@@ -11,6 +11,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 import { useMarket } from '@/src/context/MarketContext';
+import { useTranslation } from '@/src/i18n';
 
 interface MarketSelectionModalProps {
   visible: boolean;
