@@ -187,7 +187,16 @@ export default function SearchScreen() {
       setCategories(response.data.categories || []);
     } catch (error) {
       console.error('Failed to load categories:', error);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  // Handler when a category card is clicked
+  const handleCategorySelect = (categoryId: string) => {
+    setSelectedCategory(categoryId);
+    setSelectedSubject('all');
+    setShowResults(true);
   };
 
   const searchTutors = async (reset = false) => {
