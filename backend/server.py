@@ -2630,17 +2630,27 @@ async def create_booking_hold(data: BookingHoldCreate, request: Request):
         start_at = start_at.replace(tzinfo=timezone.utc)
     end_at = start_at + timedelta(minutes=data.duration_minutes)
     
-    # Check for conflicts
-    existing_booking = await db.bookings.find_one({
+    # Check for conflicts with existing bookings for THIS TUTOR
+    existing_tutor_booking = await db.bookings.find_one({
         "tutor_id": data.tutor_id,
         "status": {"$in": ["booked", "confirmed"]},
         "start_at": {"$lt": end_at},
         "end_at": {"$gt": start_at}
     })
-    if existing_booking:
-        raise HTTPException(status_code=409, detail="Slot already booked")
+    if existing_tutor_booking:
+        raise HTTPException(status_code=409, detail="This coach is already booked at this time")
     
-    # Check for existing holds
+    # Check if the CONSUMER already has a booking at this time with ANY tutor
+    consumer_conflict = await db.bookings.find_one({
+        "consumer_id": user.user_id,
+        "status": {"$in": ["booked", "confirmed"]},
+        "start_at": {"$lt": end_at},
+        "end_at": {"$gt": start_at}
+    })
+    if consumer_conflict:
+        raise HTTPException(status_code=409, detail="You already have a session booked at this time")
+    
+    # Check for existing holds on this slot (by any user for this tutor)
     existing_hold = await db.booking_holds.find_one({
         "tutor_id": data.tutor_id,
         "expires_at": {"$gt": datetime.now(timezone.utc)},
