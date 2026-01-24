@@ -198,8 +198,38 @@ export default function SearchScreen() {
     setSelectedCategory(categoryId);
     setSelectedSubject('all');
     setShowResults(true);
-    // Trigger search immediately
-    searchTutors(true);
+    // Trigger search immediately with the new category
+    searchTutorsWithCategory(categoryId);
+  };
+
+  const searchTutorsWithCategory = async (categoryId: string) => {
+    setPage(1);
+    setTutors([]);
+    setLoading(true);
+
+    try {
+      const queryParams = new URLSearchParams({
+        page: '1',
+        limit: '20',
+      });
+      
+      if (categoryId !== 'all') {
+        queryParams.append('category', categoryId);
+      }
+      if (searchQuery) {
+        queryParams.append('query', searchQuery);
+      }
+
+      const response = await api.get(`/tutors/search?${queryParams}`);
+      const newTutors = response.data.tutors || [];
+      
+      setTutors(newTutors);
+      setHasMore(newTutors.length === 20);
+    } catch (error) {
+      console.error('Failed to search tutors:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const searchTutors = async (reset = false) => {
