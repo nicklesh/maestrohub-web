@@ -465,7 +465,7 @@ class BookingConflictTester:
         future_time = datetime.now(timezone.utc) + timedelta(hours=24)
         
         success, hold_id, hold_data = await self.create_booking_hold(
-            self.consumer2_token, self.tutor1_id, future_time
+            self.consumer2_token, self.actual_tutor1_id, future_time
         )
         
         if success:
