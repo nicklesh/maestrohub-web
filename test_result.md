@@ -585,6 +585,19 @@ backend:
         agent: "testing"
         comment: "✅ SECURITY CONTROLS IMPLEMENTED: Rate limiting now working correctly - triggers 429 responses after 5 failed login attempts per minute (confirmed in logs: 'slowapi - WARNING - ratelimit 5 per 1 minute exceeded'). All required security headers present and correct: X-Content-Type-Options: nosniff, X-Frame-Options: DENY, X-XSS-Protection: 1; mode=block. SecurityHeadersMiddleware properly configured and applied. Rate limiting middleware (SlowAPIMiddleware) working as expected."
 
+
+  - task: "Duplicate Booking Prevention (409 Conflict)"
+    implemented: true
+    working: "NA"
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implemented duplicate booking prevention in create_booking function. Backend checks for existing bookings that overlap with the requested time slot before creating a new booking. Returns 409 Conflict if slot is already booked. Frontend updated to handle 409 error with user-friendly message."
+
 frontend:
   - task: "Authentication Flow - Login"
     implemented: true
