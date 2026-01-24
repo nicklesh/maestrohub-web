@@ -83,43 +83,54 @@ export default function LoginScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboardView}
-      >
-        <ScrollView
-          contentContainerStyle={[
-            styles.scrollContent,
-            isTablet && styles.scrollContentTablet,
-          ]}
-          keyboardShouldPersistTaps="handled"
+    <View style={styles.container}>
+      {/* Blurred Background Image */}
+      <Image
+        source={require('../../assets/images/login_background.png')}
+        style={styles.backgroundImage}
+        resizeMode="contain"
+        blurRadius={Platform.OS === 'ios' ? 15 : 8}
+      />
+      {/* Overlay for better readability */}
+      <View style={[styles.backgroundOverlay, { backgroundColor: colors.background }]} />
+      
+      <SafeAreaView style={styles.safeArea}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.keyboardView}
         >
-          <View style={[styles.formWrapper, formMaxWidth ? { maxWidth: formMaxWidth } : undefined]}>
-            <View style={[styles.header, isDesktop && styles.headerDesktop]}>
-              <Image
-                source={isDark 
-                  ? require('../../assets/images/mh_logo_dark_trimmed.png')
-                  : require('../../assets/images/mh_logo_trimmed.png')
-                }
-                style={{ width: logoWidth, height: logoHeight }}
-                resizeMode="contain"
-              />
-              <Text style={[styles.appTitle, isDesktop && styles.appTitleDesktop]}>
-                {t('branding.app_name')}
-              </Text>
-              <Text style={[styles.tagline, isDesktop && styles.taglineDesktop]}>
-                {t('branding.tagline')}
-              </Text>
-            </View>
+          <ScrollView
+            contentContainerStyle={[
+              styles.scrollContent,
+              isTablet && styles.scrollContentTablet,
+            ]}
+            keyboardShouldPersistTaps="handled"
+          >
+            <View style={[styles.formWrapper, formMaxWidth ? { maxWidth: formMaxWidth } : undefined]}>
+              <View style={[styles.header, isDesktop && styles.headerDesktop]}>
+                <Image
+                  source={isDark 
+                    ? require('../../assets/images/mh_logo_dark_trimmed.png')
+                    : require('../../assets/images/mh_logo_trimmed.png')
+                  }
+                  style={{ width: logoWidth, height: logoHeight }}
+                  resizeMode="contain"
+                />
+                <Text style={[styles.appTitle, isDesktop && styles.appTitleDesktop]}>
+                  {t('branding.app_name')}
+                </Text>
+                <Text style={[styles.tagline, isDesktop && styles.taglineDesktop]}>
+                  {t('branding.tagline')}
+                </Text>
+              </View>
 
-            <View style={[styles.form, isTablet && styles.formTablet]}>
-              <Text style={[styles.title, isDesktop && styles.titleDesktop]}>
-                {t('pages.login.title')}
-              </Text>
-              <Text style={[styles.subtitle, isDesktop && styles.subtitleDesktop]}>
-                {t('pages.login.subtitle')}
-              </Text>
+              <View style={[styles.form, isTablet && styles.formTablet]}>
+                <Text style={[styles.title, isDesktop && styles.titleDesktop]}>
+                  {t('pages.login.title')}
+                </Text>
+                <Text style={[styles.subtitle, isDesktop && styles.subtitleDesktop]}>
+                  {t('pages.login.subtitle')}
+                </Text>
 
               {/* Error Message */}
               {errorMessage ? (
