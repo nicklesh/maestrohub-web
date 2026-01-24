@@ -2978,19 +2978,30 @@ async def update_booking_timeslot(booking_id: str, data: BookingTimeSlotUpdate, 
     if new_start < now:
         raise HTTPException(status_code=400, detail="Cannot update to a past time slot")
     
-    # Check that the new slot is available (not already booked by someone else)
+    # Check that the new slot is available (not already booked by someone else for this tutor)
     tutor_id = booking["tutor_id"]
     conflicting_booking = await db.bookings.find_one({
         "tutor_id": tutor_id,
         "booking_id": {"$ne": booking_id},  # Exclude current booking
         "status": {"$in": ["booked", "confirmed"]},
-        "$or": [
-            {"start_at": {"$lt": new_end}, "end_at": {"$gt": new_start}}
-        ]
+        "start_at": {"$lt": new_end},
+        "end_at": {"$gt": new_start}
     })
     
     if conflicting_booking:
-        raise HTTPException(status_code=400, detail="This time slot is already booked")
+        raise HTTPException(status_code=400, detail="This coach is already booked at this time")
+    
+    # Check if the CONSUMER already has ANOTHER booking at this time with ANY tutor
+    consumer_conflict = await db.bookings.find_one({
+        "consumer_id": user.user_id,
+        "booking_id": {"$ne": booking_id},  # Exclude the current booking being rescheduled
+        "status": {"$in": ["booked", "confirmed"]},
+        "start_at": {"$lt": new_end},
+        "end_at": {"$gt": new_start}
+    })
+    
+    if consumer_conflict:
+        raise HTTPException(status_code=400, detail="You already have another session booked at this time")
     
     # Check for active holds on this slot
     conflicting_hold = await db.booking_holds.find_one({
