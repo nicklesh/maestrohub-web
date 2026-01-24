@@ -1589,7 +1589,16 @@
       "pending": "Pending",
       "confirmed": "Confirmed",
       "paid": "Paid",
-      "refunded": "Refunded"
+      "refunded": "Refunded",
+      "pay_amount": "Pay {amount}",
+      "manage_payment_methods": "Manage Payment Methods",
+      "confirm_booking": "Confirm Booking",
+      "review_details": "Review your booking details before confirming",
+      "tutor_label": "Coach",
+      "student_label": "Student",
+      "date_label": "Date",
+      "time_label": "Time",
+      "payment_label": "Payment"
     },
     "reminders": {
       "title": "Reminders",
