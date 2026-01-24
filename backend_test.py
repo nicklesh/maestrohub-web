@@ -239,8 +239,14 @@ class BookingConflictTester:
         self.actual_tutor1_id = await self.create_tutor_profile(self.tutor1_token, self.tutor1_id)
         self.actual_tutor2_id = await self.create_tutor_profile(self.tutor2_token, self.tutor2_id)
         
+        print(f"   Tutor1 user_id: {self.tutor1_id}, tutor_id: {self.actual_tutor1_id}")
+        print(f"   Tutor2 user_id: {self.tutor2_id}, tutor_id: {self.actual_tutor2_id}")
+        
         if not self.actual_tutor1_id or not self.actual_tutor2_id:
             raise Exception("Failed to create tutor profiles")
+        
+        if self.actual_tutor1_id == self.actual_tutor2_id:
+            raise Exception(f"Both tutors have the same tutor_id: {self.actual_tutor1_id}")
         
         # Create students for consumers
         self.student1_id = await self.create_student(self.consumer1_token)
