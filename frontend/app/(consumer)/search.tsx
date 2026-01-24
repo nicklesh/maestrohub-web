@@ -803,8 +803,32 @@ const styles = StyleSheet.create({
   },
   // Results Section
   resultsSection: {
-    marginTop: 24,
+    marginTop: 16,
     paddingHorizontal: 16,
+  },
+  filterPillContainer: {
+    flexDirection: 'row',
+    marginBottom: 16,
+  },
+  filterPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 20,
+    gap: 8,
+  },
+  filterPillText: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  filtersRow: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 16,
+  },
+  filtersRowTablet: {
+    gap: 16,
   },
   resultsHeader: {
     flexDirection: 'row',
