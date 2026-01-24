@@ -370,7 +370,7 @@ class BookingConflictTester:
         
         # Create hold for Consumer2 with Tutor2
         success, hold_id, hold_data = await self.create_booking_hold(
-            self.consumer2_token, self.tutor2_id, different_time
+            self.consumer2_token, self.actual_tutor2_id, different_time
         )
         
         if not success:
