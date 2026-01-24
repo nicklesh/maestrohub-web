@@ -285,7 +285,7 @@ class BookingConflictTester:
         
         # Step 2: Try to create duplicate booking hold at same time with same tutor
         success, duplicate_hold_id, duplicate_data = await self.create_booking_hold(
-            self.consumer1_token, self.tutor1_id, future_time
+            self.consumer1_token, self.actual_tutor1_id, future_time
         )
         
         if success:
