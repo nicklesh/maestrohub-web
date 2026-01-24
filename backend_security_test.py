@@ -23,7 +23,7 @@ import sys
 import os
 
 # Configuration
-BASE_URL = "https://tutorapp-revamp.preview.emergentagent.com/api"
+BASE_URL = "https://easyslot-2.preview.emergentagent.com/api"
 TIMEOUT = 30
 
 # Test credentials from the request

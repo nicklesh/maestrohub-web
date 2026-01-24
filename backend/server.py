@@ -7230,8 +7230,8 @@ app.include_router(api_router)
 ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:8001",
-    "https://tutorapp-revamp.preview.emergentagent.com",
-    "https://tutorapp-revamp.preview.emergentagent.com",
+    "https://easyslot-2.preview.emergentagent.com",
+    "https://easyslot-2.preview.emergentagent.com",
 ]
 
 app.add_middleware(
