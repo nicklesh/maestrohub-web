@@ -135,6 +135,7 @@ export default function SearchScreen() {
   useEffect(() => {
     if (searchQuery.trim() && categories.length > 0) {
       const query = searchQuery.toLowerCase().trim();
+      console.log('Auto-match checking for:', query);
       
       // Check if query matches a category
       const matchedCategory = categories.find(
@@ -142,6 +143,7 @@ export default function SearchScreen() {
       );
       
       if (matchedCategory) {
+        console.log('Matched category:', matchedCategory.id);
         setSelectedCategory(matchedCategory.id);
         setSelectedSubject('all');
         setShowResults(true);
@@ -156,6 +158,7 @@ export default function SearchScreen() {
           subj => subj.toLowerCase().includes(query)
         );
         if (matchedSubject) {
+          console.log('Matched subject:', matchedSubject, 'in category:', cat.id);
           setSelectedCategory(cat.id);
           setSelectedSubject(matchedSubject);
           setShowResults(true);
@@ -164,6 +167,7 @@ export default function SearchScreen() {
           return;
         }
       }
+      console.log('No match found for:', query);
     }
   }, [searchQuery, categories]);
 
