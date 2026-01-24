@@ -438,9 +438,17 @@ export default function BookingScreen() {
       router.replace('/(consumer)/bookings');
     } catch (error: any) {
       console.error('Booking failed:', error);
-      const errorMsg = error.response?.data?.detail || 'Failed to confirm booking. Please try again.';
-      showError(errorMsg);
       setSubmitting(false);
+      
+      if (error.response?.status === 409) {
+        // Slot was booked by someone else
+        showInfo('This time slot has been booked by someone else. Please select a different time.', 'Slot No Longer Available');
+        // Navigate back to coach page to select a new time
+        router.back();
+      } else {
+        const errorMsg = error.response?.data?.detail || 'Failed to confirm booking. Please try again.';
+        showError(errorMsg);
+      }
     }
   };
 
