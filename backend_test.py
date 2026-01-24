@@ -227,16 +227,19 @@ class BookingConflictTester:
             self.tutor2_email, self.tutor2_password, "tutor"
         )
         
-        # Create tutor profiles
-        await self.create_tutor_profile(self.tutor1_token, self.tutor1_id)
-        await self.create_tutor_profile(self.tutor2_token, self.tutor2_id)
+        # Create tutor profiles and get actual tutor_ids
+        self.actual_tutor1_id = await self.create_tutor_profile(self.tutor1_token, self.tutor1_id)
+        self.actual_tutor2_id = await self.create_tutor_profile(self.tutor2_token, self.tutor2_id)
+        
+        if not self.actual_tutor1_id or not self.actual_tutor2_id:
+            raise Exception("Failed to create tutor profiles")
         
         # Create students for consumers
         self.student1_id = await self.create_student(self.consumer1_token)
         self.student2_id = await self.create_student(self.consumer2_token)
         
         print(f"✅ Setup complete - Consumer1: {self.consumer1_id}, Consumer2: {self.consumer2_id}")
-        print(f"   Tutor1: {self.tutor1_id}, Tutor2: {self.tutor2_id}")
+        print(f"   Tutor1: {self.actual_tutor1_id}, Tutor2: {self.actual_tutor2_id}")
 
     async def test_scenario_1_same_tutor_duplicate_prevention(self):
         """
