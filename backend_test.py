@@ -255,7 +255,7 @@ class BookingConflictTester:
         
         # Create hold for first booking
         success, hold_id, hold_data = await self.create_booking_hold(
-            self.consumer1_token, self.tutor1_id, future_time
+            self.consumer1_token, self.actual_tutor1_id, future_time
         )
         
         if not success:
