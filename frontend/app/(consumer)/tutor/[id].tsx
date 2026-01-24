@@ -67,7 +67,7 @@ interface Review {
 
 export default function TutorDetailScreen() {
   const router = useRouter();
-  const { id, bookingId, mode } = useLocalSearchParams();  // bookingId and mode for update flow
+  const { id, bookingId, mode, source } = useLocalSearchParams();  // bookingId and mode for update flow, source for view only
   const { width } = useWindowDimensions();
   const { colors } = useTheme();
   const { t, formatNumber, formatDate } = useTranslation();
@@ -80,8 +80,13 @@ export default function TutorDetailScreen() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
   
-  // Check if we're in update mode (updating an existing booking's time slot)
+  // Check navigation mode
+  // - From search: no special params → show booking UI
+  // - From reschedule: mode='update' + bookingId → show slots with "Update Session"
+  // - From booking details coach name: source='booking' → view only, no booking UI
   const isUpdateMode = mode === 'update' && bookingId;
+  const isViewOnly = source === 'booking';
+  const showBookingUI = !isViewOnly;
 
   // Helper functions for translations
   const getLevelName = (level: string): string => {
