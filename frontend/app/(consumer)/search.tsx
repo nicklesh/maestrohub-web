@@ -131,7 +131,7 @@ export default function SearchScreen() {
     return cat?.subjects || [];
   }, [selectedCategory, categories]);
 
-  // Auto-match search query to category/subject
+  // Auto-match search query to category/subject and trigger search
   useEffect(() => {
     if (searchQuery.trim() && categories.length > 0) {
       const query = searchQuery.toLowerCase().trim();
@@ -145,6 +145,8 @@ export default function SearchScreen() {
         setSelectedCategory(matchedCategory.id);
         setSelectedSubject('all');
         setShowResults(true);
+        // Directly trigger search with matched values
+        searchTutorsWithParams(matchedCategory.id, 'all', query);
         return;
       }
       
@@ -157,11 +159,47 @@ export default function SearchScreen() {
           setSelectedCategory(cat.id);
           setSelectedSubject(matchedSubject);
           setShowResults(true);
+          // Directly trigger search with matched values
+          searchTutorsWithParams(cat.id, matchedSubject, query);
           return;
         }
       }
     }
   }, [searchQuery, categories]);
+
+  // Helper function to search with specific params
+  const searchTutorsWithParams = async (categoryId: string, subjectId: string, query: string) => {
+    setPage(1);
+    setTutors([]);
+    setLoading(true);
+
+    try {
+      const queryParams = new URLSearchParams({
+        page: '1',
+        limit: '20',
+      });
+      
+      if (categoryId !== 'all') {
+        queryParams.append('category', categoryId);
+      }
+      if (subjectId !== 'all') {
+        queryParams.append('subject', subjectId);
+      }
+      if (query) {
+        queryParams.append('query', query);
+      }
+
+      const response = await api.get(`/tutors/search?${queryParams}`);
+      const newTutors = response.data.tutors || [];
+      
+      setTutors(newTutors);
+      setHasMore(newTutors.length === 20);
+    } catch (error) {
+      console.error('Failed to search tutors:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Update category when params change (from home page navigation)
   useEffect(() => {
