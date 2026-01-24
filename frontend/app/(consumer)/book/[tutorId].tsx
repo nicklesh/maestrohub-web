@@ -582,7 +582,7 @@ export default function BookingScreen() {
   );
 
   const renderConfirmStep = () => (
-    <View style={styles.stepContent}>
+    <ScrollView style={styles.stepContent} contentContainerStyle={styles.confirmScrollContent}>
       {/* Payment Success Banner */}
       {paymentSuccess && (
         <View style={[styles.successBanner, { backgroundColor: colors.successLight }]}>
@@ -608,13 +608,13 @@ export default function BookingScreen() {
         <View style={styles.summaryRow}>
           <Text style={[styles.summaryLabel, isDesktop && styles.summaryLabelDesktop]}>{t('pages.booking.date_label')}</Text>
           <Text style={[styles.summaryValue, isDesktop && styles.summaryValueDesktop]}>
-            {format(parseISO(startAt!), 'EEEE, MMMM d, yyyy')}
+            {startAt ? format(parseISO(startAt), 'EEEE, MMMM d, yyyy') : '-'}
           </Text>
         </View>
         <View style={styles.summaryRow}>
           <Text style={[styles.summaryLabel, isDesktop && styles.summaryLabelDesktop]}>{t('pages.booking.time_label')}</Text>
           <Text style={[styles.summaryValue, isDesktop && styles.summaryValueDesktop]}>
-            {format(parseISO(startAt!), 'h:mm a')} - {format(parseISO(endAt!), 'h:mm a')}
+            {startAt && endAt ? `${format(parseISO(startAt), 'h:mm a')} - ${format(parseISO(endAt), 'h:mm a')}` : '-'}
           </Text>
         </View>
         <View style={styles.summaryRow}>
@@ -642,7 +642,7 @@ export default function BookingScreen() {
           </Text>
         )}
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 
   return (
