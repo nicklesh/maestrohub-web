@@ -491,14 +491,21 @@ export default function TutorDetailScreen() {
         </View>
       </ScrollView>
 
-      {/* Book Button */}
+      {/* Book/Update Button */}
       {selectedSlot && (
         <View style={[styles.bookButtonContainer, { backgroundColor: colors.surface, borderTopColor: colors.border }]}>
           <TouchableOpacity
-            style={[styles.bookButton, { backgroundColor: colors.primary }]}
+            style={[styles.bookButton, { backgroundColor: colors.primary }, updating && styles.bookButtonDisabled]}
             onPress={handleBook}
+            disabled={updating}
           >
-            <Text style={styles.bookButtonText}>{t('pages.tutor_detail.book_session')}</Text>
+            {updating ? (
+              <ActivityIndicator color="#FFFFFF" />
+            ) : (
+              <Text style={styles.bookButtonText}>
+                {isUpdateMode ? t('pages.tutor_detail.update_session') : t('pages.tutor_detail.book_session')}
+              </Text>
+            )}
           </TouchableOpacity>
         </View>
       )}
