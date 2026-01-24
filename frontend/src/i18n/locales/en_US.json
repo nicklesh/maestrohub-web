@@ -817,6 +817,7 @@
       "policies": "Policies",
       "cancellation_policy": "Cancellation Policy",
       "book_session": "Book Session",
+      "update_session": "Update Session",
       "message": "Message",
       "sessions_completed": "sessions completed",
       "years_experience": "years experience",
