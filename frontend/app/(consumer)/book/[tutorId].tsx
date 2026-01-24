@@ -179,6 +179,7 @@ export default function BookingScreen() {
       });
       console.log('Hold created:', response.data);
       setHoldId(response.data.hold_id);
+      setHoldTimeSlot(startAt); // Track which time slot this hold is for
       return response.data.hold_id;
     } catch (error: any) {
       console.error('Hold creation error:', {
