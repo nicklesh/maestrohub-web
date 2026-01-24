@@ -90,8 +90,8 @@ class BookingConflictTester:
         except Exception as e:
             raise Exception(f"Failed to register {email}: {str(e)}")
 
-    async def create_tutor_profile(self, token: str, tutor_id: str) -> bool:
-        """Create tutor profile"""
+    async def create_tutor_profile(self, token: str, user_id: str) -> str:
+        """Create tutor profile and return tutor_id"""
         try:
             headers = {"Authorization": f"Bearer {token}"}
             response = await self.client.post(f"{API_BASE}/tutors/profile", 
@@ -108,13 +108,14 @@ class BookingConflictTester:
                 }
             )
             if response.status_code == 200:
-                return True
+                data = response.json()
+                return data.get("tutor_id", "")
             else:
                 print(f"Tutor profile creation failed: {response.status_code} - {response.text}")
-                return False
+                return ""
         except Exception as e:
             print(f"Failed to create tutor profile: {e}")
-            return False
+            return ""
 
     async def create_student(self, token: str) -> str:
         """Create a test student and return student_id"""
