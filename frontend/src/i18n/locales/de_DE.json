@@ -468,7 +468,9 @@
       "how_it_works": "So funktioniert es",
       "reminders": "Erinnerungen",
       "subjects_count": "{count} Fächer",
-      "search_placeholder": "Tutor, Fach suchen..."
+      "search_placeholder": "Tutor, Fach suchen...",
+      "card_search_coach": "Coach suchen",
+      "card_search_coach_desc": "Durchsuchen Sie und finden Sie den perfekten Coach für Ihre Bedürfnisse"
     },
     "search": {
       "title": "Coach finden",

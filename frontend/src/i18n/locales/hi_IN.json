@@ -471,7 +471,9 @@
       "how_it_works": "यह कैसे काम करता है",
       "reminders": "रिमाइंडर",
       "subjects_count": "{count} विषय",
-      "search_placeholder": "ट्यूटर, विषय खोजें..."
+      "search_placeholder": "ट्यूटर, विषय खोजें...",
+      "card_search_coach": "कोच खोजें",
+      "card_search_coach_desc": "अपनी आवश्यकताओं के लिए सही कोच ब्राउज़ करें और खोजें"
     },
     "search": {
       "title": "कोच खोजें",
@@ -1857,7 +1859,8 @@
         "select_medium": "मीडियम चुनें",
         "add_stripe_account": "Stripe अकाउंट जोड़ें",
         "stripe_not_connected": "Stripe कनेक्ट नहीं है",
-        "zoom_link": "ज़ूम लिंक"
+        "zoom_link": "ज़ूम लिंक",
+        "stripe_connected": "Stripe कनेक्टेड"
       },
       "billing": {
         "title": "बिलिंग",

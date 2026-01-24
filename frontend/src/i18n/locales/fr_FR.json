@@ -470,7 +470,9 @@
       "how_it_works": "Comment ça marche",
       "reminders": "Rappels",
       "subjects_count": "{count} matières",
-      "search_placeholder": "Recherchez un tuteur, une matière..."
+      "search_placeholder": "Recherchez un tuteur, une matière...",
+      "card_search_coach": "Rechercher un Coach",
+      "card_search_coach_desc": "Parcourez et trouvez le coach parfait pour vos besoins"
     },
     "search": {
       "title": "Rechercher un coach",

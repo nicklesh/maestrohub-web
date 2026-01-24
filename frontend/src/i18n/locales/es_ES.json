@@ -471,7 +471,9 @@
       "how_it_works": "Cómo funciona",
       "reminders": "Recordatorios",
       "subjects_count": "{count} materias",
-      "search_placeholder": "Buscar tutor, materia..."
+      "search_placeholder": "Buscar tutor, materia...",
+      "card_search_coach": "Buscar un Coach",
+      "card_search_coach_desc": "Navega y encuentra el coach perfecto para tus necesidades"
     },
     "search": {
       "title": "Buscar entrenador",
