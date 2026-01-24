@@ -466,8 +466,10 @@ export default function TutorDetailScreen() {
             }}
           />
         </View>
+        )}
 
-        {/* Time Slots */}
+        {/* Time Slots - Only show when booking UI is enabled */}
+        {showBookingUI && (
         <View style={[styles.section, { backgroundColor: colors.surface }]}>
           <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.tutor_detail.available_slots')}</Text>
           {availableSlots.length === 0 ? (
@@ -495,10 +497,11 @@ export default function TutorDetailScreen() {
             </View>
           )}
         </View>
+        )}
       </ScrollView>
 
-      {/* Book/Update Button */}
-      {selectedSlot && (
+      {/* Book/Update Button - Only show when booking UI is enabled */}
+      {showBookingUI && selectedSlot && (
         <View style={[styles.bookButtonContainer, { backgroundColor: colors.surface, borderTopColor: colors.border }]}>
           <TouchableOpacity
             style={[styles.bookButton, { backgroundColor: colors.primary }, updating && styles.bookButtonDisabled]}
