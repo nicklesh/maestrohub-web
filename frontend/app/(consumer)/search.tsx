@@ -593,18 +593,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  contentWrapper: {
+  scrollContainer: {
     flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: 24,
+  },
+  contentWrapper: {
     width: '100%',
     alignSelf: 'center',
   },
   header: {
     padding: 16,
-    gap: 12,
+    paddingBottom: 8,
   },
   headerTablet: {
     padding: 24,
-    gap: 16,
+    paddingBottom: 12,
   },
   searchBar: {
     flexDirection: 'row',
@@ -627,6 +633,100 @@ const styles = StyleSheet.create({
     height: 56,
     fontSize: 18,
   },
+  // Categories Section
+  categoriesSection: {
+    paddingHorizontal: 16,
+    paddingTop: 8,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 16,
+  },
+  categoriesGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  categoriesGridTablet: {
+    gap: 16,
+  },
+  categoryCard: {
+    width: '48%',
+    borderRadius: 16,
+    padding: 16,
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  categoryCardTablet: {
+    padding: 20,
+    borderRadius: 20,
+  },
+  categoryIconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  categoryName: {
+    fontSize: 13,
+    fontWeight: '600',
+    textAlign: 'center',
+    lineHeight: 18,
+  },
+  categorySubjects: {
+    fontSize: 11,
+    marginTop: 4,
+    textAlign: 'center',
+  },
+  // Results Section
+  resultsSection: {
+    marginTop: 24,
+    paddingHorizontal: 16,
+  },
+  resultsHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  resultsTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  clearFilterBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    gap: 6,
+  },
+  clearFilterText: {
+    fontSize: 13,
+    fontWeight: '500',
+  },
+  subjectFilterRow: {
+    marginBottom: 16,
+  },
+  tutorsList: {
+    gap: 12,
+  },
+  loadMoreBtn: {
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  loadMoreText: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  // Dropdown styles
   filtersRow: {
     flexDirection: 'row',
     gap: 12,
@@ -792,20 +892,19 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   loadingContainer: {
-    flex: 1,
+    paddingVertical: 40,
     justifyContent: 'center',
     alignItems: 'center',
   },
   emptyContainer: {
-    flex: 1,
+    paddingVertical: 40,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 40,
   },
   emptyText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600',
-    marginTop: 16,
+    marginTop: 12,
   },
   emptySubtext: {
     fontSize: 14,
