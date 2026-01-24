@@ -91,6 +91,18 @@ export default function BookingScreen() {
 
   const styles = getStyles(colors);
 
+  // Detect when time slot changes - if it's different from the hold's time slot, invalidate the hold
+  useEffect(() => {
+    if (holdTimeSlot && startAt && holdTimeSlot !== startAt) {
+      console.log('Time slot changed from', holdTimeSlot, 'to', startAt);
+      // Time slot changed - we need a new hold
+      setHoldId(null);
+      setHoldTimeSlot(null);
+      // Note: We keep paymentSuccess and paymentId because user already paid
+      // The handleConfirmBooking will create a new hold for the new time
+    }
+  }, [startAt, holdTimeSlot]);
+
   useEffect(() => {
     // Wait for auth to finish loading and token to be available before loading data
     if (!authLoading && token) {
