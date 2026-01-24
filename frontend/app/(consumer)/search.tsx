@@ -439,120 +439,142 @@ export default function SearchScreen() {
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <AppHeader />
-      <View style={[styles.contentWrapper, containerMaxWidth ? { maxWidth: containerMaxWidth } : undefined]}>
-        {/* Search Bar and Dropdowns */}
-        <View style={[styles.header, isTablet && styles.headerTablet]}>
-          {/* Search Input */}
-          <View style={[styles.searchBar, { backgroundColor: colors.surface, borderColor: colors.border }, isTablet && styles.searchBarTablet]}>
-            <Ionicons name="search" size={20} color={colors.textMuted} />
-            <TextInput
-              style={[styles.searchInput, { color: colors.text }, isTablet && styles.searchInputTablet]}
-              placeholder={t('pages.search.search_placeholder')}
-              placeholderTextColor={colors.textMuted}
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-              onSubmitEditing={() => searchTutors(true)}
-              returnKeyType="search"
-            />
-            {searchQuery.length > 0 && (
-              <TouchableOpacity onPress={() => { setSearchQuery(''); searchTutors(true); }}>
-                <Ionicons name="close-circle" size={20} color={colors.textMuted} />
-              </TouchableOpacity>
-            )}
-          </View>
-
-          {/* Filter Dropdowns */}
-          <View style={[styles.filtersRow, isTablet && styles.filtersRowTablet]}>
-            <DropdownSelector
-              label={t('pages.search.category')}
-              value={getCategoryDisplayName()}
-              onPress={() => setShowCategoryDropdown(true)}
-              icon="grid-outline"
-            />
-            <DropdownSelector
-              label={t('pages.search.subject')}
-              value={getSubjectDisplayName()}
-              onPress={() => setShowSubjectDropdown(true)}
-              icon="book-outline"
-            />
-          </View>
-
-          {/* Active Filters Chips */}
-          {(selectedCategory !== 'all' || selectedSubject !== 'all') && (
-            <View style={styles.activeFilters}>
-              {selectedCategory !== 'all' && (
-                <TouchableOpacity 
-                  style={[styles.activeChip, { backgroundColor: colors.primaryLight }]}
-                  onPress={() => { setSelectedCategory('all'); setSelectedSubject('all'); }}
-                >
-                  <Text style={[styles.activeChipText, { color: colors.primary }]}>{getCategoryName()}</Text>
-                  <Ionicons name="close-circle" size={16} color={colors.primary} />
+      <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.scrollContent}>
+        <View style={[styles.contentWrapper, containerMaxWidth ? { maxWidth: containerMaxWidth } : undefined]}>
+          {/* Search Bar */}
+          <View style={[styles.header, isTablet && styles.headerTablet]}>
+            <View style={[styles.searchBar, { backgroundColor: colors.surface, borderColor: colors.border }, isTablet && styles.searchBarTablet]}>
+              <Ionicons name="search" size={20} color={colors.textMuted} />
+              <TextInput
+                style={[styles.searchInput, { color: colors.text }, isTablet && styles.searchInputTablet]}
+                placeholder={t('forms.placeholders.search_subjects')}
+                placeholderTextColor={colors.textMuted}
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+                onSubmitEditing={() => { setShowResults(true); searchTutors(true); }}
+                returnKeyType="search"
+              />
+              {searchQuery.length > 0 && (
+                <TouchableOpacity onPress={() => { setSearchQuery(''); }}>
+                  <Ionicons name="close-circle" size={20} color={colors.textMuted} />
                 </TouchableOpacity>
               )}
-              {selectedSubject !== 'all' && (
-                <TouchableOpacity 
-                  style={[styles.activeChip, { backgroundColor: colors.primaryLight }]}
-                  onPress={() => setSelectedSubject('all')}
+            </View>
+          </View>
+
+          {/* Browse Categories Section */}
+          <View style={styles.categoriesSection}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>
+              {t('pages.home.browse_categories')}
+            </Text>
+            <View style={[styles.categoriesGrid, isTablet && styles.categoriesGridTablet]}>
+              {categories.map((category) => (
+                <TouchableOpacity
+                  key={category.id}
+                  style={[
+                    styles.categoryCard,
+                    { 
+                      backgroundColor: colors.surface, 
+                      borderColor: selectedCategory === category.id ? colors.primary : colors.border,
+                      borderWidth: selectedCategory === category.id ? 2 : 1,
+                    },
+                    isTablet && styles.categoryCardTablet,
+                  ]}
+                  onPress={() => handleCategorySelect(category.id)}
                 >
-                  <Text style={[styles.activeChipText, { color: colors.primary }]}>{selectedSubject}</Text>
+                  <View style={[styles.categoryIconContainer, { backgroundColor: colors.primaryLight }]}>
+                    <Ionicons
+                      name={getCategoryIcon(category.id)}
+                      size={isTablet ? 28 : 24}
+                      color={colors.primary}
+                    />
+                  </View>
+                  <Text style={[styles.categoryName, { color: colors.text }]} numberOfLines={2}>
+                    {getCategoryName(category.id, category.name)}
+                  </Text>
+                  <Text style={[styles.categorySubjects, { color: colors.textMuted }]}>
+                    {t('pages.home.subjects_count', { count: formatNumber(category.subjects?.length || 0) })}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+
+          {/* Results Section - only show when a category is selected or search is performed */}
+          {showResults && (
+            <View style={styles.resultsSection}>
+              {/* Filter info and clear button */}
+              <View style={styles.resultsHeader}>
+                <Text style={[styles.resultsTitle, { color: colors.text }]}>
+                  {selectedCategory !== 'all' 
+                    ? getCategoryName(selectedCategory, categories.find(c => c.id === selectedCategory)?.name)
+                    : t('pages.search.all_categories')
+                  }
+                </Text>
+                <TouchableOpacity 
+                  style={[styles.clearFilterBtn, { backgroundColor: colors.primaryLight }]}
+                  onPress={() => { 
+                    setSelectedCategory('all'); 
+                    setSelectedSubject('all'); 
+                    setSearchQuery(''); 
+                    setShowResults(false);
+                    setTutors([]);
+                  }}
+                >
+                  <Text style={[styles.clearFilterText, { color: colors.primary }]}>{t('buttons.clear')}</Text>
                   <Ionicons name="close-circle" size={16} color={colors.primary} />
                 </TouchableOpacity>
+              </View>
+
+              {/* Subject Filter Dropdown */}
+              {selectedCategory !== 'all' && availableSubjects.length > 0 && (
+                <View style={styles.subjectFilterRow}>
+                  <DropdownSelector
+                    label={t('pages.search.subject')}
+                    value={getSubjectDisplayName()}
+                    onPress={() => setShowSubjectDropdown(true)}
+                    icon="book-outline"
+                  />
+                </View>
               )}
-              <TouchableOpacity 
-                style={styles.clearAllBtn}
-                onPress={() => { setSelectedCategory('all'); setSelectedSubject('all'); setSearchQuery(''); }}
-              >
-                <Text style={[styles.clearAllText, { color: colors.textMuted }]}>Clear all</Text>
-              </TouchableOpacity>
+
+              {/* Coach Results */}
+              {loading && tutors.length === 0 ? (
+                <View style={styles.loadingContainer}>
+                  <ActivityIndicator size="large" color={colors.primary} />
+                </View>
+              ) : tutors.length === 0 ? (
+                <View style={styles.emptyContainer}>
+                  <Ionicons name="search" size={48} color={colors.textMuted} />
+                  <Text style={[styles.emptyText, { color: colors.textMuted }]}>
+                    {t('pages.search.no_results_title')}
+                  </Text>
+                  <Text style={[styles.emptySubtext, { color: colors.textMuted }]}>
+                    {t('pages.search.no_results_description')}
+                  </Text>
+                </View>
+              ) : (
+                <View style={styles.tutorsList}>
+                  {tutors.map((tutor) => (
+                    <View key={tutor.tutor_id || tutor.id}>
+                      {renderTutorCard({ item: tutor, index: 0 })}
+                    </View>
+                  ))}
+                  {hasMore && !loading && (
+                    <TouchableOpacity 
+                      style={[styles.loadMoreBtn, { backgroundColor: colors.surface, borderColor: colors.border }]}
+                      onPress={() => searchTutors(false)}
+                    >
+                      <Text style={[styles.loadMoreText, { color: colors.primary }]}>{t('buttons.load_more')}</Text>
+                    </TouchableOpacity>
+                  )}
+                  {loading && <ActivityIndicator color={colors.primary} style={styles.loadMore} />}
+                </View>
+              )}
             </View>
           )}
         </View>
-
-        {/* Results */}
-        {loading && tutors.length === 0 ? (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={colors.primary} />
-          </View>
-        ) : tutors.length === 0 ? (
-          <View style={styles.emptyContainer}>
-            <Ionicons name="search" size={64} color={colors.textMuted} />
-            <Text style={[styles.emptyText, { color: colors.textMuted }]}>
-              No tutors found
-            </Text>
-            <Text style={[styles.emptySubtext, { color: colors.textMuted }]}>
-              Try adjusting your filters
-            </Text>
-          </View>
-        ) : (
-          <FlatList
-            data={tutors}
-            renderItem={renderTutorCard}
-            keyExtractor={(item) => item.tutor_id || item.id}
-            numColumns={numColumns}
-            key={numColumns}
-            contentContainerStyle={[styles.listContent, isDesktop && styles.listContentDesktop]}
-            columnWrapperStyle={numColumns > 1 ? { justifyContent: 'flex-start', gap: 8 } : undefined}
-            onEndReached={() => hasMore && !loading && searchTutors(false)}
-            onEndReachedThreshold={0.3}
-            ListFooterComponent={
-              loading ? <ActivityIndicator color={colors.primary} style={styles.loadMore} /> : null
-            }
-          />
-        )}
-      </View>
-
-      {/* Category Dropdown Modal */}
-      <DropdownModal
-        visible={showCategoryDropdown}
-        onClose={() => setShowCategoryDropdown(false)}
-        title={t('common.select_category')}
-        options={categoryOptions}
-        selected={selectedCategory}
-        onSelect={(id) => {
-          setSelectedCategory(id);
-          setSelectedSubject('all'); // Reset subject when category changes
-        }}
-      />
+      </ScrollView>
 
       {/* Subject Dropdown Modal */}
       <DropdownModal
