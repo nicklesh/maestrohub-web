@@ -235,6 +235,21 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
+  backgroundImage: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    opacity: 0.3,
+  },
+  backgroundOverlay: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    opacity: 0.85,
+  },
+  safeArea: {
+    flex: 1,
+  },
   keyboardView: {
     flex: 1,
   },
