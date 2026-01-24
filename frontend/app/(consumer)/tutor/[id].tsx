@@ -66,7 +66,7 @@ interface Review {
 
 export default function TutorDetailScreen() {
   const router = useRouter();
-  const { id } = useLocalSearchParams();
+  const { id, bookingId, mode } = useLocalSearchParams();  // bookingId and mode for update flow
   const { width } = useWindowDimensions();
   const { colors } = useTheme();
   const { t, formatNumber, formatDate } = useTranslation();
@@ -78,6 +78,9 @@ export default function TutorDetailScreen() {
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
+  
+  // Check if we're in update mode (updating an existing booking's time slot)
+  const isUpdateMode = mode === 'update' && bookingId;
 
   // Helper functions for translations
   const getLevelName = (level: string): string => {
