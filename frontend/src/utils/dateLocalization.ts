@@ -121,33 +121,50 @@ export function formatLocalizedDate(date: Date | string, formatStr: string, loca
   
   let result = formatStr;
   
-  // Replace year
-  result = result.replace('yyyy', toLocalizedNumber(year, locale));
-  result = result.replace('yy', toLocalizedNumber(year.toString().slice(-2), locale));
+  // Use placeholders to avoid replacement conflicts
+  // Replace patterns from longest to shortest using placeholders
   
-  // Replace month
-  result = result.replace('MMMM', getLocalizedMonthName(month, locale, false));
-  result = result.replace('MMM', getLocalizedMonthName(month, locale, true));
-  result = result.replace('MM', toLocalizedNumber(String(month + 1).padStart(2, '0'), locale));
-  result = result.replace(/M(?!M|a|o)/, toLocalizedNumber(month + 1, locale));
+  // Replace year (do first as it doesn't conflict)
+  result = result.replace(/yyyy/g, toLocalizedNumber(year, locale));
+  result = result.replace(/yy/g, toLocalizedNumber(year.toString().slice(-2), locale));
   
-  // Replace day
-  result = result.replace('EEEE', getLocalizedDayName(dayOfWeek, locale, false));
-  result = result.replace('EEE', getLocalizedDayName(dayOfWeek, locale, true));
-  result = result.replace('dd', toLocalizedNumber(String(day).padStart(2, '0'), locale));
-  result = result.replace(/d(?!d|e|a)/, toLocalizedNumber(day, locale));
+  // Replace day of week (EEEE and EEE) - use placeholders
+  result = result.replace(/EEEE/g, '\u0001DAYLONG\u0001');
+  result = result.replace(/EEE/g, '\u0001DAYSHORT\u0001');
+  
+  // Replace month (MMMM, MMM, MM, M) - use placeholders
+  result = result.replace(/MMMM/g, '\u0001MONTHLONG\u0001');
+  result = result.replace(/MMM/g, '\u0001MONTHSHORT\u0001');
+  result = result.replace(/MM/g, '\u0001MONTHPAD\u0001');
+  // Single M that's not followed by another M
+  result = result.replace(/M(?![A-Z]|\u0001)/g, '\u0001MONTH\u0001');
+  
+  // Replace day (dd, d) - use placeholders
+  result = result.replace(/dd/g, '\u0001DAYPAD\u0001');
+  // Single d that's not part of 'dd' and not in day names
+  result = result.replace(/\bd\b/g, '\u0001DAY\u0001');
   
   // Replace time (12-hour format)
   const hours12 = hours % 12 || 12;
   const ampm = hours >= 12 ? 'PM' : 'AM';
   const localizedAmPm = locale === 'hi_IN' ? (hours >= 12 ? 'अपराह्न' : 'पूर्वाह्न') : ampm;
   
-  result = result.replace('hh', toLocalizedNumber(String(hours12).padStart(2, '0'), locale));
-  result = result.replace(/h(?!h)/, toLocalizedNumber(hours12, locale));
-  result = result.replace('HH', toLocalizedNumber(String(hours).padStart(2, '0'), locale));
-  result = result.replace(/H(?!H)/, toLocalizedNumber(hours, locale));
-  result = result.replace('mm', toLocalizedNumber(String(minutes).padStart(2, '0'), locale));
-  result = result.replace('a', localizedAmPm);
+  result = result.replace(/hh/g, toLocalizedNumber(String(hours12).padStart(2, '0'), locale));
+  result = result.replace(/\bh\b/g, toLocalizedNumber(hours12, locale));
+  result = result.replace(/HH/g, toLocalizedNumber(String(hours).padStart(2, '0'), locale));
+  result = result.replace(/\bH\b/g, toLocalizedNumber(hours, locale));
+  result = result.replace(/mm/g, toLocalizedNumber(String(minutes).padStart(2, '0'), locale));
+  result = result.replace(/\ba\b/g, localizedAmPm);
+  
+  // Now replace placeholders with actual values
+  result = result.replace(/\u0001DAYLONG\u0001/g, getLocalizedDayName(dayOfWeek, locale, false));
+  result = result.replace(/\u0001DAYSHORT\u0001/g, getLocalizedDayName(dayOfWeek, locale, true));
+  result = result.replace(/\u0001MONTHLONG\u0001/g, getLocalizedMonthName(month, locale, false));
+  result = result.replace(/\u0001MONTHSHORT\u0001/g, getLocalizedMonthName(month, locale, true));
+  result = result.replace(/\u0001MONTHPAD\u0001/g, toLocalizedNumber(String(month + 1).padStart(2, '0'), locale));
+  result = result.replace(/\u0001MONTH\u0001/g, toLocalizedNumber(month + 1, locale));
+  result = result.replace(/\u0001DAYPAD\u0001/g, toLocalizedNumber(String(day).padStart(2, '0'), locale));
+  result = result.replace(/\u0001DAY\u0001/g, toLocalizedNumber(day, locale));
   
   return result;
 }
