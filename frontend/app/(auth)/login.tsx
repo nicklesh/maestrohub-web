@@ -239,13 +239,13 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     position: 'absolute',
     width: '100%',
     height: '100%',
-    opacity: 0.6,
+    opacity: 0.8,
   },
   backgroundOverlay: {
     position: 'absolute',
     width: '100%',
     height: '100%',
-    opacity: 0.6,
+    opacity: 0.5,
   },
   safeArea: {
     flex: 1,
