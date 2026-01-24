@@ -2941,6 +2941,11 @@ async def update_booking_timeslot(booking_id: str, data: BookingTimeSlotUpdate, 
     
     # Make sure new time is in the future
     now = datetime.now(timezone.utc)
+    # Ensure new_start has timezone info
+    if new_start.tzinfo is None:
+        new_start = new_start.replace(tzinfo=timezone.utc)
+    if new_end.tzinfo is None:
+        new_end = new_end.replace(tzinfo=timezone.utc)
     if new_start < now:
         raise HTTPException(status_code=400, detail="Cannot update to a past time slot")
     
