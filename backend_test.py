@@ -46,6 +46,8 @@ class BookingConflictTester:
         self.student2_id = None
         self.booking1_id = None
         self.booking2_id = None
+        self.actual_tutor1_id = None  # Actual tutor_id from profile creation
+        self.actual_tutor2_id = None  # Actual tutor_id from profile creation
 
     async def log_result(self, test_name: str, success: bool, message: str, details: Dict[str, Any] = None):
         """Log test result"""
