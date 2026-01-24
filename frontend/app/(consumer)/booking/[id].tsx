@@ -735,6 +735,27 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   priceValueDesktop: {
     fontSize: 28,
   },
+  actionsContainer: {
+    gap: 12,
+  },
+  rescheduleButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 14,
+    borderRadius: 12,
+    gap: 8,
+    borderWidth: 1,
+    borderColor: colors.primary,
+    backgroundColor: colors.surface,
+  },
+  rescheduleButtonTablet: {
+    paddingVertical: 16,
+  },
+  rescheduleButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
   cancelButton: {
     flexDirection: 'row',
     alignItems: 'center',
