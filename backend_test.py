@@ -96,6 +96,14 @@ class BookingConflictTester:
         """Create tutor profile and return tutor_id"""
         try:
             headers = {"Authorization": f"Bearer {token}"}
+            
+            # First try to get existing profile
+            get_response = await self.client.get(f"{API_BASE}/tutors/profile", headers=headers)
+            if get_response.status_code == 200:
+                data = get_response.json()
+                return data.get("tutor_id", "")
+            
+            # If no existing profile, create new one
             response = await self.client.post(f"{API_BASE}/tutors/profile", 
                 headers=headers,
                 json={
