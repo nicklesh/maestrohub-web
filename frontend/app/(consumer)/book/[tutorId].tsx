@@ -715,6 +715,9 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   intakeScroll: {
     paddingBottom: 40,
   },
+  confirmScrollContent: {
+    paddingBottom: 40,
+  },
   stepTitle: {
     fontSize: 24,
     fontWeight: 'bold',
