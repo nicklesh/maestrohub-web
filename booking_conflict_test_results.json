@@ -1,68 +1,16 @@
 {
   "summary": {
-    "total_tests": 7,
-    "passed": 6,
+    "total_tests": 1,
+    "passed": 0,
     "failed": 1,
-    "success_rate": "85.7%"
+    "success_rate": "0.0%"
   },
   "test_results": [
     {
-      "test": "Scenario 1 - Setup",
-      "success": true,
-      "message": "Successfully created initial booking booking_95cb4bd2809b at 2026-01-25 23:58:54.804288+00:00",
-      "details": {},
-      "timestamp": "2026-01-24T23:58:55.043767"
-    },
-    {
-      "test": "Scenario 1 - Same Tutor Duplicate",
-      "success": true,
-      "message": "\u2705 Correctly prevented duplicate booking: This coach is already booked at this time",
-      "details": {
-        "expected_error": "This coach is already booked at this time"
-      },
-      "timestamp": "2026-01-24T23:58:55.055788"
-    },
-    {
-      "test": "Scenario 2 - Consumer Schedule Conflict",
+      "test": "Test Execution",
       "success": false,
-      "message": "Got error but not the expected consumer conflict message: This coach is already booked at this time",
-      "details": {
-        "actual_error": {
-          "detail": "This coach is already booked at this time"
-        }
-      },
-      "timestamp": "2026-01-24T23:58:55.066586"
-    },
-    {
-      "test": "Scenario 3 - Setup",
-      "success": true,
-      "message": "Successfully created second booking booking_fa33347ef6a9 at 2026-01-26 23:58:55.066656+00:00",
-      "details": {},
-      "timestamp": "2026-01-24T23:58:55.310746"
-    },
-    {
-      "test": "Scenario 3 - Setup Third Booking",
-      "success": true,
-      "message": "Successfully created third booking booking_8fa46662976c at 2026-01-27 23:58:55.310771+00:00",
-      "details": {},
-      "timestamp": "2026-01-24T23:58:55.476248"
-    },
-    {
-      "test": "Scenario 3 - Reschedule Conflict",
-      "success": true,
-      "message": "\u2705 Correctly prevented reschedule conflict: This coach is already booked at this time",
-      "details": {
-        "expected_error": "This coach is already booked at this time"
-      },
-      "timestamp": "2026-01-24T23:58:55.486058"
-    },
-    {
-      "test": "Edge Case - Different Consumer Same Tutor",
-      "success": true,
-      "message": "\u2705 Correctly prevented different consumer from booking same tutor: This coach is already booked at this time",
-      "details": {},
-      "timestamp": "2026-01-24T23:58:55.494076"
+      "message": "Both tutors have the same tutor_id: tutor_32e3f791f11e"
     }
   ],
-  "timestamp": "2026-01-24T23:58:55.494354"
+  "timestamp": "2026-01-24T23:59:13.996079"
 }
