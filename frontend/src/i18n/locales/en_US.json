@@ -2310,6 +2310,7 @@
     }
   },
   "common": {
+    "done": "Done",
     "auto": "Auto",
     "manual": "Manual",
     "updated": "Updated",
