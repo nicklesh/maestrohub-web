@@ -472,7 +472,19 @@
       "how_it_works": "How It Works",
       "reminders": "Reminders",
       "subjects_count": "{count} subjects",
-      "search_placeholder": "Search coaches, subjects..."
+      "search_placeholder": "Search coaches, subjects...",
+      "welcome_back": "Welcome back",
+      "what_would_you_like": "What would you like to do today?",
+      "card_search_coach": "Search a Coach",
+      "card_search_coach_desc": "Browse and find the perfect coach for your needs",
+      "card_book_session": "Book a Session",
+      "card_book_session_desc": "Schedule a learning session with a coach",
+      "card_view_sessions": "View Kids' Sessions",
+      "card_view_sessions_desc": "Check your children's upcoming and past sessions",
+      "card_view_account": "View Your Account",
+      "card_view_account_desc": "Manage your profile, settings, and preferences",
+      "quick_tip_title": "Pro Tip",
+      "quick_tip_text": "Complete your profile to help coaches understand your learning goals better."
     },
     "search": {
       "title": "Find a Coach",
