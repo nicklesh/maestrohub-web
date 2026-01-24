@@ -365,24 +365,44 @@ export default function BookingScreen() {
   };
 
   const handleConfirmBooking = async () => {
-    console.log('handleConfirmBooking called', { holdId, selectedStudent: selectedStudent?.student_id, paymentId });
+    console.log('handleConfirmBooking called', { holdId, selectedStudent: selectedStudent?.student_id, paymentId, paymentSuccess });
     
-    if (!holdId || !selectedStudent) {
-      console.log('Missing required data:', { holdId, selectedStudent });
-      showError('Missing booking information. Please try again.');
+    if (!selectedStudent) {
+      console.log('Missing student');
+      showError('Please select a student.');
+      return;
+    }
+    
+    // If we have payment but no valid hold (user changed time slot after payment),
+    // we need to create a new hold for the new time slot
+    let currentHoldId = holdId;
+    
+    if (!currentHoldId && paymentSuccess) {
+      console.log('Payment done but no hold - creating new hold for new time slot');
+      // Create a new hold for the updated time slot
+      currentHoldId = await createHold();
+      if (!currentHoldId) {
+        showError('Failed to reserve the time slot. Please try again.');
+        return;
+      }
+    }
+    
+    if (!currentHoldId) {
+      console.log('Missing hold ID');
+      showError('Missing booking information. Please start the booking process again.');
       return;
     }
     
     setSubmitting(true);
     try {
       console.log('Creating booking with:', {
-        hold_id: holdId,
+        hold_id: currentHoldId,
         student_id: selectedStudent.student_id,
         payment_id: paymentId,
       });
       
       const response = await api.post('/bookings', {
-        hold_id: holdId,
+        hold_id: currentHoldId,
         student_id: selectedStudent.student_id,
         intake: {
           goals,
