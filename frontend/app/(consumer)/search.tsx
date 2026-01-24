@@ -572,7 +572,7 @@ export default function SearchScreen() {
               )}
 
               {/* Coach Results */}
-              {loading && tutors.length === 0 ? (
+              {loading ? (
                 <View style={styles.loadingContainer}>
                   <ActivityIndicator size="large" color={colors.primary} />
                 </View>
@@ -601,7 +601,6 @@ export default function SearchScreen() {
                       <Text style={[styles.loadMoreText, { color: colors.primary }]}>{t('buttons.load_more')}</Text>
                     </TouchableOpacity>
                   )}
-                  {loading && <ActivityIndicator color={colors.primary} style={styles.loadMore} />}
                 </View>
               )}
             </View>
