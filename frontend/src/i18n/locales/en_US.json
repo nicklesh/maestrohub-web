@@ -371,7 +371,8 @@
       "slot_unavailable": "This time slot is no longer available",
       "invalid_referral_code": "Invalid referral code",
       "login_failed": "Login Failed",
-      "registration_failed": "Registration Failed"
+      "registration_failed": "Registration Failed",
+      "load_booking_failed": "Failed to load booking details"
     },
     "info": {
       "loading": "Loading...",
