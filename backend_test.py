@@ -101,13 +101,15 @@ class BookingConflictTester:
             get_response = await self.client.get(f"{API_BASE}/tutors/profile", headers=headers)
             if get_response.status_code == 200:
                 data = get_response.json()
+                print(f"   Found existing tutor profile for user {user_id}: {data.get('tutor_id', '')}")
                 return data.get("tutor_id", "")
             
             # If no existing profile, create new one
+            print(f"   Creating new tutor profile for user {user_id}")
             response = await self.client.post(f"{API_BASE}/tutors/profile", 
                 headers=headers,
                 json={
-                    "bio": "Test tutor for booking conflict testing",
+                    "bio": f"Test tutor for booking conflict testing - {user_id}",
                     "categories": ["academic"],
                     "subjects": ["Math", "Science"],
                     "levels": ["elementary", "middle_school"],
@@ -119,12 +121,13 @@ class BookingConflictTester:
             )
             if response.status_code == 200:
                 data = response.json()
+                print(f"   Created new tutor profile for user {user_id}: {data.get('tutor_id', '')}")
                 return data.get("tutor_id", "")
             else:
-                print(f"Tutor profile creation failed: {response.status_code} - {response.text}")
+                print(f"Tutor profile creation failed for user {user_id}: {response.status_code} - {response.text}")
                 return ""
         except Exception as e:
-            print(f"Failed to create tutor profile: {e}")
+            print(f"Failed to create tutor profile for user {user_id}: {e}")
             return ""
 
     async def create_student(self, token: str) -> str:
