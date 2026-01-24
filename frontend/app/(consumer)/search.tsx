@@ -144,6 +144,7 @@ export default function SearchScreen() {
       if (matchedCategory) {
         setSelectedCategory(matchedCategory.id);
         setSelectedSubject('all');
+        setShowResults(true);
         return;
       }
       
@@ -155,6 +156,7 @@ export default function SearchScreen() {
         if (matchedSubject) {
           setSelectedCategory(cat.id);
           setSelectedSubject(matchedSubject);
+          setShowResults(true);
           return;
         }
       }
