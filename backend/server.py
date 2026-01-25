@@ -1304,8 +1304,7 @@ async def link_payment_provider(data: PaymentProviderAdd, request: Request):
     }
     existing_providers.append(new_provider)
     
-    await db.users.update_one(
-        {"user_id": user.user_id},
+    await update_user_doc(user.user_id,
         {"$set": {"payment_providers": existing_providers}}
     )
     
