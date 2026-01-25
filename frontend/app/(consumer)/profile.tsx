@@ -294,6 +294,14 @@ export default function ProfileScreen() {
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
 
+            <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(consumer)/subscription')}>
+              <View style={styles.menuItemLeft}>
+                <Ionicons name="diamond-outline" size={22} color={colors.warning} />
+                <Text style={[styles.menuItemText, { color: colors.text }]}>{t('subscription.title')}</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
+
             <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(consumer)/reminders')}>
               <View style={styles.menuItemLeft}>
                 <Ionicons name="alarm-outline" size={22} color={colors.primary} />
