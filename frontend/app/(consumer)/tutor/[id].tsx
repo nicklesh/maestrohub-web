@@ -341,12 +341,36 @@ export default function TutorDetailScreen() {
                 </Text>
               </View>
             ))}
+            {/* Market Badge */}
+            {tutor.market_flag && (
+              <View style={[styles.tag, { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border }]}>
+                <Text style={{ fontSize: 14 }}>{tutor.market_flag}</Text>
+                <Text style={[styles.tagText, { color: colors.textMuted }]}>{tutor.market_code}</Text>
+              </View>
+            )}
           </View>
 
-          <Text style={[styles.priceText, { color: colors.primary }]}>
-            {tutor.currency_symbol || '$'}{formatNumber(tutor.base_price)}{t('pages.tutor_detail.per_hour')}
-          </Text>
+          <View style={styles.priceRow}>
+            <Text style={[styles.priceText, { color: colors.primary }]}>
+              {tutor.currency_symbol || '$'}{formatNumber(tutor.display_price || tutor.base_price)}{t('pages.tutor_detail.per_hour')}
+            </Text>
+            {tutor.original_price_display && (
+              <Text style={[styles.originalPriceText, { color: colors.textMuted }]}>
+                ({tutor.original_price_display})
+              </Text>
+            )}
+          </View>
         </View>
+
+        {/* Cross-Market Notice */}
+        {tutor.is_cross_market && (
+          <View style={[styles.crossMarketNotice, { backgroundColor: colors.warning + '20', borderColor: colors.warning }]}>
+            <Ionicons name="globe-outline" size={20} color={colors.warning} />
+            <Text style={[styles.crossMarketText, { color: colors.text }]}>
+              This coach is based in {tutor.country_full_name || tutor.market_code}. Choose a coach from your country if you prefer local sessions.
+            </Text>
+          </View>
+        )}
 
         {/* Bio Section */}
         <View style={[styles.section, { backgroundColor: colors.surface }]}>
