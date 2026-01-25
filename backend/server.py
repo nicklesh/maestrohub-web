@@ -728,6 +728,89 @@ class ProviderFeeEvent(BaseModel):
     reason: Optional[str] = None
     created_at: datetime
 
+# ============== SUBSCRIPTION SYSTEM ==============
+# Subscription Plans
+SUBSCRIPTION_PLANS = {
+    "monthly": {
+        "plan_id": "premium_monthly",
+        "name": "Premium Monthly",
+        "price_cents": 999,  # $9.99
+        "currency": "USD",
+        "interval": "month",
+        "interval_count": 1,
+        "features": [
+            "unlimited_bookings",
+            "all_coaches_access",
+            "video_recordings",
+            "reports_analytics",
+            "billing_tax_reports",
+            "reminders",
+            "notifications",
+            "reviews",
+            "ad_free"
+        ]
+    },
+    "yearly": {
+        "plan_id": "premium_yearly",
+        "name": "Premium Yearly",
+        "price_cents": 9999,  # $99.99
+        "currency": "USD",
+        "interval": "year",
+        "interval_count": 1,
+        "features": [
+            "unlimited_bookings",
+            "all_coaches_access",
+            "video_recordings",
+            "reports_analytics",
+            "billing_tax_reports",
+            "reminders",
+            "notifications",
+            "reviews",
+            "ad_free"
+        ]
+    }
+}
+
+# Free tier limits
+FREE_TIER_LIMITS = {
+    "bookings_per_month": 15,
+    "coaches_visible": 5,  # Plus sponsored coaches
+    "features_enabled": [
+        "basic_search",
+        "basic_booking",
+        "view_profile"
+    ]
+}
+
+# Trial period
+TRIAL_DURATION_DAYS = 14
+
+class SubscriptionCreate(BaseModel):
+    plan_id: str  # "monthly" or "yearly"
+    payment_method: str  # "stripe", "google_pay", "apple_pay", "venmo", "zelle"
+    payment_token: Optional[str] = None  # Token from payment provider
+
+class SubscriptionStatus(BaseModel):
+    subscription_id: str
+    user_id: str
+    plan_id: str
+    status: str  # "trial", "active", "cancelled", "expired"
+    is_premium: bool
+    trial_ends_at: Optional[datetime] = None
+    current_period_start: Optional[datetime] = None
+    current_period_end: Optional[datetime] = None
+    cancel_at_period_end: bool = False
+    payment_method: Optional[str] = None
+    created_at: datetime
+
+class PaymentConfirmation(BaseModel):
+    provider: str  # "stripe", "google_pay", "apple_pay", "venmo", "zelle"
+    transaction_id: str
+    amount_cents: int
+    currency: str
+    status: str  # "succeeded", "pending", "failed"
+    timestamp: datetime
+
 # ============== AUTH HELPERS ==============
 
 def hash_password(password: str) -> str:
