@@ -266,10 +266,10 @@ export default function BookingDetailScreen() {
 
   const statusStyle = getStatusColors(booking.status);
   const statusText = getStatusTranslated(booking.status);
-  const isUpcoming = !isPast(parseISO(booking.start_at)) && ['booked', 'confirmed'].includes(booking.status);
+  const isUpcoming = !isPast(parseToLocalTime(booking.start_at)) && ['booked', 'confirmed'].includes(booking.status);
   const canReview = booking.status === 'completed';
   // Can report no-show if session time has passed and status is still booked/confirmed
-  const canReportNoShow = isPast(parseISO(booking.start_at)) && ['booked', 'confirmed'].includes(booking.status);
+  const canReportNoShow = isPast(parseToLocalTime(booking.start_at)) && ['booked', 'confirmed'].includes(booking.status);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -296,7 +296,7 @@ export default function BookingDetailScreen() {
                 <View style={styles.dateInfo}>
                   <Text style={styles.dateLabel}>{t('pages.booking_detail.date')}</Text>
                   <Text style={[styles.dateValue, isDesktop && styles.dateValueDesktop]}>
-                    {formatDate(parseISO(booking.start_at), 'EEEE, MMMM d, yyyy')}
+                    {formatDate(parseToLocalTime(booking.start_at), 'EEEE, MMMM d, yyyy')}
                   </Text>
                 </View>
               </View>
@@ -307,14 +307,14 @@ export default function BookingDetailScreen() {
                 <View style={styles.dateInfo}>
                   <Text style={styles.dateLabel}>{t('pages.booking_detail.time')}</Text>
                   <Text style={[styles.dateValue, isDesktop && styles.dateValueDesktop]}>
-                    {formatDate(parseISO(booking.start_at), 'h:mm a')} - {formatDate(parseISO(booking.end_at), 'h:mm a')}
+                    {formatDate(parseToLocalTime(booking.start_at), 'h:mm a')} - {formatDate(parseToLocalTime(booking.end_at), 'h:mm a')}
                   </Text>
                 </View>
               </View>
             </View>
             
             {/* Meeting Link - Show for online sessions with upcoming status */}
-            {booking.meeting_link && !isPast(parseISO(booking.start_at)) && (
+            {booking.meeting_link && !isPast(parseToLocalTime(booking.start_at)) && (
               <View style={[styles.meetingLinkRow, { borderTopWidth: 1, borderTopColor: colors.border, paddingTop: 16, marginTop: 16 }]}>
                 <View style={styles.dateContainer}>
                   <Ionicons name="videocam" size={24} color={colors.success} />
@@ -432,7 +432,7 @@ export default function BookingDetailScreen() {
                             {notif.notification_type === 'email' ? t('pages.add_child.email') : 'SMS'} {t('pages.booking_detail.sent_to')} {notif.sent_to}
                           </Text>
                           <Text style={[styles.historyTime, { color: colors.textMuted }]}>
-                            {format(parseISO(notif.sent_at), 'MMM d, h:mm a')}
+                            {format(parseToLocalTime(notif.sent_at), 'MMM d, h:mm a')}
                           </Text>
                         </View>
                       ))}
