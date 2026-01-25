@@ -389,11 +389,11 @@ export default function TutorDetailScreen() {
               <View style={styles.crossMarketHeader}>
                 <FlagIcon countryCode={tutor.market_code || 'US'} size={16} />
                 <Text style={[styles.crossMarketTitle, { color: colors.text }]}>
-                  Coach from {tutor.country_full_name || tutor.market_code}
+                  {t('pages.tutor_detail.coach_from_country', { country: tutor.country_full_name || tutor.market_code })}
                 </Text>
               </View>
               <Text style={[styles.crossMarketText, { color: colors.textMuted }]}>
-                Choose a coach from your country if you prefer local sessions.
+                {t('pages.tutor_detail.prefer_local_sessions')}
               </Text>
             </View>
           </View>
