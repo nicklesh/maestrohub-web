@@ -274,17 +274,29 @@ def create_sample_users(db):
         }
         users.append(user)
     
-    # Sample parents
+    # Sample parents - mix of subscription statuses
     parents_data = [
-        {"email": "parent1@test.com", "name": "John Smith", "market": "US_USD"},
-        {"email": "parent2@test.com", "name": "Anita Patel", "market": "IN_INR"},
-        {"email": "parent3@test.com", "name": "Marie Dubois", "market": "FR_EUR"},
-        {"email": "parent4@test.com", "name": "Hans Mueller", "market": "DE_EUR"},
-        {"email": "parent5@test.com", "name": "Yuki Tanaka", "market": "JP_JPY"},
+        {"email": "parent1@test.com", "name": "John Smith", "market": "US_USD", "subscription": "premium_monthly"},
+        {"email": "parent2@test.com", "name": "Anita Patel", "market": "IN_INR", "subscription": "premium_yearly"},
+        {"email": "parent3@test.com", "name": "Marie Dubois", "market": "FR_EUR", "subscription": None},  # Free user
+        {"email": "parent4@test.com", "name": "Hans Mueller", "market": "DE_EUR", "subscription": None},  # Free user
+        {"email": "parent5@test.com", "name": "Yuki Tanaka", "market": "JP_JPY", "subscription": "trial"},  # New user in trial
+        {"email": "freeparent@test.com", "name": "Free User", "market": "US_USD", "subscription": "expired_trial"},  # Expired trial
     ]
     
     for parent in parents_data:
+        user_id = f"user_{secrets.token_hex(12)}"
+        
+        # Adjust created_at based on subscription status for trial testing
+        if parent["subscription"] == "trial":
+            created_at = now - timedelta(days=5)  # 5 days into 14-day trial
+        elif parent["subscription"] == "expired_trial":
+            created_at = now - timedelta(days=30)  # Trial expired 16 days ago
+        else:
+            created_at = now - timedelta(days=60)  # Existing user
+        
         user = {
+            "user_id": user_id,
             "email": parent["email"],
             "password_hash": hash_password("password123"),
             "name": parent["name"],
@@ -292,8 +304,10 @@ def create_sample_users(db):
             "is_active": True,
             "is_verified": True,
             "market": parent["market"],
-            "market_id": parent["market"],  # For search filtering
-            "created_at": now,
+            "market_id": parent["market"],
+            "is_premium": parent["subscription"] in ["premium_monthly", "premium_yearly", "trial"],
+            "subscription_status": parent["subscription"] if parent["subscription"] else "free",
+            "created_at": created_at,
             "updated_at": now,
             "children": [
                 {"name": f"{parent['name'].split()[0]}'s Child", "age": 10, "id": secrets.token_hex(12)}
