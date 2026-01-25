@@ -3,6 +3,46 @@
  * Handles date formatting with localized months, days, and numbers
  */
 
+/**
+ * Parse a datetime string that may or may not have timezone info
+ * If no timezone info, treats as UTC and converts to local time
+ * If has timezone info, properly converts to local time
+ */
+export function parseToLocalTime(dateString: string): Date {
+  if (!dateString) return new Date();
+  
+  // Remove any whitespace
+  const cleaned = dateString.trim();
+  
+  // Check if it already has timezone info
+  const hasTimezone = cleaned.includes('+') || cleaned.includes('Z') || cleaned.match(/\d{2}:\d{2}:\d{2}[+-]/);
+  
+  if (hasTimezone) {
+    // Already has timezone, let JS parse it correctly
+    return new Date(cleaned);
+  }
+  
+  // No timezone - treat as UTC and convert to local
+  // Format: "2026-01-30 17:00:00" -> "2026-01-30T17:00:00Z"
+  const isoString = cleaned.replace(' ', 'T') + 'Z';
+  return new Date(isoString);
+}
+
+/**
+ * Get the user's timezone abbreviation (e.g., PST, IST, EST)
+ */
+export function getUserTimezone(): string {
+  try {
+    const options: Intl.DateTimeFormatOptions = { timeZoneName: 'short' };
+    const formatter = new Intl.DateTimeFormat('en-US', options);
+    const parts = formatter.formatToParts(new Date());
+    const tzPart = parts.find(p => p.type === 'timeZoneName');
+    return tzPart?.value || 'Local';
+  } catch {
+    return 'Local';
+  }
+}
+
 // Hindi numerals mapping
 const HINDI_NUMERALS: Record<string, string> = {
   '0': '०',
