@@ -4603,6 +4603,10 @@ async def get_provider_report(
     completed_sessions = len([b for b in bookings if b["status"] == "completed"])
     upcoming_sessions = len([b for b in bookings if b["status"] in ["booked", "confirmed"]])
     canceled_sessions = len([b for b in bookings if "canceled" in b["status"]])
+    rescheduled_sessions = len([b for b in bookings if b.get("rescheduled", False)])
+    
+    # Calculate total value of cancelled bookings
+    canceled_amount_cents = sum(b.get("amount_cents", 0) or b.get("price_snapshot", 0) * 100 for b in bookings if "canceled" in b["status"])
     
     total_earned_cents = sum(p["amount_cents"] for p in payouts if p["status"] == "completed")
     pending_cents = sum(p["amount_cents"] for p in payouts if p["status"] == "pending")
