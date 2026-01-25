@@ -3307,6 +3307,7 @@ async def get_bookings(request: Request, role: str = "consumer"):
         
         results.append({
             **b,
+            "rescheduled": b.get("rescheduled", False),  # Ensure rescheduled field is always present
             "tutor_name": tutor_name,
             "tutor_subject": tutor.get("subjects", ["General"])[0] if tutor and tutor.get("subjects") else "General",
             "student_name": student["name"] if student else "Unknown",
