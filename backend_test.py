@@ -332,14 +332,14 @@ class APITester:
             if response.status_code == 200:
                 data = response.json()
                 
-                success = data.get("success", False)
+                message = data.get("message")
                 updated_markets = data.get("enabled_markets", [])
                 
                 self.log_result(
                     "Consumer Enabled Markets - PUT", 
-                    success and "US_USD" in updated_markets and "IN_INR" in updated_markets, 
-                    f"Updated enabled markets: success={success}, markets={updated_markets}",
-                    {"success": success, "enabled_markets": updated_markets}
+                    message and "US_USD" in updated_markets and "IN_INR" in updated_markets, 
+                    f"Updated enabled markets: message='{message}', markets={updated_markets}",
+                    {"message": message, "enabled_markets": updated_markets}
                 )
             else:
                 self.log_result("Consumer Enabled Markets - PUT", False, f"PUT enabled markets failed: {response.status_code} - {response.text}")
