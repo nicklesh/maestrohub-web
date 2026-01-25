@@ -52,7 +52,7 @@ export default function BookingsScreen() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [filter, setFilter] = useState<'upcoming' | 'past'>('upcoming');
+  const [filter, setFilter] = useState<'upcoming' | 'past' | 'rescheduled' | 'cancelled'>('upcoming');
 
   const getStatusColors = (status: string) => {
     switch (status) {
