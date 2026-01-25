@@ -87,6 +87,7 @@ export default function TutorReportsScreen() {
   const [summary, setSummary] = useState<ReportSummary | null>(null);
   const [sponsorship, setSponsorship] = useState<SponsorshipSummary | null>(null);
   const [byStudent, setByStudent] = useState<ByStudent[]>([]);
+  const [byConsumer, setByConsumer] = useState<ByConsumer[]>([]);
   const [byMonth, setByMonth] = useState<ByMonth[]>([]);
 
   const containerMaxWidth = isDesktop ? 1200 : isTablet ? 900 : undefined;
