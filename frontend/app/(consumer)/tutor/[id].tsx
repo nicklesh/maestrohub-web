@@ -819,7 +819,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   calendarDayLabel: {
-    flex: 1,
+    width: '14.28%',
     textAlign: 'center',
     fontSize: 12,
     fontWeight: '600',
@@ -830,14 +830,19 @@ const styles = StyleSheet.create({
   },
   calendarDayCell: {
     width: '14.28%',
-    aspectRatio: 1,
+    height: 44,
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 2,
   },
   calendarDayButton: {
-    margin: 2,
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: 8,
     borderWidth: 1,
+  },
   },
   calendarDayText: {
     fontSize: 15,
