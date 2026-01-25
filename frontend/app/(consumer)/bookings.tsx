@@ -288,6 +288,7 @@ export default function BookingsScreen() {
             numColumns={numColumns}
             key={numColumns}
             contentContainerStyle={[styles.listContent, isDesktop && styles.listContentDesktop]}
+            columnWrapperStyle={numColumns > 1 ? styles.columnWrapper : undefined}
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
