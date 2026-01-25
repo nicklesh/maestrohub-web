@@ -4,7 +4,7 @@
     "slug": "maestro-habitat",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/maestrohub_app_icon_only_192x192.png",
+    "icon": "./assets/images/mh_logo_1024_transparent.png",
     "scheme": "maestrohabitat",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -22,7 +22,7 @@
       "package": "com.maestrohabitat.app",
       "versionCode": 1,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/maestrohub_app_icon_only_192x192.png",
+        "foregroundImage": "./assets/images/mh_logo_1024_transparent.png",
         "backgroundColor": "#2563EB"
       },
       "edgeToEdgeEnabled": true,
@@ -36,7 +36,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/maestrohub_app_icon_only_192x192.png",
+      "favicon": "./assets/images/mh_logo_1024_transparent.png",
       "name": "Maestro Habitat",
       "shortName": "Maestro",
       "description": "Find the coach. Master your learning.",
@@ -48,7 +48,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/maestrohub_app_icon_only_192x192.png",
+          "image": "./assets/images/mh_logo_1024_transparent.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#2563EB"
