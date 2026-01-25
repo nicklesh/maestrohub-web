@@ -8,6 +8,10 @@ import base64
 import httpx
 from typing import Optional, Dict, Any
 from datetime import datetime, timezone
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 logger = logging.getLogger(__name__)
 
