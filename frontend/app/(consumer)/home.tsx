@@ -189,7 +189,7 @@ export default function HomeScreen() {
 const getStyles = (colors: ThemeColors, isDark: boolean) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: 'transparent', // Allow global background to show through
   },
   scrollContent: {
     paddingBottom: 40,
