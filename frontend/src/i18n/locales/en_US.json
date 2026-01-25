@@ -2199,6 +2199,7 @@
         "completed_sessions": "Completed Sessions",
         "upcoming_sessions": "Upcoming Sessions",
         "canceled_sessions": "Canceled Sessions",
+        "rescheduled_sessions": "Rescheduled Sessions",
         "completion_rate": "Completion Rate",
         "earnings_by_month": "Earnings by Month",
         "earnings_by_student": "Earnings by Student",
@@ -2213,7 +2214,13 @@
         "current_plan": "Current Plan",
         "expires": "Expires",
         "weeks": "weeks",
-        "no_sponsorship": "No active sponsorship"
+        "no_sponsorship": "No active sponsorship",
+        "parent_list": "Parents",
+        "active": "Active",
+        "total": "Total",
+        "this_month": "This Month",
+        "rescheduled": "Rescheduled",
+        "cancelled": "Cancelled"
       },
       "faq": {
         "title": "Frequently Asked Questions",
