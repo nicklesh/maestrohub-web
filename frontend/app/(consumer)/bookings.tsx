@@ -129,8 +129,8 @@ export default function BookingsScreen() {
 
   const renderBookingCard = ({ item }: { item: Booking }) => {
     const statusColors = getStatusColors(item.status);
-    const startDate = parseISO(item.start_at);
-    const endDate = parseISO(item.end_at);
+    const startDate = parseToLocalTime(item.start_at);
+    const endDate = parseToLocalTime(item.end_at);
     const isCanceled = item.status.includes('canceled');
     const currencySymbol = item.currency_symbol || '$';
     const hasKidNotifications = item.kid_notifications && item.kid_notifications.length > 0;
