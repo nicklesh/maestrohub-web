@@ -358,9 +358,12 @@ export default function SearchScreen() {
         )}
         
         <View style={styles.cardHeader}>
-          <View style={[styles.avatar, { backgroundColor: colors.primary }]}>
-            <Text style={styles.avatarText}>{item.user_name?.charAt(0)?.toUpperCase() || 'T'}</Text>
-          </View>
+          <UserAvatar 
+            name={item.user_name || 'T'} 
+            role="tutor" 
+            category={(item.categories || [])[0]}
+            size={44}
+          />
           <View style={styles.cardInfo}>
             <Text style={[styles.tutorName, { color: colors.text }]} numberOfLines={1}>{item.user_name}</Text>
             <View style={styles.ratingRow}>
