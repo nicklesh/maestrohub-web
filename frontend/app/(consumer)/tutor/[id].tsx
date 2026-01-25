@@ -333,7 +333,7 @@ export default function TutorDetailScreen() {
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <AppHeader showBack />
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView contentContainerStyle={[styles.scrollContent, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
         {/* Profile Card */}
         <View style={[styles.profileCard, { backgroundColor: colors.surface }]}>
           <UserAvatar 
