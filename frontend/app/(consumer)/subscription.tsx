@@ -46,14 +46,21 @@ export default function SubscriptionScreen() {
   const [processing, setProcessing] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('stripe');
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState({ title: '', message: '' });
 
   const paymentMethods = [
-    { id: 'stripe', name: 'Credit Card', icon: 'card-outline' },
-    { id: 'google_pay', name: 'Google Pay', icon: 'logo-google' },
-    { id: 'apple_pay', name: 'Apple Pay', icon: 'logo-apple' },
-    { id: 'venmo', name: 'Venmo', icon: 'wallet-outline' },
-    { id: 'zelle', name: 'Zelle', icon: 'cash-outline' },
+    { id: 'stripe', name: t('subscription.payment_credit_card'), icon: 'card-outline' },
+    { id: 'google_pay', name: t('subscription.payment_google_pay'), icon: 'logo-google' },
+    { id: 'apple_pay', name: t('subscription.payment_apple_pay'), icon: 'logo-apple' },
+    { id: 'venmo', name: t('subscription.payment_venmo'), icon: 'wallet-outline' },
+    { id: 'zelle', name: t('subscription.payment_zelle'), icon: 'cash-outline' },
   ];
+
+  const showSuccess = (title: string, message: string) => {
+    setSuccessMessage({ title, message });
+    setShowSuccessModal(true);
+  };
 
   const handleSubscribe = async () => {
     if (!selectedPlan) return;
@@ -62,13 +69,9 @@ export default function SubscriptionScreen() {
     try {
       const success = await subscribe(selectedPlan, selectedPaymentMethod);
       if (success) {
-        Alert.alert(
-          t('subscription.success_title'),
-          t('subscription.success_message'),
-          [{ text: 'OK', onPress: () => router.back() }]
-        );
+        showSuccess(t('subscription.success_title'), t('subscription.success_message'));
       } else {
-        Alert.alert(t('subscription.error_title'), t('subscription.error_message'));
+        showSuccess(t('subscription.error_title'), t('subscription.error_message'));
       }
     } finally {
       setProcessing(false);
@@ -85,25 +88,13 @@ export default function SubscriptionScreen() {
     try {
       const success = await cancelSubscription();
       if (success) {
-        if (Platform.OS === 'web') {
-          window.alert(t('subscription.cancelled_message'));
-        } else {
-          Alert.alert(t('subscription.cancelled_title'), t('subscription.cancelled_message'));
-        }
+        showSuccess(t('subscription.cancelled_title'), t('subscription.cancelled_message'));
       } else {
-        if (Platform.OS === 'web') {
-          window.alert('Failed to cancel subscription');
-        } else {
-          Alert.alert(t('subscription.error_title'), 'Failed to cancel subscription');
-        }
+        showSuccess(t('subscription.error_title'), t('subscription.cancel_error_message'));
       }
     } catch (error) {
       console.error('Cancel error:', error);
-      if (Platform.OS === 'web') {
-        window.alert('An error occurred');
-      } else {
-        Alert.alert(t('subscription.error_title'), 'An error occurred');
-      }
+      showSuccess(t('subscription.error_title'), t('subscription.generic_error'));
     } finally {
       setProcessing(false);
     }
@@ -114,8 +105,13 @@ export default function SubscriptionScreen() {
     try {
       const success = await reactivateSubscription();
       if (success) {
-        Alert.alert(t('subscription.reactivated_title'), t('subscription.reactivated_message'));
+        showSuccess(t('subscription.reactivated_title'), t('subscription.reactivated_message'));
+      } else {
+        showSuccess(t('subscription.error_title'), t('subscription.reactivate_error_message'));
       }
+    } catch (error) {
+      console.error('Reactivate error:', error);
+      showSuccess(t('subscription.error_title'), t('subscription.generic_error'));
     } finally {
       setProcessing(false);
     }
