@@ -834,12 +834,13 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   calendarDayCell: {
-    width: '14.285%',
-    aspectRatio: 1,
+    width: '14.28%',
+    minHeight: 44,
     padding: 2,
   },
   calendarDayButton: {
     flex: 1,
+    minHeight: 40,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,
