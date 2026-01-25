@@ -247,17 +247,17 @@ def create_sample_users(db):
     
     # Sample coaches with different markets and specialties
     coaches_data = [
-        {"email": "coach.math@test.com", "name": "Sarah Johnson", "market": "US_USD", "category": "Academics", "subcategory": "Mathematics", "price": 75, "modality": "online"},
-        {"email": "coach.piano@test.com", "name": "Michael Chen", "market": "US_USD", "category": "Music", "subcategory": "Piano", "price": 85, "modality": "hybrid"},
-        {"email": "coach.yoga@test.com", "name": "Priya Sharma", "market": "IN_INR", "category": "Sports", "subcategory": "Yoga", "price": 1500, "modality": "online"},
-        {"email": "coach.spanish@test.com", "name": "Carlos Rodriguez", "market": "MX_MXN", "category": "Languages", "subcategory": "Spanish", "price": 800, "modality": "online"},
-        {"email": "coach.coding@test.com", "name": "James Wilson", "market": "GB_GBP", "category": "Technology", "subcategory": "Coding", "price": 60, "modality": "online"},
-        {"email": "coach.art@test.com", "name": "Emma Davis", "market": "AU_AUD", "category": "Arts", "subcategory": "Drawing", "price": 70, "modality": "in_person"},
-        {"email": "coach.ballet@test.com", "name": "Sophie Martin", "market": "FR_EUR", "category": "Dance", "subcategory": "Ballet", "price": 65, "modality": "hybrid"},
-        {"email": "coach.sat@test.com", "name": "David Kim", "market": "US_USD", "category": "Test Prep", "subcategory": "SAT", "price": 100, "modality": "online"},
-        {"email": "tutor1@test.com", "name": "Test Coach One", "market": "US_USD", "category": "Academics", "subcategory": "Science", "price": 65, "modality": "online"},
-        {"email": "tutor2@test.com", "name": "Test Coach Two", "market": "IN_INR", "category": "Music", "subcategory": "Tabla", "price": 1200, "modality": "hybrid"},
-        {"email": "tutor3@test.com", "name": "Test Coach Three", "market": "GB_GBP", "category": "Languages", "subcategory": "French", "price": 55, "modality": "online"},
+        {"email": "coach.math@test.com", "name": "Sarah Johnson", "market": "US_USD", "category": "academics", "subcategory": "Mathematics", "price": 75, "modality": "online"},
+        {"email": "coach.piano@test.com", "name": "Michael Chen", "market": "US_USD", "category": "performance_arts", "subcategory": "Piano", "price": 85, "modality": "hybrid"},
+        {"email": "coach.yoga@test.com", "name": "Priya Sharma", "market": "IN_INR", "category": "activities_hobbies", "subcategory": "Yoga", "price": 1500, "modality": "online"},
+        {"email": "coach.life@test.com", "name": "Carlos Rodriguez", "market": "MX_MXN", "category": "coaching_personal", "subcategory": "Life Coaching", "price": 800, "modality": "online"},
+        {"email": "coach.coding@test.com", "name": "James Wilson", "market": "GB_GBP", "category": "academics", "subcategory": "Coding/Programming", "price": 60, "modality": "online"},
+        {"email": "coach.art@test.com", "name": "Emma Davis", "market": "AU_AUD", "category": "activities_hobbies", "subcategory": "Art & Design", "price": 70, "modality": "in_person"},
+        {"email": "coach.dance@test.com", "name": "Sophie Martin", "market": "FR_EUR", "category": "performance_arts", "subcategory": "Dance", "price": 65, "modality": "hybrid"},
+        {"email": "coach.sat@test.com", "name": "David Kim", "market": "US_USD", "category": "academics", "subcategory": "SAT/ACT", "price": 100, "modality": "online"},
+        {"email": "tutor1@test.com", "name": "Test Coach One", "market": "US_USD", "category": "academics", "subcategory": "Science", "price": 65, "modality": "online"},
+        {"email": "tutor2@test.com", "name": "Test Coach Two", "market": "IN_INR", "category": "performance_arts", "subcategory": "Music", "price": 1200, "modality": "hybrid"},
+        {"email": "tutor3@test.com", "name": "Test Coach Three", "market": "GB_GBP", "category": "business_communication", "subcategory": "Communication Coaching", "price": 55, "modality": "online"},
     ]
     
     for coach in coaches_data:
