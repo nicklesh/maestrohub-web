@@ -2516,12 +2516,12 @@ async def get_tutor_availability(tutor_id: str, date: str = None, from_date: str
     # Get exceptions
     exceptions = await db.availability_exceptions.find({"tutor_id": tutor_id}, {"_id": 0}).to_list(100)
     
-    # Get existing bookings
+    # Get existing bookings (use naive datetime for comparison since bookings are stored as naive)
     now = datetime.now(timezone.utc)
+    now_naive = now.replace(tzinfo=None)
     bookings = await db.bookings.find({
         "tutor_id": tutor_id,
-        "status": {"$in": ["booked", "confirmed"]},
-        "start_at": {"$gte": now}
+        "status": {"$in": ["booked", "confirmed"]}
     }, {"_id": 0}).to_list(1000)
     
     # Get active holds
