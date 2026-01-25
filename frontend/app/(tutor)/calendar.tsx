@@ -340,7 +340,7 @@ export default function CalendarScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+      <SafeAreaView style={[styles.container, { backgroundColor: 'transparent' }]}>
         <AppHeader />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
@@ -350,7 +350,7 @@ export default function CalendarScreen() {
   }
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: 'transparent' }]}>
       <AppHeader />
 
       <ScrollView style={styles.content} contentContainerStyle={styles.scrollContent}>
@@ -523,7 +523,7 @@ export default function CalendarScreen() {
                       key={time}
                       style={[
                         styles.timeSlot,
-                        { backgroundColor: colors.background, borderColor: colors.border },
+                        { backgroundColor: 'transparent', borderColor: colors.border },
                         isSelected && { backgroundColor: colors.primary, borderColor: colors.primary }
                       ]}
                       onPress={() => toggleTimeSlot(time)}
