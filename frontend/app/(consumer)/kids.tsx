@@ -254,7 +254,7 @@ export default function KidsScreen() {
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <AppHeader />
 
-      <View style={styles.content}>
+      <View style={[styles.content, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
         <View style={styles.header}>
           <Text style={[styles.title, { color: colors.text }]}>{t('pages.kids.title')}</Text>
           <TouchableOpacity
