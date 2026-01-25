@@ -110,6 +110,8 @@ class APITester:
         
         # Test token validation with invalid token
         try:
+            # Clear any existing cookies to ensure clean test
+            self.session.cookies.clear()
             response = self.make_request('GET', '/auth/me', token='invalid.token.here')
             if response.status_code == 401:
                 self.log_test("Token Validation - Invalid Token", True, 
