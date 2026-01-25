@@ -75,7 +75,7 @@ export default function BookingDetailScreen() {
   const { colors } = useTheme();
   const { token } = useAuth();
   const { t, formatDate } = useTranslation();
-  const { showError, showInfo } = useToast();
+  const { showError, showInfo, showSuccess } = useToast();
   const [booking, setBooking] = useState<Booking | null>(null);
   const [loading, setLoading] = useState(true);
   const [canceling, setCanceling] = useState(false);
@@ -84,6 +84,9 @@ export default function BookingDetailScreen() {
   const [reviewComment, setReviewComment] = useState('');
   const [submittingReview, setSubmittingReview] = useState(false);
   const [reportingNoShow, setReportingNoShow] = useState(false);
+  const [showNotifyModal, setShowNotifyModal] = useState(false);
+  const [notifyNote, setNotifyNote] = useState('');
+  const [sendingNotification, setSendingNotification] = useState(false);
 
   // Responsive breakpoints
   const isTablet = width >= 768;
