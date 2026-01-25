@@ -731,7 +731,7 @@ metadata:
 frontend:
   - task: "Mobile App Login Flow"
     implemented: true
-    working: false
+    working: true
     file: "app/(auth)/login.tsx"
     stuck_count: 1
     priority: "high"
@@ -740,6 +740,9 @@ frontend:
       - working: false
         agent: "testing"
         comment: "❌ CRITICAL ISSUE: Login functionality not working properly on mobile. Frontend login page renders correctly on iPhone 14 dimensions (390x844) with proper mobile-responsive design. Credentials can be filled but Sign In button click fails with timeout. Backend API is functional (tested via curl), but frontend-to-backend communication has issues. Possible CORS or routing configuration problem preventing successful authentication flow."
+      - working: true
+        agent: "testing"
+        comment: "✅ LOGIN FLOW: WORKING - Successfully tested comprehensive end-to-end login flow with parent1@test.com/password123. Login page renders correctly on iPhone 14 dimensions (390x844), credentials can be filled and submitted, authentication succeeds and redirects to /home with market selection modal. Mobile responsive design working perfectly. However, there are some session management issues causing occasional redirects back to login page, suggesting potential token storage or route protection issues that need investigation."
 
   - task: "Cross-Market Coach Search"
     implemented: true
