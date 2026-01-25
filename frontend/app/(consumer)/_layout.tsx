@@ -100,6 +100,7 @@ export default function ConsumerLayout() {
       <Tabs.Screen name="referrals" options={{ href: null }} />
       <Tabs.Screen name="language" options={{ href: null }} />
       <Tabs.Screen name="settings" options={{ href: null }} />
+      <Tabs.Screen name="subscription" options={{ href: null }} />
     </Tabs>
   );
 }
