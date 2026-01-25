@@ -2458,18 +2458,19 @@ async def search_tutors(
         # Search users by name
         user_matches = await db.users.find(
             {"name": {"$regex": query, "$options": "i"}, "role": "tutor"},
-            {"_id": 0, "user_id": 1, "name": 1, "picture": 1}
+            {"name": 1, "picture": 1}
         ).to_list(limit)
         
-        existing_user_ids = {r["user_id"] for r in results}
+        existing_user_ids = {r.get("user_id") for r in results if r.get("user_id")}
         for user_match in user_matches:
-            if user_match["user_id"] not in existing_user_ids:
+            user_id_str = str(user_match["_id"])
+            if user_id_str not in existing_user_ids:
                 tutor = await db.tutors.find_one({
-                    "user_id": user_match["user_id"],
+                    "user_id": user_id_str,
                     "is_published": True,
                     "status": "approved"
                 }, {"_id": 0})
-                if tutor and (not current_user_id or tutor["user_id"] != current_user_id):
+                if tutor and (not current_user_id or tutor.get("user_id") != current_user_id):
                     market_info = MARKETS_CONFIG.get(tutor.get("market_id"), {})
                     results.append({
                         **tutor,
