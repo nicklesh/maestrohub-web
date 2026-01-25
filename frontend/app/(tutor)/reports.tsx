@@ -286,6 +286,60 @@ export default function TutorReportsScreen() {
             </View>
           )}
 
+          {/* Parent List Section */}
+          {byConsumer.length > 0 && (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>{t('pages.coach.reports.parent_list') || 'Parents'}</Text>
+              {byConsumer.map((item, index) => (
+                <View key={index} style={[styles.parentCard, { backgroundColor: colors.background, borderColor: colors.border }]}>
+                  <View style={styles.parentHeader}>
+                    <View style={styles.listItemLeft}>
+                      <View style={[styles.avatar, { backgroundColor: colors.primary }]}>
+                        <Text style={styles.avatarText}>{item.consumer_name.charAt(0)}</Text>
+                      </View>
+                      <View>
+                        <Text style={styles.listItemName}>{item.consumer_name}</Text>
+                        <View style={[
+                          styles.statusBadge, 
+                          { backgroundColor: item.status === 'active' ? colors.successLight : colors.warningLight }
+                        ]}>
+                          <Text style={[
+                            styles.statusText, 
+                            { color: item.status === 'active' ? colors.success : colors.warning }
+                          ]}>
+                            {item.status === 'active' ? (t('pages.coach.reports.active') || 'Active') : item.status}
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                  </View>
+                  <View style={styles.parentStats}>
+                    <View style={styles.parentStat}>
+                      <Ionicons name="calendar" size={16} color={colors.primary} />
+                      <Text style={styles.parentStatValue}>{item.total_sessions}</Text>
+                      <Text style={styles.parentStatLabel}>{t('pages.coach.reports.total') || 'Total'}</Text>
+                    </View>
+                    <View style={styles.parentStat}>
+                      <Ionicons name="time" size={16} color={colors.accent} />
+                      <Text style={styles.parentStatValue}>{item.month_sessions}</Text>
+                      <Text style={styles.parentStatLabel}>{t('pages.coach.reports.this_month') || 'This Month'}</Text>
+                    </View>
+                    <View style={styles.parentStat}>
+                      <Ionicons name="refresh" size={16} color={colors.warning} />
+                      <Text style={styles.parentStatValue}>{item.rescheduled_sessions}</Text>
+                      <Text style={styles.parentStatLabel}>{t('pages.coach.reports.rescheduled') || 'Rescheduled'}</Text>
+                    </View>
+                    <View style={styles.parentStat}>
+                      <Ionicons name="close-circle" size={16} color={colors.error} />
+                      <Text style={styles.parentStatValue}>{item.canceled_sessions}</Text>
+                      <Text style={styles.parentStatLabel}>{t('pages.coach.reports.cancelled') || 'Cancelled'}</Text>
+                    </View>
+                  </View>
+                </View>
+              ))}
+            </View>
+          )}
+
           {/* Monthly Breakdown */}
           {byMonth.length > 0 && (
             <View style={styles.section}>
