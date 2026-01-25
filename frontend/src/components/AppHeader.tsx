@@ -43,6 +43,33 @@ export default function AppHeader({ showBack = false, title, showUserName = fals
   const [contactSubject, setContactSubject] = useState('');
   const [contactMessage, setContactMessage] = useState('');
   const [submittingContact, setSubmittingContact] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  // Fetch unread notification count
+  useEffect(() => {
+    const fetchUnreadCount = async () => {
+      try {
+        const authToken = await AsyncStorage.getItem('token');
+        if (!authToken) return;
+        
+        const response = await api.get('/notifications', {
+          headers: { Authorization: `Bearer ${authToken}` }
+        });
+        
+        const notifications = response.data || [];
+        const unread = notifications.filter((n: any) => !n.read).length;
+        setUnreadCount(unread);
+      } catch (error) {
+        console.log('Failed to fetch notifications count');
+      }
+    };
+    
+    fetchUnreadCount();
+    
+    // Refresh every 30 seconds
+    const interval = setInterval(fetchUnreadCount, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   const getRoleDisplay = (role: string) => {
     switch (role) {
