@@ -369,6 +369,10 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 20,
   },
+  cardMultiColumn: {
+    width: '48%',
+    marginHorizontal: '1%',
+  },
   cardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
