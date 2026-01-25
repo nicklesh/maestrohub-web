@@ -506,34 +506,104 @@ export default function TutorDetailScreen() {
         {showBookingUI && (
           <View style={[styles.section, { backgroundColor: colors.surface }]}>
             <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.tutor_detail.select_date')}</Text>
-          <FlatList
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            data={dates}
-            keyExtractor={(item) => item.toISOString()}
-            contentContainerStyle={styles.dateList}
-            renderItem={({ item }) => {
-              const isSelected = format(item, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd');
-              return (
-                <TouchableOpacity
-                  style={[
-                    styles.dateCard,
-                    { backgroundColor: colors.background, borderColor: colors.border },
-                    isSelected && { backgroundColor: colors.primary, borderColor: colors.primary }
-                  ]}
-                  onPress={() => setSelectedDate(item)}
-                >
-                  <Text style={[styles.dateDay, { color: isSelected ? '#FFFFFF' : colors.textMuted }]}>
-                    {formatDate(item, 'EEE')}
-                  </Text>
-                  <Text style={[styles.dateNum, { color: isSelected ? '#FFFFFF' : colors.text }]}>
-                    {formatDate(item, 'd')}
-                  </Text>
-                </TouchableOpacity>
-              );
-            }}
-          />
-        </View>
+            
+            {/* Month/Year Header */}
+            <View style={styles.calendarHeader}>
+              <TouchableOpacity 
+                onPress={() => {
+                  const newDate = new Date(selectedDate);
+                  newDate.setMonth(newDate.getMonth() - 1);
+                  if (newDate >= startOfDay(new Date())) {
+                    setSelectedDate(newDate);
+                  }
+                }}
+                style={[styles.calendarNavButton, { backgroundColor: colors.background }]}
+              >
+                <Ionicons name="chevron-back" size={20} color={colors.primary} />
+              </TouchableOpacity>
+              <Text style={[styles.calendarMonthTitle, { color: colors.text }]}>
+                {formatDate(selectedDate, 'MMMM yyyy')}
+              </Text>
+              <TouchableOpacity 
+                onPress={() => {
+                  const newDate = new Date(selectedDate);
+                  newDate.setMonth(newDate.getMonth() + 1);
+                  setSelectedDate(newDate);
+                }}
+                style={[styles.calendarNavButton, { backgroundColor: colors.background }]}
+              >
+                <Ionicons name="chevron-forward" size={20} color={colors.primary} />
+              </TouchableOpacity>
+            </View>
+            
+            {/* Day Labels */}
+            <View style={styles.calendarWeekHeader}>
+              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                <Text key={day} style={[styles.calendarDayLabel, { color: colors.textMuted }]}>
+                  {day}
+                </Text>
+              ))}
+            </View>
+            
+            {/* Calendar Grid */}
+            <View style={styles.calendarGrid}>
+              {(() => {
+                const today = startOfDay(new Date());
+                const firstDayOfMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
+                const lastDayOfMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0);
+                const startPadding = firstDayOfMonth.getDay();
+                const totalDays = lastDayOfMonth.getDate();
+                
+                const calendarDays = [];
+                
+                // Add empty cells for days before the 1st
+                for (let i = 0; i < startPadding; i++) {
+                  calendarDays.push(
+                    <View key={`empty-${i}`} style={styles.calendarDayCell} />
+                  );
+                }
+                
+                // Add days of the month
+                for (let day = 1; day <= totalDays; day++) {
+                  const date = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), day);
+                  const isSelected = format(date, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd');
+                  const isPast = date < today;
+                  const isToday = format(date, 'yyyy-MM-dd') === format(today, 'yyyy-MM-dd');
+                  const isBookingDate = currentBooking && format(date, 'yyyy-MM-dd') === format(parseToLocalTime(currentBooking.start_at), 'yyyy-MM-dd');
+                  
+                  calendarDays.push(
+                    <TouchableOpacity
+                      key={day}
+                      style={[
+                        styles.calendarDayCell,
+                        styles.calendarDayButton,
+                        { borderColor: colors.border },
+                        isSelected && { backgroundColor: colors.primary, borderColor: colors.primary },
+                        isPast && { opacity: 0.4 },
+                        isToday && !isSelected && { borderColor: colors.primary, borderWidth: 2 },
+                        isBookingDate && !isSelected && { backgroundColor: colors.warning + '30' }
+                      ]}
+                      onPress={() => !isPast && setSelectedDate(date)}
+                      disabled={isPast}
+                    >
+                      <Text style={[
+                        styles.calendarDayText,
+                        { color: isSelected ? '#FFFFFF' : colors.text },
+                        isPast && { color: colors.textMuted }
+                      ]}>
+                        {day}
+                      </Text>
+                      {isBookingDate && !isSelected && (
+                        <View style={[styles.bookingDot, { backgroundColor: colors.warning }]} />
+                      )}
+                    </TouchableOpacity>
+                  );
+                }
+                
+                return calendarDays;
+              })()}
+            </View>
+          </View>
         )}
 
         {/* Time Slots - Only show when booking UI is enabled */}
