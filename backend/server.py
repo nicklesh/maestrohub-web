@@ -8226,6 +8226,409 @@ async def delete_profile_picture(request: Request):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+# ============== SUBSCRIPTION ENDPOINTS ==============
+
+async def get_user_subscription(user_id: str) -> dict:
+    """Helper function to get user's subscription status"""
+    subscription = await db.subscriptions.find_one({"user_id": user_id, "status": {"$in": ["trial", "active"]}})
+    
+    if not subscription:
+        # Check if user is in trial period (new user)
+        user = await db.users.find_one({"user_id": user_id})
+        if user:
+            created_at = user.get("created_at", datetime.now(timezone.utc))
+            trial_ends_at = created_at + timedelta(days=TRIAL_DURATION_DAYS)
+            
+            if datetime.now(timezone.utc) < trial_ends_at:
+                # User is in trial period
+                return {
+                    "subscription_id": None,
+                    "user_id": user_id,
+                    "plan_id": "trial",
+                    "status": "trial",
+                    "is_premium": True,  # Trial users get premium features
+                    "trial_ends_at": trial_ends_at,
+                    "current_period_start": created_at,
+                    "current_period_end": trial_ends_at,
+                    "cancel_at_period_end": False,
+                    "features": SUBSCRIPTION_PLANS["monthly"]["features"],
+                    "days_remaining": (trial_ends_at - datetime.now(timezone.utc)).days
+                }
+        
+        # No subscription and trial expired - free tier
+        return {
+            "subscription_id": None,
+            "user_id": user_id,
+            "plan_id": "free",
+            "status": "free",
+            "is_premium": False,
+            "trial_ends_at": None,
+            "current_period_start": None,
+            "current_period_end": None,
+            "cancel_at_period_end": False,
+            "features": FREE_TIER_LIMITS["features_enabled"],
+            "limits": FREE_TIER_LIMITS
+        }
+    
+    # User has active subscription
+    return {
+        "subscription_id": subscription.get("subscription_id"),
+        "user_id": user_id,
+        "plan_id": subscription.get("plan_id"),
+        "status": subscription.get("status"),
+        "is_premium": True,
+        "trial_ends_at": subscription.get("trial_ends_at"),
+        "current_period_start": subscription.get("current_period_start"),
+        "current_period_end": subscription.get("current_period_end"),
+        "cancel_at_period_end": subscription.get("cancel_at_period_end", False),
+        "payment_method": subscription.get("payment_method"),
+        "features": SUBSCRIPTION_PLANS.get(subscription.get("plan_id"), SUBSCRIPTION_PLANS["monthly"])["features"]
+    }
+
+async def check_booking_limit(user_id: str) -> dict:
+    """Check if user has reached their booking limit"""
+    subscription = await get_user_subscription(user_id)
+    
+    if subscription["is_premium"]:
+        return {"allowed": True, "remaining": -1, "limit": -1}  # -1 means unlimited
+    
+    # Count bookings this month for free users
+    start_of_month = datetime.now(timezone.utc).replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    bookings_count = await db.bookings.count_documents({
+        "parent_id": user_id,
+        "created_at": {"$gte": start_of_month},
+        "status": {"$ne": "cancelled"}
+    })
+    
+    limit = FREE_TIER_LIMITS["bookings_per_month"]
+    remaining = max(0, limit - bookings_count)
+    
+    return {
+        "allowed": bookings_count < limit,
+        "remaining": remaining,
+        "limit": limit,
+        "used": bookings_count
+    }
+
+@api_router.get("/subscription/status")
+async def get_subscription_status(request: Request):
+    """Get current user's subscription status"""
+    user_id = await get_current_user(request)
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    
+    subscription = await get_user_subscription(user_id)
+    booking_limit = await check_booking_limit(user_id)
+    
+    return {
+        **subscription,
+        "booking_limit": booking_limit
+    }
+
+@api_router.get("/subscription/plans")
+async def get_subscription_plans():
+    """Get available subscription plans"""
+    return {
+        "plans": [
+            {
+                **SUBSCRIPTION_PLANS["monthly"],
+                "price_display": f"${SUBSCRIPTION_PLANS['monthly']['price_cents'] / 100:.2f}/month"
+            },
+            {
+                **SUBSCRIPTION_PLANS["yearly"],
+                "price_display": f"${SUBSCRIPTION_PLANS['yearly']['price_cents'] / 100:.2f}/year",
+                "savings": f"Save ${((SUBSCRIPTION_PLANS['monthly']['price_cents'] * 12) - SUBSCRIPTION_PLANS['yearly']['price_cents']) / 100:.2f}/year"
+            }
+        ],
+        "free_tier": FREE_TIER_LIMITS,
+        "trial_days": TRIAL_DURATION_DAYS
+    }
+
+@api_router.post("/subscription/create")
+async def create_subscription(request: Request, data: SubscriptionCreate):
+    """Create a new subscription"""
+    user_id = await get_current_user(request)
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    
+    # Validate plan
+    if data.plan_id not in SUBSCRIPTION_PLANS:
+        raise HTTPException(status_code=400, detail="Invalid plan")
+    
+    plan = SUBSCRIPTION_PLANS[data.plan_id]
+    
+    # Check for existing active subscription
+    existing = await db.subscriptions.find_one({
+        "user_id": user_id,
+        "status": {"$in": ["trial", "active"]}
+    })
+    if existing:
+        raise HTTPException(status_code=400, detail="Already have an active subscription")
+    
+    # Process payment (MOCK for now)
+    payment_result = await process_mock_payment(
+        user_id=user_id,
+        amount_cents=plan["price_cents"],
+        currency=plan["currency"],
+        payment_method=data.payment_method,
+        payment_token=data.payment_token
+    )
+    
+    if payment_result["status"] != "succeeded":
+        raise HTTPException(status_code=400, detail=f"Payment failed: {payment_result.get('error', 'Unknown error')}")
+    
+    # Calculate period dates
+    now = datetime.now(timezone.utc)
+    if plan["interval"] == "month":
+        period_end = now + timedelta(days=30 * plan["interval_count"])
+    else:  # year
+        period_end = now + timedelta(days=365 * plan["interval_count"])
+    
+    # Create subscription
+    subscription_id = f"sub_{uuid.uuid4().hex[:16]}"
+    subscription_data = {
+        "subscription_id": subscription_id,
+        "user_id": user_id,
+        "plan_id": data.plan_id,
+        "status": "active",
+        "payment_method": data.payment_method,
+        "current_period_start": now,
+        "current_period_end": period_end,
+        "cancel_at_period_end": False,
+        "payment_history": [{
+            "transaction_id": payment_result["transaction_id"],
+            "amount_cents": plan["price_cents"],
+            "currency": plan["currency"],
+            "status": "succeeded",
+            "created_at": now
+        }],
+        "created_at": now,
+        "updated_at": now
+    }
+    
+    await db.subscriptions.insert_one(subscription_data)
+    
+    # Update user record
+    await db.users.update_one(
+        {"user_id": user_id},
+        {"$set": {
+            "subscription_id": subscription_id,
+            "is_premium": True,
+            "subscription_status": "active",
+            "updated_at": now
+        }}
+    )
+    
+    await track_event("subscription_created", user_id, {
+        "plan_id": data.plan_id,
+        "payment_method": data.payment_method
+    })
+    
+    return {
+        "success": True,
+        "subscription_id": subscription_id,
+        "status": "active",
+        "plan": plan,
+        "current_period_end": period_end.isoformat()
+    }
+
+@api_router.post("/subscription/cancel")
+async def cancel_subscription(request: Request):
+    """Cancel subscription at end of current period"""
+    user_id = await get_current_user(request)
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    
+    subscription = await db.subscriptions.find_one({
+        "user_id": user_id,
+        "status": "active"
+    })
+    
+    if not subscription:
+        raise HTTPException(status_code=404, detail="No active subscription found")
+    
+    await db.subscriptions.update_one(
+        {"subscription_id": subscription["subscription_id"]},
+        {"$set": {
+            "cancel_at_period_end": True,
+            "updated_at": datetime.now(timezone.utc)
+        }}
+    )
+    
+    await track_event("subscription_cancelled", user_id)
+    
+    return {
+        "success": True,
+        "message": "Subscription will be cancelled at the end of the current period",
+        "current_period_end": subscription["current_period_end"].isoformat()
+    }
+
+@api_router.post("/subscription/reactivate")
+async def reactivate_subscription(request: Request):
+    """Reactivate a cancelled subscription before period ends"""
+    user_id = await get_current_user(request)
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    
+    subscription = await db.subscriptions.find_one({
+        "user_id": user_id,
+        "status": "active",
+        "cancel_at_period_end": True
+    })
+    
+    if not subscription:
+        raise HTTPException(status_code=404, detail="No cancelled subscription found to reactivate")
+    
+    await db.subscriptions.update_one(
+        {"subscription_id": subscription["subscription_id"]},
+        {"$set": {
+            "cancel_at_period_end": False,
+            "updated_at": datetime.now(timezone.utc)
+        }}
+    )
+    
+    await track_event("subscription_reactivated", user_id)
+    
+    return {
+        "success": True,
+        "message": "Subscription reactivated"
+    }
+
+async def process_mock_payment(user_id: str, amount_cents: int, currency: str, payment_method: str, payment_token: str = None) -> dict:
+    """
+    MOCK payment processor - simulates payment confirmation from various providers.
+    In production, this would integrate with actual payment providers.
+    """
+    import random
+    
+    # Simulate payment processing delay
+    # In production, this would call the actual payment provider API
+    
+    # Simulate 95% success rate for testing
+    success = random.random() < 0.95
+    
+    transaction_id = f"txn_{payment_method}_{uuid.uuid4().hex[:12]}"
+    
+    if success:
+        # Store payment confirmation
+        payment_confirmation = {
+            "confirmation_id": f"conf_{uuid.uuid4().hex[:12]}",
+            "user_id": user_id,
+            "provider": payment_method,
+            "transaction_id": transaction_id,
+            "amount_cents": amount_cents,
+            "currency": currency,
+            "status": "succeeded",
+            "timestamp": datetime.now(timezone.utc),
+            "mock": True  # Flag to indicate this is a mock payment
+        }
+        
+        await db.payment_confirmations.insert_one(payment_confirmation)
+        
+        return {
+            "status": "succeeded",
+            "transaction_id": transaction_id,
+            "provider": payment_method,
+            "amount_cents": amount_cents,
+            "currency": currency,
+            "confirmation_id": payment_confirmation["confirmation_id"]
+        }
+    else:
+        return {
+            "status": "failed",
+            "error": "Payment declined by provider",
+            "provider": payment_method
+        }
+
+@api_router.post("/payment/mock-webhook")
+async def mock_payment_webhook(request: Request):
+    """
+    Mock webhook endpoint for simulating payment provider callbacks.
+    In production, each provider would have their own webhook endpoint.
+    """
+    body = await request.json()
+    
+    event_type = body.get("event_type")
+    transaction_id = body.get("transaction_id")
+    user_id = body.get("user_id")
+    
+    if event_type == "payment.succeeded":
+        # Update payment confirmation status
+        await db.payment_confirmations.update_one(
+            {"transaction_id": transaction_id},
+            {"$set": {"webhook_confirmed": True, "webhook_received_at": datetime.now(timezone.utc)}}
+        )
+        
+        logger.info(f"Payment webhook confirmed for transaction {transaction_id}")
+        
+    elif event_type == "subscription.renewed":
+        # Handle subscription renewal
+        subscription = await db.subscriptions.find_one({"user_id": user_id, "status": "active"})
+        if subscription:
+            plan = SUBSCRIPTION_PLANS.get(subscription["plan_id"], SUBSCRIPTION_PLANS["monthly"])
+            now = datetime.now(timezone.utc)
+            
+            if plan["interval"] == "month":
+                new_period_end = now + timedelta(days=30)
+            else:
+                new_period_end = now + timedelta(days=365)
+            
+            await db.subscriptions.update_one(
+                {"subscription_id": subscription["subscription_id"]},
+                {"$set": {
+                    "current_period_start": now,
+                    "current_period_end": new_period_end,
+                    "updated_at": now
+                },
+                "$push": {
+                    "payment_history": {
+                        "transaction_id": transaction_id,
+                        "amount_cents": plan["price_cents"],
+                        "currency": plan["currency"],
+                        "status": "succeeded",
+                        "created_at": now
+                    }
+                }}
+            )
+            
+            logger.info(f"Subscription renewed for user {user_id}")
+    
+    return {"received": True}
+
+@api_router.get("/subscription/check-feature/{feature}")
+async def check_feature_access(feature: str, request: Request):
+    """Check if user has access to a specific feature"""
+    user_id = await get_current_user(request)
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    
+    subscription = await get_user_subscription(user_id)
+    
+    # Premium features
+    premium_features = [
+        "unlimited_bookings",
+        "all_coaches_access",
+        "video_recordings",
+        "reports_analytics",
+        "billing_tax_reports",
+        "reminders",
+        "notifications",
+        "reviews",
+        "ad_free"
+    ]
+    
+    if feature in premium_features:
+        has_access = subscription["is_premium"]
+    else:
+        has_access = True  # Free features are always accessible
+    
+    return {
+        "feature": feature,
+        "has_access": has_access,
+        "subscription_status": subscription["status"],
+        "upgrade_required": not has_access
+    }
+
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
