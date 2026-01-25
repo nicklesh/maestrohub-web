@@ -4679,6 +4679,8 @@ async def get_provider_report(
             "completed_sessions": completed_sessions,
             "upcoming_sessions": upcoming_sessions,
             "canceled_sessions": canceled_sessions,
+            "rescheduled_sessions": rescheduled_sessions,
+            "canceled_amount_cents": canceled_amount_cents,
             "total_earned_cents": total_earned_cents,
             "pending_cents": pending_cents,
             "total_platform_fees_cents": total_fees_cents,
