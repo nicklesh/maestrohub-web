@@ -379,31 +379,33 @@ export default function KidsScreen() {
               </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.autoSendRow}
-              onPress={() => setFormAutoSend(!formAutoSend)}
-            >
-              <Ionicons
-                name={formAutoSend ? 'checkbox' : 'square-outline'}
-                size={24}
-                color={formAutoSend ? colors.primary : colors.textMuted}
-              />
-              <Text style={[styles.autoSendText, { color: colors.text }]}>
-                {t('pages.add_child.auto_send_schedules')}
-              </Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.autoSendRow}
+                onPress={() => setFormAutoSend(!formAutoSend)}
+              >
+                <Ionicons
+                  name={formAutoSend ? 'checkbox' : 'square-outline'}
+                  size={24}
+                  color={formAutoSend ? colors.primary : colors.textMuted}
+                />
+                <Text style={[styles.autoSendText, { color: colors.text }]}>
+                  {t('pages.add_child.auto_send_schedules')}
+                </Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              style={[styles.saveButton, { backgroundColor: colors.primary }, saving && styles.saveButtonDisabled]}
-              onPress={handleSave}
-              disabled={saving}
-            >
-              {saving ? (
-                <ActivityIndicator color="#FFFFFF" />
-              ) : (
-                <Text style={styles.saveButtonText}>{editingKid ? t('common.save') : t('pages.kids.add_child')}</Text>
-              )}
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.saveButton, { backgroundColor: colors.primary }, saving && styles.saveButtonDisabled]}
+                onPress={handleSave}
+                disabled={saving}
+              >
+                {saving ? (
+                  <ActivityIndicator color="#FFFFFF" />
+                ) : (
+                  <Text style={styles.saveButtonText}>{editingKid ? t('common.save') : t('pages.kids.add_child')}</Text>
+                )}
+              </TouchableOpacity>
+              <View style={{ height: 20 }} />
+            </ScrollView>
           </View>
         </KeyboardAvoidingView>
       </Modal>
