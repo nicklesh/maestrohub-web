@@ -345,10 +345,10 @@ export default function TutorDetailScreen() {
               </View>
             ))}
             {/* Market Badge */}
-            {tutor.market_flag && (
+            {tutor.market_code && (
               <View style={[styles.tag, { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border }]}>
-                <Text style={{ fontSize: 14 }}>{tutor.market_flag}</Text>
                 <Text style={[styles.tagText, { color: colors.textMuted }]}>{tutor.market_code}</Text>
+                <FlagIcon countryCode={tutor.market_code} size={14} />
               </View>
             )}
           </View>
@@ -369,9 +369,17 @@ export default function TutorDetailScreen() {
         {tutor.is_cross_market && (
           <View style={[styles.crossMarketNotice, { backgroundColor: colors.warning + '20', borderColor: colors.warning }]}>
             <Ionicons name="globe-outline" size={20} color={colors.warning} />
-            <Text style={[styles.crossMarketText, { color: colors.text }]}>
-              This coach is based in {tutor.country_full_name || tutor.market_code}. Choose a coach from your country if you prefer local sessions.
-            </Text>
+            <View style={{ flex: 1 }}>
+              <View style={styles.crossMarketHeader}>
+                <FlagIcon countryCode={tutor.market_code || 'US'} size={16} />
+                <Text style={[styles.crossMarketTitle, { color: colors.text }]}>
+                  Coach from {tutor.country_full_name || tutor.market_code}
+                </Text>
+              </View>
+              <Text style={[styles.crossMarketText, { color: colors.textMuted }]}>
+                Choose a coach from your country if you prefer local sessions.
+              </Text>
+            </View>
           </View>
         )}
 
