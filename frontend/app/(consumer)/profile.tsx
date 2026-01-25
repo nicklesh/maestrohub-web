@@ -476,14 +476,14 @@ export default function ProfileScreen() {
       <Modal visible={showContactSheet} animationType="slide" transparent>
         <KeyboardAvoidingView 
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={styles.modalOverlay}
+          style={[styles.modalOverlay, { alignItems: 'center' }]}
         >
           <TouchableOpacity 
             style={styles.modalBackdrop} 
             activeOpacity={1} 
             onPress={() => !contactSuccess && setShowContactSheet(false)}
           />
-          <View style={[styles.bottomSheet, { backgroundColor: colors.surface, overflow: 'hidden' }]}>
+          <View style={[styles.bottomSheet, { backgroundColor: colors.surface, overflow: 'hidden' }, containerMaxWidth ? { maxWidth: containerMaxWidth, width: '100%' } : undefined]}>
             <View style={[styles.sheetHandle, { backgroundColor: colors.gray300 }]} />
             
             {contactSuccess ? (
