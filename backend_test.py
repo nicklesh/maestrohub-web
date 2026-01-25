@@ -12,7 +12,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Dict, Any
 
 # Get backend URL from environment
-BACKEND_URL = os.getenv('REACT_APP_BACKEND_URL', 'https://easyslot-2.preview.emergentagent.com')
+BACKEND_URL = os.getenv('REACT_APP_BACKEND_URL', 'https://timezone-fix-17.preview.emergentagent.com')
 API_BASE = f"{BACKEND_URL}/api"
 
 class BookingConflictTester:
