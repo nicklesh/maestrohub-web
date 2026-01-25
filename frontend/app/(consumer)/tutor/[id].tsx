@@ -309,11 +309,12 @@ export default function TutorDetailScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Profile Card */}
         <View style={[styles.profileCard, { backgroundColor: colors.surface }]}>
-          <View style={[styles.avatar, { backgroundColor: colors.primaryLight }]}>
-            <Text style={[styles.avatarText, { color: colors.primary }]}>
-              {tutor.user_name?.charAt(0) || 'T'}
-            </Text>
-          </View>
+          <UserAvatar 
+            name={tutor.user_name || 'T'} 
+            role="tutor" 
+            category={(tutor.categories || [])[0]}
+            size={80}
+          />
           <Text style={[styles.tutorName, { color: colors.text }]}>{tutor.user_name}</Text>
           <View style={styles.ratingRow}>
             <Ionicons name="star" size={16} color="#FFB800" />
