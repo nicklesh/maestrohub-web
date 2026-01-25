@@ -815,7 +815,8 @@
         "when_get_paid": "When do I get paid as a coach?",
         "app_not_working": "The app isn't working properly",
         "update_profile": "How do I update my profile?",
-        "delete_account": "How do I delete my account?"
+        "delete_account": "How do I delete my account?",
+        "contact_support": "How do I contact support?"
       },
       "answers": {
         "how_create_account": "Download the app, tap Sign Up, and follow the prompts to create your account with your email address.",
