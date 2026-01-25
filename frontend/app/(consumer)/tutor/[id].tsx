@@ -753,6 +753,23 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingVertical: 16,
   },
+  currentBookingCard: {
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    marginBottom: 16,
+  },
+  currentBookingLabel: {
+    fontSize: 12,
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    marginBottom: 8,
+  },
+  currentBookingTime: {
+    fontSize: 15,
+    fontWeight: '500',
+    marginBottom: 4,
+  },
   slotsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
