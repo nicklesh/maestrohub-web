@@ -6,6 +6,11 @@
     "support_email": "support@maestrohabitat.com",
     "admin_email": "admin@maestrohabitat.com"
   },
+  "modality": {
+    "online": "Online",
+    "in_person": "In-Person",
+    "hybrid": "Hybrid"
+  },
   "navigation": {
     "home": "Home",
     "search": "Search",
