@@ -1730,6 +1730,7 @@
       "no_show_failed": "Failed to report no-show",
       "reported": "Reported",
       "cancel_booking": "Cancel Booking",
+      "cancel_confirm_message": "Are you sure you want to cancel this booking?",
       "reschedule": "Reschedule",
       "not_found": "Booking not found",
       "lesson_goals": "Lesson Goals",
