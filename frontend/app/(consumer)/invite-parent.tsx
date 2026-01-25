@@ -322,27 +322,28 @@ export default function InviteParentScreen() {
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <AppHeader showBack showUserName title={t("pages.invite_parent.title")} />
       
-      {/* Share Link Card */}
-      <View style={[styles.shareCard, { backgroundColor: colors.primaryLight, borderColor: colors.primary }]}>
-        <View style={styles.shareCardContent}>
-          <Ionicons name="share-social" size={28} color={colors.primary} />
-          <View style={styles.shareTextContainer}>
-            <Text style={[styles.shareTitle, { color: colors.text }]}>{t('pages.invite_parent.share_with_friends')}</Text>
-            <Text style={[styles.shareSubtitle, { color: colors.textMuted }]}>
-              {t('pages.invite_parent.share_subtitle')}
-            </Text>
+      <View style={contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%', flex: 1 } : { flex: 1 }}>
+        {/* Share Link Card */}
+        <View style={[styles.shareCard, { backgroundColor: colors.primaryLight, borderColor: colors.primary }]}>
+          <View style={styles.shareCardContent}>
+            <Ionicons name="share-social" size={28} color={colors.primary} />
+            <View style={styles.shareTextContainer}>
+              <Text style={[styles.shareTitle, { color: colors.text }]}>{t('pages.invite_parent.share_with_friends')}</Text>
+              <Text style={[styles.shareSubtitle, { color: colors.textMuted }]}>
+                {t('pages.invite_parent.share_subtitle')}
+              </Text>
+            </View>
           </View>
+          <TouchableOpacity
+            style={[styles.shareButton, { backgroundColor: colors.primary }]}
+            onPress={() => setShowShareModal(true)}
+          >
+            <Ionicons name="share-outline" size={18} color="#fff" />
+            <Text style={styles.shareButtonText}>{t('pages.invite_parent.share_link')}</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={[styles.shareButton, { backgroundColor: colors.primary }]}
-          onPress={() => setShowShareModal(true)}
-        >
-          <Ionicons name="share-outline" size={18} color="#fff" />
-          <Text style={styles.shareButtonText}>{t('pages.invite_parent.share_link')}</Text>
-        </TouchableOpacity>
-      </View>
 
-      {/* Invites List */}
+        {/* Invites List */}
       <View style={styles.listHeader}>
         <Text style={[styles.listTitle, { color: colors.text }]}>{t('pages.invite_parent.your_invitations')}</Text>
         <TouchableOpacity
