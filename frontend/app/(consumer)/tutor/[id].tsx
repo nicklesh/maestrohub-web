@@ -539,6 +539,21 @@ export default function TutorDetailScreen() {
         {/* Time Slots - Only show when booking UI is enabled */}
         {showBookingUI && (
         <View style={[styles.section, { backgroundColor: colors.surface }]}>
+          {/* Show current booked slot if in update mode */}
+          {isUpdateMode && currentBooking && (
+            <View style={[styles.currentBookingCard, { backgroundColor: colors.primary + '15', borderColor: colors.primary }]}>
+              <Text style={[styles.currentBookingLabel, { color: colors.primary }]}>
+                {t('pages.tutor_detail.current_booking')}
+              </Text>
+              <Text style={[styles.currentBookingTime, { color: colors.text }]}>
+                {formatDate(parseToLocalTime(currentBooking.start_at), 'EEEE, MMMM d, yyyy')}
+              </Text>
+              <Text style={[styles.currentBookingTime, { color: colors.text }]}>
+                {formatDate(parseToLocalTime(currentBooking.start_at), 'h:mm a')} - {formatDate(parseToLocalTime(currentBooking.end_at), 'h:mm a')}
+              </Text>
+            </View>
+          )}
+          
           <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.tutor_detail.available_slots')}</Text>
           {availableSlots.length === 0 ? (
             <Text style={[styles.noSlotsText, { color: colors.textMuted }]}>{t('pages.tutor_detail.no_slots')}</Text>
@@ -547,6 +562,8 @@ export default function TutorDetailScreen() {
               {availableSlots.map((slot, index) => {
                 const isSelected = selectedSlot?.start_time === slot.start_time && slot.is_available;
                 const isUnavailable = !slot.is_available || slot.is_booked || slot.is_held;
+                // Convert to local time for display
+                const localTime = convertSlotTimeToLocal(slot.start_time, selectedDate);
                 
                 return (
                   <TouchableOpacity
@@ -565,7 +582,7 @@ export default function TutorDetailScreen() {
                       { color: isSelected ? '#FFFFFF' : isUnavailable ? colors.textMuted : colors.text },
                       isUnavailable && { textDecorationLine: 'line-through' }
                     ]}>
-                      {slot.start_time}
+                      {localTime}
                     </Text>
                     {isUnavailable && (
                       <Text style={[styles.bookedLabel, { color: colors.textMuted }]}>
