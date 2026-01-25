@@ -2112,6 +2112,41 @@ async def unpublish_tutor_profile(request: Request):
     await db.tutors.update_one({"user_id": user.user_id}, {"$set": {"is_published": False}})
     return {"message": "Profile unpublished"}
 
+class TutorMeetingLinkUpdate(BaseModel):
+    meeting_link: Optional[str] = None
+    waiting_room_enabled: bool = True
+
+@api_router.put("/tutors/meeting-link")
+async def update_tutor_meeting_link(data: TutorMeetingLinkUpdate, request: Request):
+    """Update just the meeting link settings for a tutor"""
+    user = await require_auth(request)
+    
+    tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Coach profile not found")
+    
+    # Validate meeting link if provided
+    if data.meeting_link and not validate_meeting_link(data.meeting_link):
+        raise HTTPException(
+            status_code=400, 
+            detail="Invalid meeting link. Please use a valid Zoom, Microsoft Teams, Google Meet, or Webex URL."
+        )
+    
+    await db.tutors.update_one(
+        {"user_id": user.user_id},
+        {"$set": {
+            "meeting_link": data.meeting_link,
+            "waiting_room_enabled": data.waiting_room_enabled
+        }}
+    )
+    
+    return {
+        "success": True,
+        "message": "Meeting link updated",
+        "meeting_link": data.meeting_link,
+        "waiting_room_enabled": data.waiting_room_enabled
+    }
+
 # ============== SEARCH/DISCOVERY ROUTES ==============
 
 # Constants for sponsor rotation
