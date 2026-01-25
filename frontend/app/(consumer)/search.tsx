@@ -1046,6 +1046,42 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: '600',
   },
+  countryFilterRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderRadius: 12,
+  },
+  countryFilterLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    flex: 1,
+  },
+  countryFilterLabel: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  countryToggle: {
+    width: 50,
+    height: 28,
+    borderRadius: 14,
+    padding: 2,
+    justifyContent: 'center',
+  },
+  countryToggleCircle: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: '#fff',
+  },
+  countryToggleCircleActive: {
+    alignSelf: 'flex-end',
+  },
   priceContainer: {
     alignItems: 'flex-end',
   },
