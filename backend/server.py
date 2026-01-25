@@ -7935,8 +7935,8 @@ app.include_router(api_router)
 ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:8001",
-    "https://easydeploy-2.preview.emergentagent.com",
-    "https://easydeploy-2.preview.emergentagent.com",
+    "https://eduflow-114.preview.emergentagent.com",
+    "https://eduflow-114.preview.emergentagent.com",
 ]
 
 app.add_middleware(

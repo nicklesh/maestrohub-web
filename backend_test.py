@@ -12,7 +12,7 @@ from datetime import datetime, timezone
 from typing import Dict, Any, Optional
 
 # Backend URL from frontend/.env
-BACKEND_URL = "https://easydeploy-2.preview.emergentagent.com/api"
+BACKEND_URL = "https://eduflow-114.preview.emergentagent.com/api"
 
 # Test credentials provided in review request
 TEST_CREDENTIALS = {
