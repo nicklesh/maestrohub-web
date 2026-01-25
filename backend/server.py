@@ -1219,6 +1219,7 @@ async def update_auto_pay_settings(data: AutoPaySettings, request: Request):
 # ============== PAYMENT PROVIDERS CONFIGURATION ==============
 # Market-specific payment providers (no PII stored - only provider preference)
 PAYMENT_PROVIDERS_USD = [
+    {"id": "stripe", "name": "Credit/Debit Card", "icon": "card"},
     {"id": "paypal", "name": "PayPal", "icon": "logo-paypal"},
     {"id": "google_pay", "name": "Google Pay", "icon": "logo-google"},
     {"id": "apple_pay", "name": "Apple Pay", "icon": "logo-apple"},
@@ -1227,6 +1228,8 @@ PAYMENT_PROVIDERS_USD = [
 ]
 
 PAYMENT_PROVIDERS_INR = [
+    {"id": "stripe", "name": "Credit/Debit Card", "icon": "card"},
+    {"id": "razorpay", "name": "Razorpay", "icon": "card"},
     {"id": "phonepe", "name": "PhonePe", "icon": "wallet"},
     {"id": "google_pay", "name": "Google Pay (GPay)", "icon": "logo-google"},
     {"id": "paytm", "name": "Paytm", "icon": "wallet"},
