@@ -4983,6 +4983,176 @@ async def get_consumer_market(request: Request):
         "needs_selection": True
     }
 
+# === MULTI-MARKET MANAGEMENT ENDPOINTS ===
+
+class EnabledMarketsUpdate(BaseModel):
+    enabled_markets: List[str]  # List of market IDs to enable
+
+@api_router.put("/me/enabled-markets")
+async def update_enabled_markets(data: EnabledMarketsUpdate, request: Request):
+    """Update consumer's enabled markets for cross-market coach discovery"""
+    user = await require_auth(request)
+    
+    # Validate all market IDs
+    valid_markets = []
+    for market_id in data.enabled_markets:
+        if market_id in MARKETS_CONFIG and MARKETS_CONFIG[market_id]["is_enabled"]:
+            valid_markets.append(market_id)
+    
+    await db.users.update_one(
+        {"user_id": user.user_id},
+        {"$set": {"enabled_markets": valid_markets}}
+    )
+    
+    return {
+        "message": "Enabled markets updated",
+        "enabled_markets": valid_markets
+    }
+
+@api_router.get("/me/enabled-markets")
+async def get_enabled_markets(request: Request):
+    """Get consumer's enabled markets"""
+    user = await require_auth(request)
+    
+    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    enabled_markets = user_doc.get("enabled_markets", [])
+    
+    # Include market details
+    markets_with_details = []
+    for market_id in enabled_markets:
+        if market_id in MARKETS_CONFIG:
+            market_display = get_market_display(market_id)
+            markets_with_details.append({
+                "market_id": market_id,
+                **MARKETS_CONFIG[market_id],
+                **market_display
+            })
+    
+    return {
+        "enabled_markets": enabled_markets,
+        "markets_details": markets_with_details
+    }
+
+class TutorMarketPricing(BaseModel):
+    market_prices: Dict[str, float]  # {"IN_INR": 4000, "GB_GBP": 40}
+    enabled_markets: Optional[List[str]] = None  # Markets where coach wants to be visible
+
+@api_router.put("/tutors/market-pricing")
+async def update_tutor_market_pricing(data: TutorMarketPricing, request: Request):
+    """Update tutor's market-specific pricing and enabled markets"""
+    user = await require_auth(request)
+    
+    tutor = await db.tutors.find_one({"user_id": user.user_id})
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Tutor profile not found")
+    
+    # Validate market IDs and prices
+    validated_prices = {}
+    for market_id, price in data.market_prices.items():
+        if market_id in MARKETS_CONFIG:
+            market = MARKETS_CONFIG[market_id]
+            # Validate price is within market's min/max
+            if market["min_price"] <= price <= market["max_price"]:
+                validated_prices[market_id] = price
+            else:
+                validated_prices[market_id] = max(market["min_price"], min(price, market["max_price"]))
+    
+    # Validate enabled markets
+    validated_enabled = []
+    if data.enabled_markets:
+        for market_id in data.enabled_markets:
+            if market_id in MARKETS_CONFIG and MARKETS_CONFIG[market_id]["is_enabled"]:
+                validated_enabled.append(market_id)
+    
+    update_data = {"market_prices": validated_prices}
+    if data.enabled_markets is not None:
+        update_data["enabled_markets"] = validated_enabled
+    
+    await db.tutors.update_one(
+        {"user_id": user.user_id},
+        {"$set": update_data}
+    )
+    
+    return {
+        "message": "Market pricing updated",
+        "market_prices": validated_prices,
+        "enabled_markets": validated_enabled
+    }
+
+@api_router.get("/tutors/market-pricing")
+async def get_tutor_market_pricing(request: Request):
+    """Get tutor's market pricing and recommendations"""
+    user = await require_auth(request)
+    
+    tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Tutor profile not found")
+    
+    base_price = tutor.get("base_price", 0)
+    base_market = tutor.get("market_id", "US_USD")
+    current_prices = tutor.get("market_prices", {})
+    enabled_markets = tutor.get("enabled_markets", [])
+    
+    # Get recommendations for all available markets
+    all_markets = list(MARKETS_CONFIG.keys())
+    try:
+        recommendations = await get_market_price_recommendations(
+            base_price, base_market, all_markets
+        )
+    except Exception as e:
+        logger.error(f"Failed to get price recommendations: {e}")
+        recommendations = {}
+    
+    # Build response with current prices and recommendations
+    market_pricing = []
+    for market_id, config in MARKETS_CONFIG.items():
+        market_display = get_market_display(market_id)
+        current_price = current_prices.get(market_id)
+        rec = recommendations.get(market_id, {})
+        
+        market_pricing.append({
+            "market_id": market_id,
+            "market_display": market_display["display"],
+            "market_flag": market_display["flag"],
+            "market_code": market_display["code"],
+            "currency": config["currency"],
+            "currency_symbol": config["currency_symbol"],
+            "min_price": config["min_price"],
+            "max_price": config["max_price"],
+            "current_price": current_price,
+            "recommended_price": rec.get("recommended_price"),
+            "exchange_rate": rec.get("exchange_rate"),
+            "is_base_market": market_id == base_market,
+            "is_enabled": market_id in enabled_markets
+        })
+    
+    return {
+        "base_price": base_price,
+        "base_market": base_market,
+        "market_pricing": market_pricing,
+        "enabled_markets": enabled_markets,
+        "modality": tutor.get("modality", [])
+    }
+
+@api_router.get("/exchange-rates")
+async def get_current_exchange_rates(base: str = "USD"):
+    """Get current exchange rates"""
+    try:
+        rates = await get_exchange_rates(base.upper())
+        return {
+            "base": base.upper(),
+            "rates": rates,
+            "timestamp": datetime.now(timezone.utc).isoformat()
+        }
+    except Exception as e:
+        logger.error(f"Failed to get exchange rates: {e}")
+        return {
+            "base": base.upper(),
+            "rates": {"USD": 1.0, "INR": 83.0},
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "is_fallback": True
+        }
+
 @api_router.post("/providers/market")
 async def set_provider_market(data: ProviderMarketSetRequest, request: Request):
     """Set provider's market based on payout country"""
