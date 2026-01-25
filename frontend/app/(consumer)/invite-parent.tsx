@@ -106,6 +106,11 @@ export default function InviteParentScreen() {
   const { colors } = useTheme();
   const { showSuccess, showError } = useToast();
   const { t, locale } = useTranslation();
+  const { width } = useWindowDimensions();
+  const isTablet = width >= 768;
+  const isDesktop = width >= 1024;
+  const contentMaxWidth = isDesktop ? 640 : isTablet ? 560 : undefined;
+  
   const [invites, setInvites] = useState<ParentInvite[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
