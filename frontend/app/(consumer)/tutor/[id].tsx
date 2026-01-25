@@ -759,6 +759,20 @@ export default function TutorDetailScreen() {
               })}
             </View>
           )}
+          
+          {/* Legend for slot colors */}
+          {availableSlots.length > 0 && (
+            <View style={styles.legendContainer}>
+              <View style={styles.legendItem}>
+                <View style={[styles.legendDot, { backgroundColor: '#FFF3E0', borderColor: '#FB8C00' }]} />
+                <Text style={[styles.legendText, { color: colors.textMuted }]}>{t('pages.tutor_detail.your_booking')}</Text>
+              </View>
+              <View style={styles.legendItem}>
+                <View style={[styles.legendDot, { backgroundColor: '#E3F2FD', borderColor: '#1976D2' }]} />
+                <Text style={[styles.legendText, { color: colors.textMuted }]}>{t('pages.tutor_detail.coach_booked')}</Text>
+              </View>
+            </View>
+          )}
         </View>
         )}
       </ScrollView>
