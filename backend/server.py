@@ -8014,6 +8014,12 @@ async def get_sponsored_tutors(category: Optional[str] = None):
 # Dynamic CORS - supports production deployment
 CORS_ORIGINS = os.environ.get('CORS_ORIGINS', '*')
 
+# Production domains
+PRODUCTION_DOMAINS = [
+    "https://www.maestrohabitat.com",
+    "https://maestrohabitat.com",
+]
+
 # If CORS_ORIGINS is '*', allow all origins
 if CORS_ORIGINS == '*':
     app.add_middleware(
@@ -8025,16 +8031,17 @@ if CORS_ORIGINS == '*':
     )
 else:
     ALLOWED_ORIGINS = [origin.strip() for origin in CORS_ORIGINS.split(',')]
-    # Always include common development origins
+    # Always include common development origins and production domains
     ALLOWED_ORIGINS.extend([
         "http://localhost:3000",
         "http://localhost:8001",
     ])
+    ALLOWED_ORIGINS.extend(PRODUCTION_DOMAINS)
     app.add_middleware(
         CORSMiddleware,
         allow_credentials=True,
         allow_origins=ALLOWED_ORIGINS,
-        allow_origin_regex=r"https://.*\.(preview\.emergentagent\.com|emergent\.host)",  # Allow all preview and production subdomains
+        allow_origin_regex=r"https://.*\.(preview\.emergentagent\.com|emergent\.host|maestrohabitat\.com)",  # Allow all preview, production, and custom domain subdomains
         allow_methods=["*"],
         allow_headers=["*"],
     )
