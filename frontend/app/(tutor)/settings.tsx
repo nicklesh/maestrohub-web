@@ -221,7 +221,7 @@ export default function TutorSettings() {
               <Text style={[styles.meetingHint, { color: colors.textMuted }]}>
                 {t('pages.tutor_settings.meeting_link_desc')}
               </Text>
-              <View style={[styles.meetingInputRow, { backgroundColor: 'transparent', borderColor: colors.border }]}>
+              <View style={[styles.meetingInputRow, { backgroundColor: colors.background, borderColor: colors.border }]}>
                 <Ionicons name="link" size={18} color={colors.textMuted} />
                 <TextInput
                   style={[styles.meetingInput, { color: colors.text }]}
@@ -417,7 +417,7 @@ export default function TutorSettings() {
 const getStyles = (colors: ThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: colors.background,
   },
   loadingContainer: {
     flex: 1,

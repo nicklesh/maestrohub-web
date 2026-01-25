@@ -185,7 +185,7 @@ export default function InvitesScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: 'transparent' }]}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
         <AppHeader />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
@@ -195,7 +195,7 @@ export default function InvitesScreen() {
   }
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: 'transparent' }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <AppHeader />
       
       <View style={styles.content}>
@@ -252,7 +252,7 @@ export default function InvitesScreen() {
 
             <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.coach.invites.email_required')}</Text>
             <TextInput
-              style={[styles.input, { backgroundColor: 'transparent', color: colors.text, borderColor: colors.border }]}
+              style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
               placeholder={t('pages.coach.invites.email_placeholder')}
               placeholderTextColor={colors.textMuted}
               value={newInviteEmail}
@@ -263,7 +263,7 @@ export default function InvitesScreen() {
 
             <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.coach.invites.name_optional')}</Text>
             <TextInput
-              style={[styles.input, { backgroundColor: 'transparent', color: colors.text, borderColor: colors.border }]}
+              style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
               placeholder={t('pages.coach.invites.name_placeholder')}
               placeholderTextColor={colors.textMuted}
               value={newInviteName}
@@ -272,7 +272,7 @@ export default function InvitesScreen() {
 
             <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.coach.invites.message_optional')}</Text>
             <TextInput
-              style={[styles.input, styles.textArea, { backgroundColor: 'transparent', color: colors.text, borderColor: colors.border }]}
+              style={[styles.input, styles.textArea, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
               placeholder={t('pages.coach.invites.message_placeholder')}
               placeholderTextColor={colors.textMuted}
               value={newInviteMessage}

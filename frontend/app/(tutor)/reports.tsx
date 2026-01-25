@@ -387,7 +387,7 @@ export default function TutorReportsScreen() {
 const getStyles = (colors: ThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: colors.background,
   },
   loadingContainer: {
     flex: 1,

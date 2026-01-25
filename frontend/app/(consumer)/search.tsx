@@ -520,7 +520,7 @@ export default function SearchScreen() {
   ];
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: 'transparent' }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <AppHeader />
       <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.scrollContent}>
         <View style={[styles.contentWrapper, containerMaxWidth ? { maxWidth: containerMaxWidth } : undefined]}>

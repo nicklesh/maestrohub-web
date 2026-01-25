@@ -193,7 +193,7 @@ export default function BookingsScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: 'transparent' }]}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
         <AppHeader />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
@@ -203,7 +203,7 @@ export default function BookingsScreen() {
   }
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: 'transparent' }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <AppHeader />
       <View style={[styles.contentWrapper, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
         <View style={[styles.header, isTablet && styles.headerTablet]}>

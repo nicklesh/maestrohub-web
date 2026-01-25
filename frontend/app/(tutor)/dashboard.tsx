@@ -487,7 +487,7 @@ export default function TutorDashboard() {
 const getStyles = (colors: ThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: colors.background,
   },
   loadingContainer: {
     flex: 1,
@@ -827,7 +827,7 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     marginBottom: 20,
     padding: 16,
     borderRadius: 12,
-    backgroundColor: 'transparent',
+    backgroundColor: colors.background,
   },
   bookingPreviewDate: {
     fontSize: 16,
