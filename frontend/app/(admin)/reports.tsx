@@ -802,6 +802,11 @@ export default function AdminReportsScreen() {
           </View>
           <View style={styles.revenueDivider} />
           <View style={styles.revenueItem}>
+            <Text style={styles.revenueLabel}>{t('pages.admin.reports_page.cancelled_revenue') || 'Cancelled $'}</Text>
+            <Text style={[styles.revenueValue, { color: colors.error }]}>${stats.canceledRevenue.toLocaleString()}</Text>
+          </View>
+          <View style={styles.revenueDivider} />
+          <View style={styles.revenueItem}>
             <Text style={styles.revenueLabel}>{t('pages.admin.reports_page.pending_payouts')}</Text>
             <Text style={[styles.revenueValue, { color: colors.accent }]}>${stats.pendingPayouts.toLocaleString()}</Text>
           </View>
