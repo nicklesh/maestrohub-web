@@ -444,7 +444,7 @@ export default function SearchScreen() {
         </View>
 
         <View style={styles.modalityRow}>
-          {(item.modality || []).map((m) => (
+          {(Array.isArray(item.modality) ? item.modality : [item.modality].filter(Boolean)).map((m) => (
             <View key={m} style={styles.modalityItem}>
               <Ionicons
                 name={m === 'online' ? 'videocam' : m === 'hybrid' ? 'sync' : 'location'}
