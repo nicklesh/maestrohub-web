@@ -102,6 +102,7 @@ export default function TutorReportsScreen() {
       setSummary(data.summary);
       setSponsorship(data.sponsorship);
       setByStudent(data.by_student || []);
+      setByConsumer(data.by_consumer || []);
       setByMonth(data.by_month || []);
     } catch (error) {
       console.error('Error fetching report:', error);
