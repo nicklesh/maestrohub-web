@@ -796,6 +796,20 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
+  sendNotificationButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    borderRadius: 10,
+    gap: 8,
+    borderWidth: 1,
+    marginTop: 12,
+  },
+  sendNotificationText: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
   cancelButton: {
     flexDirection: 'row',
     alignItems: 'center',
