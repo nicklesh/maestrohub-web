@@ -2309,6 +2309,15 @@ async def search_tutors(
     
     # Get user info for each tutor
     results = []
+    
+    # Get consumer's market info for price conversion
+    consumer_currency = "USD"
+    consumer_currency_symbol = "$"
+    if consumer_market_id:
+        consumer_market_info = MARKETS_CONFIG.get(consumer_market_id, {})
+        consumer_currency = consumer_market_info.get("currency", "USD")
+        consumer_currency_symbol = consumer_market_info.get("currency_symbol", "$")
+    
     for tutor in all_tutors:
         user = await db.users.find_one({"user_id": tutor["user_id"]}, {"_id": 0})
         if user:
@@ -2316,14 +2325,54 @@ async def search_tutors(
             is_sponsored_display = tutor["tutor_id"] in selected_sponsor_ids
             
             # Include market info in results
-            market_info = MARKETS_CONFIG.get(tutor.get("market_id"), {})
+            tutor_market_id = tutor.get("market_id")
+            market_info = MARKETS_CONFIG.get(tutor_market_id, {})
+            tutor_currency = market_info.get("currency", "USD")
+            tutor_currency_symbol = market_info.get("currency_symbol", "$")
+            
+            # Get market display (flag + code)
+            market_display = get_market_display(tutor_market_id or "US_USD")
+            
+            # Calculate display price and original price
+            original_price = tutor.get("base_price", 0)
+            display_price = original_price
+            original_price_display = None
+            
+            # Check if tutor has set a specific price for consumer's market
+            market_prices = tutor.get("market_prices", {})
+            if consumer_market_id and consumer_market_id in market_prices:
+                # Use tutor's custom price for this market
+                display_price = market_prices[consumer_market_id]
+                if tutor_market_id != consumer_market_id:
+                    original_price_display = f"{tutor_currency_symbol}{original_price:.0f}"
+            elif tutor_market_id != consumer_market_id:
+                # Convert price to consumer's currency
+                try:
+                    converted_price, rate = await convert_price(
+                        original_price, tutor_currency, consumer_currency
+                    )
+                    display_price = converted_price
+                    original_price_display = f"{tutor_currency_symbol}{original_price:.0f}"
+                except Exception as e:
+                    logger.error(f"Price conversion error: {e}")
+                    # Fall back to original price
+                    display_price = original_price
+            
             results.append({
                 **tutor,
                 "user_name": user["name"],
                 "user_picture": user.get("picture"),
-                "currency": market_info.get("currency", "USD"),
-                "currency_symbol": market_info.get("currency_symbol", "$"),
-                "is_sponsored": is_sponsored_display
+                "currency": consumer_currency if consumer_market_id else tutor_currency,
+                "currency_symbol": consumer_currency_symbol if consumer_market_id else tutor_currency_symbol,
+                "display_price": display_price,
+                "original_price": original_price,
+                "original_currency_symbol": tutor_currency_symbol,
+                "original_price_display": original_price_display,
+                "is_sponsored": is_sponsored_display,
+                "market_flag": market_display["flag"],
+                "market_code": market_display["code"],
+                "market_display": market_display["display"],
+                "is_cross_market": tutor_market_id != consumer_market_id if consumer_market_id else False
             })
     
     # If query provided, also search for tutors by user name
