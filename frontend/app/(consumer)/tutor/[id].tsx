@@ -85,6 +85,9 @@ export default function TutorDetailScreen() {
   const router = useRouter();
   const { id, bookingId, mode, source } = useLocalSearchParams();  // bookingId and mode for update flow, source for view only
   const { width } = useWindowDimensions();
+  const isTablet = width >= 768;
+  const isDesktop = width >= 1024;
+  const contentMaxWidth = isDesktop ? 640 : isTablet ? 560 : undefined;
   const { colors } = useTheme();
   const { t, formatNumber, formatDate } = useTranslation();
   const [tutor, setTutor] = useState<Tutor | null>(null);
