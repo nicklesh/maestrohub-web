@@ -691,9 +691,18 @@ export default function TutorDetailScreen() {
             <View style={styles.slotsGrid}>
               {availableSlots.map((slot, index) => {
                 const isSelected = selectedSlot?.start_time === slot.start_time && slot.is_available;
-                const isUnavailable = !slot.is_available || slot.is_booked || slot.is_held;
+                const hasUserConflict = slot.has_user_conflict;
+                const isUnavailable = !slot.is_available || slot.is_booked || slot.is_held || hasUserConflict;
                 // Convert to local time for display
                 const localTime = convertSlotTimeToLocal(slot.start_time, selectedDate);
+                
+                // Determine label text based on reason for unavailability
+                const getUnavailableLabel = () => {
+                  if (hasUserConflict) return t('pages.tutor_detail.your_booking');
+                  if (slot.is_booked) return t('pages.tutor_detail.booked');
+                  if (slot.is_held) return t('pages.tutor_detail.held');
+                  return t('pages.tutor_detail.unavailable');
+                };
                 
                 return (
                   <TouchableOpacity
@@ -702,21 +711,22 @@ export default function TutorDetailScreen() {
                       styles.slotCard,
                       { backgroundColor: colors.background, borderColor: colors.border },
                       isSelected && { backgroundColor: colors.primary, borderColor: colors.primary },
-                      isUnavailable && { backgroundColor: colors.backgroundSecondary, borderColor: colors.border, opacity: 0.5 }
+                      hasUserConflict && { backgroundColor: colors.warningBackground || '#FFF3E0', borderColor: colors.warning || '#FB8C00', opacity: 0.7 },
+                      (isUnavailable && !hasUserConflict) && { backgroundColor: colors.backgroundSecondary, borderColor: colors.border, opacity: 0.5 }
                     ]}
                     onPress={() => !isUnavailable && setSelectedSlot(slot)}
                     disabled={isUnavailable}
                   >
                     <Text style={[
                       styles.slotText, 
-                      { color: isSelected ? '#FFFFFF' : isUnavailable ? colors.textMuted : colors.text },
+                      { color: isSelected ? '#FFFFFF' : hasUserConflict ? (colors.warning || '#FB8C00') : isUnavailable ? colors.textMuted : colors.text },
                       isUnavailable && { textDecorationLine: 'line-through' }
                     ]}>
                       {localTime}
                     </Text>
                     {isUnavailable && (
-                      <Text style={[styles.bookedLabel, { color: colors.textMuted }]}>
-                        {t('pages.tutor_detail.booked')}
+                      <Text style={[styles.bookedLabel, { color: hasUserConflict ? (colors.warning || '#FB8C00') : colors.textMuted }]}>
+                        {getUnavailableLabel()}
                       </Text>
                     )}
                   </TouchableOpacity>
