@@ -288,29 +288,13 @@ export default function BookingScreen() {
         headers: { Authorization: `Bearer ${token}` }
       });
       console.log('Payment providers response:', response.data);
-      const linkedProviders = response.data.linked_providers || [];
       
-      if (linkedProviders.length === 0) {
-        // No payment methods - redirect to billing
-        setSubmitting(false);
-        showAlert(
-          'Payment Method Required',
-          'Please add a payment method before booking a session.',
-          [
-            { text: 'Cancel', style: 'cancel' },
-            { 
-              text: 'Add Payment Method', 
-              onPress: () => {
-                router.push('/(consumer)/billing');
-              }
-            }
-          ]
-        );
-        return;
-      }
+      // Store available providers for payment step
+      setAvailableProviders(response.data.available_providers || []);
       
-      // Has payment methods - proceed to payment step
-      console.log('User has payment methods, proceeding to payment step');
+      // Proceed to payment step regardless of linked providers
+      // User can select from available providers during payment
+      console.log('Proceeding to payment step');
       setSubmitting(false);
       setStep('payment');
     } catch (error: any) {
