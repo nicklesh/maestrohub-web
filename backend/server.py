@@ -8310,10 +8310,11 @@ async def check_booking_limit(user_id: str) -> dict:
 @api_router.get("/subscription/status")
 async def get_subscription_status(request: Request):
     """Get current user's subscription status"""
-    user_id = await get_current_user(request)
-    if not user_id:
+    user = await get_current_user(request)
+    if not user:
         raise HTTPException(status_code=401, detail="Not authenticated")
     
+    user_id = user.user_id
     subscription = await get_user_subscription(user_id)
     booking_limit = await check_booking_limit(user_id)
     
