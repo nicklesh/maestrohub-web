@@ -9,8 +9,8 @@ import {
   RefreshControl,
   TextInput,
   Modal,
+  useWindowDimensions,
 } from 'react-native';
-import { useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
