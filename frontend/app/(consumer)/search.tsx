@@ -243,7 +243,15 @@ export default function SearchScreen() {
   const loadCategories = async () => {
     try {
       const response = await api.get('/categories');
-      setCategories(response.data.categories || []);
+      // Transform subcategories to subjects for frontend compatibility
+      const transformedCategories = (response.data.categories || []).map((cat: any) => ({
+        id: cat.name?.toLowerCase().replace(/[&\s]+/g, '_') || cat.id,
+        name: cat.name,
+        subjects: (cat.subcategories || []).map((sub: any) => 
+          typeof sub === 'string' ? sub : sub.name
+        ),
+      }));
+      setCategories(transformedCategories);
     } catch (error) {
       console.error('Failed to load categories:', error);
     } finally {
