@@ -218,7 +218,14 @@ export default function AppHeader({ showBack = false, title, showUserName = fals
           {/* Notification Bell - only for non-admin users */}
           {user?.role !== 'admin' && (
             <TouchableOpacity 
-              onPress={() => router.push('/(consumer)/notifications')} 
+              onPress={() => {
+                // Navigate to correct notifications page based on role
+                if (user?.role === 'tutor') {
+                  router.push('/(tutor)/notifications');
+                } else {
+                  router.push('/(consumer)/notifications');
+                }
+              }} 
               style={[styles.iconButton, { backgroundColor: colors.background }]}
             >
               <View>
