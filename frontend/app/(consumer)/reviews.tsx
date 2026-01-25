@@ -381,6 +381,7 @@ export default function ReviewsScreen() {
           </View>
         </View>
       </Modal>
+      </View>
     </SafeAreaView>
   );
 }
