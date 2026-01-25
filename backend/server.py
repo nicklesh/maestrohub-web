@@ -8467,10 +8467,11 @@ async def cancel_subscription(request: Request):
 @api_router.post("/subscription/reactivate")
 async def reactivate_subscription(request: Request):
     """Reactivate a cancelled subscription before period ends"""
-    user_id = await get_current_user(request)
-    if not user_id:
+    user = await get_current_user(request)
+    if not user:
         raise HTTPException(status_code=401, detail="Not authenticated")
     
+    user_id = user.user_id
     subscription = await db.subscriptions.find_one({
         "user_id": user_id,
         "status": "active",
