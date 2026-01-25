@@ -439,12 +439,18 @@ class APITester:
                 if response.status_code == 200:
                     data = response.json()
                     
-                    if isinstance(data, list):
-                        self.log_test(f"Notifications - {user_type}", True, 
-                                    f"Found {len(data)} notifications")
+                    # Check if response has 'notifications' key with list
+                    if isinstance(data, dict) and 'notifications' in data:
+                        notifications = data['notifications']
+                        if isinstance(notifications, list):
+                            self.log_test(f"Notifications - {user_type}", True, 
+                                        f"Found {len(notifications)} notifications, unread: {data.get('unread_count', 0)}")
+                        else:
+                            self.log_test(f"Notifications - {user_type}", False, 
+                                        f"Expected list in 'notifications' key, got: {type(notifications)}")
                     else:
                         self.log_test(f"Notifications - {user_type}", False, 
-                                    f"Expected list, got: {type(data)}")
+                                    f"Expected dict with 'notifications' key, got: {type(data)}")
                 else:
                     self.log_test(f"Notifications - {user_type}", False, 
                                 f"Status: {response.status_code}, Response: {response.text}")
