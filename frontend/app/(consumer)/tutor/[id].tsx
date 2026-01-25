@@ -28,6 +28,7 @@ interface Tutor {
   subjects: string[];
   levels: string[];
   modality: string[];
+  categories?: string[];
   base_price: number;
   duration_minutes: number;
   rating_avg: number;
