@@ -49,6 +49,7 @@ export default function SearchScreen() {
   const params = useLocalSearchParams();
   const { width } = useWindowDimensions();
   const { colors } = useTheme();
+  const { token } = useAuth();
   const { t, formatNumber } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
