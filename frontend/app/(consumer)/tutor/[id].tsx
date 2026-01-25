@@ -479,21 +479,34 @@ export default function TutorDetailScreen() {
             <Text style={[styles.noSlotsText, { color: colors.textMuted }]}>{t('pages.tutor_detail.no_slots')}</Text>
           ) : (
             <View style={styles.slotsGrid}>
-              {availableSlots.filter(s => s.is_available).map((slot, index) => {
-                const isSelected = selectedSlot?.start_time === slot.start_time;
+              {availableSlots.map((slot, index) => {
+                const isSelected = selectedSlot?.start_time === slot.start_time && slot.is_available;
+                const isUnavailable = !slot.is_available || slot.is_booked || slot.is_held;
+                
                 return (
                   <TouchableOpacity
                     key={index}
                     style={[
                       styles.slotCard,
                       { backgroundColor: colors.background, borderColor: colors.border },
-                      isSelected && { backgroundColor: colors.primary, borderColor: colors.primary }
+                      isSelected && { backgroundColor: colors.primary, borderColor: colors.primary },
+                      isUnavailable && { backgroundColor: colors.backgroundSecondary, borderColor: colors.border, opacity: 0.5 }
                     ]}
-                    onPress={() => setSelectedSlot(slot)}
+                    onPress={() => !isUnavailable && setSelectedSlot(slot)}
+                    disabled={isUnavailable}
                   >
-                    <Text style={[styles.slotText, { color: isSelected ? '#FFFFFF' : colors.text }]}>
+                    <Text style={[
+                      styles.slotText, 
+                      { color: isSelected ? '#FFFFFF' : isUnavailable ? colors.textMuted : colors.text },
+                      isUnavailable && { textDecorationLine: 'line-through' }
+                    ]}>
                       {slot.start_time}
                     </Text>
+                    {isUnavailable && (
+                      <Text style={[styles.bookedLabel, { color: colors.textMuted }]}>
+                        {t('pages.tutor_detail.booked')}
+                      </Text>
+                    )}
                   </TouchableOpacity>
                 );
               })}
