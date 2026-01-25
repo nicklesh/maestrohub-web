@@ -2219,6 +2219,13 @@ async def search_tutors(
     sort_field = "rating_avg" if sort_by == "rating" else "base_price" if sort_by == "price" else "created_at"
     sort_order = -1 if sort_by == "rating" else 1
     
+    # Apply market filter using $and to preserve other filters
+    if market_filter:
+        if "$and" not in db_query:
+            db_query = {"$and": [db_query, market_filter]}
+        else:
+            db_query["$and"].append(market_filter)
+    
     # === SPONSOR ROTATION LOGIC ===
     # Get all sponsored tutors matching the query for rotation
     sponsored_query = {**db_query, "is_sponsored": True}
