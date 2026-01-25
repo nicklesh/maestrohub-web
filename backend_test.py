@@ -162,7 +162,7 @@ class APITester:
             if response.status_code == 200:
                 data = response.json()
                 
-                required_fields = ["base_currency", "rates", "last_updated"]
+                required_fields = ["base", "rates", "timestamp"]
                 has_required = all(field in data for field in required_fields)
                 
                 rates = data.get("rates", {})
@@ -172,7 +172,7 @@ class APITester:
                     "Exchange Rates - USD Base", 
                     has_required and has_inr, 
                     f"USD rates: {len(rates)} currencies, has INR: {has_inr}",
-                    {"base": data.get("base_currency"), "currency_count": len(rates)}
+                    {"base": data.get("base"), "currency_count": len(rates)}
                 )
             else:
                 self.log_result("Exchange Rates - USD Base", False, f"USD rates failed: {response.status_code} - {response.text}")
