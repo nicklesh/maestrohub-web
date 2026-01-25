@@ -159,19 +159,25 @@ class APITester:
             if response.status_code == 200:
                 data = response.json()
                 
-                if isinstance(data, list) and len(data) >= 2:
-                    market_ids = [market.get('market_id') for market in data]
-                    expected_markets = ['US_USD', 'IN_INR']
-                    
-                    if all(market in market_ids for market in expected_markets):
-                        self.log_test("Markets API", True, 
-                                    f"Found expected markets: {market_ids}")
+                # Check if response has 'markets' key with list of markets
+                if isinstance(data, dict) and 'markets' in data:
+                    markets = data['markets']
+                    if len(markets) >= 2:
+                        market_ids = [market.get('market_id') for market in markets]
+                        expected_markets = ['US_USD', 'IN_INR']
+                        
+                        if all(market in market_ids for market in expected_markets):
+                            self.log_test("Markets API", True, 
+                                        f"Found expected markets: {market_ids}")
+                        else:
+                            self.log_test("Markets API", False, 
+                                        f"Missing expected markets. Found: {market_ids}")
                     else:
                         self.log_test("Markets API", False, 
-                                    f"Missing expected markets. Found: {market_ids}")
+                                    f"Expected 2+ markets, got {len(markets)}")
                 else:
                     self.log_test("Markets API", False, 
-                                f"Expected list with 2+ markets, got: {data}")
+                                f"Expected dict with 'markets' key, got: {type(data)}")
             else:
                 self.log_test("Markets API", False, 
                             f"Status: {response.status_code}, Response: {response.text}")
