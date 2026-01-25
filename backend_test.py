@@ -187,7 +187,7 @@ class APITester:
             if response.status_code == 200:
                 data = response.json()
                 
-                base_currency = data.get("base_currency")
+                base_currency = data.get("base")
                 rates = data.get("rates", {})
                 has_usd = "USD" in rates
                 
