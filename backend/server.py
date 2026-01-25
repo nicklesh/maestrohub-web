@@ -8345,9 +8345,11 @@ async def get_subscription_plans():
 @api_router.post("/subscription/create")
 async def create_subscription(request: Request, data: SubscriptionCreate):
     """Create a new subscription"""
-    user_id = await get_current_user(request)
-    if not user_id:
+    user = await get_current_user(request)
+    if not user:
         raise HTTPException(status_code=401, detail="Not authenticated")
+    
+    user_id = user.user_id
     
     # Validate plan
     if data.plan_id not in SUBSCRIPTION_PLANS:
