@@ -598,6 +598,7 @@
       "upcoming": "Upcoming",
       "past": "Past",
       "cancelled": "Cancelled",
+      "rescheduled": "Rescheduled",
       "pending": "Pending",
       "completed": "Completed",
       "session_with": "Session with {name}",
