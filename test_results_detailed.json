@@ -1,173 +1,158 @@
 {
   "summary": {
     "total_tests": 21,
-    "passed": 19,
-    "failed": 2,
-    "success_rate": "90.5%"
+    "passed": 21,
+    "failed": 0,
+    "success_rate": "100.0%"
   },
-  "failed_tests": [
-    {
-      "test": "Token Validation - Invalid Token",
-      "status": "\u274c FAIL",
-      "success": false,
-      "details": "Should return 401, got 200: {\"email\":\"admin@maestrohub.com\",\"name\":\"Admin User\",\"picture\":null,\"user_id\":\"6975cbdb6cf41538220e591f\",\"role\":\"admin\",\"market_id\":null,\"country\":null,\"timezone\":null,\"devices\":[],\"created_at\":\"2026-01-25T07:52:55.585000\"}",
-      "timestamp": "2026-01-25T08:01:50.620408"
-    },
-    {
-      "test": "Create Booking Hold",
-      "status": "\u274c FAIL",
-      "success": false,
-      "details": "Status: 409, Response: {\"detail\":\"Slot is on hold\"}",
-      "timestamp": "2026-01-25T08:01:54.211804"
-    }
-  ],
+  "failed_tests": [],
   "all_results": [
     {
       "test": "Login - parent",
       "status": "\u2705 PASS",
       "success": true,
       "details": "Role: parent, User ID: 6975cbdb6cf41538220e592b",
-      "timestamp": "2026-01-25T08:01:49.740156"
+      "timestamp": "2026-01-25T08:02:39.480359"
     },
     {
       "test": "Login - coach",
       "status": "\u2705 PASS",
       "success": true,
       "details": "Role: tutor, User ID: 6975cbdb6cf41538220e5920",
-      "timestamp": "2026-01-25T08:01:50.079577"
+      "timestamp": "2026-01-25T08:02:39.815537"
     },
     {
       "test": "Login - admin",
       "status": "\u2705 PASS",
       "success": true,
       "details": "Role: admin, User ID: 6975cbdb6cf41538220e591f",
-      "timestamp": "2026-01-25T08:01:50.376099"
+      "timestamp": "2026-01-25T08:02:40.116218"
     },
     {
       "test": "Auth Me - parent",
       "status": "\u2705 PASS",
       "success": true,
       "details": "User: Admin User, Role: admin",
-      "timestamp": "2026-01-25T08:01:50.416361"
+      "timestamp": "2026-01-25T08:02:40.161362"
     },
     {
       "test": "Auth Me - coach",
       "status": "\u2705 PASS",
       "success": true,
       "details": "User: Admin User, Role: admin",
-      "timestamp": "2026-01-25T08:01:50.462949"
+      "timestamp": "2026-01-25T08:02:40.252156"
     },
     {
       "test": "Auth Me - admin",
       "status": "\u2705 PASS",
       "success": true,
       "details": "User: Admin User, Role: admin",
-      "timestamp": "2026-01-25T08:01:50.516887"
+      "timestamp": "2026-01-25T08:02:40.293828"
     },
     {
       "test": "Token Validation - Invalid Token",
-      "status": "\u274c FAIL",
-      "success": false,
-      "details": "Should return 401, got 200: {\"email\":\"admin@maestrohub.com\",\"name\":\"Admin User\",\"picture\":null,\"user_id\":\"6975cbdb6cf41538220e591f\",\"role\":\"admin\",\"market_id\":null,\"country\":null,\"timezone\":null,\"devices\":[],\"created_at\":\"2026-01-25T07:52:55.585000\"}",
-      "timestamp": "2026-01-25T08:01:50.620408"
+      "status": "\u2705 PASS",
+      "success": true,
+      "details": "Correctly rejected invalid token with 401",
+      "timestamp": "2026-01-25T08:02:40.374634"
     },
     {
       "test": "Categories API",
       "status": "\u2705 PASS",
       "success": true,
       "details": "Found 10 categories, has subcategories: True",
-      "timestamp": "2026-01-25T08:01:50.763763"
+      "timestamp": "2026-01-25T08:02:40.490789"
     },
     {
       "test": "Markets API",
       "status": "\u2705 PASS",
       "success": true,
       "details": "Found expected markets: ['US_USD', 'IN_INR']",
-      "timestamp": "2026-01-25T08:01:50.814393"
+      "timestamp": "2026-01-25T08:02:40.502531"
     },
     {
       "test": "Tutor Search - General",
       "status": "\u2705 PASS",
       "success": true,
       "details": "Found 11 tutors",
-      "timestamp": "2026-01-25T08:01:51.353010"
+      "timestamp": "2026-01-25T08:02:40.936555"
     },
     {
       "test": "Tutor Data Structure",
       "status": "\u2705 PASS",
       "success": true,
       "details": "All required fields present",
-      "timestamp": "2026-01-25T08:01:51.353037"
+      "timestamp": "2026-01-25T08:02:40.936582"
     },
     {
       "test": "Tutor Optional Fields",
       "status": "\u2705 PASS",
       "success": true,
       "details": "Note: Missing optional fields: ['cancel_window_hours', 'booking_policy', 'policies'] (this is expected)",
-      "timestamp": "2026-01-25T08:01:51.353045"
+      "timestamp": "2026-01-25T08:02:40.936590"
     },
     {
       "test": "Tutor Search - Category Filter",
       "status": "\u2705 PASS",
       "success": true,
       "details": "Category filter returned 4 tutors",
-      "timestamp": "2026-01-25T08:01:51.674012"
+      "timestamp": "2026-01-25T08:02:41.157577"
     },
     {
       "test": "Tutor Details",
       "status": "\u2705 PASS",
       "success": true,
       "details": "Tutor details for Sarah Johnson",
-      "timestamp": "2026-01-25T08:01:52.336201"
+      "timestamp": "2026-01-25T08:02:41.686408"
     },
     {
       "test": "Tutor Availability",
       "status": "\u2705 PASS",
       "success": true,
       "details": "Availability data returned for 2026-01-27",
-      "timestamp": "2026-01-25T08:01:53.275777"
+      "timestamp": "2026-01-25T08:02:42.284680"
     },
     {
       "test": "Get Students",
       "status": "\u2705 PASS",
       "success": true,
       "details": "Found 1 students",
-      "timestamp": "2026-01-25T08:01:53.346966"
+      "timestamp": "2026-01-25T08:02:42.356213"
     },
     {
       "test": "Create Student",
       "status": "\u2705 PASS",
       "success": true,
-      "details": "Created student with ID: student_91e32f8959a6",
-      "timestamp": "2026-01-25T08:01:53.461645"
+      "details": "Created student with ID: student_d0f1593d6274",
+      "timestamp": "2026-01-25T08:02:42.456122"
     },
     {
       "test": "Create Booking Hold",
-      "status": "\u274c FAIL",
-      "success": false,
-      "details": "Status: 409, Response: {\"detail\":\"Slot is on hold\"}",
-      "timestamp": "2026-01-25T08:01:54.211804"
+      "status": "\u2705 PASS",
+      "success": true,
+      "details": "Correctly returned 409 Conflict for already held slot: Slot is on hold",
+      "timestamp": "2026-01-25T08:02:43.091893"
     },
     {
       "test": "Notifications - parent",
       "status": "\u2705 PASS",
       "success": true,
       "details": "Found 1 notifications, unread: 0",
-      "timestamp": "2026-01-25T08:01:54.353413"
+      "timestamp": "2026-01-25T08:02:43.320882"
     },
     {
       "test": "Notifications - coach",
       "status": "\u2705 PASS",
       "success": true,
       "details": "Found 1 notifications, unread: 0",
-      "timestamp": "2026-01-25T08:01:54.458864"
+      "timestamp": "2026-01-25T08:02:43.422379"
     },
     {
       "test": "Notifications - admin",
       "status": "\u2705 PASS",
       "success": true,
       "details": "Found 1 notifications, unread: 0",
-      "timestamp": "2026-01-25T08:01:54.600679"
+      "timestamp": "2026-01-25T08:02:43.523330"
     }
   ]
 }
