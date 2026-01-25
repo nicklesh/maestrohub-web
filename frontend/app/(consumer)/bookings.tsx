@@ -108,14 +108,21 @@ export default function BookingsScreen() {
   const filteredBookings = bookings.filter((booking) => {
     const bookingDate = parseToLocalTime(booking.start_at);
     const isBookingPast = isPast(bookingDate);
+    const isCanceled = booking.status.includes('canceled');
+    const isRescheduled = booking.rescheduled === true;
     
-    // Filter based on booking date only
-    // Upcoming: future date bookings (including canceled future bookings)
-    // Past: past date bookings (including canceled past bookings)
-    if (filter === 'upcoming') {
-      return !isBookingPast;
+    switch (filter) {
+      case 'upcoming':
+        return !isBookingPast && !isCanceled;
+      case 'past':
+        return isBookingPast && !isCanceled;
+      case 'rescheduled':
+        return isRescheduled;
+      case 'cancelled':
+        return isCanceled;
+      default:
+        return true;
     }
-    return isBookingPast;
   });
 
   const getStatusDisplay = (status: string) => {
