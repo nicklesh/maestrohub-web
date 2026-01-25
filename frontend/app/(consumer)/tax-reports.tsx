@@ -389,6 +389,7 @@ export default function TaxReportsScreen() {
           </View>
         }
       />
+      </View>
     </SafeAreaView>
   );
 }
