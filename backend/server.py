@@ -2,10 +2,20 @@ from fastapi import FastAPI, APIRouter, HTTPException, Depends, Request, Respons
 from fastapi.security import HTTPBearer
 from fastapi.responses import StreamingResponse
 from dotenv import load_dotenv
+
+# Load environment variables FIRST
+load_dotenv()
+
+# Initialize New Relic BEFORE importing other modules
+import os
+NEW_RELIC_LICENSE_KEY = os.environ.get('NEW_RELIC_LICENSE_KEY', '')
+if NEW_RELIC_LICENSE_KEY:
+    import newrelic.agent
+    newrelic.agent.initialize('/app/backend/newrelic.ini')
+
 from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
-import os
 import logging
 import re
 import html
