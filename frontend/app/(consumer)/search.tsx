@@ -320,6 +320,9 @@ export default function SearchScreen() {
       if (searchQuery) {
         queryParams.append('query', searchQuery);
       }
+      if (!showGlobalCoaches) {
+        queryParams.append('local_only', 'true');
+      }
 
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
       const response = await api.get(`/tutors/search?${queryParams}`, { headers });
