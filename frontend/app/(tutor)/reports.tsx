@@ -59,6 +59,18 @@ interface ByMonth {
   earned_cents: number;
 }
 
+interface ByConsumer {
+  consumer_id: string;
+  consumer_name: string;
+  consumer_email: string;
+  status: string;
+  total_sessions: number;
+  month_sessions: number;
+  rescheduled_sessions: number;
+  canceled_sessions: number;
+  total_spent_cents: number;
+}
+
 export default function TutorReportsScreen() {
   const { token } = useAuth();
   const { colors } = useTheme();
