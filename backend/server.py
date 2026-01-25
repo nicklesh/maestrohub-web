@@ -7837,8 +7837,8 @@ app.include_router(api_router)
 ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:8001",
-    "https://learnhub-868.preview.emergentagent.com",
-    "https://learnhub-868.preview.emergentagent.com",
+    "https://easydeploy-2.preview.emergentagent.com",
+    "https://easydeploy-2.preview.emergentagent.com",
 ]
 
 app.add_middleware(

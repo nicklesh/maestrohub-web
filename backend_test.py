@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 from typing import Dict, Any, Optional
 
 # Configuration
-BASE_URL = "https://learnhub-868.preview.emergentagent.com/api"
+BASE_URL = "https://easydeploy-2.preview.emergentagent.com/api"
 TEST_CREDENTIALS = {
     "parent": {"email": "parent1@test.com", "password": "password123"},
     "coach": {"email": "coach.math@test.com", "password": "password123"},
