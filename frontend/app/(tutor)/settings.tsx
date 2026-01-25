@@ -289,22 +289,28 @@ export default function TutorSettings() {
             </View>
           )}
 
-          {/* Multi-Market Settings */}
-          {profile && (profile.modality?.includes('online') || profile.modality?.includes('hybrid')) && (
+          {/* Multi-Market Settings - visible for online/hybrid coaches or when modality is not set */}
+          {profile && (
+            (profile.modality?.includes('online') || 
+             profile.modality?.includes('hybrid') || 
+             !profile.modality?.length || 
+             profile.modality === 'online' ||
+             profile.modality === 'hybrid')
+          ) && (
             <View style={[styles.card, isTablet && styles.cardTablet]}>
               <View style={styles.cardHeader}>
                 <Ionicons name="globe-outline" size={22} color={colors.primary} />
-                <Text style={[styles.cardTitle, isDesktop && styles.cardTitleDesktop]}>Multi-Market Exposure</Text>
+                <Text style={[styles.cardTitle, isDesktop && styles.cardTitleDesktop]}>{t('pages.coach.settings.multi_market_exposure') || 'Multi-Market Exposure'}</Text>
               </View>
               <Text style={[styles.meetingHint, { color: colors.textMuted }]}>
-                Since you offer online/hybrid sessions, you can choose to appear in search results for other markets.
+                {t('pages.coach.settings.multi_market_hint') || 'Since you offer online/hybrid sessions, you can choose to appear in search results for other markets.'}
               </Text>
               <TouchableOpacity
                 style={[styles.menuItem, isTablet && styles.menuItemTablet, { borderBottomWidth: 0, marginTop: 8 }]}
                 onPress={() => router.push('/(tutor)/market-settings')}
               >
                 <Ionicons name="earth-outline" size={isTablet ? 24 : 22} color={colors.primary} />
-                <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Manage Markets & Pricing</Text>
+                <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>{t('pages.coach.settings.manage_markets') || 'Manage Markets & Pricing'}</Text>
                 <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
               </TouchableOpacity>
             </View>
