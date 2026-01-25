@@ -806,9 +806,15 @@ async def get_current_user(request: Request) -> Optional[User]:
     # Check if it's a JWT token
     user_id = decode_jwt_token(session_token)
     if user_id:
-        user_doc = await db.users.find_one({"user_id": user_id}, {"_id": 0})
-        if user_doc:
-            return User(**user_doc)
+        from bson import ObjectId
+        try:
+            user_doc = await db.users.find_one({"_id": ObjectId(user_id)})
+            if user_doc:
+                # Convert _id to string for User model
+                user_doc["user_id"] = str(user_doc.pop("_id"))
+                return User(**user_doc)
+        except Exception:
+            pass
     
     # Check session in database (for Google OAuth sessions)
     session = await db.user_sessions.find_one({"session_token": session_token}, {"_id": 0})
@@ -817,9 +823,13 @@ async def get_current_user(request: Request) -> Optional[User]:
         if expires_at.tzinfo is None:
             expires_at = expires_at.replace(tzinfo=timezone.utc)
         if expires_at > datetime.now(timezone.utc):
-            user_doc = await db.users.find_one({"user_id": session["user_id"]}, {"_id": 0})
-            if user_doc:
-                return User(**user_doc)
+            try:
+                user_doc = await db.users.find_one({"_id": ObjectId(session["user_id"])})
+                if user_doc:
+                    user_doc["user_id"] = str(user_doc.pop("_id"))
+                    return User(**user_doc)
+            except Exception:
+                pass
     
     return None
 
