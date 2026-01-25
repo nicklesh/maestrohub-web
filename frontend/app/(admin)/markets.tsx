@@ -136,7 +136,10 @@ export default function AdminMarketsScreen() {
           style={styles.marketHeader}
           onPress={() => setSelectedMarket(isSelected ? null : market.market_id)}
         >
-          <Text style={styles.flag}>{FLAG_EMOJI[market.country] || '🌍'}</Text>
+          <View style={styles.flagCodeContainer}>
+            <Text style={styles.flag}>{FLAG_EMOJI[market.country] || '🌍'}</Text>
+            <Text style={[styles.countryCode, { color: colors.textMuted }]}>{market.country}</Text>
+          </View>
           <View style={styles.marketInfo}>
             <Text style={[styles.marketName, isDesktop && styles.marketNameDesktop]}>
               {t(`countries.${market.country}`) || COUNTRY_NAMES[market.country] || market.country}
