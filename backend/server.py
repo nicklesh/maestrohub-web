@@ -2263,8 +2263,8 @@ async def search_tutors(
         # Note: We don't search in bio to avoid false positives
     
     if category:
-        # If category filter is specified, require exact match
-        db_query["categories"] = category
+        # Match category in categories array
+        db_query["categories"] = {"$in": [category]}
         # Remove the $or clause when category is explicitly specified
         if "$or" in db_query and not query:
             del db_query["$or"]
