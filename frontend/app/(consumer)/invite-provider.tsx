@@ -253,11 +253,6 @@ export default function InviteProviderScreen() {
     );
   }
 
-  const { width } = useWindowDimensions();
-  const isTablet = width >= 768;
-  const isDesktop = width >= 1024;
-  const contentMaxWidth = isDesktop ? 640 : isTablet ? 560 : undefined;
-
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <AppHeader showBack showUserName title={t("pages.invite_provider.title")} />
