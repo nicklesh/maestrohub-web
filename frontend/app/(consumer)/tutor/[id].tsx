@@ -127,10 +127,6 @@ export default function TutorDetailScreen() {
     return translated === key ? category : translated;
   };
 
-  // Responsive breakpoints
-  const isTablet = width >= 768;
-  const isDesktop = width >= 1024;
-
   useEffect(() => {
     // Reset selected slot when component loads or id changes
     setSelectedSlot(null);
