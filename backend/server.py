@@ -1219,21 +1219,18 @@ async def update_auto_pay_settings(data: AutoPaySettings, request: Request):
 # ============== PAYMENT PROVIDERS CONFIGURATION ==============
 # Market-specific payment providers (no PII stored - only provider preference)
 PAYMENT_PROVIDERS_USD = [
-    {"id": "stripe", "name": "Credit/Debit Card", "icon": "card"},
-    {"id": "paypal", "name": "PayPal", "icon": "logo-paypal"},
-    {"id": "google_pay", "name": "Google Pay", "icon": "logo-google"},
-    {"id": "apple_pay", "name": "Apple Pay", "icon": "logo-apple"},
-    {"id": "venmo", "name": "Venmo", "icon": "phone-portrait"},
-    {"id": "zelle", "name": "Zelle", "icon": "flash"},
+    {"id": "stripe", "name": "Pay with Stripe", "icon": "card", "type": "redirect"},
+    {"id": "paypal", "name": "PayPal", "icon": "logo-paypal", "type": "redirect"},
+    {"id": "google_pay", "name": "Google Pay", "icon": "logo-google", "type": "redirect"},
+    {"id": "apple_pay", "name": "Apple Pay", "icon": "logo-apple", "type": "redirect"},
 ]
 
 PAYMENT_PROVIDERS_INR = [
-    {"id": "stripe", "name": "Credit/Debit Card", "icon": "card"},
-    {"id": "razorpay", "name": "Razorpay", "icon": "card"},
-    {"id": "phonepe", "name": "PhonePe", "icon": "wallet"},
-    {"id": "google_pay", "name": "Google Pay (GPay)", "icon": "logo-google"},
-    {"id": "paytm", "name": "Paytm", "icon": "wallet"},
-    {"id": "amazon_pay", "name": "Amazon Pay", "icon": "cart"},
+    {"id": "stripe", "name": "Pay with Stripe", "icon": "card", "type": "redirect"},
+    {"id": "razorpay", "name": "Razorpay", "icon": "card", "type": "redirect"},
+    {"id": "phonepe", "name": "PhonePe", "icon": "wallet", "type": "redirect"},
+    {"id": "google_pay", "name": "Google Pay (GPay)", "icon": "logo-google", "type": "redirect"},
+    {"id": "paytm", "name": "Paytm", "icon": "wallet", "type": "redirect"},
 ]
 
 # Payment Provider Preference Model (no PII stored)
