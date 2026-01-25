@@ -174,15 +174,7 @@ COUNTRY_TO_MARKET = {
 }
 
 # Create the main app
-_app = FastAPI(title="Maestro Habitat API", version="1.0.0")
-
-# Wrap with New Relic if configured
-if NEW_RELIC_LICENSE_KEY:
-    import newrelic.agent
-    app = newrelic.agent.ASGIApplicationWrapper(_app)
-else:
-    app = _app
-
+app = FastAPI(title="Maestro Habitat API", version="1.0.0")
 api_router = APIRouter(prefix="/api")
 security = HTTPBearer(auto_error=False)
 
