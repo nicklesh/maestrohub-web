@@ -240,6 +240,16 @@ export default function ConsumerReportsScreen() {
               <Text style={styles.summaryValue}>{formatCurrency(summary?.total_spent_cents || 0)}</Text>
               <Text style={styles.summaryLabel}>{t('pages.reports.total_spent')}</Text>
             </View>
+            <View style={[styles.summaryCard, { backgroundColor: colors.warning || '#FB8C00' }]}>
+              <Ionicons name="refresh-outline" size={24} color={colors.white} />
+              <Text style={styles.summaryValue}>{summary?.rescheduled_sessions || 0}</Text>
+              <Text style={styles.summaryLabel}>{t('pages.reports.rescheduled') || 'Rescheduled'}</Text>
+            </View>
+            <View style={[styles.summaryCard, { backgroundColor: colors.error || '#EF4444' }]}>
+              <Ionicons name="close-circle-outline" size={24} color={colors.white} />
+              <Text style={styles.summaryValue}>{summary?.canceled_sessions || 0}</Text>
+              <Text style={styles.summaryLabel}>{t('pages.reports.cancelled') || 'Cancelled'}</Text>
+            </View>
           </View>
 
           {/* By Tutor Section */}
