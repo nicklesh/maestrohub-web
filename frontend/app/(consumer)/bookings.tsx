@@ -360,6 +360,9 @@ const styles = StyleSheet.create({
   listContentDesktop: {
     paddingHorizontal: 16,
   },
+  columnWrapper: {
+    justifyContent: 'flex-start',
+  },
   card: {
     borderRadius: 16,
     padding: 16,
