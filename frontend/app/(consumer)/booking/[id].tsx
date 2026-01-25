@@ -367,6 +367,29 @@ export default function BookingDetailScreen() {
               </View>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
+            
+            {/* Send Notification to Coach Button */}
+            {isUpcoming && (
+              <TouchableOpacity
+                style={[styles.sendNotificationButton, { backgroundColor: colors.primary + '15', borderColor: colors.primary }]}
+                onPress={async () => {
+                  try {
+                    const token = await AsyncStorage.getItem('token');
+                    await api.post(`/bookings/${booking.booking_id}/notify-coach`, {}, {
+                      headers: { Authorization: `Bearer ${token}` }
+                    });
+                    showSuccess(t('pages.booking_detail.notification_sent'));
+                  } catch (error) {
+                    showError(t('pages.booking_detail.notification_failed'));
+                  }
+                }}
+              >
+                <Ionicons name="notifications-outline" size={18} color={colors.primary} />
+                <Text style={[styles.sendNotificationText, { color: colors.primary }]}>
+                  {t('pages.booking_detail.send_notification_to_coach')}
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
 
           {/* Student Info */}
