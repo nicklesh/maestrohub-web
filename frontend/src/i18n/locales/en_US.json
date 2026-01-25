@@ -788,6 +788,10 @@
       "title": "Frequently Asked Questions",
       "frequently_asked": "Frequently Asked Questions",
       "getting_started": "Getting Started",
+      "booking_sessions": "Booking & Sessions",
+      "payments_billing": "Payments & Billing",
+      "for_coaches": "For Coaches",
+      "technical_support": "Technical Support",
       "payments": "Payments",
       "bookings": "Bookings",
       "account": "Account",
@@ -797,26 +801,38 @@
       "contact_us": "Contact Us",
       "contact_us_text": "Can't find what you're looking for?",
       "questions": {
-        "how_book_session": {
-          "question": "How do I book a session?",
-          "answer": "Browse coaches, select your preferred time slot, and confirm your booking."
-        },
-        "how_cancel_booking": {
-          "question": "How do I cancel a booking?",
-          "answer": "Go to your bookings, select the session, and click cancel. Cancellation policies apply."
-        },
-        "payment_methods": {
-          "question": "What payment methods are accepted?",
-          "answer": "We accept all major credit cards and debit cards through our secure payment system."
-        },
-        "how_become_coach": {
-          "question": "How do I become a coach?",
-          "answer": "Sign up as a coach, complete your profile, set your rates, and get verified."
-        },
-        "refund_policy": {
-          "question": "What is the refund policy?",
-          "answer": "Refunds are available if you cancel within the allowed timeframe specified in our policy."
-        }
+        "how_create_account": "How do I create an account?",
+        "how_find_coach": "How do I find the right coach?",
+        "is_info_secure": "Is my information secure?",
+        "how_book_session": "How do I book a session?",
+        "can_reschedule": "Can I reschedule a session?",
+        "coach_cancels": "What happens if a coach cancels?",
+        "payment_methods": "What payment methods are accepted?",
+        "when_charged": "When am I charged for a session?",
+        "view_payment_history": "How do I view my payment history?",
+        "become_coach": "How do I become a coach?",
+        "set_availability": "How do I set my availability?",
+        "when_get_paid": "When do I get paid as a coach?",
+        "app_not_working": "The app isn't working properly",
+        "update_profile": "How do I update my profile?",
+        "delete_account": "How do I delete my account?"
+      },
+      "answers": {
+        "how_create_account": "Download the app, tap Sign Up, and follow the prompts to create your account with your email address.",
+        "how_find_coach": "Use our search filters to find coaches by subject, availability, price range, and ratings. You can also read reviews from other parents.",
+        "is_info_secure": "Yes, we use industry-standard encryption and security measures to protect your personal information and payment details.",
+        "how_book_session": "Browse coaches, select your preferred time slot, choose your child, and confirm your booking. Payment is processed automatically.",
+        "can_reschedule": "Yes, you can reschedule a session up to 24 hours before the scheduled time. Go to My Bookings and tap Reschedule.",
+        "coach_cancels": "If a coach cancels, you'll receive a full refund and can book with another coach or reschedule.",
+        "payment_methods": "We accept all major credit cards and debit cards through our secure payment system.",
+        "when_charged": "You're charged when you confirm a booking. If you cancel within the allowed timeframe, you'll receive a full refund.",
+        "view_payment_history": "Go to Settings > Billing to view your complete payment history and download receipts.",
+        "become_coach": "Sign up as a coach, complete your profile with qualifications and experience, set your rates, and submit for verification.",
+        "set_availability": "Go to your Coach Dashboard > Calendar to set your weekly availability and block off vacation time.",
+        "when_get_paid": "Coaches are paid weekly via direct deposit. Earnings from completed sessions are transferred every Monday.",
+        "app_not_working": "Try closing and reopening the app, or check for updates. If issues persist, contact us through the Contact Us option in Settings.",
+        "update_profile": "Go to Settings > Edit Profile to update your personal information, photo, and preferences.",
+        "delete_account": "Contact our support team through the Contact Us option. Account deletion is processed within 48 hours."
       }
     },
     "tutor_detail": {
