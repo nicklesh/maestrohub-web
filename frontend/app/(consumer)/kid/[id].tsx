@@ -159,6 +159,7 @@ export default function KidDetailScreen() {
 
       <ScrollView
         style={styles.content}
+        contentContainerStyle={contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); loadData(); }} />
         }
