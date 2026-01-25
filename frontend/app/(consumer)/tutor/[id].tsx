@@ -692,16 +692,44 @@ export default function TutorDetailScreen() {
               {availableSlots.map((slot, index) => {
                 const isSelected = selectedSlot?.start_time === slot.start_time && slot.is_available;
                 const hasUserConflict = slot.has_user_conflict;
-                const isUnavailable = !slot.is_available || slot.is_booked || slot.is_held || hasUserConflict;
+                const isCoachUnavailable = slot.is_booked || slot.is_held;
+                const isUnavailable = !slot.is_available || isCoachUnavailable || hasUserConflict;
                 // Convert to local time for display
                 const localTime = convertSlotTimeToLocal(slot.start_time, selectedDate);
                 
                 // Determine label text based on reason for unavailability
                 const getUnavailableLabel = () => {
                   if (hasUserConflict) return t('pages.tutor_detail.your_booking');
-                  if (slot.is_booked) return t('pages.tutor_detail.booked');
+                  if (slot.is_booked) return t('pages.tutor_detail.coach_booked');
                   if (slot.is_held) return t('pages.tutor_detail.held');
                   return t('pages.tutor_detail.unavailable');
+                };
+                
+                // Different colors: Orange for parent conflict, Blue-grey for coach unavailability
+                const getSlotStyle = () => {
+                  if (isSelected) {
+                    return { backgroundColor: colors.primary, borderColor: colors.primary };
+                  }
+                  if (hasUserConflict) {
+                    // Orange - Parent has another booking
+                    return { backgroundColor: '#FFF3E0', borderColor: '#FB8C00', opacity: 0.85 };
+                  }
+                  if (isCoachUnavailable) {
+                    // Blue-grey - Coach is unavailable
+                    return { backgroundColor: '#E3F2FD', borderColor: '#1976D2', opacity: 0.7 };
+                  }
+                  if (!slot.is_available) {
+                    return { backgroundColor: colors.backgroundSecondary, borderColor: colors.border, opacity: 0.5 };
+                  }
+                  return { backgroundColor: colors.background, borderColor: colors.border };
+                };
+                
+                const getTextColor = () => {
+                  if (isSelected) return '#FFFFFF';
+                  if (hasUserConflict) return '#E65100'; // Dark orange
+                  if (isCoachUnavailable) return '#1565C0'; // Dark blue
+                  if (isUnavailable) return colors.textMuted;
+                  return colors.text;
                 };
                 
                 return (
@@ -709,23 +737,20 @@ export default function TutorDetailScreen() {
                     key={index}
                     style={[
                       styles.slotCard,
-                      { backgroundColor: colors.background, borderColor: colors.border },
-                      isSelected && { backgroundColor: colors.primary, borderColor: colors.primary },
-                      hasUserConflict && { backgroundColor: colors.warningBackground || '#FFF3E0', borderColor: colors.warning || '#FB8C00', opacity: 0.7 },
-                      (isUnavailable && !hasUserConflict) && { backgroundColor: colors.backgroundSecondary, borderColor: colors.border, opacity: 0.5 }
+                      getSlotStyle()
                     ]}
                     onPress={() => !isUnavailable && setSelectedSlot(slot)}
                     disabled={isUnavailable}
                   >
                     <Text style={[
                       styles.slotText, 
-                      { color: isSelected ? '#FFFFFF' : hasUserConflict ? (colors.warning || '#FB8C00') : isUnavailable ? colors.textMuted : colors.text },
+                      { color: getTextColor() },
                       isUnavailable && { textDecorationLine: 'line-through' }
                     ]}>
                       {localTime}
                     </Text>
                     {isUnavailable && (
-                      <Text style={[styles.bookedLabel, { color: hasUserConflict ? (colors.warning || '#FB8C00') : colors.textMuted }]}>
+                      <Text style={[styles.bookedLabel, { color: getTextColor() }]}>
                         {getUnavailableLabel()}
                       </Text>
                     )}
