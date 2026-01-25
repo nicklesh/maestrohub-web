@@ -410,6 +410,7 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   modalOverlay: {
     flex: 1,
     justifyContent: 'flex-end',
+    alignItems: 'center',
   },
   modalBackdrop: {
     position: 'absolute',
