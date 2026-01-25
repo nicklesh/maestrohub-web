@@ -329,6 +329,7 @@ def create_tutor_profiles(db, coaches_data, users_collection):
             "market": coach["market"],
             "market_id": coach["market"],  # Used in search queries
             "modality": coach["modality"],
+            "duration_minutes": 60,  # Default session duration
             "experience_years": 5,
             "rating": 4.5 + (hash(coach["email"]) % 10) / 20,  # Random rating 4.5-5.0
             "total_reviews": 10 + hash(coach["email"]) % 50,
@@ -340,6 +341,10 @@ def create_tutor_profiles(db, coaches_data, users_collection):
                 "wednesday": [{"start": "09:00", "end": "17:00"}],
                 "thursday": [{"start": "09:00", "end": "17:00"}],
                 "friday": [{"start": "09:00", "end": "17:00"}],
+            },
+            "policies": {
+                "cancel_window_hours": 24,
+                "no_show_policy": "Full charge for no-shows without 24-hour notice"
             },
             "is_active": True,
             "is_verified": True,
