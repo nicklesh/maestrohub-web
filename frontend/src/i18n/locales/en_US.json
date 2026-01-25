@@ -1752,8 +1752,11 @@
       "no_meeting_link": "No meeting link set",
       "set_meeting_link": "Set Meeting Link",
       "send_notification_to_coach": "Send Notification to Coach",
-      "notification_sent": "Notification sent to coach",
-      "notification_failed": "Failed to send notification"
+      "notification_sent": "Notification sent to coach successfully!",
+      "notification_failed": "Failed to send notification",
+      "notification_note_hint": "Add an optional note to send to the coach:",
+      "notification_note_placeholder": "e.g., Running 5 minutes late...",
+      "send": "Send"
     },
     "add_child": {
       "title": "Add Child",
