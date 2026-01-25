@@ -370,6 +370,14 @@ export default function SearchScreen() {
           </View>
         )}
         
+        {/* Market Flag Badge */}
+        {item.market_flag && (
+          <View style={[styles.marketBadge, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <Text style={styles.marketFlag}>{item.market_flag}</Text>
+            <Text style={[styles.marketCode, { color: colors.textMuted }]}>{item.market_code}</Text>
+          </View>
+        )}
+        
         <View style={styles.cardHeader}>
           <UserAvatar 
             name={item.user_name || 'T'} 
@@ -389,9 +397,16 @@ export default function SearchScreen() {
               </Text>
             </View>
           </View>
-          <Text style={[styles.price, { color: colors.primary }]}>
-            {item.currency_symbol || '$'}{formatNumber(item.base_price)}{t('pages.search.per_hour')}
-          </Text>
+          <View style={styles.priceContainer}>
+            <Text style={[styles.price, { color: colors.primary }]}>
+              {item.currency_symbol || '$'}{formatNumber(item.display_price || item.base_price)}{t('pages.search.per_hour')}
+            </Text>
+            {item.original_price_display && (
+              <Text style={[styles.originalPrice, { color: colors.textMuted }]}>
+                ({item.original_price_display})
+              </Text>
+            )}
+          </View>
         </View>
 
         <Text style={[styles.bio, { color: colors.textMuted }]} numberOfLines={2}>
