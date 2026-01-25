@@ -245,7 +245,7 @@ export default function SearchScreen() {
       const response = await api.get('/categories');
       // Transform subcategories to subjects for frontend compatibility
       const transformedCategories = (response.data.categories || []).map((cat: any) => ({
-        id: cat.name?.toLowerCase().replace(/[&\s]+/g, '_') || cat.id,
+        id: cat.id || cat.name?.toLowerCase().replace(/[&\s]+/g, '_'),
         name: cat.name,
         subjects: (cat.subcategories || []).map((sub: any) => 
           typeof sub === 'string' ? sub : sub.name
