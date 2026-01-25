@@ -3139,6 +3139,13 @@ async def notify_coach(booking_id: str, request: Request):
     """Send a notification to the coach about the booking"""
     user = await require_auth(request)
     
+    # Parse request body for optional note
+    try:
+        body = await request.json()
+        note = body.get("note", "")
+    except:
+        note = ""
+    
     booking = await db.bookings.find_one({"booking_id": booking_id}, {"_id": 0})
     if not booking:
         raise HTTPException(status_code=404, detail="Booking not found")
