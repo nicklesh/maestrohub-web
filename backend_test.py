@@ -116,7 +116,7 @@ class APITester:
                             "Correctly rejected invalid token with 401")
             else:
                 self.log_test("Token Validation - Invalid Token", False, 
-                            f"Should return 401, got {response.status_code}")
+                            f"Should return 401, got {response.status_code}: {response.text}")
         except Exception as e:
             self.log_test("Token Validation - Invalid Token", False, f"Exception: {str(e)}")
     
