@@ -10,7 +10,7 @@ import uuid
 from datetime import datetime, timezone, timedelta
 
 # Configuration
-BASE_URL = "https://timezone-fix-17.preview.emergentagent.com/api"
+BASE_URL = "https://learnhub-868.preview.emergentagent.com/api"
 TIMEOUT = 30
 
 # Test credentials

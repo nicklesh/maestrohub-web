@@ -7773,8 +7773,8 @@ app.include_router(api_router)
 ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:8001",
-    "https://timezone-fix-17.preview.emergentagent.com",
-    "https://timezone-fix-17.preview.emergentagent.com",
+    "https://learnhub-868.preview.emergentagent.com",
+    "https://learnhub-868.preview.emergentagent.com",
 ]
 
 app.add_middleware(
