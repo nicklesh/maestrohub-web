@@ -1328,8 +1328,7 @@ async def unlink_payment_provider(provider_id: str, request: Request):
     if provider_to_remove.get("is_default") and updated_providers:
         updated_providers[0]["is_default"] = True
     
-    await db.users.update_one(
-        {"user_id": user.user_id},
+    await update_user_doc(user.user_id,
         {"$set": {"payment_providers": updated_providers}}
     )
     
