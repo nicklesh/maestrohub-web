@@ -8627,6 +8627,10 @@ async def check_feature_access(feature: str, request: Request):
     }
 
 
+# Include router - MUST be after all @api_router endpoints are defined
+app.include_router(api_router)
+
+
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
