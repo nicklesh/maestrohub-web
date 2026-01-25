@@ -766,9 +766,29 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: '600',
   },
+  nameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+  },
   tutorName: {
     fontSize: 22,
     fontWeight: '700',
+  },
+  nameFlagBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    backgroundColor: 'rgba(0,0,0,0.05)',
+    borderRadius: 6,
+  },
+  nameFlagCode: {
+    fontSize: 12,
+    fontWeight: '600',
   },
   ratingRow: {
     flexDirection: 'row',
