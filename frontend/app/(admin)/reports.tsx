@@ -573,6 +573,9 @@ export default function AdminReportsScreen() {
     pendingPayouts: 0,
     totalBookings: 0,
     completedBookings: 0,
+    canceledBookings: 0,
+    rescheduledBookings: 0,
+    canceledRevenue: 0,
   });
 
   const [trendData, setTrendData] = useState<TrendData[]>([]);
