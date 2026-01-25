@@ -147,7 +147,23 @@ export default function BookingDetailScreen() {
         performCancel();
       }
     } else {
-      showInfo('Are you sure you want to cancel this booking?', 'Cancel Booking');
+      // Use Alert.alert for mobile to get actual confirmation
+      Alert.alert(
+        t('pages.booking_detail.cancel_booking'),
+        t('pages.booking_detail.cancel_confirm_message') || 'Are you sure you want to cancel this booking?',
+        [
+          {
+            text: t('common.no') || 'No',
+            style: 'cancel',
+          },
+          {
+            text: t('common.yes') || 'Yes',
+            style: 'destructive',
+            onPress: performCancel,
+          },
+        ],
+        { cancelable: true }
+      );
     }
   };
 
