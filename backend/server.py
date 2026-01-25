@@ -3480,11 +3480,13 @@ async def update_booking_timeslot(booking_id: str, data: BookingTimeSlotUpdate, 
         {"$set": {
             "start_at": new_start,
             "end_at": new_end,
+            "rescheduled": True,
+            "rescheduled_at": now,
             "updated_at": now
         }}
     )
     
-    logger.info(f"Booking {booking_id} time slot updated from {booking['start_at']} to {new_start}")
+    logger.info(f"Booking {booking_id} rescheduled from {booking['start_at']} to {new_start}")
     
     return {
         "success": True, 
