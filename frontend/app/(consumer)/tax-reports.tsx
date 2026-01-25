@@ -350,7 +350,8 @@ export default function TaxReportsScreen() {
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <AppHeader showBack title={t('pages.tax_reports.title')} />
       
-      <View style={[styles.infoCard, { backgroundColor: colors.primaryLight, borderColor: colors.primary }]}>
+      <View style={contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%', flex: 1 } : { flex: 1 }}>
+        <View style={[styles.infoCard, { backgroundColor: colors.primaryLight, borderColor: colors.primary }]}>
         <Ionicons name="information-circle" size={24} color={colors.primary} />
         <View style={styles.infoContent}>
           <Text style={[styles.infoTitle, { color: colors.text }]}>
