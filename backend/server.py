@@ -3133,6 +3133,81 @@ async def update_booking_timeslot(booking_id: str, data: BookingTimeSlotUpdate, 
         "end_at": new_end.isoformat()
     }
 
+
+@api_router.post("/bookings/{booking_id}/notify-coach")
+async def notify_coach(booking_id: str, request: Request):
+    """Send a notification to the coach about the booking"""
+    user = await require_auth(request)
+    
+    booking = await db.bookings.find_one({"booking_id": booking_id}, {"_id": 0})
+    if not booking:
+        raise HTTPException(status_code=404, detail="Booking not found")
+    
+    if booking["consumer_id"] != user.user_id:
+        raise HTTPException(status_code=403, detail="You can only send notifications for your own bookings")
+    
+    # Get tutor info
+    tutor = await db.tutors.find_one({"tutor_id": booking["tutor_id"]}, {"_id": 0})
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Coach not found")
+    
+    tutor_user = await db.users.find_one({"user_id": tutor["user_id"]}, {"_id": 0})
+    consumer_user = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    student = await db.students.find_one({"student_id": booking.get("student_id")}, {"_id": 0})
+    
+    # Format booking time
+    start_at = booking["start_at"]
+    if isinstance(start_at, str):
+        start_at = datetime.fromisoformat(start_at.replace('Z', '+00:00'))
+    
+    session_date = start_at.strftime("%B %d, %Y") if hasattr(start_at, 'strftime') else str(start_at)[:10]
+    session_time = start_at.strftime("%I:%M %p") if hasattr(start_at, 'strftime') else str(start_at)[11:16]
+    student_name = student["name"] if student else "Student"
+    consumer_name = consumer_user["name"] if consumer_user else "Parent"
+    
+    # Create in-app notification for coach
+    notif_id = f"notif_{uuid.uuid4().hex[:12]}"
+    await db.notifications.insert_one({
+        "notification_id": notif_id,
+        "user_id": tutor["user_id"],
+        "type": "reminder",
+        "title": "Session Reminder",
+        "message": f"{consumer_name} is reminding you about the session with {student_name} on {session_date} at {session_time}.",
+        "data": {"booking_id": booking_id, "consumer_id": user.user_id},
+        "read": False,
+        "created_at": datetime.now(timezone.utc)
+    })
+    
+    # Send email to coach
+    if tutor_user and tutor_user.get("email"):
+        try:
+            email_subject = f"Session Reminder from {consumer_name}"
+            email_html = f"""
+            <h2>Session Reminder</h2>
+            <p>Hi {tutor_user['name']},</p>
+            <p>{consumer_name} has sent you a reminder about your upcoming session:</p>
+            <ul>
+                <li><strong>Student:</strong> {student_name}</li>
+                <li><strong>Date:</strong> {session_date}</li>
+                <li><strong>Time:</strong> {session_time}</li>
+            </ul>
+            <p>Please make sure to be available at the scheduled time.</p>
+            <p>Best regards,<br>Maestro Habitat Team</p>
+            """
+            
+            await email_service.send_email(
+                to=tutor_user["email"],
+                subject=email_subject,
+                html=email_html,
+                text=f"Session reminder from {consumer_name}: {student_name} on {session_date} at {session_time}"
+            )
+            logger.info(f"Reminder email sent to coach {tutor_user['email']}")
+        except Exception as e:
+            logger.error(f"Failed to send reminder email: {str(e)}")
+    
+    return {"success": True, "message": "Notification sent to coach"}
+
+
 @api_router.post("/bookings/{booking_id}/cancel")
 async def cancel_booking(booking_id: str, request: Request):
     user = await require_auth(request)
