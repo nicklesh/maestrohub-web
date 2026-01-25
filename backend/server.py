@@ -8239,6 +8239,9 @@ async def get_user_subscription(user_id: str) -> dict:
             
         if user:
             created_at = user.get("created_at", datetime.now(timezone.utc))
+            # Ensure timezone awareness
+            if created_at.tzinfo is None:
+                created_at = created_at.replace(tzinfo=timezone.utc)
             trial_ends_at = created_at + timedelta(days=TRIAL_DURATION_DAYS)
             
             if datetime.now(timezone.utc) < trial_ends_at:
