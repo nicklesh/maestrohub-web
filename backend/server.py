@@ -2,6 +2,7 @@ from fastapi import FastAPI, APIRouter, HTTPException, Depends, Request, Respons
 from fastapi.security import HTTPBearer
 from fastapi.responses import StreamingResponse
 from dotenv import load_dotenv
+from bson import ObjectId
 
 # Load environment variables FIRST
 load_dotenv()
