@@ -66,6 +66,8 @@ export default function ReferralsScreen() {
   const [applying, setApplying] = useState(false);
 
   const isTablet = width >= 768;
+  const isDesktop = width >= 1024;
+  const contentMaxWidth = isDesktop ? 640 : isTablet ? 560 : undefined;
   const isProvider = user?.role === 'provider' || user?.role === 'tutor';
 
   const loadData = useCallback(async () => {
