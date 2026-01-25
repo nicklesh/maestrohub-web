@@ -135,7 +135,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setUser(response.data);
       }
     } catch (error) {
-      console.error('Failed to load auth:', error);
+      // Silent handling - old/invalid tokens are expected, just clear them
+      console.log('Clearing expired auth session');
       // Clear invalid token
       await clearAuth();
     } finally {
