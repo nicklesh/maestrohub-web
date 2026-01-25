@@ -54,6 +54,11 @@ export default function ReviewsScreen() {
   const { colors } = useTheme();
   const { showSuccess, showError, showInfo } = useToast();
   const { t, locale } = useTranslation();
+  const { width } = useWindowDimensions();
+  const isTablet = width >= 768;
+  const isDesktop = width >= 1024;
+  const contentMaxWidth = isDesktop ? 640 : isTablet ? 560 : undefined;
+  
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [pendingReviews, setPendingReviews] = useState<PendingReview[]>([]);
