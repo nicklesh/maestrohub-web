@@ -2162,6 +2162,7 @@ async def search_tutors(
     modality: Optional[str] = None,
     min_price: Optional[float] = None,
     max_price: Optional[float] = None,
+    local_only: bool = False,  # If true, only show coaches from user's market
     sort_by: str = "rating",  # rating, price, soonest
     page: int = 1,
     limit: int = 20
