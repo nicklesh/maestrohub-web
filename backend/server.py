@@ -5737,6 +5737,9 @@ async def admin_get_reports_overview(request: Request):
             "total_consumers": total_consumers,
             "total_bookings": total_bookings,
             "completed_bookings": completed_bookings,
+            "canceled_bookings": canceled_bookings,
+            "rescheduled_bookings": rescheduled_bookings,
+            "canceled_revenue_cents": canceled_revenue,
             "total_revenue_cents": total_revenue,
             "platform_fees_cents": platform_fees,
             "pending_payouts_cents": pending_payouts
