@@ -373,6 +373,11 @@ const styles = StyleSheet.create({
   tutorName: {
     fontSize: 16,
     fontWeight: '600',
+    marginBottom: 2,
+  },
+  subjectText: {
+    fontSize: 13,
+    fontWeight: '500',
     marginBottom: 4,
   },
   studentName: {
