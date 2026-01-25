@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   RefreshControl,
   Switch,
+  useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -38,6 +39,10 @@ export default function RemindersScreen() {
   const { colors } = useTheme();
   const { showSuccess, showError } = useToast();
   const { t } = useTranslation();
+  const { width } = useWindowDimensions();
+  const isTablet = width >= 768;
+  const isDesktop = width >= 1024;
+  const contentMaxWidth = isDesktop ? 640 : isTablet ? 560 : undefined;
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [config, setConfig] = useState<ReminderConfig>({
     session_reminder_hours: 1,
