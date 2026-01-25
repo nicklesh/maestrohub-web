@@ -821,8 +821,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 16,
   },
+  crossMarketHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 4,
+  },
+  crossMarketTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
   crossMarketText: {
-    flex: 1,
     fontSize: 13,
     lineHeight: 18,
   },
