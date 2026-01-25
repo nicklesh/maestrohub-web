@@ -2555,40 +2555,81 @@ async def get_tutor(tutor_id: str, request: Request = None):
     if not tutor:
         raise HTTPException(status_code=404, detail="Coach not found")
     
+    user_info = await db.users.find_one({"user_id": tutor["user_id"]}, {"_id": 0})
+    tutor_market_id = tutor.get("market_id", "US_USD")
+    tutor_market_info = MARKETS_CONFIG.get(tutor_market_id, {})
+    tutor_currency = tutor_market_info.get("currency", "USD")
+    tutor_currency_symbol = tutor_market_info.get("currency_symbol", "$")
+    
+    # Get market display info
+    market_display = get_market_display(tutor_market_id)
+    
+    # Get country full name for cross-market message
+    country_names = {
+        "US": "United States",
+        "IN": "India",
+        "GB": "United Kingdom",
+        "CA": "Canada",
+        "AU": "Australia",
+    }
+    country_full_name = country_names.get(market_display["code"], market_display["code"])
+    
+    # Base response
+    response = {
+        **tutor,
+        "user_name": user_info["name"] if user_info else "Unknown",
+        "user_picture": user_info.get("picture") if user_info else None,
+        "currency": tutor_currency,
+        "currency_symbol": tutor_currency_symbol,
+        "market_id": tutor_market_id,
+        "market_flag": market_display["flag"],
+        "market_code": market_display["code"],
+        "country_full_name": country_full_name,
+        "is_cross_market": False
+    }
+    
     # Check if consumer is accessing a tutor from a different market
     if request:
         try:
             user = await require_auth(request)
             user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
             consumer_market_id = user_doc.get("market_id") if user_doc else None
-            tutor_market_id = tutor.get("market_id")
             
             if consumer_market_id and tutor_market_id and consumer_market_id != tutor_market_id:
-                # Return tutor info with cross-market warning
-                market_info = MARKETS_CONFIG.get(tutor_market_id, {})
-                user_info = await db.users.find_one({"user_id": tutor["user_id"]}, {"_id": 0})
-                return {
-                    **tutor,
-                    "user_name": user_info["name"] if user_info else "Unknown",
-                    "user_picture": user_info.get("picture") if user_info else None,
-                    "currency": market_info.get("currency", "USD"),
-                    "currency_symbol": market_info.get("currency_symbol", "$"),
-                    "cross_market_warning": True,
-                    "message": "This tutor is not available in your region. Switch markets to book."
-                }
+                # Cross-market access - convert price
+                consumer_market_info = MARKETS_CONFIG.get(consumer_market_id, {})
+                consumer_currency = consumer_market_info.get("currency", "USD")
+                consumer_currency_symbol = consumer_market_info.get("currency_symbol", "$")
+                
+                original_price = tutor.get("base_price", 0)
+                
+                # Check if tutor has set a custom price for consumer's market
+                market_prices = tutor.get("market_prices", {})
+                if consumer_market_id in market_prices:
+                    display_price = market_prices[consumer_market_id]
+                else:
+                    # Convert price
+                    try:
+                        converted_price, rate = await convert_price(
+                            original_price, tutor_currency, consumer_currency
+                        )
+                        display_price = converted_price
+                    except Exception as e:
+                        logger.error(f"Price conversion error: {e}")
+                        display_price = original_price
+                
+                response["is_cross_market"] = True
+                response["display_price"] = display_price
+                response["original_price"] = original_price
+                response["original_currency_symbol"] = tutor_currency_symbol
+                response["original_price_display"] = f"{tutor_currency_symbol}{original_price:.0f}"
+                response["currency"] = consumer_currency
+                response["currency_symbol"] = consumer_currency_symbol
+                response["cross_market_notice"] = f"This coach is based in {country_full_name}. Choose a coach from your country if you prefer local sessions."
         except:
             pass
     
-    user = await db.users.find_one({"user_id": tutor["user_id"]}, {"_id": 0})
-    market_info = MARKETS_CONFIG.get(tutor.get("market_id"), {})
-    
-    return {
-        **tutor,
-        "user_name": user["name"] if user else "Unknown",
-        "user_picture": user.get("picture") if user else None,
-        "currency": market_info.get("currency", "USD"),
-        "currency_symbol": market_info.get("currency_symbol", "$")
-    }
+    return response
 
 # ============== AVAILABILITY ROUTES ==============
 
