@@ -358,7 +358,12 @@ export default function BookingDetailScreen() {
                   {booking.tutor_name?.charAt(0)?.toUpperCase() || 'T'}
                 </Text>
               </View>
-              <Text style={[styles.personName, isDesktop && styles.personNameDesktop]}>{booking.tutor_name}</Text>
+              <View style={styles.personInfo}>
+                <Text style={[styles.personName, isDesktop && styles.personNameDesktop]}>{booking.tutor_name}</Text>
+                {booking.tutor_subject && (
+                  <Text style={[styles.personSubject, { color: colors.primary }]}>{booking.tutor_subject}</Text>
+                )}
+              </View>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
           </View>
