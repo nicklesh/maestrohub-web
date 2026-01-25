@@ -319,13 +319,13 @@ export default function TutorDetailScreen() {
         {/* Profile Card */}
         <View style={[styles.profileCard, { backgroundColor: colors.surface }]}>
           <UserAvatar 
-            name={tutor.user_name || 'T'} 
+            name={tutor.name || tutor.user_name || 'T'} 
             role="tutor" 
             category={(tutor.categories || [])[0]}
             size={80}
           />
           <View style={styles.nameRow}>
-            <Text style={[styles.tutorName, { color: colors.text }]}>{tutor.user_name}</Text>
+            <Text style={[styles.tutorName, { color: colors.text }]}>{tutor.name || tutor.user_name}</Text>
             {tutor.market_code && (
               <View style={styles.nameFlagBadge}>
                 <FlagIcon countryCode={tutor.market_code} size={16} />
