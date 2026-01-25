@@ -384,6 +384,22 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 20,
   },
+  notificationBadge: {
+    position: 'absolute',
+    top: -4,
+    right: -4,
+    minWidth: 16,
+    height: 16,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 3,
+  },
+  notificationBadgeText: {
+    color: '#fff',
+    fontSize: 10,
+    fontWeight: '700',
+  },
   modalOverlay: {
     flex: 1,
     justifyContent: 'flex-end',
