@@ -833,7 +833,8 @@
         "when_get_paid": "Coaches are paid weekly via direct deposit. Earnings from completed sessions are transferred every Monday.",
         "app_not_working": "Try closing and reopening the app, or check for updates. If issues persist, contact us through the Contact Us option in Settings.",
         "update_profile": "Go to Settings > Edit Profile to update your personal information, photo, and preferences.",
-        "delete_account": "Contact our support team through the Contact Us option. Account deletion is processed within 48 hours."
+        "delete_account": "Contact our support team through the Contact Us option. Account deletion is processed within 48 hours.",
+        "contact_support": "You can reach our support team by clicking 'Contact Us' in the FAQ section or from the menu in the header. We typically respond within 24 hours."
       }
     },
     "tutor_detail": {
