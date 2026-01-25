@@ -1249,7 +1249,9 @@ async def get_payment_providers(request: Request):
     """Get available payment providers based on user's market"""
     user = await require_auth(request)
     user_doc = await get_user_doc(user.user_id)
-    market_id = user_doc.get("market_id", "US_USD")
+    if not user_doc:
+        user_doc = {}
+    market_id = user_doc.get("market_id") or user_doc.get("market") or "US_USD"
     
     # Return market-specific providers
     if market_id == "IN_INR":
