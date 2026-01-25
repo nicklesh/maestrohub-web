@@ -44,7 +44,7 @@ export default function SubscriptionScreen() {
 
   const [selectedPlan, setSelectedPlan] = useState<string>('yearly');
   const [processing, setProcessing] = useState(false);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('stripe');
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('paypal');
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState({ title: '', message: '' });
