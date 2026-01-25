@@ -236,7 +236,7 @@ export default function ReferralsScreen() {
         data={referrals}
         renderItem={renderReferralItem}
         keyExtractor={(item) => item.referral_id}
-        contentContainerStyle={[styles.listContent, isTablet && styles.listContentTablet]}
+        contentContainerStyle={[styles.listContent, isTablet && styles.listContentTablet, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
