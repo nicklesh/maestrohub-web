@@ -994,6 +994,33 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     textTransform: 'uppercase',
   },
+  marketBadge: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderBottomRightRadius: 8,
+    borderWidth: 1,
+    gap: 4,
+    zIndex: 1,
+  },
+  marketFlag: {
+    fontSize: 14,
+  },
+  marketCode: {
+    fontSize: 10,
+    fontWeight: '600',
+  },
+  priceContainer: {
+    alignItems: 'flex-end',
+  },
+  originalPrice: {
+    fontSize: 10,
+    marginTop: 2,
+  },
   cardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
