@@ -128,6 +128,12 @@ export default function TutorLayout() {
         }}
       />
       <Tabs.Screen
+        name="market-settings"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
         name="language"
         options={{
           href: null,
