@@ -1057,6 +1057,28 @@ const styles = StyleSheet.create({
     fontSize: 10,
     marginTop: 2,
   },
+  legendContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 12,
+    gap: 16,
+    flexWrap: 'wrap',
+  },
+  legendItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  legendDot: {
+    width: 16,
+    height: 16,
+    borderRadius: 4,
+    borderWidth: 2,
+  },
+  legendText: {
+    fontSize: 11,
+  },
   bookButtonContainer: {
     position: 'absolute',
     bottom: 0,
