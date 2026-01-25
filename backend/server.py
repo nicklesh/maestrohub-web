@@ -2863,6 +2863,7 @@ async def get_bookings(request: Request, role: str = "consumer"):
         results.append({
             **b,
             "tutor_name": tutor_user["name"] if tutor_user else "Unknown",
+            "tutor_subject": tutor.get("subjects", ["General"])[0] if tutor and tutor.get("subjects") else "General",
             "student_name": student["name"] if student else "Unknown",
             "currency": market_config["currency"],
             "currency_symbol": market_config["currency_symbol"],
