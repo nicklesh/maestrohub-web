@@ -182,8 +182,9 @@ export default function ReviewsScreen() {
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <AppHeader showBack title={t("pages.reviews.title")} />
 
-      {/* Tabs */}
-      <View style={[styles.tabs, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+      <View style={contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%', flex: 1 } : { flex: 1 }}>
+        {/* Tabs */}
+        <View style={[styles.tabs, { backgroundColor: colors.surface, borderColor: colors.border }]}>
         <TouchableOpacity
           style={[styles.tab, activeTab === 'pending' && { borderBottomColor: colors.primary, borderBottomWidth: 2 }]}
           onPress={() => setActiveTab('pending')}
