@@ -292,7 +292,7 @@ class NewRelicService:
     """
     def __init__(self):
         self.license_key = os.environ.get('NEW_RELIC_LICENSE_KEY', '')
-        self.app_name = os.environ.get('NEW_RELIC_APP_NAME', 'MaestroHub')
+        self.app_name = os.environ.get('NEW_RELIC_APP_NAME', 'Maestro Habitat API')
         self.enabled = bool(self.license_key)
         self._initialized = False
         
@@ -305,9 +305,17 @@ class NewRelicService:
         """Initialize New Relic agent"""
         try:
             import newrelic.agent
-            newrelic.agent.initialize()
+            # Use config file if exists, otherwise use environment variables
+            config_file = '/app/backend/newrelic.ini'
+            if os.path.exists(config_file):
+                newrelic.agent.initialize(config_file)
+            else:
+                # Initialize with environment variables
+                os.environ['NEW_RELIC_LICENSE_KEY'] = self.license_key
+                os.environ['NEW_RELIC_APP_NAME'] = self.app_name
+                newrelic.agent.initialize()
             self._initialized = True
-            logger.info("New Relic agent initialized")
+            logger.info(f"New Relic agent initialized for '{self.app_name}'")
         except ImportError:
             logger.warning("newrelic package not installed")
         except Exception as e:
