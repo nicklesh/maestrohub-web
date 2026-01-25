@@ -5699,6 +5699,10 @@ async def admin_get_reports_overview(request: Request):
     total_consumers = await db.users.count_documents({"role": "consumer"})
     total_bookings = await db.bookings.count_documents({})
     completed_bookings = await db.bookings.count_documents({"status": "completed"})
+    canceled_bookings = await db.bookings.count_documents({
+        "status": {"$in": ["canceled_by_consumer", "canceled_by_provider"]}
+    })
+    rescheduled_bookings = await db.bookings.count_documents({"rescheduled": True})
     
     # Revenue calculation
     revenue_pipeline = [
@@ -5708,6 +5712,14 @@ async def admin_get_reports_overview(request: Request):
     revenue_result = await db.bookings.aggregate(revenue_pipeline).to_list(1)
     total_revenue = revenue_result[0]["total"] if revenue_result else 0
     platform_fees = revenue_result[0]["fees"] if revenue_result else 0
+    
+    # Cancelled bookings revenue (lost revenue)
+    canceled_pipeline = [
+        {"$match": {"status": {"$in": ["canceled_by_consumer", "canceled_by_provider"]}}},
+        {"$group": {"_id": None, "total": {"$sum": "$price_snapshot"}}}
+    ]
+    canceled_result = await db.bookings.aggregate(canceled_pipeline).to_list(1)
+    canceled_revenue = canceled_result[0]["total"] if canceled_result else 0
     
     # Pending payouts
     pending_pipeline = [
