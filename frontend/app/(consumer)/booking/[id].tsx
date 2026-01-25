@@ -202,6 +202,28 @@ export default function BookingDetailScreen() {
     }
   };
 
+  const handleSendNotification = async () => {
+    if (!booking) return;
+    
+    setSendingNotification(true);
+    try {
+      await api.post(`/bookings/${booking.booking_id}/notify-coach`, {
+        note: notifyNote.trim() || undefined
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      showSuccess(t('pages.booking_detail.notification_sent'));
+      setShowNotifyModal(false);
+      setNotifyNote('');
+    } catch (error: any) {
+      console.error('Notification error:', error);
+      const errorMsg = error.response?.data?.detail || t('pages.booking_detail.notification_failed');
+      showError(errorMsg);
+    } finally {
+      setSendingNotification(false);
+    }
+  };
+
   const handleReportNoShow = async () => {
     const confirmMsg = t('pages.booking_detail.no_show_confirm');
     
