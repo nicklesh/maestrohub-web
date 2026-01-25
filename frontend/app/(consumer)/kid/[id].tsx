@@ -245,7 +245,7 @@ export default function KidDetailScreen() {
                     <View style={styles.bookingHeader}>
                       <View>
                         <Text style={[styles.bookingSubject, { color: colors.text }]}>{translateSubject(booking.subject)}</Text>
-                        <Text style={[styles.bookingTutor, { color: colors.textMuted }]}>{t('common.with')} {booking.tutor_name}</Text>
+                        <Text style={[styles.bookingTutor, { color: colors.textMuted }]}>{booking.tutor_name}</Text>
                       </View>
                       <View style={[styles.statusBadge, { backgroundColor: getStatusColor(booking.status) + '20' }]}>
                         <Text style={[styles.statusText, { color: getStatusColor(booking.status) }]}>
