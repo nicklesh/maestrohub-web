@@ -2344,6 +2344,8 @@
     }
   },
   "common": {
+    "yes": "Yes",
+    "no": "No",
     "done": "Done",
     "auto": "Auto",
     "manual": "Manual",
