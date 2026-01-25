@@ -22,6 +22,7 @@ import { useToast } from '@/src/context/ToastContext';
 import { useTranslation } from '@/src/i18n';
 import AppHeader from '@/src/components/AppHeader';
 import UserAvatar from '@/src/components/UserAvatar';
+import FlagIcon from '@/src/components/FlagIcon';
 
 interface Tutor {
   id: string;
