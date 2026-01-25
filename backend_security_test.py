@@ -23,7 +23,7 @@ import sys
 import os
 
 # Configuration
-BASE_URL = "https://eduflow-114.preview.emergentagent.com/api"
+BASE_URL = "https://coach-finder-27.preview.emergentagent.com/api"
 TIMEOUT = 30
 
 # Test credentials from the request
