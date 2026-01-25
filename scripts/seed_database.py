@@ -7,7 +7,7 @@ import os
 import sys
 from datetime import datetime
 from pymongo import MongoClient
-import hashlib
+import bcrypt
 import secrets
 
 # Load environment
@@ -16,12 +16,10 @@ load_dotenv('/app/backend/.env')
 
 MONGO_URL = os.getenv("MONGO_URL")
 DB_NAME = os.getenv("DB_NAME", "maestrohub")
-PASSWORD_PEPPER = os.getenv("PASSWORD_PEPPER", "")
 
 def hash_password(password: str) -> str:
-    """Hash password with pepper"""
-    salted = password + PASSWORD_PEPPER
-    return hashlib.sha256(salted.encode()).hexdigest()
+    """Hash password with bcrypt"""
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
 def get_db():
     client = MongoClient(MONGO_URL)
