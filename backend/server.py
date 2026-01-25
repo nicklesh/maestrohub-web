@@ -8011,9 +8011,6 @@ async def get_sponsored_tutors(category: Optional[str] = None):
     return {"sponsored_tutors": results}
 
 
-# Include router
-app.include_router(api_router)
-
 # Dynamic CORS allowing specific origins with credentials
 ALLOWED_ORIGINS = [
     "http://localhost:3000",
