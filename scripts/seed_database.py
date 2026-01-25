@@ -285,6 +285,7 @@ def create_tutor_profiles(db, coaches_data, users_collection):
             continue
             
         tutor = {
+            "tutor_id": f"tutor_{secrets.token_hex(12)}",  # Unique tutor ID
             "user_id": str(user["_id"]),
             "email": coach["email"],
             "name": coach["name"],
