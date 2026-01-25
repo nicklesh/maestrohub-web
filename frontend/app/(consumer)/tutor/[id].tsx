@@ -121,8 +121,31 @@ export default function TutorDetailScreen() {
     // Reset selected slot when component loads or id changes
     setSelectedSlot(null);
     setSelectedDate(new Date());
+    setCurrentBooking(null);
     loadTutor();
-  }, [id]);
+    
+    // If in update mode, load the current booking to show its slot
+    if (isUpdateMode && bookingId) {
+      loadCurrentBooking();
+    }
+  }, [id, bookingId]);
+
+  const loadCurrentBooking = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      const response = await api.get(`/bookings/${bookingId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const booking = response.data;
+      setCurrentBooking({ start_at: booking.start_at, end_at: booking.end_at });
+      
+      // Set the selected date to the booking's date
+      const bookingDate = parseToLocalTime(booking.start_at);
+      setSelectedDate(startOfDay(bookingDate));
+    } catch (error) {
+      console.error('Failed to load current booking:', error);
+    }
+  };
 
   useEffect(() => {
     if (tutor) {
