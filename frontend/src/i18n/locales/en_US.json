@@ -858,7 +858,7 @@
       "reviews_count": "({{count}} reviews)",
       "cancellation_notice": "Cancellation Notice",
       "hours_notice": "{{hours}}h notice required",
-      "full_charge_no_shows": "Full charge for no-shows",
+      "full_charge_no_shows": "Full charge for no-shows without 24-hour notice",
       "session_packages": "Session Packages",
       "save_up_to": "Save up to {{percent}}%",
       "book_multiple_save": "Book multiple sessions and save!",
