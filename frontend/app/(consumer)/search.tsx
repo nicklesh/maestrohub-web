@@ -131,8 +131,8 @@ export default function SearchScreen() {
   // Responsive breakpoints
   const isTablet = width >= 768;
   const isDesktop = width >= 1024;
-  const containerMaxWidth = isDesktop ? 1200 : isTablet ? 900 : undefined;
-  const numColumns = isDesktop ? 3 : isTablet ? 2 : 1;
+  const containerMaxWidth = isDesktop ? 960 : isTablet ? 720 : undefined;
+  const numColumns = isDesktop ? 2 : 1;  // 2 columns on desktop, 1 on mobile/tablet
 
   // Get subjects for selected category
   const availableSubjects = useMemo(() => {
