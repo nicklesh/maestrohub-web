@@ -761,15 +761,18 @@ frontend:
 
   - task: "Coach Details Page with Cross-Market Features"
     implemented: true
-    working: "NA"
+    working: true
     file: "app/(consumer)/tutor/[id].tsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "testing"
         comment: "⚠️ UNABLE TO TEST: Could not access coach details due to login issues. Code analysis shows proper implementation: coach name with country flag display, modality tags (Online, In-Person, Hybrid), cross-market notice box for coaches from other countries, and comprehensive profile information. Implementation includes FlagIcon component and cross-market notice styling."
+      - working: true
+        agent: "testing"
+        comment: "✅ COACH PROFILE: WORKING - Successfully tested coach profile page functionality. Login flow now working allows access to coach details. Coach profile pages render correctly with proper mobile responsive design. Implementation includes all cross-market features as previously analyzed: coach names, modality tags, availability calendar, and booking functionality. Some session management issues may affect consistent navigation but core functionality is operational."
 
   - task: "Coach Settings and Meeting Link Management"
     implemented: true
