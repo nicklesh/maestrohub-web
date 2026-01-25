@@ -617,4 +617,18 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
   },
+  successIconContainer: {
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  okButton: {
+    padding: 14,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  okButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
 });
