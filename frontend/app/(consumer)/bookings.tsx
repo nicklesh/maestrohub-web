@@ -167,6 +167,11 @@ export default function BookingsScreen() {
         </View>
 
         <Text style={[styles.tutorName, { color: colors.text }]}>{item.tutor_name}</Text>
+        {item.tutor_subject && (
+          <Text style={[styles.subjectText, { color: colors.primary }]}>
+            {item.tutor_subject}
+          </Text>
+        )}
         <Text style={[styles.studentName, { color: colors.textMuted }]}>
           {t('pages.bookings.student_label')} {item.student_name}
         </Text>
