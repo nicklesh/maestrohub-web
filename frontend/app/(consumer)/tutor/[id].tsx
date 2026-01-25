@@ -820,9 +820,10 @@ const styles = StyleSheet.create({
   calendarWeekHeader: {
     flexDirection: 'row',
     marginBottom: 8,
+    width: '100%',
   },
   calendarDayLabel: {
-    width: '14.28%',
+    flex: 1,
     textAlign: 'center',
     fontSize: 12,
     fontWeight: '600',
@@ -830,17 +831,15 @@ const styles = StyleSheet.create({
   calendarGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    width: '100%',
   },
   calendarDayCell: {
-    width: '14.28%',
-    height: 44,
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: '14.285%',
+    aspectRatio: 1,
     padding: 2,
   },
   calendarDayButton: {
-    width: '100%',
-    height: '100%',
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,
