@@ -1905,7 +1905,10 @@
         "select_medium": "Select Medium",
         "add_stripe_account": "Add Stripe Account",
         "stripe_connected": "Stripe Connected",
-        "stripe_not_connected": "Stripe Not Connected"
+        "stripe_not_connected": "Stripe Not Connected",
+        "multi_market_exposure": "Multi-Market Exposure",
+        "multi_market_hint": "Since you offer online/hybrid sessions, you can choose to appear in search results for other markets.",
+        "manage_markets": "Manage Markets & Pricing"
       },
       "billing": {
         "title": "Billing",
