@@ -406,6 +406,48 @@ def seed_database():
     db.users.insert_many(users)
     print(f"    ✅ {len(users)} users created (1 admin, {len(coaches_data)} coaches, {len(users) - len(coaches_data) - 1} parents)")
     
+    # Seed subscriptions for premium parents
+    print("  Seeding subscriptions...")
+    db.subscriptions.delete_many({})  # Clear existing subscriptions
+    subscriptions = []
+    now = datetime.utcnow()
+    
+    for user in users:
+        if user.get("role") == "parent" and user.get("subscription_status") in ["premium_monthly", "premium_yearly"]:
+            plan_id = "monthly" if user["subscription_status"] == "premium_monthly" else "yearly"
+            period_days = 30 if plan_id == "monthly" else 365
+            
+            subscription = {
+                "subscription_id": f"sub_{secrets.token_hex(12)}",
+                "user_id": user["user_id"],
+                "plan_id": plan_id,
+                "status": "active",
+                "payment_method": "stripe",
+                "current_period_start": now - timedelta(days=10),
+                "current_period_end": now + timedelta(days=period_days - 10),
+                "cancel_at_period_end": False,
+                "payment_history": [{
+                    "transaction_id": f"txn_{secrets.token_hex(12)}",
+                    "amount_cents": 999 if plan_id == "monthly" else 9999,
+                    "currency": "USD",
+                    "status": "succeeded",
+                    "created_at": now - timedelta(days=10)
+                }],
+                "created_at": now - timedelta(days=10),
+                "updated_at": now
+            }
+            subscriptions.append(subscription)
+            
+            # Update user with subscription_id
+            db.users.update_one(
+                {"user_id": user["user_id"]},
+                {"$set": {"subscription_id": subscription["subscription_id"]}}
+            )
+    
+    if subscriptions:
+        db.subscriptions.insert_many(subscriptions)
+    print(f"    ✅ {len(subscriptions)} subscriptions created")
+    
     # Seed tutor profiles
     print("  Seeding tutor profiles...")
     tutors = create_tutor_profiles(db, coaches_data, db.users)
