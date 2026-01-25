@@ -345,6 +345,43 @@ export default function SubscriptionScreen() {
           </View>
         )}
       </ScrollView>
+
+      {/* Cancel Confirmation Modal */}
+      <Modal visible={showCancelConfirm} animationType="fade" transparent>
+        <View style={styles.modalOverlay}>
+          <View style={[styles.confirmModal, { backgroundColor: colors.surface }]}>
+            <Text style={[styles.confirmTitle, { color: colors.text }]}>
+              {t('subscription.cancel_confirm_title')}
+            </Text>
+            <Text style={[styles.confirmMessage, { color: colors.textMuted }]}>
+              {t('subscription.cancel_confirm_message')}
+            </Text>
+            <View style={styles.confirmButtons}>
+              <TouchableOpacity
+                style={[styles.confirmButton, { backgroundColor: colors.background, borderColor: colors.border, borderWidth: 1 }]}
+                onPress={() => setShowCancelConfirm(false)}
+              >
+                <Text style={[styles.confirmButtonText, { color: colors.text }]}>
+                  {t('common.cancel')}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.confirmButton, { backgroundColor: colors.error }]}
+                onPress={performCancel}
+                disabled={processing}
+              >
+                {processing ? (
+                  <ActivityIndicator color="#fff" size="small" />
+                ) : (
+                  <Text style={[styles.confirmButtonText, { color: '#fff' }]}>
+                    {t('subscription.cancel_subscription')}
+                  </Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
