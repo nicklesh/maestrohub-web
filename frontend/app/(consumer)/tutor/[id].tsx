@@ -164,6 +164,18 @@ export default function TutorDetailScreen() {
     }
   }, [tutor, selectedDate]);
 
+  // Pre-select the current booking slot when in update mode
+  useEffect(() => {
+    if (currentBooking && availableSlots.length > 0 && !selectedSlot) {
+      // Find the slot that matches the current booking time
+      const bookingStartTime = formatDate(parseToLocalTime(currentBooking.start_at), 'HH:mm');
+      const matchingSlot = availableSlots.find(slot => slot.start_time === bookingStartTime);
+      if (matchingSlot) {
+        setSelectedSlot(matchingSlot);
+      }
+    }
+  }, [currentBooking, availableSlots]);
+
   const loadTutor = async () => {
     try {
       const response = await api.get(`/tutors/${id}`);
