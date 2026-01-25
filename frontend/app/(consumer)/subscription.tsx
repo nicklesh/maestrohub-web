@@ -45,6 +45,7 @@ export default function SubscriptionScreen() {
   const [selectedPlan, setSelectedPlan] = useState<string>('yearly');
   const [processing, setProcessing] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('stripe');
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
 
   const paymentMethods = [
     { id: 'stripe', name: 'Credit Card', icon: 'card-outline' },
