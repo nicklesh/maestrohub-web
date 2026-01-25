@@ -2148,15 +2148,35 @@ async def search_tutors(
     # Get consumer's market for filtering and exclude self from results
     current_user_id = None
     consumer_market_id = None
+    consumer_enabled_markets = None
     try:
         user = await require_auth(request)
         current_user_id = user.user_id
         user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
         consumer_market_id = user_doc.get("market_id") if user_doc else None
+        consumer_enabled_markets = user_doc.get("enabled_markets", []) if user_doc else []
         
-        # Enforce market filtering if market is set
+        # Build market filter:
+        # 1. Same market tutors (always visible)
+        # 2. Online/hybrid tutors from other markets if they enabled cross-market
+        # 3. Tutors from markets the consumer has enabled
         if consumer_market_id:
-            db_query["market_id"] = consumer_market_id
+            # Combine consumer's market + any additional enabled markets
+            all_consumer_markets = [consumer_market_id] + (consumer_enabled_markets or [])
+            all_consumer_markets = list(set(all_consumer_markets))  # Remove duplicates
+            
+            # Match tutors where:
+            # - Tutor is in consumer's market(s), OR
+            # - Tutor has online/hybrid modality AND has enabled the consumer's market
+            db_query["$or"] = [
+                # Same market tutors
+                {"market_id": {"$in": all_consumer_markets}},
+                # Cross-market online/hybrid tutors who enabled consumer's market
+                {
+                    "modality": {"$in": ["online", "hybrid"]},
+                    "enabled_markets": {"$in": all_consumer_markets}
+                }
+            ]
         
         # Prevent self-selection: exclude current user's tutor profile from results
         # This handles the case where a parent has also become a tutor
