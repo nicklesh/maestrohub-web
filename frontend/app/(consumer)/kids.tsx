@@ -532,6 +532,9 @@ const styles = StyleSheet.create({
     padding: 20,
     maxHeight: '85%',
   },
+  formScrollView: {
+    maxHeight: '100%',
+  },
   sheetHandle: {
     width: 40,
     height: 4,
