@@ -930,6 +930,16 @@ const styles = StyleSheet.create({
   tutorsList: {
     gap: 12,
   },
+  tutorsListMultiColumn: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start',
+  },
+  tutorCardWrapper: {
+    width: '32%',
+    marginBottom: 12,
+    marginRight: '1.3%',
+  },
   loadMoreBtn: {
     padding: 16,
     borderRadius: 12,
