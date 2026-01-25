@@ -1661,6 +1661,8 @@
       "completed": "Completed",
       "upcoming": "Upcoming",
       "total_spent": "Total Spent",
+      "rescheduled": "Rescheduled",
+      "cancelled": "Cancelled",
       "sessions_by_coach": "Sessions by Coach",
       "sessions_by_student": "Sessions by Student",
       "monthly_breakdown": "Monthly Breakdown",
