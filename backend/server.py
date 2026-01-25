@@ -4554,6 +4554,8 @@ async def get_consumer_report(
             "completed_sessions": completed_sessions,
             "upcoming_sessions": upcoming_sessions,
             "canceled_sessions": canceled_sessions,
+            "rescheduled_sessions": rescheduled_sessions,
+            "canceled_amount_cents": canceled_amount_cents,
             "total_spent_cents": total_spent_cents,
             "currency": market_config["currency"],
             "currency_symbol": market_config["currency_symbol"]
