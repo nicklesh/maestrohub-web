@@ -8011,22 +8011,33 @@ async def get_sponsored_tutors(category: Optional[str] = None):
     return {"sponsored_tutors": results}
 
 
-# Dynamic CORS allowing specific origins with credentials
-ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://localhost:8001",
-    "https://eduflow-114.preview.emergentagent.com",
-    "https://eduflow-114.preview.emergentagent.com",
-]
+# Dynamic CORS - supports production deployment
+CORS_ORIGINS = os.environ.get('CORS_ORIGINS', '*')
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_credentials=True,
-    allow_origins=ALLOWED_ORIGINS,
-    allow_origin_regex=r"https://.*\.preview\.emergentagent\.com",  # Allow all preview subdomains
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# If CORS_ORIGINS is '*', allow all origins
+if CORS_ORIGINS == '*':
+    app.add_middleware(
+        CORSMiddleware,
+        allow_credentials=False,
+        allow_origins=["*"],
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+else:
+    ALLOWED_ORIGINS = [origin.strip() for origin in CORS_ORIGINS.split(',')]
+    # Always include common development origins
+    ALLOWED_ORIGINS.extend([
+        "http://localhost:3000",
+        "http://localhost:8001",
+    ])
+    app.add_middleware(
+        CORSMiddleware,
+        allow_credentials=True,
+        allow_origins=ALLOWED_ORIGINS,
+        allow_origin_regex=r"https://.*\.(preview\.emergentagent\.com|emergent\.host)",  # Allow all preview and production subdomains
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 
 # ============== IMAGE UPLOAD ENDPOINTS ==============
