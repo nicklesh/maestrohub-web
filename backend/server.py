@@ -2124,6 +2124,13 @@ async def get_my_tutor_profile(request: Request):
     tutor = await db.tutors.find_one({"user_id": user.user_id}, {"_id": 0})
     if not tutor:
         raise HTTPException(status_code=404, detail="Coach profile not found")
+    
+    # Ensure modality is a list (fix for legacy data)
+    if isinstance(tutor.get("modality"), str):
+        tutor["modality"] = [tutor["modality"]]
+    elif not tutor.get("modality"):
+        tutor["modality"] = ["online"]
+    
     return TutorProfile(**tutor)
 
 @api_router.put("/tutors/profile", response_model=TutorProfile)
