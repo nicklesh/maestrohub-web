@@ -33,7 +33,7 @@ export interface AppConfig {
 // Default values (used as fallback if env vars not set)
 const DEFAULT_CONFIG: AppConfig = {
   appName: process.env.EXPO_PUBLIC_APP_NAME || 'Maestro Habitat',
-  tagline: process.env.EXPO_PUBLIC_APP_TAGLINE || 'Find the coach. Master your learning.',
+  tagline: process.env.EXPO_PUBLIC_APP_TAGLINE || 'Where potential resolves into mastery!',
   logoLight: process.env.EXPO_PUBLIC_LOGO_LIGHT || '/assets/images/mh_logo_dark_trimmed.png',
   logoDark: process.env.EXPO_PUBLIC_LOGO_DARK || '/assets/images/mh_logo_light_trimmed.png',
   
