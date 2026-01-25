@@ -1,52 +1,24 @@
 {
   "summary": {
     "total_tests": 21,
-    "passed": 15,
-    "failed": 6,
-    "success_rate": "71.4%"
+    "passed": 19,
+    "failed": 2,
+    "success_rate": "90.5%"
   },
   "failed_tests": [
     {
       "test": "Token Validation - Invalid Token",
       "status": "\u274c FAIL",
       "success": false,
-      "details": "Should return 401, got 200",
-      "timestamp": "2026-01-25T08:00:31.180777"
+      "details": "Should return 401, got 200: {\"email\":\"admin@maestrohub.com\",\"name\":\"Admin User\",\"picture\":null,\"user_id\":\"6975cbdb6cf41538220e591f\",\"role\":\"admin\",\"market_id\":null,\"country\":null,\"timezone\":null,\"devices\":[],\"created_at\":\"2026-01-25T07:52:55.585000\"}",
+      "timestamp": "2026-01-25T08:01:50.620408"
     },
     {
-      "test": "Markets API",
+      "test": "Create Booking Hold",
       "status": "\u274c FAIL",
       "success": false,
-      "details": "Expected list with 2+ markets, got: {'markets': [{'market_id': 'US_USD', 'country': 'US', 'currency': 'USD', 'currency_symbol': '$', 'default_timezone': 'America/New_York', 'is_enabled': True, 'payment_provider_key': 'stripe_us', 'min_price': 10.0, 'max_price': 500.0}, {'market_id': 'IN_INR', 'country': 'IN', 'currency': 'INR', 'currency_symbol': '\u20b9', 'default_timezone': 'Asia/Kolkata', 'is_enabled': True, 'payment_provider_key': 'stripe_in', 'min_price': 200.0, 'max_price': 10000.0}]}",
-      "timestamp": "2026-01-25T08:00:31.296049"
-    },
-    {
-      "test": "Tutor Optional Fields",
-      "status": "\u274c FAIL",
-      "success": false,
-      "details": "Missing optional fields: ['cancel_window_hours', 'booking_policy', 'policies']",
-      "timestamp": "2026-01-25T08:00:32.021155"
-    },
-    {
-      "test": "Notifications - parent",
-      "status": "\u274c FAIL",
-      "success": false,
-      "details": "Expected list, got: <class 'dict'>",
-      "timestamp": "2026-01-25T08:00:34.746651"
-    },
-    {
-      "test": "Notifications - coach",
-      "status": "\u274c FAIL",
-      "success": false,
-      "details": "Expected list, got: <class 'dict'>",
-      "timestamp": "2026-01-25T08:00:34.846778"
-    },
-    {
-      "test": "Notifications - admin",
-      "status": "\u274c FAIL",
-      "success": false,
-      "details": "Expected list, got: <class 'dict'>",
-      "timestamp": "2026-01-25T08:00:34.987779"
+      "details": "Status: 409, Response: {\"detail\":\"Slot is on hold\"}",
+      "timestamp": "2026-01-25T08:01:54.211804"
     }
   ],
   "all_results": [
@@ -55,147 +27,147 @@
       "status": "\u2705 PASS",
       "success": true,
       "details": "Role: parent, User ID: 6975cbdb6cf41538220e592b",
-      "timestamp": "2026-01-25T08:00:30.255449"
+      "timestamp": "2026-01-25T08:01:49.740156"
     },
     {
       "test": "Login - coach",
       "status": "\u2705 PASS",
       "success": true,
       "details": "Role: tutor, User ID: 6975cbdb6cf41538220e5920",
-      "timestamp": "2026-01-25T08:00:30.590851"
+      "timestamp": "2026-01-25T08:01:50.079577"
     },
     {
       "test": "Login - admin",
       "status": "\u2705 PASS",
       "success": true,
       "details": "Role: admin, User ID: 6975cbdb6cf41538220e591f",
-      "timestamp": "2026-01-25T08:00:30.895346"
+      "timestamp": "2026-01-25T08:01:50.376099"
     },
     {
       "test": "Auth Me - parent",
       "status": "\u2705 PASS",
       "success": true,
       "details": "User: Admin User, Role: admin",
-      "timestamp": "2026-01-25T08:00:30.976695"
+      "timestamp": "2026-01-25T08:01:50.416361"
     },
     {
       "test": "Auth Me - coach",
       "status": "\u2705 PASS",
       "success": true,
       "details": "User: Admin User, Role: admin",
-      "timestamp": "2026-01-25T08:00:31.057671"
+      "timestamp": "2026-01-25T08:01:50.462949"
     },
     {
       "test": "Auth Me - admin",
       "status": "\u2705 PASS",
       "success": true,
       "details": "User: Admin User, Role: admin",
-      "timestamp": "2026-01-25T08:00:31.138547"
+      "timestamp": "2026-01-25T08:01:50.516887"
     },
     {
       "test": "Token Validation - Invalid Token",
       "status": "\u274c FAIL",
       "success": false,
-      "details": "Should return 401, got 200",
-      "timestamp": "2026-01-25T08:00:31.180777"
+      "details": "Should return 401, got 200: {\"email\":\"admin@maestrohub.com\",\"name\":\"Admin User\",\"picture\":null,\"user_id\":\"6975cbdb6cf41538220e591f\",\"role\":\"admin\",\"market_id\":null,\"country\":null,\"timezone\":null,\"devices\":[],\"created_at\":\"2026-01-25T07:52:55.585000\"}",
+      "timestamp": "2026-01-25T08:01:50.620408"
     },
     {
       "test": "Categories API",
       "status": "\u2705 PASS",
       "success": true,
       "details": "Found 10 categories, has subcategories: True",
-      "timestamp": "2026-01-25T08:00:31.284216"
+      "timestamp": "2026-01-25T08:01:50.763763"
     },
     {
       "test": "Markets API",
-      "status": "\u274c FAIL",
-      "success": false,
-      "details": "Expected list with 2+ markets, got: {'markets': [{'market_id': 'US_USD', 'country': 'US', 'currency': 'USD', 'currency_symbol': '$', 'default_timezone': 'America/New_York', 'is_enabled': True, 'payment_provider_key': 'stripe_us', 'min_price': 10.0, 'max_price': 500.0}, {'market_id': 'IN_INR', 'country': 'IN', 'currency': 'INR', 'currency_symbol': '\u20b9', 'default_timezone': 'Asia/Kolkata', 'is_enabled': True, 'payment_provider_key': 'stripe_in', 'min_price': 200.0, 'max_price': 10000.0}]}",
-      "timestamp": "2026-01-25T08:00:31.296049"
+      "status": "\u2705 PASS",
+      "success": true,
+      "details": "Found expected markets: ['US_USD', 'IN_INR']",
+      "timestamp": "2026-01-25T08:01:50.814393"
     },
     {
       "test": "Tutor Search - General",
       "status": "\u2705 PASS",
       "success": true,
       "details": "Found 11 tutors",
-      "timestamp": "2026-01-25T08:00:32.021119"
+      "timestamp": "2026-01-25T08:01:51.353010"
     },
     {
       "test": "Tutor Data Structure",
       "status": "\u2705 PASS",
       "success": true,
       "details": "All required fields present",
-      "timestamp": "2026-01-25T08:00:32.021147"
+      "timestamp": "2026-01-25T08:01:51.353037"
     },
     {
       "test": "Tutor Optional Fields",
-      "status": "\u274c FAIL",
-      "success": false,
-      "details": "Missing optional fields: ['cancel_window_hours', 'booking_policy', 'policies']",
-      "timestamp": "2026-01-25T08:00:32.021155"
+      "status": "\u2705 PASS",
+      "success": true,
+      "details": "Note: Missing optional fields: ['cancel_window_hours', 'booking_policy', 'policies'] (this is expected)",
+      "timestamp": "2026-01-25T08:01:51.353045"
     },
     {
       "test": "Tutor Search - Category Filter",
       "status": "\u2705 PASS",
       "success": true,
       "details": "Category filter returned 4 tutors",
-      "timestamp": "2026-01-25T08:00:32.334398"
+      "timestamp": "2026-01-25T08:01:51.674012"
     },
     {
       "test": "Tutor Details",
       "status": "\u2705 PASS",
       "success": true,
       "details": "Tutor details for Sarah Johnson",
-      "timestamp": "2026-01-25T08:00:32.996312"
+      "timestamp": "2026-01-25T08:01:52.336201"
     },
     {
       "test": "Tutor Availability",
       "status": "\u2705 PASS",
       "success": true,
       "details": "Availability data returned for 2026-01-27",
-      "timestamp": "2026-01-25T08:00:33.722696"
+      "timestamp": "2026-01-25T08:01:53.275777"
     },
     {
       "test": "Get Students",
       "status": "\u2705 PASS",
       "success": true,
-      "details": "Found 0 students",
-      "timestamp": "2026-01-25T08:00:33.834488"
+      "details": "Found 1 students",
+      "timestamp": "2026-01-25T08:01:53.346966"
     },
     {
       "test": "Create Student",
       "status": "\u2705 PASS",
       "success": true,
-      "details": "Created student with ID: student_fdd186f5f304",
-      "timestamp": "2026-01-25T08:00:33.920088"
+      "details": "Created student with ID: student_91e32f8959a6",
+      "timestamp": "2026-01-25T08:01:53.461645"
     },
     {
       "test": "Create Booking Hold",
-      "status": "\u2705 PASS",
-      "success": true,
-      "details": "Created hold with ID: hold_3ed0340ea998",
-      "timestamp": "2026-01-25T08:00:34.646865"
+      "status": "\u274c FAIL",
+      "success": false,
+      "details": "Status: 409, Response: {\"detail\":\"Slot is on hold\"}",
+      "timestamp": "2026-01-25T08:01:54.211804"
     },
     {
       "test": "Notifications - parent",
-      "status": "\u274c FAIL",
-      "success": false,
-      "details": "Expected list, got: <class 'dict'>",
-      "timestamp": "2026-01-25T08:00:34.746651"
+      "status": "\u2705 PASS",
+      "success": true,
+      "details": "Found 1 notifications, unread: 0",
+      "timestamp": "2026-01-25T08:01:54.353413"
     },
     {
       "test": "Notifications - coach",
-      "status": "\u274c FAIL",
-      "success": false,
-      "details": "Expected list, got: <class 'dict'>",
-      "timestamp": "2026-01-25T08:00:34.846778"
+      "status": "\u2705 PASS",
+      "success": true,
+      "details": "Found 1 notifications, unread: 0",
+      "timestamp": "2026-01-25T08:01:54.458864"
     },
     {
       "test": "Notifications - admin",
-      "status": "\u274c FAIL",
-      "success": false,
-      "details": "Expected list, got: <class 'dict'>",
-      "timestamp": "2026-01-25T08:00:34.987779"
+      "status": "\u2705 PASS",
+      "success": true,
+      "details": "Found 1 notifications, unread: 0",
+      "timestamp": "2026-01-25T08:01:54.600679"
     }
   ]
 }
