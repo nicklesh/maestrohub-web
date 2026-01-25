@@ -84,6 +84,7 @@ export default function TutorDetailScreen() {
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
+  const [currentBooking, setCurrentBooking] = useState<{ start_at: string; end_at: string } | null>(null);
   
   // Check navigation mode
   // - From search: no special params → show booking UI
