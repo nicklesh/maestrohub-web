@@ -148,7 +148,7 @@ async def translate_locale(locale_code, en_data, client):
         paths = [path for path, _ in batch]
         
         try:
-            translations = await translate_batch(texts, language_name, chat)
+            translations = await translate_batch(texts, language_name, client)
             
             # Update locale data
             for j, (path, translation) in enumerate(zip(paths, translations)):
@@ -168,10 +168,19 @@ async def translate_locale(locale_code, en_data, client):
     print(f"  {locale_code}: Saved translations")
 
 async def main():
+    # Check for API key
+    if not OPENAI_API_KEY:
+        print("❌ OPENAI_API_KEY not found in environment!")
+        print("Please set OPENAI_API_KEY in /app/backend/.env")
+        return
+    
     # Load English as reference
     en_file = os.path.join(LOCALES_DIR, "en_US.json")
     with open(en_file, 'r', encoding='utf-8') as f:
         en_data = json.load(f)
+    
+    # Initialize OpenAI client
+    client = AsyncOpenAI(api_key=OPENAI_API_KEY)
     
     # Initialize chat with Gemini (faster for batch translations)
     chat = LlmChat(
