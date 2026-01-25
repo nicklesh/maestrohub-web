@@ -643,7 +643,7 @@ const styles = StyleSheet.create({
   },
   dayNumber: { fontSize: 14, fontWeight: '500' },
   emptyDayCell: {
-    backgroundColor: colors.background,
+    backgroundColor: 'transparent',
   },
   availabilityDot: {
     width: 6,
