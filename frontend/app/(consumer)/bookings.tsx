@@ -328,7 +328,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 20,
     marginBottom: 16,
-    gap: 12,
+    gap: 8,
+    flexWrap: 'wrap',
   },
   tabsTablet: {
     paddingHorizontal: 24,
