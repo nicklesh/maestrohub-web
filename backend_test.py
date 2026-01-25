@@ -94,10 +94,15 @@ class BackendTester:
             )
             
             if response.status_code == 200:
-                data = response.json()
-                bookings = data.get("bookings", [])
-                self.log_result("Get Bookings", True, f"Retrieved {len(bookings)} bookings")
-                return bookings
+                bookings = response.json()  # API returns direct array
+                if isinstance(bookings, list):
+                    self.log_result("Get Bookings", True, f"Retrieved {len(bookings)} bookings")
+                    return bookings
+                else:
+                    # Fallback for object format
+                    bookings = bookings.get("bookings", [])
+                    self.log_result("Get Bookings", True, f"Retrieved {len(bookings)} bookings")
+                    return bookings
             else:
                 self.log_result("Get Bookings", False, f"Failed to get bookings: {response.status_code}", {
                     "response": response.text
