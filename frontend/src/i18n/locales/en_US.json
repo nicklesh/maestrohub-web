@@ -2438,6 +2438,7 @@
     "generic_error": "An unexpected error occurred. Please try again."
   },
   "common": {
+    "ok": "OK",
     "yes": "Yes",
     "no": "No",
     "done": "Done",
