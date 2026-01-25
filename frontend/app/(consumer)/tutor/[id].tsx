@@ -40,8 +40,10 @@ interface Tutor {
   market_id?: string;
   market_flag?: string;
   market_code?: string;
+  country_full_name?: string;
   is_cross_market?: boolean;
   original_price_display?: string;
+  cross_market_notice?: string;
   policies?: {
     cancel_window_hours?: number;
     no_show_policy?: string;
