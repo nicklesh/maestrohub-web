@@ -254,7 +254,7 @@ export default function FAQScreen() {
             onPress={() => !contactSuccess && setShowContactModal(false)}
             activeOpacity={1}
           />
-          <View style={[styles.modalContent, { backgroundColor: colors.surface, maxWidth: contentMaxWidth || '100%' }]}>
+          <View style={[styles.modalContent, { backgroundColor: colors.surface }, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
             {contactSuccess ? (
               <View style={styles.successContainer}>
                 <Ionicons name="checkmark-circle" size={64} color={colors.primary} />
