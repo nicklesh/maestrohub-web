@@ -375,7 +375,7 @@ export default function SearchScreen() {
         {item.market_code && (
           <View style={[styles.marketBadge, { backgroundColor: colors.surface, borderColor: colors.border }]}>
             <Text style={[styles.marketCode, { color: colors.textMuted }]}>{item.market_code}</Text>
-            <Text style={styles.marketFlag}>{item.market_flag}</Text>
+            <FlagIcon countryCode={item.market_code} size={14} />
           </View>
         )}
         
