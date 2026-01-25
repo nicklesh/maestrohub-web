@@ -911,9 +911,10 @@ async def login(request: Request, data: UserLogin, response: Response):
         device_exists = any(d.get("device_id") == data.device.device_id for d in devices)
         if not device_exists:
             devices.append(data.device.dict())
-            await db.users.update_one({"user_id": user_doc["user_id"]}, {"$set": {"devices": devices}})
+            await db.users.update_one({"_id": user_doc["_id"]}, {"$set": {"devices": devices}})
     
-    token = create_jwt_token(user_doc["user_id"])
+    user_id = str(user_doc["_id"])
+    token = create_jwt_token(user_id)
     
     response.set_cookie(
         key="session_token",
@@ -929,7 +930,7 @@ async def login(request: Request, data: UserLogin, response: Response):
     user_role = fresh_user.get("role", "consumer") if fresh_user else "consumer"
     logger.info(f"Login success for {data.email}, returning role: {user_role}")
     
-    return {"user_id": user_doc["user_id"], "token": token, "role": user_role}
+    return {"user_id": user_id, "token": token, "role": user_role}
 
 @api_router.post("/auth/google/callback")
 async def google_callback(request: Request, response: Response):
