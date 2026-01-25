@@ -20,8 +20,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/context/AuthContext';
 import { useTheme } from '@/src/context/ThemeContext';
 import { useToast } from '@/src/context/ToastContext';
+import { useSubscription } from '@/src/context/SubscriptionContext';
 import { useTranslation } from '@/src/i18n';
 import AppHeader from '@/src/components/AppHeader';
+import { TrialBanner } from '@/src/components/PremiumFeatureGate';
 import { api } from '@/src/services/api';
 
 interface Notification {
