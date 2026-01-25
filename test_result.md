@@ -826,6 +826,8 @@ test_plan:
 agent_communication:
   - agent: "testing"
     message: "Comprehensive backend API testing completed successfully. All 10 core API endpoints are working correctly including auth flows, student management, tutor profiles, and categories. The API is fully functional with proper authentication, data validation, and response formatting. Backend is ready for production use."
+  - agent: "testing"
+    message: "🚨 CRITICAL FRONTEND ISSUE FOUND: Mobile app login functionality is broken. While the app renders correctly on mobile dimensions (390x844) and backend APIs work perfectly (confirmed via curl), the frontend login flow fails. Sign In button clicks timeout, preventing access to search, coach details, and settings features. This appears to be a frontend-to-backend communication issue, possibly CORS or API routing configuration. All cross-market features are properly implemented in code (FlagIcon component, country toggles, cross-market notices) but cannot be tested due to authentication blocker. URGENT: Fix frontend authentication flow to enable full testing of cross-market marketplace features."
   - agent: "main"
     message: "Implemented new payment provider system: 1) Added market-specific payment providers (USD: PayPal, GPay, Apple Pay, Venmo, Zelle; INR: PhonePe, GPay, Paytm, Amazon Pay), 2) Added /payment-providers endpoints for linking/unlinking providers, 3) Added /payments/process endpoint with auto-charge logic and fallback, 4) Implemented 90/10 split calculation (tutor/platform), 5) Updated billing.tsx with new provider management UI, 6) Updated booking page with auto-charge flow. Also fixed booking-holds datetime parsing by converting to ISO format."
   - agent: "main"
