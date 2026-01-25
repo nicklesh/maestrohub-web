@@ -2585,16 +2585,28 @@ async def get_tutor_availability(tutor_id: str, date: str = None, from_date: str
                     slot_end_naive = slot_end_time.replace(tzinfo=None)
                     now_naive = now.replace(tzinfo=None)
                     
+                    def parse_booking_time(dt):
+                        """Parse booking datetime to naive datetime for comparison"""
+                        if isinstance(dt, str):
+                            # Handle string datetime with or without timezone
+                            dt_str = dt.replace('Z', '+00:00')
+                            if '+' in dt_str:
+                                dt_str = dt_str.split('+')[0]
+                            return datetime.fromisoformat(dt_str)
+                        elif hasattr(dt, 'replace'):
+                            return dt.replace(tzinfo=None)
+                        return dt
+                    
                     is_booked = any(
-                        (b["start_at"].replace(tzinfo=None) if hasattr(b["start_at"], 'replace') else b["start_at"]) < slot_end_naive and 
-                        (b["end_at"].replace(tzinfo=None) if hasattr(b["end_at"], 'replace') else b["end_at"]) > slot_current_naive
+                        parse_booking_time(b["start_at"]) < slot_end_naive and 
+                        parse_booking_time(b["end_at"]) > slot_current_naive
                         for b in bookings
                     )
                     
                     # Check if slot is on hold
                     is_held = any(
-                        (h["start_at"].replace(tzinfo=None) if hasattr(h["start_at"], 'replace') else h["start_at"]) < slot_end_naive and 
-                        (h["end_at"].replace(tzinfo=None) if hasattr(h["end_at"], 'replace') else h["end_at"]) > slot_current_naive
+                        parse_booking_time(h["start_at"]) < slot_end_naive and 
+                        parse_booking_time(h["end_at"]) > slot_current_naive
                         for h in holds
                     )
                     
