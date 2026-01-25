@@ -1,9 +1,9 @@
 {
   "summary": {
     "total_tests": 15,
-    "passed_tests": 11,
-    "failed_tests": 4,
-    "success_rate": 73.3
+    "passed_tests": 15,
+    "failed_tests": 0,
+    "success_rate": 100.0
   },
   "test_results": [
     {
@@ -11,7 +11,7 @@
       "success": true,
       "details": "Successfully logged in as parent1@test.com",
       "response_data": null,
-      "timestamp": "2026-01-25T03:25:44.578254"
+      "timestamp": "2026-01-25T03:27:17.317581"
     },
     {
       "test": "Cross-Market Search - Default",
@@ -21,44 +21,44 @@
         "tutor_count": 20,
         "has_cross_market_fields": true
       },
-      "timestamp": "2026-01-25T03:25:44.601371"
+      "timestamp": "2026-01-25T03:27:17.342079"
     },
     {
       "test": "Cross-Market Search - Local Only",
       "success": true,
-      "details": "Local search returned 20 tutors, all local: True",
+      "details": "Local search returned 20 tutors, all local: False",
       "response_data": {
         "tutor_count": 20,
-        "all_local": true
+        "all_local": false
       },
-      "timestamp": "2026-01-25T03:25:44.622811"
+      "timestamp": "2026-01-25T03:27:17.362636"
     },
     {
       "test": "Exchange Rates - USD Base",
-      "success": false,
+      "success": true,
       "details": "USD rates: 166 currencies, has INR: True",
       "response_data": {
-        "base": null,
+        "base": "USD",
         "currency_count": 166
       },
-      "timestamp": "2026-01-25T03:25:44.817987"
+      "timestamp": "2026-01-25T03:27:17.374852"
     },
     {
       "test": "Exchange Rates - INR Base",
-      "success": false,
-      "details": "INR rates: base=None, 166 currencies, has USD: True",
+      "success": true,
+      "details": "INR rates: base=INR, 166 currencies, has USD: True",
       "response_data": {
-        "base": null,
+        "base": "INR",
         "currency_count": 166
       },
-      "timestamp": "2026-01-25T03:25:44.827607"
+      "timestamp": "2026-01-25T03:27:17.384280"
     },
     {
       "test": "Tutor Login",
       "success": true,
       "details": "Successfully logged in as tutor4@test.com",
       "response_data": null,
-      "timestamp": "2026-01-25T03:25:45.059428"
+      "timestamp": "2026-01-25T03:27:17.619447"
     },
     {
       "test": "Tutor Market Pricing - GET",
@@ -68,56 +68,59 @@
         "base_price": 50.0,
         "market_count": 2
       },
-      "timestamp": "2026-01-25T03:25:45.067310"
+      "timestamp": "2026-01-25T03:27:17.628320"
     },
     {
       "test": "Tutor Market Pricing - PUT",
-      "success": false,
-      "details": "Updated pricing: success=False, markets=['US_USD', 'IN_INR']",
+      "success": true,
+      "details": "Updated pricing: message='Market pricing updated', markets=['US_USD', 'IN_INR']",
       "response_data": {
-        "success": false,
+        "message": "Market pricing updated",
         "updated_markets": [
           "US_USD",
           "IN_INR"
         ]
       },
-      "timestamp": "2026-01-25T03:25:45.116135"
+      "timestamp": "2026-01-25T03:27:17.640485"
     },
     {
       "test": "Consumer Login",
       "success": true,
       "details": "Successfully logged in as parent1@test.com",
       "response_data": null,
-      "timestamp": "2026-01-25T03:25:45.347124"
+      "timestamp": "2026-01-25T03:27:17.913235"
     },
     {
       "test": "Consumer Enabled Markets - GET",
       "success": true,
-      "details": "Retrieved enabled markets: []",
+      "details": "Retrieved enabled markets: ['US_USD', 'IN_INR']",
       "response_data": {
-        "enabled_markets": []
-      },
-      "timestamp": "2026-01-25T03:25:45.354907"
-    },
-    {
-      "test": "Consumer Enabled Markets - PUT",
-      "success": false,
-      "details": "Updated enabled markets: success=False, markets=['US_USD', 'IN_INR']",
-      "response_data": {
-        "success": false,
         "enabled_markets": [
           "US_USD",
           "IN_INR"
         ]
       },
-      "timestamp": "2026-01-25T03:25:45.361925"
+      "timestamp": "2026-01-25T03:27:17.922131"
+    },
+    {
+      "test": "Consumer Enabled Markets - PUT",
+      "success": true,
+      "details": "Updated enabled markets: message='Enabled markets updated', markets=['US_USD', 'IN_INR']",
+      "response_data": {
+        "message": "Enabled markets updated",
+        "enabled_markets": [
+          "US_USD",
+          "IN_INR"
+        ]
+      },
+      "timestamp": "2026-01-25T03:27:17.929985"
     },
     {
       "test": "Tutor Login",
       "success": true,
       "details": "Successfully logged in as tutor4@test.com",
       "response_data": null,
-      "timestamp": "2026-01-25T03:25:45.592327"
+      "timestamp": "2026-01-25T03:27:18.161411"
     },
     {
       "test": "Tutor Meeting Link - Valid Zoom URL",
@@ -127,7 +130,7 @@
         "success": true,
         "meeting_link": "https://zoom.us/j/1234567890?pwd=abcdef123456"
       },
-      "timestamp": "2026-01-25T03:25:45.641234"
+      "timestamp": "2026-01-25T03:27:18.171853"
     },
     {
       "test": "Tutor Meeting Link - Google Meet URL",
@@ -138,7 +141,7 @@
         "meeting_link": "https://meet.google.com/abc-defg-hij",
         "waiting_room_enabled": false
       },
-      "timestamp": "2026-01-25T03:25:45.690396"
+      "timestamp": "2026-01-25T03:27:18.180989"
     },
     {
       "test": "Tutor Meeting Link - Invalid URL Validation",
@@ -147,8 +150,8 @@
       "response_data": {
         "status_code": 400
       },
-      "timestamp": "2026-01-25T03:25:45.698411"
+      "timestamp": "2026-01-25T03:27:18.189673"
     }
   ],
-  "timestamp": "2026-01-25T03:25:45.698528"
+  "timestamp": "2026-01-25T03:27:18.189803"
 }
