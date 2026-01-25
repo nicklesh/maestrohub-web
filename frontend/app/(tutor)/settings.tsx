@@ -289,6 +289,27 @@ export default function TutorSettings() {
             </View>
           )}
 
+          {/* Multi-Market Settings */}
+          {profile && (profile.modality?.includes('online') || profile.modality?.includes('hybrid')) && (
+            <View style={[styles.card, isTablet && styles.cardTablet]}>
+              <View style={styles.cardHeader}>
+                <Ionicons name="globe-outline" size={22} color={colors.primary} />
+                <Text style={[styles.cardTitle, isDesktop && styles.cardTitleDesktop]}>Multi-Market Exposure</Text>
+              </View>
+              <Text style={[styles.meetingHint, { color: colors.textMuted }]}>
+                Since you offer online/hybrid sessions, you can choose to appear in search results for other markets.
+              </Text>
+              <TouchableOpacity
+                style={[styles.menuItem, isTablet && styles.menuItemTablet, { borderBottomWidth: 0, marginTop: 8 }]}
+                onPress={() => router.push('/(tutor)/market-settings')}
+              >
+                <Ionicons name="earth-outline" size={isTablet ? 24 : 22} color={colors.primary} />
+                <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Manage Markets & Pricing</Text>
+                <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+              </TouchableOpacity>
+            </View>
+          )}
+
           {/* Publish Toggle */}
           {profile && profile.status === 'approved' && (
             <View style={[styles.card, isTablet && styles.cardTablet]}>
