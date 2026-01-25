@@ -6,10 +6,21 @@ from dotenv import load_dotenv
 # Load environment variables FIRST
 load_dotenv()
 
+import os
+
+# Initialize New Relic BEFORE any other imports
+NEW_RELIC_LICENSE_KEY = os.environ.get('NEW_RELIC_LICENSE_KEY', '')
+if NEW_RELIC_LICENSE_KEY and os.path.exists('/app/backend/newrelic.ini'):
+    try:
+        import newrelic.agent
+        newrelic.agent.initialize('/app/backend/newrelic.ini')
+        print("New Relic agent initialized successfully")
+    except Exception as e:
+        print(f"New Relic initialization error: {e}")
+
 from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
-import os
 import logging
 import re
 import html
