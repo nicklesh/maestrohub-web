@@ -3261,8 +3261,13 @@ async def get_bookings(request: Request, role: str = "consumer"):
     results = []
     for b in bookings:
         tutor = await db.tutors.find_one({"tutor_id": b["tutor_id"]}, {"_id": 0})
-        tutor_user = await db.users.find_one({"user_id": tutor["user_id"]}, {"_id": 0}) if tutor else None
+        tutor_user = None
+        if tutor and tutor.get("user_id"):
+            tutor_user = await get_user_doc(tutor.get("user_id"))
         student = await db.students.find_one({"student_id": b["student_id"]}, {"_id": 0})
+        
+        # Get tutor name with fallback
+        tutor_name = tutor_user.get("name") if tutor_user else (tutor.get("name") if tutor else "Unknown")
         
         # Get market info for currency
         market_id = b.get("market_id") or (tutor.get("market_id") if tutor else "US_USD") or "US_USD"
