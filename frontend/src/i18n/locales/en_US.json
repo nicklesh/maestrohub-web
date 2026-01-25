@@ -849,6 +849,7 @@
       "available_slots": "Available Slots",
       "no_slots": "No available slots on this day",
       "booked": "Booked",
+      "coach_booked": "Coach Booked",
       "held": "Held",
       "unavailable": "Unavailable",
       "your_booking": "Your Booking",
