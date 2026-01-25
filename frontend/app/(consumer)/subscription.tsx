@@ -81,20 +81,29 @@ export default function SubscriptionScreen() {
         {
           text: t('subscription.cancel_subscription'),
           style: 'destructive',
-          onPress: async () => {
-            setProcessing(true);
-            try {
-              const success = await cancelSubscription();
-              if (success) {
-                Alert.alert(t('subscription.cancelled_title'), t('subscription.cancelled_message'));
-              }
-            } finally {
-              setProcessing(false);
-            }
+          onPress: () => {
+            performCancel();
           },
         },
       ]
     );
+  };
+
+  const performCancel = async () => {
+    setProcessing(true);
+    try {
+      const success = await cancelSubscription();
+      if (success) {
+        Alert.alert(t('subscription.cancelled_title'), t('subscription.cancelled_message'));
+      } else {
+        Alert.alert(t('subscription.error_title'), 'Failed to cancel subscription');
+      }
+    } catch (error) {
+      console.error('Cancel error:', error);
+      Alert.alert(t('subscription.error_title'), 'An error occurred');
+    } finally {
+      setProcessing(false);
+    }
   };
 
   const handleReactivate = async () => {
