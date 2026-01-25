@@ -371,10 +371,10 @@ export default function SearchScreen() {
         )}
         
         {/* Market Flag Badge */}
-        {item.market_flag && (
+        {item.market_code && (
           <View style={[styles.marketBadge, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-            <Text style={styles.marketFlag}>{item.market_flag}</Text>
             <Text style={[styles.marketCode, { color: colors.textMuted }]}>{item.market_code}</Text>
+            <Text style={styles.marketFlag}>{item.market_flag}</Text>
           </View>
         )}
         
