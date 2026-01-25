@@ -62,7 +62,27 @@ export function MarketProvider({ children }: { children: ReactNode }) {
             setCurrentMarket(marketResponse.data.market);
             setNeedsSelection(false);
           } else {
-            setNeedsSelection(true);
+            // For authenticated users without market, use suggested market automatically
+            // Market selection should only be prompted during registration, not login
+            if (geoResponse.data.market_id) {
+              const suggestedMarket = marketsResponse.data.markets.find(
+                (m: Market) => m.market_id === geoResponse.data.market_id
+              );
+              if (suggestedMarket) {
+                setCurrentMarket(suggestedMarket);
+                // Auto-save this market for the user
+                try {
+                  await api.put('/me/market', { market_id: suggestedMarket.market_id });
+                } catch (e) {
+                  console.error('Failed to auto-save market:', e);
+                }
+                setNeedsSelection(false);
+              } else {
+                setNeedsSelection(true);
+              }
+            } else {
+              setNeedsSelection(true);
+            }
           }
         } catch (e) {
           // User not authenticated or no market set
