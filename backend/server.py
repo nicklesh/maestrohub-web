@@ -890,7 +890,7 @@ async def register(request: Request, data: UserCreate, response: Response):
 @api_router.post("/auth/login")
 @limiter.limit("5/minute")
 async def login(request: Request, data: UserLogin, response: Response):
-    user_doc = await db.users.find_one({"email": data.email}, {"_id": 0})
+    user_doc = await db.users.find_one({"email": data.email})
     if not user_doc:
         logger.error(f"Login failed: user not found for {data.email}")
         raise HTTPException(status_code=401, detail="Invalid credentials")
