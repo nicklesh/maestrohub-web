@@ -212,7 +212,11 @@ class BackendTester:
                 self.log_result("Create Test Booking", False, "Failed to get students for booking")
                 return None
             
-            students = students_response.json().get("students", [])
+            students = students_response.json()  # API returns direct array
+            if not isinstance(students, list):
+                # Fallback for object format
+                students = students_response.json().get("students", [])
+            
             if not students:
                 # Create a test student
                 student_response = await self.client.post(
