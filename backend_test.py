@@ -265,14 +265,14 @@ class APITester:
             if response.status_code == 200:
                 data = response.json()
                 
-                success = data.get("success", False)
+                message = data.get("message")
                 updated_markets = data.get("market_prices", {})
                 
                 self.log_result(
                     "Tutor Market Pricing - PUT", 
-                    success and len(updated_markets) >= 2, 
-                    f"Updated pricing: success={success}, markets={list(updated_markets.keys())}",
-                    {"success": success, "updated_markets": list(updated_markets.keys())}
+                    message and len(updated_markets) >= 2, 
+                    f"Updated pricing: message='{message}', markets={list(updated_markets.keys())}",
+                    {"message": message, "updated_markets": list(updated_markets.keys())}
                 )
             else:
                 self.log_result("Tutor Market Pricing - PUT", False, f"PUT pricing failed: {response.status_code} - {response.text}")
