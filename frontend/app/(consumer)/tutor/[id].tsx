@@ -43,6 +43,9 @@ interface TimeSlot {
   start_time: string;
   end_time: string;
   is_available: boolean;
+  available?: boolean;
+  is_booked?: boolean;
+  is_held?: boolean;
 }
 
 interface SessionPackage {
