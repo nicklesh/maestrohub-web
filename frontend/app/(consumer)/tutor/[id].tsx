@@ -344,7 +344,7 @@ export default function TutorDetailScreen() {
           </View>
 
           <View style={styles.tagsRow}>
-            {(tutor.modality || []).map((m) => (
+            {(Array.isArray(tutor.modality) ? tutor.modality : [tutor.modality].filter(Boolean)).map((m) => (
               <View key={m} style={[styles.tag, { backgroundColor: colors.primaryLight }]}>
                 <Ionicons name={m === 'online' ? 'videocam' : m === 'hybrid' ? 'sync' : 'location'} size={14} color={colors.primary} />
                 <Text style={[styles.tagText, { color: colors.primary }]}>
