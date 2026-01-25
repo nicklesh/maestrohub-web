@@ -182,18 +182,11 @@ async def main():
     # Initialize OpenAI client
     client = AsyncOpenAI(api_key=OPENAI_API_KEY)
     
-    # Initialize chat with Gemini (faster for batch translations)
-    chat = LlmChat(
-        api_key=API_KEY,
-        session_id="i18n-translation",
-        system_message="You are a professional translator. Translate UI text accurately and concisely."
-    ).with_model("gemini", "gemini-2.5-flash")
-    
     print("Starting i18n translation...")
     
     # Process each locale
     for locale_code in LANGUAGE_NAMES.keys():
-        await translate_locale(locale_code, en_data, chat)
+        await translate_locale(locale_code, en_data, client)
     
     print("\nTranslation complete!")
 
