@@ -840,6 +840,7 @@
       "select_time": "Select Time",
       "available_slots": "Available Slots",
       "no_slots": "No available slots on this day",
+      "booked": "Booked",
       "levels": "Levels",
       "reviews_count": "({{count}} reviews)",
       "cancellation_notice": "Cancellation Notice",
