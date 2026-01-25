@@ -3173,13 +3173,14 @@ async def notify_coach(booking_id: str, request: Request):
     consumer_name = consumer_user["name"] if consumer_user else "Parent"
     
     # Create in-app notification for coach
+    note_text = f"\n\nNote: {note}" if note else ""
     notif_id = f"notif_{uuid.uuid4().hex[:12]}"
     await db.notifications.insert_one({
         "notification_id": notif_id,
         "user_id": tutor["user_id"],
         "type": "reminder",
         "title": "Session Reminder",
-        "message": f"{consumer_name} is reminding you about the session with {student_name} on {session_date} at {session_time}.",
+        "message": f"{consumer_name} is reminding you about the session with {student_name} on {session_date} at {session_time}.{note_text}",
         "data": {"booking_id": booking_id, "consumer_id": user.user_id},
         "read": False,
         "created_at": datetime.now(timezone.utc)
