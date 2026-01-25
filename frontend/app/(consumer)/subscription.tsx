@@ -378,6 +378,29 @@ export default function SubscriptionScreen() {
           </View>
         </View>
       </Modal>
+
+      {/* Success Modal */}
+      <Modal visible={showSuccessModal} animationType="fade" transparent>
+        <View style={styles.modalOverlay}>
+          <View style={[styles.confirmModal, { backgroundColor: colors.surface }]}>
+            <View style={styles.successIconContainer}>
+              <Ionicons name="checkmark-circle" size={64} color={colors.success || colors.primary} />
+            </View>
+            <Text style={[styles.confirmTitle, { color: colors.text }]}>
+              {successMessage.title}
+            </Text>
+            <Text style={[styles.confirmMessage, { color: colors.textMuted }]}>
+              {successMessage.message}
+            </Text>
+            <TouchableOpacity
+              style={[styles.okButton, { backgroundColor: colors.primary }]}
+              onPress={() => setShowSuccessModal(false)}
+            >
+              <Text style={styles.okButtonText}>{t('common.ok')}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
