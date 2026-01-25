@@ -40,13 +40,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     height: '100%',
-    opacity: 0.6,
+    opacity: 0.4,
   },
   backgroundOverlay: {
     position: 'absolute',
     width: '100%',
     height: '100%',
-    opacity: 0.7,
+    opacity: 0.5,
   },
   content: {
     flex: 1,
