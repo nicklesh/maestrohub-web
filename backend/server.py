@@ -3332,7 +3332,9 @@ async def get_booking(booking_id: str, request: Request):
     
     # Enrich with tutor/student info and currency
     booking_tutor = await db.tutors.find_one({"tutor_id": booking["tutor_id"]}, {"_id": 0})
-    tutor_user = await db.users.find_one({"user_id": booking_tutor["user_id"]}, {"_id": 0}) if booking_tutor else None
+    tutor_user = None
+    if booking_tutor and booking_tutor.get("user_id"):
+        tutor_user = await get_user_doc(booking_tutor.get("user_id"))
     student = await db.students.find_one({"student_id": booking.get("student_id")}, {"_id": 0})
     
     # Get market info for currency
