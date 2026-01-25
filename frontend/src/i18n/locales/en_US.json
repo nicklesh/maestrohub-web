@@ -841,6 +841,7 @@
       "available_slots": "Available Slots",
       "no_slots": "No available slots on this day",
       "booked": "Booked",
+      "current_booking": "Current Booking",
       "levels": "Levels",
       "reviews_count": "({{count}} reviews)",
       "cancellation_notice": "Cancellation Notice",
