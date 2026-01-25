@@ -1749,7 +1749,10 @@
       "has_waiting_room": "Has waiting room",
       "edit_meeting_link": "Edit Meeting Link",
       "no_meeting_link": "No meeting link set",
-      "set_meeting_link": "Set Meeting Link"
+      "set_meeting_link": "Set Meeting Link",
+      "send_notification_to_coach": "Send Notification to Coach",
+      "notification_sent": "Notification sent to coach",
+      "notification_failed": "Failed to send notification"
     },
     "add_child": {
       "title": "Add Child",
