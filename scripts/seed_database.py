@@ -289,10 +289,13 @@ def create_tutor_profiles(db, coaches_data, users_collection):
             "name": coach["name"],
             "bio": f"Experienced {coach['subcategory']} coach with a passion for teaching. I specialize in helping students achieve their goals through personalized instruction.",
             "category": coach["category"],
+            "categories": [coach["category"]],  # Array for search
             "subcategory": coach["subcategory"],
+            "subjects": [coach["subcategory"]],  # Array for search
             "base_price": coach["price"],
             "currency": coach["market"].split("_")[1],
             "market": coach["market"],
+            "market_id": coach["market"],  # Used in search queries
             "modality": coach["modality"],
             "experience_years": 5,
             "rating": 4.5 + (hash(coach["email"]) % 10) / 20,  # Random rating 4.5-5.0
@@ -308,6 +311,8 @@ def create_tutor_profiles(db, coaches_data, users_collection):
             },
             "is_active": True,
             "is_verified": True,
+            "is_published": True,  # Required for search
+            "status": "approved",  # Required for search
             "created_at": now,
             "updated_at": now,
         }
