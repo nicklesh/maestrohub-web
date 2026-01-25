@@ -32,14 +32,15 @@ interface Student {
 
 interface TutorProfile {
   tutor_id: string;
-  user_name: string;
+  user_name?: string;
+  name?: string;
   base_price: number;
-  duration_minutes: number;
+  duration_minutes?: number;
   currency?: string;
   currency_symbol?: string;
-  policies: {
-    cancel_window_hours: number;
-    no_show_policy: string;
+  policies?: {
+    cancel_window_hours?: number;
+    no_show_policy?: string;
   };
 }
 
