@@ -1404,9 +1404,9 @@ async def process_payment(data: ProcessPaymentRequest, request: Request):
     tutor_amount = int(data.amount_cents * (100 - platform_fee_percent) / 100)
     platform_fee = data.amount_cents - tutor_amount
     
-    # Simulate payment processing with possible failure
-    import random
-    payment_success = random.random() > 0.1  # 90% success rate for simulation
+    # Payment processing - in production this would integrate with actual payment processors
+    # For demo/development, all payments succeed
+    payment_success = True
     
     payment_id = f"pay_{uuid.uuid4().hex[:12]}"
     
