@@ -2534,12 +2534,13 @@ async def get_tutor_availability(tutor_id: str, date: str = None, from_date: str
     slots = []
     
     # Handle single date parameter (used by frontend)
+    # Note: Times are treated as local times (no timezone conversion)
     if date:
-        from_dt = datetime.fromisoformat(date).replace(tzinfo=timezone.utc)
+        from_dt = datetime.fromisoformat(date)
         to_dt = from_dt + timedelta(days=1)
     else:
-        from_dt = datetime.fromisoformat(from_date).replace(tzinfo=timezone.utc) if from_date else now
-        to_dt = datetime.fromisoformat(to_date).replace(tzinfo=timezone.utc) if to_date else now + timedelta(days=30)
+        from_dt = datetime.fromisoformat(from_date) if from_date else now.replace(tzinfo=None)
+        to_dt = datetime.fromisoformat(to_date) if to_date else (now + timedelta(days=30)).replace(tzinfo=None)
     
     current = from_dt
     while current < to_dt:
