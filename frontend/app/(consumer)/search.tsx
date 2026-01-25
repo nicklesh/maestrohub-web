@@ -933,17 +933,14 @@ const styles = StyleSheet.create({
   tutorsListMultiColumn: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
   },
   tutorCardWrapper: {
-    width: '32%',
+    width: '48%',
     marginBottom: 12,
-    marginRight: '1.33%',
   },
   tutorCardWrapperSingle: {
     width: '100%',
-    maxWidth: 700,
-    alignSelf: 'center',
     marginBottom: 12,
   },
   loadMoreBtn: {
