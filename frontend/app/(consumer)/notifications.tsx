@@ -103,9 +103,9 @@ export default function NotificationsScreen() {
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const days = Math.floor(hours / 24);
 
-    if (hours < 1) return t('tutor.notifications.just_now');
-    if (hours < 24) return t('tutor.notifications.hours_ago', { count: hours });
-    if (days < 7) return t('tutor.notifications.days_ago', { count: days });
+    if (hours < 1) return t('pages.notifications.just_now');
+    if (hours < 24) return t('pages.notifications.hours_ago', { count: hours });
+    if (days < 7) return t('pages.notifications.days_ago', { count: days });
     // Use locale-aware date formatting
     const localeCode = locale === 'hi_IN' ? 'hi-IN' : locale === 'te_IN' ? 'te-IN' : locale?.replace('_', '-') || 'en-US';
     return date.toLocaleDateString(localeCode, { month: 'short', day: 'numeric' });
