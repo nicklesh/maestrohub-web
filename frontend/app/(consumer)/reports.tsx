@@ -26,6 +26,8 @@ interface ReportSummary {
   completed_sessions: number;
   upcoming_sessions: number;
   canceled_sessions: number;
+  rescheduled_sessions: number;
+  canceled_amount_cents: number;
   total_spent_cents: number;
   currency: string;
   currency_symbol: string;
