@@ -50,7 +50,7 @@ export default function SubscriptionScreen() {
   const [successMessage, setSuccessMessage] = useState({ title: '', message: '' });
 
   const paymentMethods = [
-    { id: 'stripe', name: t('subscription.payment_credit_card'), icon: 'card-outline' },
+    { id: 'paypal', name: t('subscription.payment_paypal'), icon: 'logo-paypal' },
     { id: 'google_pay', name: t('subscription.payment_google_pay'), icon: 'logo-google' },
     { id: 'apple_pay', name: t('subscription.payment_apple_pay'), icon: 'logo-apple' },
     { id: 'venmo', name: t('subscription.payment_venmo'), icon: 'wallet-outline' },

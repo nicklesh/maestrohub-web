@@ -2397,7 +2397,7 @@
     "choose_plan": "Choose Your Plan",
     "best_value": "Best Value",
     "payment_method": "Payment Method",
-    "payment_credit_card": "Credit Card",
+    "payment_paypal": "PayPal",
     "payment_google_pay": "Google Pay",
     "payment_apple_pay": "Apple Pay",
     "payment_venmo": "Venmo",
