@@ -238,7 +238,46 @@ export default function TutorDetailScreen() {
     });
   };
 
-  const dates = Array.from({ length: 14 }, (_, i) => addDays(startOfDay(new Date()), i));
+  // Generate dates with booking date first if in update mode
+  const generateDates = () => {
+    const baseDates = Array.from({ length: 14 }, (_, i) => addDays(startOfDay(new Date()), i));
+    
+    if (currentBooking) {
+      const bookingDate = startOfDay(parseToLocalTime(currentBooking.start_at));
+      // Check if booking date is already in the list
+      const existingIndex = baseDates.findIndex(d => 
+        format(d, 'yyyy-MM-dd') === format(bookingDate, 'yyyy-MM-dd')
+      );
+      
+      if (existingIndex === -1) {
+        // Booking date not in list, add it at the beginning
+        return [bookingDate, ...baseDates];
+      } else if (existingIndex > 0) {
+        // Move booking date to the front
+        const reordered = [...baseDates];
+        reordered.splice(existingIndex, 1);
+        return [bookingDate, ...reordered];
+      }
+    }
+    return baseDates;
+  };
+  
+  const dates = generateDates();
+
+  // Helper to convert UTC time string (HH:MM) to local time
+  const convertSlotTimeToLocal = (utcTimeStr: string, dateContext: Date): string => {
+    // Parse the time and combine with the selected date
+    const [hours, minutes] = utcTimeStr.split(':').map(Number);
+    const utcDate = new Date(Date.UTC(
+      dateContext.getFullYear(),
+      dateContext.getMonth(),
+      dateContext.getDate(),
+      hours,
+      minutes
+    ));
+    // Format in local time
+    return format(utcDate, 'h:mm a');
+  };
 
   if (loading) {
     return (
