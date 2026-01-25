@@ -403,8 +403,12 @@ def seed_database():
     # Seed users
     print("  Seeding users...")
     users, coaches_data = create_sample_users(db)
-    db.users.insert_many(users)
+    result = db.users.insert_many(users)
     print(f"    ✅ {len(users)} users created (1 admin, {len(coaches_data)} coaches, {len(users) - len(coaches_data) - 1} parents)")
+    
+    # Map inserted ids back to users
+    for i, inserted_id in enumerate(result.inserted_ids):
+        users[i]["_id"] = inserted_id
     
     # Seed subscriptions for premium parents
     print("  Seeding subscriptions...")
@@ -417,9 +421,12 @@ def seed_database():
             plan_id = "monthly" if user["subscription_status"] == "premium_monthly" else "yearly"
             period_days = 30 if plan_id == "monthly" else 365
             
+            # Use MongoDB's _id (converted to string) as user_id for subscription
+            user_id_str = str(user["_id"])
+            
             subscription = {
                 "subscription_id": f"sub_{secrets.token_hex(12)}",
-                "user_id": user["user_id"],
+                "user_id": user_id_str,
                 "plan_id": plan_id,
                 "status": "active",
                 "payment_method": "stripe",
@@ -440,7 +447,7 @@ def seed_database():
             
             # Update user with subscription_id
             db.users.update_one(
-                {"user_id": user["user_id"]},
+                {"_id": user["_id"]},
                 {"$set": {"subscription_id": subscription["subscription_id"]}}
             )
     
