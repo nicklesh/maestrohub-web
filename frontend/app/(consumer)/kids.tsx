@@ -300,64 +300,65 @@ export default function KidsScreen() {
               {editingKid ? t('pages.kids.edit_child') : t('pages.kids.add_child')}
             </Text>
 
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.add_child.name')} *</Text>
-            <TextInput
-              style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-              placeholder={t('pages.add_child.name_placeholder')}
-              placeholderTextColor={colors.textMuted}
-              value={formName}
-              onChangeText={setFormName}
-            />
+            <ScrollView style={styles.formScrollView} showsVerticalScrollIndicator={false}>
+              <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.add_child.name')} *</Text>
+              <TextInput
+                style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
+                placeholder={t('pages.add_child.name_placeholder')}
+                placeholderTextColor={colors.textMuted}
+                value={formName}
+                onChangeText={setFormName}
+              />
 
-            <View style={styles.row}>
-              <View style={styles.halfInput}>
-                <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.add_child.age')}</Text>
-                <TextInput
-                  style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-                  placeholder={t('pages.add_child.age_placeholder')}
-                  placeholderTextColor={colors.textMuted}
-                  value={formAge}
-                  onChangeText={setFormAge}
-                  keyboardType="numeric"
-                />
+              <View style={styles.row}>
+                <View style={styles.halfInput}>
+                  <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.add_child.age')}</Text>
+                  <TextInput
+                    style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
+                    placeholder={t('pages.add_child.age_placeholder')}
+                    placeholderTextColor={colors.textMuted}
+                    value={formAge}
+                    onChangeText={setFormAge}
+                    keyboardType="numeric"
+                  />
+                </View>
+                <View style={styles.halfInput}>
+                  <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.add_child.grade')}</Text>
+                  <TextInput
+                    style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
+                    placeholder={t('pages.add_child.grade_placeholder')}
+                    placeholderTextColor={colors.textMuted}
+                    value={formGrade}
+                    onChangeText={setFormGrade}
+                  />
+                </View>
               </View>
-              <View style={styles.halfInput}>
-                <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.add_child.grade')}</Text>
-                <TextInput
-                  style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-                  placeholder={t('pages.add_child.grade_placeholder')}
-                  placeholderTextColor={colors.textMuted}
-                  value={formGrade}
-                  onChangeText={setFormGrade}
-                />
+
+              {/* Contact Information Section */}
+              <View style={[styles.sectionDivider, { backgroundColor: colors.border }]} />
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.add_child.notification_contact')}</Text>
+              <View style={[styles.privacyNotice, { backgroundColor: colors.backgroundSecondary, borderColor: colors.primary }]}>
+                <Ionicons name="shield-checkmark-outline" size={18} color={colors.primary} />
+                <Text style={[styles.privacyText, { color: colors.textSecondary }]}>
+                  {t('pages.add_child.notification_info')}
+                </Text>
               </View>
-            </View>
 
-            {/* Contact Information Section */}
-            <View style={[styles.sectionDivider, { backgroundColor: colors.border }]} />
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.add_child.notification_contact')}</Text>
-            <View style={[styles.privacyNotice, { backgroundColor: colors.backgroundSecondary, borderColor: colors.primary }]}>
-              <Ionicons name="shield-checkmark-outline" size={18} color={colors.primary} />
-              <Text style={[styles.privacyText, { color: colors.textSecondary }]}>
-                {t('pages.add_child.notification_info')}
-              </Text>
-            </View>
+              <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.add_child.email')}</Text>
+              <TextInput
+                style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
+                placeholder={t('pages.add_child.email_placeholder')}
+                placeholderTextColor={colors.textMuted}
+                value={formEmail}
+                onChangeText={setFormEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
 
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.add_child.email')}</Text>
-            <TextInput
-              style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-              placeholder={t('pages.add_child.email_placeholder')}
-              placeholderTextColor={colors.textMuted}
-              value={formEmail}
-              onChangeText={setFormEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
-
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.add_child.phone')}</Text>
-            <TextInput
-              style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-              placeholder={t('pages.add_child.phone_placeholder')}
+              <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.add_child.phone')}</Text>
+              <TextInput
+                style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
+                placeholder={t('pages.add_child.phone_placeholder')}
               placeholderTextColor={colors.textMuted}
               value={formPhone}
               onChangeText={setFormPhone}
