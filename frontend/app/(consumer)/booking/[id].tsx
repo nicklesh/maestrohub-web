@@ -41,6 +41,7 @@ interface Booking {
   booking_id: string;
   tutor_id: string;
   tutor_name: string;
+  tutor_subject?: string;
   student_id: string;
   student_name: string;
   start_at: string;
