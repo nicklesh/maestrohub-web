@@ -1868,10 +1868,14 @@ async def get_student_schedule(student_id: str, request: Request):
     enriched = []
     for booking in bookings:
         tutor = await db.tutors.find_one({"tutor_id": booking.get("tutor_id")}, {"_id": 0})
-        tutor_user = await db.users.find_one({"user_id": tutor.get("user_id") if tutor else None}, {"_id": 0})
+        tutor_user = None
+        if tutor and tutor.get("user_id"):
+            tutor_user = await get_user_doc(tutor.get("user_id"))
+        # Fallback to tutor name if user lookup fails
+        tutor_name = tutor_user.get("name") if tutor_user else (tutor.get("name") if tutor else "Unknown")
         enriched.append({
             **booking,
-            "tutor_name": tutor_user.get("name") if tutor_user else "Unknown",
+            "tutor_name": tutor_name,
             "subject": tutor.get("subjects", [])[0] if tutor and tutor.get("subjects") else "General"
         })
     
