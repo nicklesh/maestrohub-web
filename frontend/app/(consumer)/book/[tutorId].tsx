@@ -83,6 +83,7 @@ export default function BookingScreen() {
   // Payment state
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [paymentId, setPaymentId] = useState<string | null>(null);
+  const [availableProviders, setAvailableProviders] = useState<any[]>([]);
   
   // Intake form
   const [goals, setGoals] = useState('');
