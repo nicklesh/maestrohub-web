@@ -8231,7 +8231,12 @@ async def get_user_subscription(user_id: str) -> dict:
     
     if not subscription:
         # Check if user is in trial period (new user)
-        user = await db.users.find_one({"user_id": user_id})
+        from bson import ObjectId
+        try:
+            user = await db.users.find_one({"_id": ObjectId(user_id)})
+        except:
+            user = await db.users.find_one({"user_id": user_id})
+            
         if user:
             created_at = user.get("created_at", datetime.now(timezone.utc))
             trial_ends_at = created_at + timedelta(days=TRIAL_DURATION_DAYS)
