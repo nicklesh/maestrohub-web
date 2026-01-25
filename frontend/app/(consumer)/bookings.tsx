@@ -244,6 +244,30 @@ export default function BookingsScreen() {
               {t('pages.bookings.past')}
             </Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.tab,
+              { backgroundColor: filter === 'rescheduled' ? colors.warning : colors.surface, borderColor: colors.border },
+              isTablet && styles.tabTablet
+            ]}
+            onPress={() => setFilter('rescheduled')}
+          >
+            <Text style={[styles.tabText, { color: filter === 'rescheduled' ? '#FFFFFF' : colors.text }, isTablet && styles.tabTextTablet]}>
+              {t('pages.bookings.rescheduled') || 'Rescheduled'}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.tab,
+              { backgroundColor: filter === 'cancelled' ? colors.error : colors.surface, borderColor: colors.border },
+              isTablet && styles.tabTablet
+            ]}
+            onPress={() => setFilter('cancelled')}
+          >
+            <Text style={[styles.tabText, { color: filter === 'cancelled' ? '#FFFFFF' : colors.text }, isTablet && styles.tabTextTablet]}>
+              {t('pages.bookings.cancelled')}
+            </Text>
+          </TouchableOpacity>
         </View>
 
         {filteredBookings.length === 0 ? (
