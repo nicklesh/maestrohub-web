@@ -248,15 +248,19 @@ export default function FAQScreen() {
         </View>
       </ScrollView>
       
-      {/* Contact Us Modal */}
+      {/* Contact Us Modal - Bottom Sheet style like header */}
       <Modal visible={showContactModal} animationType="slide" transparent>
-        <View style={styles.modalOverlay}>
+        <KeyboardAvoidingView 
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.modalOverlay}
+        >
           <TouchableOpacity 
             style={styles.modalBackdrop} 
             onPress={() => !contactSuccess && setShowContactModal(false)}
             activeOpacity={1}
           />
-          <View style={[styles.modalContent, { backgroundColor: colors.surface }, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
+          <View style={[styles.bottomSheet, { backgroundColor: colors.surface, overflow: 'hidden' }, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
+            <View style={[styles.sheetHandle, { backgroundColor: colors.gray300 }]} />
             {contactSuccess ? (
               <View style={styles.successContainer}>
                 <Ionicons name="checkmark-circle" size={64} color={colors.primary} />
@@ -267,12 +271,8 @@ export default function FAQScreen() {
               </View>
             ) : (
               <>
-                <View style={styles.modalHeader}>
-                  <Text style={[styles.modalTitle, { color: colors.text }]}>{t('pages.contact.title')}</Text>
-                  <TouchableOpacity onPress={() => setShowContactModal(false)}>
-                    <Ionicons name="close" size={24} color={colors.text} />
-                  </TouchableOpacity>
-                </View>
+                <Text style={[styles.sheetTitle, { color: colors.text }]}>{t('pages.contact.title')}</Text>
+                
                 <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.contact.subject')}</Text>
                 <TextInput
                   style={[styles.textInput, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
@@ -281,6 +281,7 @@ export default function FAQScreen() {
                   value={contactSubject}
                   onChangeText={setContactSubject}
                 />
+                
                 <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.contact.message')}</Text>
                 <TextInput
                   style={[styles.textArea, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
@@ -291,6 +292,7 @@ export default function FAQScreen() {
                   multiline
                   numberOfLines={4}
                 />
+                
                 <TouchableOpacity 
                   style={[styles.submitButton, { backgroundColor: colors.primary, opacity: isSending ? 0.7 : 1 }]}
                   onPress={handleSendContact}
@@ -305,7 +307,7 @@ export default function FAQScreen() {
               </>
             )}
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
     </SafeAreaView>
   );
