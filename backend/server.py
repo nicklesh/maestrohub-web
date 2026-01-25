@@ -460,7 +460,7 @@ class TutorProfileCreate(BaseModel):
     categories: List[str]  # academic, music, activities
     subjects: List[str]
     levels: Optional[List[str]] = []  # elementary, middle_school, high_school, college, adult
-    modality: List[str]  # online, in_person
+    modality: List[str]  # online, in_person, hybrid
     service_area_radius: Optional[int] = 10  # miles
     base_price: float
     duration_minutes: int = 60
@@ -468,6 +468,10 @@ class TutorProfileCreate(BaseModel):
     meeting_link: Optional[str] = None  # Zoom/Teams/Google Meet link for online sessions
     waiting_room_enabled: bool = True  # Let meeting invitees wait to be allowed into meeting
     policies: TutorPolicies = TutorPolicies()
+    # Multi-market pricing: {"IN_INR": 4000, "GB_GBP": 40}
+    market_prices: Optional[Dict[str, float]] = None
+    # Markets where coach wants to be visible (for online/hybrid)
+    enabled_markets: Optional[List[str]] = None
 
 class TutorProfile(TutorProfileCreate):
     tutor_id: str
