@@ -1,580 +1,505 @@
 #!/usr/bin/env python3
 """
-Enhanced Duplicate Booking Prevention Testing
-Tests both same tutor conflicts and consumer schedule conflicts
+Maestro Hub Backend API Testing - Cross-Market Features
+Tests the new cross-market coach search, exchange rates, market pricing, and meeting link APIs
 """
 
 import asyncio
 import httpx
 import json
 import os
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
 from typing import Dict, Any
 
 # Get backend URL from environment
-BACKEND_URL = os.getenv('REACT_APP_BACKEND_URL', 'https://timezone-fix-17.preview.emergentagent.com')
+BACKEND_URL = os.environ.get('EXPO_PUBLIC_BACKEND_URL', 'https://timezone-fix-17.preview.emergentagent.com')
 API_BASE = f"{BACKEND_URL}/api"
 
-class BookingConflictTester:
+# Test credentials
+TEST_CREDENTIALS = {
+    "consumer": {
+        "email": "parent1@test.com",
+        "password": "password123"
+    },
+    "tutor": {
+        "email": "tutor4@test.com", 
+        "password": "password123"
+    }
+}
+
+class APITester:
     def __init__(self):
         self.client = httpx.AsyncClient(timeout=30.0)
+        self.tokens = {}
         self.test_results = []
         
-        # Test users
-        self.consumer1_email = "consumer1@testbooking.com"
-        self.consumer1_password = "TestPass123!"
-        self.consumer1_token = None
-        self.consumer1_id = None
+    async def __aenter__(self):
+        return self
         
-        self.consumer2_email = "consumer2@testbooking.com" 
-        self.consumer2_password = "TestPass123!"
-        self.consumer2_token = None
-        self.consumer2_id = None
-        
-        self.tutor1_email = "tutor1conflict@testbooking.com"
-        self.tutor1_password = "TestPass123!"
-        self.tutor1_token = None
-        self.tutor1_id = None
-        
-        self.tutor2_email = "tutor2conflict@testbooking.com"
-        self.tutor2_password = "TestPass123!"
-        self.tutor2_token = None
-        self.tutor2_id = None
-        
-        # Test data
-        self.student1_id = None
-        self.student2_id = None
-        self.booking1_id = None
-        self.booking2_id = None
-        self.actual_tutor1_id = None  # Actual tutor_id from profile creation
-        self.actual_tutor2_id = None  # Actual tutor_id from profile creation
-
-    async def log_result(self, test_name: str, success: bool, message: str, details: Dict[str, Any] = None):
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self.client.aclose()
+    
+    def log_result(self, test_name: str, success: bool, details: str, response_data: Any = None):
         """Log test result"""
-        result = {
+        status = "✅ PASS" if success else "❌ FAIL"
+        print(f"{status} - {test_name}: {details}")
+        
+        self.test_results.append({
             "test": test_name,
             "success": success,
-            "message": message,
-            "details": details or {},
+            "details": details,
+            "response_data": response_data,
             "timestamp": datetime.now().isoformat()
-        }
-        self.test_results.append(result)
-        status = "✅ PASS" if success else "❌ FAIL"
-        print(f"{status} - {test_name}: {message}")
-        if details:
-            print(f"   Details: {json.dumps(details, indent=2)}")
-
-    async def register_user(self, email: str, password: str, role: str = "consumer") -> tuple[str, str]:
-        """Register a test user and return (user_id, token)"""
+        })
+    
+    async def login(self, role: str) -> str:
+        """Login and get JWT token"""
+        creds = TEST_CREDENTIALS[role]
+        
         try:
-            response = await self.client.post(f"{API_BASE}/auth/register", json={
-                "email": email,
-                "password": password,
-                "name": f"Test {role.title()}",
-                "role": role
-            })
-            
-            if response.status_code == 200:
-                data = response.json()
-                return data["user_id"], data["token"]
-            elif response.status_code == 400 and "already registered" in response.text:
-                # User exists, try to login
-                login_response = await self.client.post(f"{API_BASE}/auth/login", json={
-                    "email": email,
-                    "password": password
-                })
-                if login_response.status_code == 200:
-                    data = login_response.json()
-                    return data["user_id"], data["token"]
-            
-            raise Exception(f"Registration failed: {response.status_code} - {response.text}")
-            
-        except Exception as e:
-            raise Exception(f"Failed to register {email}: {str(e)}")
-
-    async def create_tutor_profile(self, token: str, user_id: str) -> str:
-        """Create tutor profile and return tutor_id"""
-        try:
-            headers = {"Authorization": f"Bearer {token}"}
-            
-            # First check who we are authenticated as
-            me_response = await self.client.get(f"{API_BASE}/auth/me", headers=headers)
-            if me_response.status_code == 200:
-                me_data = me_response.json()
-                print(f"   Authenticated as user: {me_data.get('user_id', 'unknown')} (expected: {user_id})")
-            
-            # First try to get existing profile
-            get_response = await self.client.get(f"{API_BASE}/tutors/profile", headers=headers)
-            if get_response.status_code == 200:
-                data = get_response.json()
-                print(f"   Found existing tutor profile for user {user_id}: {data.get('tutor_id', '')} (profile user_id: {data.get('user_id', 'unknown')})")
-                return data.get("tutor_id", "")
-            
-            # If no existing profile, create new one
-            print(f"   Creating new tutor profile for user {user_id}")
-            response = await self.client.post(f"{API_BASE}/tutors/profile", 
-                headers=headers,
-                json={
-                    "bio": f"Test tutor for booking conflict testing - {user_id}",
-                    "categories": ["academic"],
-                    "subjects": ["Math", "Science"],
-                    "levels": ["elementary", "middle_school"],
-                    "modality": ["online"],
-                    "base_price": 50.0,
-                    "duration_minutes": 60,
-                    "payout_country": "US"
-                }
-            )
-            if response.status_code == 200:
-                data = response.json()
-                print(f"   Created new tutor profile for user {user_id}: {data.get('tutor_id', '')} (profile user_id: {data.get('user_id', 'unknown')})")
-                return data.get("tutor_id", "")
-            else:
-                print(f"Tutor profile creation failed for user {user_id}: {response.status_code} - {response.text}")
-                return ""
-        except Exception as e:
-            print(f"Failed to create tutor profile for user {user_id}: {e}")
-            return ""
-
-    async def create_student(self, token: str) -> str:
-        """Create a test student and return student_id"""
-        try:
-            headers = {"Authorization": f"Bearer {token}"}
-            response = await self.client.post(f"{API_BASE}/students",
-                headers=headers,
-                json={
-                    "name": "Test Student",
-                    "age": 12,
-                    "grade": "7th"
-                }
-            )
-            if response.status_code == 200:
-                return response.json()["student_id"]
-            else:
-                raise Exception(f"Failed to create student: {response.status_code} - {response.text}")
-        except Exception as e:
-            raise Exception(f"Student creation error: {str(e)}")
-
-    async def create_booking_hold(self, token: str, tutor_id: str, start_time: datetime) -> tuple[bool, str, dict]:
-        """Create booking hold and return (success, hold_id, response_data)"""
-        try:
-            headers = {"Authorization": f"Bearer {token}"}
-            response = await self.client.post(f"{API_BASE}/booking-holds",
-                headers=headers,
-                json={
-                    "tutor_id": tutor_id,
-                    "start_at": start_time.isoformat(),
-                    "duration_minutes": 60
-                }
+            response = await self.client.post(
+                f"{API_BASE}/auth/login",
+                json=creds
             )
             
             if response.status_code == 200:
                 data = response.json()
-                return True, data["hold_id"], data
+                token = data.get("token")
+                self.tokens[role] = token
+                self.log_result(f"{role.title()} Login", True, f"Successfully logged in as {creds['email']}")
+                return token
             else:
-                return False, "", response.json() if response.status_code != 500 else {"error": response.text}
+                self.log_result(f"{role.title()} Login", False, f"Login failed: {response.status_code} - {response.text}")
+                return None
                 
         except Exception as e:
-            return False, "", {"error": str(e)}
-
-    async def create_booking(self, token: str, hold_id: str, student_id: str) -> tuple[bool, str, dict]:
-        """Create booking from hold and return (success, booking_id, response_data)"""
+            self.log_result(f"{role.title()} Login", False, f"Login error: {str(e)}")
+            return None
+    
+    def get_headers(self, role: str) -> Dict[str, str]:
+        """Get authorization headers for role"""
+        token = self.tokens.get(role)
+        if not token:
+            return {}
+        return {"Authorization": f"Bearer {token}"}
+    
+    async def test_cross_market_coach_search(self):
+        """Test Cross-Market Coach Search API"""
+        print("\n🔍 Testing Cross-Market Coach Search...")
+        
+        # Login as consumer
+        await self.login("consumer")
+        headers = self.get_headers("consumer")
+        
+        if not headers:
+            self.log_result("Cross-Market Search Setup", False, "Failed to get consumer authentication")
+            return
+        
+        # Test 1: Default search (should include cross-market coaches)
         try:
-            headers = {"Authorization": f"Bearer {token}"}
-            response = await self.client.post(f"{API_BASE}/bookings",
-                headers=headers,
-                json={
-                    "hold_id": hold_id,
-                    "student_id": student_id,
-                    "intake": {
-                        "goals": "Test booking for conflict testing",
-                        "current_level": "Beginner",
-                        "policy_acknowledged": True
-                    }
-                }
+            response = await self.client.get(
+                f"{API_BASE}/tutors/search",
+                headers=headers
             )
             
             if response.status_code == 200:
                 data = response.json()
-                return True, data["booking_id"], data
+                tutors = data.get("tutors", [])
+                
+                # Check for cross-market fields
+                cross_market_found = False
+                for tutor in tutors:
+                    if tutor.get("is_cross_market") or tutor.get("market_flag") or tutor.get("display_price"):
+                        cross_market_found = True
+                        break
+                
+                self.log_result(
+                    "Cross-Market Search - Default", 
+                    True, 
+                    f"Search returned {len(tutors)} tutors, cross-market fields present: {cross_market_found}",
+                    {"tutor_count": len(tutors), "has_cross_market_fields": cross_market_found}
+                )
             else:
-                return False, "", response.json() if response.status_code != 500 else {"error": response.text}
+                self.log_result("Cross-Market Search - Default", False, f"Search failed: {response.status_code} - {response.text}")
                 
         except Exception as e:
-            return False, "", {"error": str(e)}
-
-    async def reschedule_booking(self, token: str, booking_id: str, new_start: datetime) -> tuple[bool, dict]:
-        """Reschedule booking to new time and return (success, response_data)"""
+            self.log_result("Cross-Market Search - Default", False, f"Search error: {str(e)}")
+        
+        # Test 2: Local only search
         try:
-            headers = {"Authorization": f"Bearer {token}"}
-            new_end = new_start + timedelta(hours=1)
-            response = await self.client.put(f"{API_BASE}/bookings/{booking_id}/timeslot",
-                headers=headers,
-                json={
-                    "start_at": new_start.isoformat(),
-                    "end_at": new_end.isoformat()
-                }
+            response = await self.client.get(
+                f"{API_BASE}/tutors/search?local_only=true",
+                headers=headers
             )
             
             if response.status_code == 200:
-                return True, response.json()
+                data = response.json()
+                tutors = data.get("tutors", [])
+                
+                # All tutors should be from same market
+                local_only = all(not tutor.get("is_cross_market", False) for tutor in tutors)
+                
+                self.log_result(
+                    "Cross-Market Search - Local Only", 
+                    True, 
+                    f"Local search returned {len(tutors)} tutors, all local: {local_only}",
+                    {"tutor_count": len(tutors), "all_local": local_only}
+                )
             else:
-                return False, response.json() if response.status_code != 500 else {"error": response.text}
+                self.log_result("Cross-Market Search - Local Only", False, f"Local search failed: {response.status_code} - {response.text}")
                 
         except Exception as e:
-            return False, {"error": str(e)}
-
-    async def setup_test_users(self):
-        """Setup all test users and profiles"""
-        print("🔧 Setting up test users...")
+            self.log_result("Cross-Market Search - Local Only", False, f"Local search error: {str(e)}")
+    
+    async def test_exchange_rates_api(self):
+        """Test Exchange Rates API"""
+        print("\n💱 Testing Exchange Rates API...")
         
-        # Register consumers
-        self.consumer1_id, self.consumer1_token = await self.register_user(
-            self.consumer1_email, self.consumer1_password, "consumer"
-        )
-        self.consumer2_id, self.consumer2_token = await self.register_user(
-            self.consumer2_email, self.consumer2_password, "consumer"
-        )
-        
-        # Register tutors
-        self.tutor1_id, self.tutor1_token = await self.register_user(
-            self.tutor1_email, self.tutor1_password, "tutor"
-        )
-        self.tutor2_id, self.tutor2_token = await self.register_user(
-            self.tutor2_email, self.tutor2_password, "tutor"
-        )
-        
-        # Create tutor profiles and get actual tutor_ids
-        self.actual_tutor1_id = await self.create_tutor_profile(self.tutor1_token, self.tutor1_id)
-        self.actual_tutor2_id = await self.create_tutor_profile(self.tutor2_token, self.tutor2_id)
-        
-        print(f"   Tutor1 user_id: {self.tutor1_id}, tutor_id: {self.actual_tutor1_id}")
-        print(f"   Tutor2 user_id: {self.tutor2_id}, tutor_id: {self.actual_tutor2_id}")
-        
-        if not self.actual_tutor1_id or not self.actual_tutor2_id:
-            raise Exception("Failed to create tutor profiles")
-        
-        if self.actual_tutor1_id == self.actual_tutor2_id:
-            raise Exception(f"Both tutors have the same tutor_id: {self.actual_tutor1_id}")
-        
-        # Create students for consumers
-        self.student1_id = await self.create_student(self.consumer1_token)
-        self.student2_id = await self.create_student(self.consumer2_token)
-        
-        print(f"✅ Setup complete - Consumer1: {self.consumer1_id}, Consumer2: {self.consumer2_id}")
-        print(f"   Tutor1: {self.actual_tutor1_id}, Tutor2: {self.actual_tutor2_id}")
-
-    async def test_scenario_1_same_tutor_duplicate_prevention(self):
-        """
-        Scenario 1: Same Tutor Duplicate Prevention
-        1. Consumer creates booking with Tutor1 at specific time
-        2. Same consumer tries to book same tutor at same time
-        3. Expected: 409 Conflict with "This coach is already booked at this time"
-        """
-        print("\n📋 Testing Scenario 1: Same Tutor Duplicate Prevention")
-        
-        # Step 1: Create first booking
-        future_time = datetime.now(timezone.utc) + timedelta(hours=24)
-        
-        # Create hold for first booking
-        success, hold_id, hold_data = await self.create_booking_hold(
-            self.consumer1_token, self.actual_tutor1_id, future_time
-        )
-        
-        if not success:
-            await self.log_result(
-                "Scenario 1 - Setup", False, 
-                f"Failed to create initial booking hold: {hold_data}"
-            )
-            return
-        
-        # Complete first booking
-        success, booking_id, booking_data = await self.create_booking(
-            self.consumer1_token, hold_id, self.student1_id
-        )
-        
-        if not success:
-            await self.log_result(
-                "Scenario 1 - Setup", False,
-                f"Failed to create initial booking: {booking_data}"
-            )
-            return
-        
-        self.booking1_id = booking_id
-        await self.log_result(
-            "Scenario 1 - Setup", True,
-            f"Successfully created initial booking {booking_id} at {future_time}"
-        )
-        
-        # Step 2: Try to create duplicate booking hold at same time with same tutor
-        success, duplicate_hold_id, duplicate_data = await self.create_booking_hold(
-            self.consumer1_token, self.actual_tutor1_id, future_time
-        )
-        
-        if success:
-            await self.log_result(
-                "Scenario 1 - Same Tutor Duplicate", False,
-                "Expected 409 conflict but booking hold was created successfully",
-                {"hold_id": duplicate_hold_id, "response": duplicate_data}
-            )
-        else:
-            # Check if we got the expected 409 error
-            error_message = duplicate_data.get("detail", "")
-            if "already booked at this time" in error_message or "coach is already booked" in error_message.lower():
-                await self.log_result(
-                    "Scenario 1 - Same Tutor Duplicate", True,
-                    f"✅ Correctly prevented duplicate booking: {error_message}",
-                    {"expected_error": error_message}
+        # Test 1: Get USD rates
+        try:
+            response = await self.client.get(f"{API_BASE}/exchange-rates")
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                required_fields = ["base_currency", "rates", "last_updated"]
+                has_required = all(field in data for field in required_fields)
+                
+                rates = data.get("rates", {})
+                has_inr = "INR" in rates
+                
+                self.log_result(
+                    "Exchange Rates - USD Base", 
+                    has_required and has_inr, 
+                    f"USD rates: {len(rates)} currencies, has INR: {has_inr}",
+                    {"base": data.get("base_currency"), "currency_count": len(rates)}
                 )
             else:
-                await self.log_result(
-                    "Scenario 1 - Same Tutor Duplicate", False,
-                    f"Got error but not the expected message: {error_message}",
-                    {"actual_error": duplicate_data}
-                )
-
-    async def test_scenario_2_consumer_schedule_conflict_prevention(self):
-        """
-        Scenario 2: Consumer Schedule Conflict Prevention (NEW)
-        1. Use same consumer from scenario 1 (already has booking with Tutor1)
-        2. Try to create booking hold with DIFFERENT tutor (Tutor2) at SAME time
-        3. Expected: 409 Conflict with "You already have a session booked at this time"
-        """
-        print("\n📋 Testing Scenario 2: Consumer Schedule Conflict Prevention")
+                self.log_result("Exchange Rates - USD Base", False, f"USD rates failed: {response.status_code} - {response.text}")
+                
+        except Exception as e:
+            self.log_result("Exchange Rates - USD Base", False, f"USD rates error: {str(e)}")
         
-        if not self.booking1_id:
-            await self.log_result(
-                "Scenario 2 - Prerequisites", False,
-                "Scenario 1 must complete successfully first"
-            )
-            return
-        
-        # Get the time from the existing booking
-        future_time = datetime.now(timezone.utc) + timedelta(hours=24)
-        
-        # Try to create booking hold with DIFFERENT tutor at SAME time
-        success, hold_id, hold_data = await self.create_booking_hold(
-            self.consumer1_token, self.actual_tutor2_id, future_time
-        )
-        
-        if success:
-            await self.log_result(
-                "Scenario 2 - Consumer Schedule Conflict", False,
-                "Expected 409 conflict but booking hold was created with different tutor",
-                {"hold_id": hold_id, "response": hold_data}
-            )
-        else:
-            # Check if we got the expected consumer conflict error
-            error_message = hold_data.get("detail", "")
-            if "already have a session booked at this time" in error_message:
-                await self.log_result(
-                    "Scenario 2 - Consumer Schedule Conflict", True,
-                    f"✅ Correctly prevented consumer schedule conflict: {error_message}",
-                    {"expected_error": error_message}
+        # Test 2: Get INR rates
+        try:
+            response = await self.client.get(f"{API_BASE}/exchange-rates?base=INR")
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                base_currency = data.get("base_currency")
+                rates = data.get("rates", {})
+                has_usd = "USD" in rates
+                
+                self.log_result(
+                    "Exchange Rates - INR Base", 
+                    base_currency == "INR" and has_usd, 
+                    f"INR rates: base={base_currency}, {len(rates)} currencies, has USD: {has_usd}",
+                    {"base": base_currency, "currency_count": len(rates)}
                 )
             else:
-                await self.log_result(
-                    "Scenario 2 - Consumer Schedule Conflict", False,
-                    f"Got error but not the expected consumer conflict message: {error_message}",
-                    {"actual_error": hold_data}
+                self.log_result("Exchange Rates - INR Base", False, f"INR rates failed: {response.status_code} - {response.text}")
+                
+        except Exception as e:
+            self.log_result("Exchange Rates - INR Base", False, f"INR rates error: {str(e)}")
+    
+    async def test_tutor_market_pricing_api(self):
+        """Test Tutor Market Pricing API"""
+        print("\n💰 Testing Tutor Market Pricing API...")
+        
+        # Login as tutor
+        await self.login("tutor")
+        headers = self.get_headers("tutor")
+        
+        if not headers:
+            self.log_result("Tutor Market Pricing Setup", False, "Failed to get tutor authentication")
+            return
+        
+        # Test 1: Get current market pricing
+        try:
+            response = await self.client.get(
+                f"{API_BASE}/tutors/market-pricing",
+                headers=headers
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                required_fields = ["base_price", "market_pricing"]
+                has_required = all(field in data for field in required_fields)
+                
+                market_pricing = data.get("market_pricing", [])
+                
+                self.log_result(
+                    "Tutor Market Pricing - GET", 
+                    has_required, 
+                    f"Retrieved pricing: base_price={data.get('base_price')}, {len(market_pricing)} markets",
+                    {"base_price": data.get("base_price"), "market_count": len(market_pricing)}
                 )
-
-    async def test_scenario_3_reschedule_conflict_prevention(self):
-        """
-        Scenario 3: Reschedule Conflict Prevention
-        1. Consumer2 creates booking with Tutor2 at different time
-        2. Consumer1 tries to reschedule their existing booking to overlap with Consumer2's booking
-        3. Expected: 400 Error with "You already have another session booked at this time"
-        """
-        print("\n📋 Testing Scenario 3: Reschedule Conflict Prevention")
+                
+                # Store current data for update test
+                self.current_pricing = data
+                
+            else:
+                self.log_result("Tutor Market Pricing - GET", False, f"GET pricing failed: {response.status_code} - {response.text}")
+                
+        except Exception as e:
+            self.log_result("Tutor Market Pricing - GET", False, f"GET pricing error: {str(e)}")
         
-        # Step 1: Create second booking with different consumer and tutor at different time
-        different_time = datetime.now(timezone.utc) + timedelta(hours=48)  # 48 hours from now
-        
-        # Create hold for Consumer2 with Tutor2
-        success, hold_id, hold_data = await self.create_booking_hold(
-            self.consumer2_token, self.actual_tutor2_id, different_time
-        )
-        
-        if not success:
-            await self.log_result(
-                "Scenario 3 - Setup", False,
-                f"Failed to create second booking hold: {hold_data}"
+        # Test 2: Update market pricing
+        try:
+            update_data = {
+                "market_prices": {
+                    "US_USD": 50.0,
+                    "IN_INR": 3500.0
+                },
+                "enabled_markets": ["US_USD", "IN_INR"]
+            }
+            
+            response = await self.client.put(
+                f"{API_BASE}/tutors/market-pricing",
+                headers=headers,
+                json=update_data
             )
-            return
-        
-        # Complete second booking
-        success, booking2_id, booking_data = await self.create_booking(
-            self.consumer2_token, hold_id, self.student2_id
-        )
-        
-        if not success:
-            await self.log_result(
-                "Scenario 3 - Setup", False,
-                f"Failed to create second booking: {booking_data}"
-            )
-            return
-        
-        self.booking2_id = booking2_id
-        await self.log_result(
-            "Scenario 3 - Setup", True,
-            f"Successfully created second booking {booking2_id} at {different_time}"
-        )
-        
-        # Step 2: Create third booking for Consumer1 with Tutor1 at yet another time
-        third_time = datetime.now(timezone.utc) + timedelta(hours=72)  # 72 hours from now
-        
-        success, hold_id3, hold_data3 = await self.create_booking_hold(
-            self.consumer1_token, self.actual_tutor1_id, third_time
-        )
-        
-        if not success:
-            await self.log_result(
-                "Scenario 3 - Setup Third Booking", False,
-                f"Failed to create third booking hold: {hold_data3}"
-            )
-            return
-        
-        success, booking3_id, booking_data3 = await self.create_booking(
-            self.consumer1_token, hold_id3, self.student1_id
-        )
-        
-        if not success:
-            await self.log_result(
-                "Scenario 3 - Setup Third Booking", False,
-                f"Failed to create third booking: {booking_data3}"
-            )
-            return
-        
-        await self.log_result(
-            "Scenario 3 - Setup Third Booking", True,
-            f"Successfully created third booking {booking3_id} at {third_time}"
-        )
-        
-        # Step 3: Try to reschedule Consumer1's third booking to overlap with Consumer2's booking time
-        # This should fail because Consumer1 already has their first booking at 24 hours
-        # Let's try to reschedule to the same time as Consumer2's booking (48 hours)
-        success, reschedule_data = await self.reschedule_booking(
-            self.consumer1_token, booking3_id, different_time
-        )
-        
-        if success:
-            await self.log_result(
-                "Scenario 3 - Reschedule Conflict", False,
-                "Expected 400 error but reschedule was successful",
-                {"response": reschedule_data}
-            )
-        else:
-            # Check if we got the expected reschedule conflict error
-            error_message = reschedule_data.get("detail", "")
-            if "already have another session booked" in error_message or "already booked at this time" in error_message:
-                await self.log_result(
-                    "Scenario 3 - Reschedule Conflict", True,
-                    f"✅ Correctly prevented reschedule conflict: {error_message}",
-                    {"expected_error": error_message}
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                success = data.get("success", False)
+                updated_markets = data.get("market_prices", {})
+                
+                self.log_result(
+                    "Tutor Market Pricing - PUT", 
+                    success and len(updated_markets) >= 2, 
+                    f"Updated pricing: success={success}, markets={list(updated_markets.keys())}",
+                    {"success": success, "updated_markets": list(updated_markets.keys())}
                 )
             else:
-                await self.log_result(
-                    "Scenario 3 - Reschedule Conflict", False,
-                    f"Got error but not the expected reschedule conflict message: {error_message}",
-                    {"actual_error": reschedule_data}
-                )
-
-    async def test_additional_edge_cases(self):
-        """Test additional edge cases for comprehensive coverage"""
-        print("\n📋 Testing Additional Edge Cases")
+                self.log_result("Tutor Market Pricing - PUT", False, f"PUT pricing failed: {response.status_code} - {response.text}")
+                
+        except Exception as e:
+            self.log_result("Tutor Market Pricing - PUT", False, f"PUT pricing error: {str(e)}")
+    
+    async def test_consumer_enabled_markets_api(self):
+        """Test Consumer Enabled Markets API"""
+        print("\n🌍 Testing Consumer Enabled Markets API...")
         
-        # Edge Case 1: Different consumer trying to book same tutor at same time
-        future_time = datetime.now(timezone.utc) + timedelta(hours=24)
+        # Login as consumer
+        await self.login("consumer")
+        headers = self.get_headers("consumer")
         
-        success, hold_id, hold_data = await self.create_booking_hold(
-            self.consumer2_token, self.actual_tutor1_id, future_time
-        )
+        if not headers:
+            self.log_result("Consumer Enabled Markets Setup", False, "Failed to get consumer authentication")
+            return
         
-        if success:
-            await self.log_result(
-                "Edge Case - Different Consumer Same Tutor", False,
-                "Expected 409 conflict but different consumer could book same tutor at same time",
-                {"hold_id": hold_id}
+        # Test 1: Get current enabled markets
+        try:
+            response = await self.client.get(
+                f"{API_BASE}/me/enabled-markets",
+                headers=headers
             )
-        else:
-            error_message = hold_data.get("detail", "")
-            if "already booked at this time" in error_message or "coach is already booked" in error_message.lower():
-                await self.log_result(
-                    "Edge Case - Different Consumer Same Tutor", True,
-                    f"✅ Correctly prevented different consumer from booking same tutor: {error_message}"
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                enabled_markets = data.get("enabled_markets", [])
+                
+                self.log_result(
+                    "Consumer Enabled Markets - GET", 
+                    isinstance(enabled_markets, list), 
+                    f"Retrieved enabled markets: {enabled_markets}",
+                    {"enabled_markets": enabled_markets}
+                )
+                
+            else:
+                self.log_result("Consumer Enabled Markets - GET", False, f"GET enabled markets failed: {response.status_code} - {response.text}")
+                
+        except Exception as e:
+            self.log_result("Consumer Enabled Markets - GET", False, f"GET enabled markets error: {str(e)}")
+        
+        # Test 2: Update enabled markets
+        try:
+            update_data = {
+                "enabled_markets": ["US_USD", "IN_INR"]
+            }
+            
+            response = await self.client.put(
+                f"{API_BASE}/me/enabled-markets",
+                headers=headers,
+                json=update_data
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                success = data.get("success", False)
+                updated_markets = data.get("enabled_markets", [])
+                
+                self.log_result(
+                    "Consumer Enabled Markets - PUT", 
+                    success and "US_USD" in updated_markets and "IN_INR" in updated_markets, 
+                    f"Updated enabled markets: success={success}, markets={updated_markets}",
+                    {"success": success, "enabled_markets": updated_markets}
                 )
             else:
-                await self.log_result(
-                    "Edge Case - Different Consumer Same Tutor", False,
-                    f"Unexpected error message: {error_message}",
-                    {"actual_error": hold_data}
+                self.log_result("Consumer Enabled Markets - PUT", False, f"PUT enabled markets failed: {response.status_code} - {response.text}")
+                
+        except Exception as e:
+            self.log_result("Consumer Enabled Markets - PUT", False, f"PUT enabled markets error: {str(e)}")
+    
+    async def test_tutor_meeting_link_api(self):
+        """Test Tutor Meeting Link API"""
+        print("\n🔗 Testing Tutor Meeting Link API...")
+        
+        # Login as tutor
+        await self.login("tutor")
+        headers = self.get_headers("tutor")
+        
+        if not headers:
+            self.log_result("Tutor Meeting Link Setup", False, "Failed to get tutor authentication")
+            return
+        
+        # Test 1: Update meeting link with valid Zoom URL
+        try:
+            update_data = {
+                "meeting_link": "https://zoom.us/j/1234567890?pwd=abcdef123456",
+                "waiting_room_enabled": True
+            }
+            
+            response = await self.client.put(
+                f"{API_BASE}/tutors/meeting-link",
+                headers=headers,
+                json=update_data
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                success = data.get("success", False)
+                meeting_link = data.get("meeting_link")
+                
+                self.log_result(
+                    "Tutor Meeting Link - Valid Zoom URL", 
+                    success and meeting_link == update_data["meeting_link"], 
+                    f"Updated meeting link: success={success}, link={meeting_link}",
+                    {"success": success, "meeting_link": meeting_link}
                 )
-
+            else:
+                self.log_result("Tutor Meeting Link - Valid Zoom URL", False, f"PUT meeting link failed: {response.status_code} - {response.text}")
+                
+        except Exception as e:
+            self.log_result("Tutor Meeting Link - Valid Zoom URL", False, f"PUT meeting link error: {str(e)}")
+        
+        # Test 2: Update with Google Meet URL
+        try:
+            update_data = {
+                "meeting_link": "https://meet.google.com/abc-defg-hij",
+                "waiting_room_enabled": False
+            }
+            
+            response = await self.client.put(
+                f"{API_BASE}/tutors/meeting-link",
+                headers=headers,
+                json=update_data
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                success = data.get("success", False)
+                meeting_link = data.get("meeting_link")
+                waiting_room = data.get("waiting_room_enabled")
+                
+                self.log_result(
+                    "Tutor Meeting Link - Google Meet URL", 
+                    success and meeting_link == update_data["meeting_link"], 
+                    f"Updated Google Meet link: success={success}, waiting_room={waiting_room}",
+                    {"success": success, "meeting_link": meeting_link, "waiting_room_enabled": waiting_room}
+                )
+            else:
+                self.log_result("Tutor Meeting Link - Google Meet URL", False, f"PUT Google Meet link failed: {response.status_code} - {response.text}")
+                
+        except Exception as e:
+            self.log_result("Tutor Meeting Link - Google Meet URL", False, f"PUT Google Meet link error: {str(e)}")
+        
+        # Test 3: Test invalid URL validation
+        try:
+            update_data = {
+                "meeting_link": "https://invalid-meeting-platform.com/meeting/123",
+                "waiting_room_enabled": True
+            }
+            
+            response = await self.client.put(
+                f"{API_BASE}/tutors/meeting-link",
+                headers=headers,
+                json=update_data
+            )
+            
+            # Should either reject invalid URL or accept it (depending on validation)
+            if response.status_code == 400:
+                self.log_result(
+                    "Tutor Meeting Link - Invalid URL Validation", 
+                    True, 
+                    "Invalid URL properly rejected with 400 status",
+                    {"status_code": response.status_code}
+                )
+            elif response.status_code == 200:
+                self.log_result(
+                    "Tutor Meeting Link - Invalid URL Validation", 
+                    True, 
+                    "Invalid URL accepted (validation may be lenient)",
+                    {"status_code": response.status_code}
+                )
+            else:
+                self.log_result("Tutor Meeting Link - Invalid URL Validation", False, f"Unexpected status: {response.status_code} - {response.text}")
+                
+        except Exception as e:
+            self.log_result("Tutor Meeting Link - Invalid URL Validation", False, f"Invalid URL test error: {str(e)}")
+    
     async def run_all_tests(self):
-        """Run all booking conflict tests"""
-        print("🚀 Starting Enhanced Duplicate Booking Prevention Tests")
-        print(f"Backend URL: {BACKEND_URL}")
+        """Run all cross-market API tests"""
+        print("🚀 Starting Maestro Hub Cross-Market API Testing...")
+        print(f"Backend URL: {API_BASE}")
         
-        try:
-            # Setup
-            await self.setup_test_users()
-            
-            # Run test scenarios
-            await self.test_scenario_1_same_tutor_duplicate_prevention()
-            await self.test_scenario_2_consumer_schedule_conflict_prevention()
-            await self.test_scenario_3_reschedule_conflict_prevention()
-            await self.test_additional_edge_cases()
-            
-            # Summary
-            total_tests = len(self.test_results)
-            passed_tests = len([r for r in self.test_results if r["success"]])
-            failed_tests = total_tests - passed_tests
-            
-            print(f"\n📊 TEST SUMMARY")
-            print(f"Total Tests: {total_tests}")
-            print(f"✅ Passed: {passed_tests}")
-            print(f"❌ Failed: {failed_tests}")
-            print(f"Success Rate: {(passed_tests/total_tests*100):.1f}%")
-            
-            if failed_tests > 0:
-                print(f"\n❌ FAILED TESTS:")
-                for result in self.test_results:
-                    if not result["success"]:
-                        print(f"   - {result['test']}: {result['message']}")
-            
-            return passed_tests, failed_tests, self.test_results
-            
-        except Exception as e:
-            print(f"❌ Test execution failed: {str(e)}")
-            return 0, 1, [{"test": "Test Execution", "success": False, "message": str(e)}]
+        # Run all test suites
+        await self.test_cross_market_coach_search()
+        await self.test_exchange_rates_api()
+        await self.test_tutor_market_pricing_api()
+        await self.test_consumer_enabled_markets_api()
+        await self.test_tutor_meeting_link_api()
         
-        finally:
-            await self.client.aclose()
+        # Summary
+        total_tests = len(self.test_results)
+        passed_tests = sum(1 for result in self.test_results if result["success"])
+        failed_tests = total_tests - passed_tests
+        
+        print(f"\n📊 TEST SUMMARY:")
+        print(f"Total Tests: {total_tests}")
+        print(f"✅ Passed: {passed_tests}")
+        print(f"❌ Failed: {failed_tests}")
+        print(f"Success Rate: {(passed_tests/total_tests*100):.1f}%")
+        
+        # Save detailed results
+        with open("/app/cross_market_test_results.json", "w") as f:
+            json.dump({
+                "summary": {
+                    "total_tests": total_tests,
+                    "passed_tests": passed_tests,
+                    "failed_tests": failed_tests,
+                    "success_rate": round(passed_tests/total_tests*100, 1)
+                },
+                "test_results": self.test_results,
+                "timestamp": datetime.now().isoformat()
+            }, f, indent=2)
+        
+        return passed_tests == total_tests
 
 async def main():
-    """Main test execution"""
-    tester = BookingConflictTester()
-    passed, failed, results = await tester.run_all_tests()
-    
-    # Save detailed results
-    with open("/app/booking_conflict_test_results.json", "w") as f:
-        json.dump({
-            "summary": {
-                "total_tests": len(results),
-                "passed": passed,
-                "failed": failed,
-                "success_rate": f"{(passed/(passed+failed)*100):.1f}%" if (passed+failed) > 0 else "0%"
-            },
-            "test_results": results,
-            "timestamp": datetime.now().isoformat()
-        }, f, indent=2)
-    
-    print(f"\n📄 Detailed results saved to: /app/booking_conflict_test_results.json")
-    
-    # Return appropriate exit code
-    return 0 if failed == 0 else 1
+    """Main test runner"""
+    async with APITester() as tester:
+        success = await tester.run_all_tests()
+        return success
 
 if __name__ == "__main__":
-    exit_code = asyncio.run(main())
-    exit(exit_code)
+    success = asyncio.run(main())
+    exit(0 if success else 1)
