@@ -301,7 +301,7 @@ export default function KidsScreen() {
             activeOpacity={1}
             onPress={() => { setShowAddModal(false); resetForm(); }}
           />
-          <View style={[styles.bottomSheet, { backgroundColor: colors.surface }]}>
+          <View style={[styles.bottomSheet, { backgroundColor: colors.surface }, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
             <View style={[styles.sheetHandle, { backgroundColor: colors.gray300 }]} />
             <Text style={[styles.sheetTitle, { color: colors.text }]}>
               {editingKid ? t('pages.kids.edit_child') : t('pages.kids.add_child')}
