@@ -701,13 +701,20 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     color: '#FFFFFF',
   },
   personName: {
-    flex: 1,
     fontSize: 16,
     fontWeight: '500',
     color: colors.text,
   },
   personNameDesktop: {
     fontSize: 18,
+  },
+  personInfo: {
+    flex: 1,
+  },
+  personSubject: {
+    fontSize: 13,
+    fontWeight: '500',
+    marginTop: 2,
   },
   intakeText: {
     fontSize: 14,
