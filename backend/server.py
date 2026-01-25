@@ -8600,10 +8600,11 @@ async def mock_payment_webhook(request: Request):
 @api_router.get("/subscription/check-feature/{feature}")
 async def check_feature_access(feature: str, request: Request):
     """Check if user has access to a specific feature"""
-    user_id = await get_current_user(request)
-    if not user_id:
+    user = await get_current_user(request)
+    if not user:
         raise HTTPException(status_code=401, detail="Not authenticated")
     
+    user_id = user.user_id
     subscription = await get_user_subscription(user_id)
     
     # Premium features
