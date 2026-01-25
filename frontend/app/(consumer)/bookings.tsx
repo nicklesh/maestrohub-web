@@ -105,7 +105,7 @@ export default function BookingsScreen() {
   };
 
   const filteredBookings = bookings.filter((booking) => {
-    const bookingDate = parseISO(booking.start_at);
+    const bookingDate = parseToLocalTime(booking.start_at);
     const isBookingPast = isPast(bookingDate);
     
     // Filter based on booking date only
