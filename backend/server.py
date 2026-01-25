@@ -2194,8 +2194,8 @@ async def search_tutors(
         
         # Build market filter:
         # 1. Same market tutors (always visible)
-        # 2. Online/hybrid tutors from other markets if they enabled cross-market
-        # 3. Tutors from markets the consumer has enabled
+        # 2. Online/hybrid tutors from ANY market (globally visible by default)
+        # 3. Tutors from markets the consumer has explicitly enabled
         if consumer_market_id:
             # Combine consumer's market + any additional enabled markets
             all_consumer_markets = [consumer_market_id] + (consumer_enabled_markets or [])
@@ -2204,13 +2204,10 @@ async def search_tutors(
             # Store market filter to apply later with $and
             market_filter = {
                 "$or": [
-                    # Same market tutors
+                    # Same market tutors (any modality)
                     {"market_id": {"$in": all_consumer_markets}},
-                    # Cross-market online/hybrid tutors who enabled consumer's market
-                    {
-                        "modality": {"$in": ["online", "hybrid"]},
-                        "enabled_markets": {"$in": all_consumer_markets}
-                    }
+                    # Online/hybrid tutors are visible globally by default
+                    {"modality": {"$in": ["online", "hybrid"]}}
                 ]
             }
         
