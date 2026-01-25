@@ -36,6 +36,10 @@ export default function NotificationsScreen() {
   const [refreshing, setRefreshing] = useState(false);
 
   const loadNotifications = useCallback(async () => {
+    if (!token) {
+      setLoading(false);
+      return;
+    }
     try {
       const response = await api.get('/notifications', {
         headers: { Authorization: `Bearer ${token}` }
@@ -50,8 +54,10 @@ export default function NotificationsScreen() {
   }, [token]);
 
   useEffect(() => {
-    loadNotifications();
-  }, [loadNotifications]);
+    if (token) {
+      loadNotifications();
+    }
+  }, [token, loadNotifications]);
 
   const markAsRead = async (notificationId: string) => {
     try {
