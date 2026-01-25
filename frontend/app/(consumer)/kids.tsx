@@ -194,13 +194,13 @@ export default function KidsScreen() {
         </View>
         <View style={styles.kidActions}>
           <TouchableOpacity
-            style={[styles.iconBtn, { backgroundColor: colors.background }]}
+            style={[styles.iconBtn, { backgroundColor: 'transparent' }]}
             onPress={() => openEditModal(item)}
           >
             <Ionicons name="pencil" size={18} color={colors.primary} />
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.iconBtn, { backgroundColor: colors.background }]}
+            style={[styles.iconBtn, { backgroundColor: 'transparent' }]}
             onPress={() => confirmDelete(item)}
           >
             <Ionicons name="trash" size={18} color={colors.error} />
@@ -228,7 +228,7 @@ export default function KidsScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+      <SafeAreaView style={[styles.container, { backgroundColor: 'transparent' }]}>
         <AppHeader />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
@@ -238,7 +238,7 @@ export default function KidsScreen() {
   }
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: 'transparent' }]}>
       <AppHeader />
 
       <View style={styles.content}>
@@ -296,7 +296,7 @@ export default function KidsScreen() {
 
             <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.add_child.name')} *</Text>
             <TextInput
-              style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
+              style={[styles.input, { backgroundColor: 'transparent', color: colors.text, borderColor: colors.border }]}
               placeholder={t('pages.add_child.name_placeholder')}
               placeholderTextColor={colors.textMuted}
               value={formName}
@@ -307,7 +307,7 @@ export default function KidsScreen() {
               <View style={styles.halfInput}>
                 <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.add_child.age')}</Text>
                 <TextInput
-                  style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
+                  style={[styles.input, { backgroundColor: 'transparent', color: colors.text, borderColor: colors.border }]}
                   placeholder={t('pages.add_child.age_placeholder')}
                   placeholderTextColor={colors.textMuted}
                   value={formAge}
@@ -318,7 +318,7 @@ export default function KidsScreen() {
               <View style={styles.halfInput}>
                 <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.add_child.grade')}</Text>
                 <TextInput
-                  style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
+                  style={[styles.input, { backgroundColor: 'transparent', color: colors.text, borderColor: colors.border }]}
                   placeholder={t('pages.add_child.grade_placeholder')}
                   placeholderTextColor={colors.textMuted}
                   value={formGrade}
@@ -330,7 +330,7 @@ export default function KidsScreen() {
             {/* Contact Information Section */}
             <View style={[styles.sectionDivider, { backgroundColor: colors.border }]} />
             <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.add_child.notification_contact')}</Text>
-            <View style={[styles.privacyNotice, { backgroundColor: colors.backgroundSecondary, borderColor: colors.primary }]}>
+            <View style={[styles.privacyNotice, { backgroundColor: 'transparent'Secondary, borderColor: colors.primary }]}>
               <Ionicons name="shield-checkmark-outline" size={18} color={colors.primary} />
               <Text style={[styles.privacyText, { color: colors.textSecondary }]}>
                 {t('pages.add_child.notification_info')}
@@ -339,7 +339,7 @@ export default function KidsScreen() {
 
             <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.add_child.email')}</Text>
             <TextInput
-              style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
+              style={[styles.input, { backgroundColor: 'transparent', color: colors.text, borderColor: colors.border }]}
               placeholder={t('pages.add_child.email_placeholder')}
               placeholderTextColor={colors.textMuted}
               value={formEmail}
@@ -350,7 +350,7 @@ export default function KidsScreen() {
 
             <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.add_child.phone')}</Text>
             <TextInput
-              style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
+              style={[styles.input, { backgroundColor: 'transparent', color: colors.text, borderColor: colors.border }]}
               placeholder={t('pages.add_child.phone_placeholder')}
               placeholderTextColor={colors.textMuted}
               value={formPhone}

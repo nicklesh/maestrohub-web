@@ -190,7 +190,7 @@ export default function ProfileScreen() {
   const styles = createStyles(colors);
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: 'transparent' }]} edges={['top', 'bottom']}>
       <AppHeader title={t('pages.profile.account_title')} />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={[styles.contentWrapper, containerMaxWidth ? { maxWidth: containerMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
@@ -503,7 +503,7 @@ export default function ProfileScreen() {
             
             <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.contact.subject')}</Text>
             <TextInput
-              style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
+              style={[styles.input, { backgroundColor: 'transparent', color: colors.text, borderColor: colors.border }]}
               placeholder={t('pages.contact.subject_placeholder')}
               placeholderTextColor={colors.textMuted}
               value={contactSubject}
@@ -512,7 +512,7 @@ export default function ProfileScreen() {
             
             <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('pages.contact.message')}</Text>
             <TextInput
-              style={[styles.input, styles.textArea, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
+              style={[styles.input, styles.textArea, { backgroundColor: 'transparent', color: colors.text, borderColor: colors.border }]}
               placeholder={t('pages.contact.message_placeholder')}
               placeholderTextColor={colors.textMuted}
               value={contactMessage}
