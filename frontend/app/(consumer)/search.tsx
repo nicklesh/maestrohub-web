@@ -196,7 +196,8 @@ export default function SearchScreen() {
         queryParams.append('query', query);
       }
 
-      const response = await api.get(`/tutors/search?${queryParams}`);
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      const response = await api.get(`/tutors/search?${queryParams}`, { headers });
       const newTutors = response.data.tutors || [];
       
       setTutors(newTutors);
