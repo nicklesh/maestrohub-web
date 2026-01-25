@@ -394,6 +394,31 @@ def seed_database():
         db.tutors.insert_many(tutors)
     print(f"    ✅ {len(tutors)} tutor profiles created")
     
+    # Seed availability rules for each tutor
+    print("  Seeding availability rules...")
+    db.availability_rules.delete_many({})  # Clear existing rules
+    availability_rules = []
+    # Map Python weekday (Mon=0) to JS weekday (Sun=0): Mon=1, Tue=2, Wed=3, Thu=4, Fri=5
+    day_mapping = {'monday': 1, 'tuesday': 2, 'wednesday': 3, 'thursday': 4, 'friday': 5, 'saturday': 6, 'sunday': 0}
+    for tutor in tutors:
+        availability = tutor.get('availability', {})
+        for day_name, slots in availability.items():
+            js_day = day_mapping.get(day_name.lower(), 0)
+            for slot in slots:
+                rule = {
+                    "rule_id": f"rule_{secrets.token_hex(12)}",
+                    "tutor_id": tutor['tutor_id'],
+                    "day_of_week": js_day,
+                    "start_time": slot['start'],
+                    "end_time": slot['end'],
+                    "is_recurring": True,
+                    "created_at": datetime.utcnow()
+                }
+                availability_rules.append(rule)
+    if availability_rules:
+        db.availability_rules.insert_many(availability_rules)
+    print(f"    ✅ {len(availability_rules)} availability rules created")
+    
     # Create indexes
     print("  Creating indexes...")
     db.users.create_index("email", unique=True)
