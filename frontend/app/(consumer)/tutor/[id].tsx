@@ -324,7 +324,15 @@ export default function TutorDetailScreen() {
             category={(tutor.categories || [])[0]}
             size={80}
           />
-          <Text style={[styles.tutorName, { color: colors.text }]}>{tutor.user_name}</Text>
+          <View style={styles.nameRow}>
+            <Text style={[styles.tutorName, { color: colors.text }]}>{tutor.user_name}</Text>
+            {tutor.market_code && (
+              <View style={styles.nameFlagBadge}>
+                <FlagIcon countryCode={tutor.market_code} size={16} />
+                <Text style={[styles.nameFlagCode, { color: colors.textMuted }]}>{tutor.market_code}</Text>
+              </View>
+            )}
+          </View>
           <View style={styles.ratingRow}>
             <Ionicons name="star" size={16} color="#FFB800" />
             <Text style={[styles.ratingText, { color: colors.text }]}>
@@ -338,19 +346,12 @@ export default function TutorDetailScreen() {
           <View style={styles.tagsRow}>
             {(tutor.modality || []).map((m) => (
               <View key={m} style={[styles.tag, { backgroundColor: colors.primaryLight }]}>
-                <Ionicons name={m === 'online' ? 'videocam' : 'location'} size={14} color={colors.primary} />
+                <Ionicons name={m === 'online' ? 'videocam' : m === 'hybrid' ? 'sync' : 'location'} size={14} color={colors.primary} />
                 <Text style={[styles.tagText, { color: colors.primary }]}>
-                  {m === 'online' ? t('modality.online') : m === 'hybrid' ? t('modality.hybrid') : t('modality.in_person')}
+                  {t(`modality.${m}`)}
                 </Text>
               </View>
             ))}
-            {/* Market Badge */}
-            {tutor.market_code && (
-              <View style={[styles.tag, { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border }]}>
-                <Text style={[styles.tagText, { color: colors.textMuted }]}>{tutor.market_code}</Text>
-                <FlagIcon countryCode={tutor.market_code} size={14} />
-              </View>
-            )}
           </View>
 
           <View style={styles.priceRow}>
