@@ -2393,7 +2393,11 @@ async def search_tutors(
         consumer_currency_symbol = consumer_market_info.get("currency_symbol", "$")
     
     for tutor in all_tutors:
-        user = await db.users.find_one({"user_id": tutor["user_id"]}, {"_id": 0})
+        from bson import ObjectId
+        try:
+            user = await db.users.find_one({"_id": ObjectId(tutor["user_id"])})
+        except:
+            user = None
         if user:
             # Check if sponsored for this specific category
             is_sponsored_display = tutor["tutor_id"] in selected_sponsor_ids
