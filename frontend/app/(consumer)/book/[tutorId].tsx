@@ -558,7 +558,7 @@ export default function BookingScreen() {
             {policyAcknowledged && <Ionicons name="checkmark" size={16} color="#fff" />}
           </View>
           <Text style={[styles.checkboxLabel, isDesktop && styles.checkboxLabelDesktop]}>
-            {t('pages.booking.acknowledge_policy', { hours: tutor?.policies.cancel_window_hours })}
+            {t('pages.booking.acknowledge_policy', { hours: tutor?.policies?.cancel_window_hours || 24 })}
           </Text>
         </TouchableOpacity>
         
