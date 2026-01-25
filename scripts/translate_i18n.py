@@ -77,8 +77,8 @@ def set_value_by_path(obj, path, value):
         current = current[part]
     current[parts[-1]] = value
 
-async def translate_batch(texts, target_language, chat):
-    """Translate a batch of texts"""
+async def translate_batch(texts, target_language, client):
+    """Translate a batch of texts using OpenAI"""
     if not texts:
         return []
     
@@ -92,11 +92,19 @@ Keep translations concise and natural for a mobile app UI.
 
 {texts_list}"""
 
-    message = UserMessage(text=prompt)
-    response = await chat.send_message(message)
+    response = await client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": "You are a professional translator. Translate UI text accurately and concisely."},
+            {"role": "user", "content": prompt}
+        ],
+        temperature=0.3
+    )
+    
+    result = response.choices[0].message.content
     
     # Parse response
-    lines = response.strip().split('\n')
+    lines = result.strip().split('\n')
     translations = []
     for line in lines:
         # Remove numbering like "1. " or "1) "
@@ -111,7 +119,7 @@ Keep translations concise and natural for a mobile app UI.
     
     return translations
 
-async def translate_locale(locale_code, en_data, chat):
+async def translate_locale(locale_code, en_data, client):
     """Translate all untranslated strings for a locale"""
     locale_file = os.path.join(LOCALES_DIR, f"{locale_code}.json")
     
