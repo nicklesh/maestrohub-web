@@ -36,6 +36,15 @@ from email_service import (
     no_show_notification_email
 )
 
+# Import exchange rate service
+from exchange_rate_service import (
+    convert_price,
+    get_exchange_rates,
+    get_market_price_recommendations,
+    get_market_display,
+    get_country_flag
+)
+
 # Import new services
 from services.tax_report_service import TaxReportService
 from services.referral_service import ReferralService
