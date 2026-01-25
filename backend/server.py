@@ -2800,20 +2800,27 @@ async def create_booking(data: BookingCreate, request: Request):
     try:
         tutor_user = await db.users.find_one({"user_id": tutor["user_id"]}, {"_id": 0})
         consumer_user = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+        student = await db.students.find_one({"student_id": data.student_id}, {"_id": 0})
         
         if consumer_user and tutor_user:
             start_dt = hold["start_at"]
-            if start_dt.tzinfo is None:
+            if hasattr(start_dt, 'tzinfo') and start_dt.tzinfo is None:
                 start_dt = start_dt.replace(tzinfo=timezone.utc)
             
+            # Format session time
+            session_date = start_dt.strftime("%B %d, %Y") if hasattr(start_dt, 'strftime') else str(start_dt)[:10]
+            session_time = start_dt.strftime("%I:%M %p") if hasattr(start_dt, 'strftime') else str(start_dt)[11:16]
+            student_name = student["name"] if student else "Student"
+            
+            # Send email to consumer (parent)
             email_data = booking_confirmation_email(
                 consumer_name=consumer_user["name"],
                 coach_name=tutor_user["name"],
-                session_date=start_dt.strftime("%B %d, %Y"),
-                session_time=start_dt.strftime("%I:%M %p"),
+                session_date=session_date,
+                session_time=session_time,
                 duration=tutor.get("duration_minutes", 60),
                 price=f"{market_config['currency_symbol']}{tutor['base_price']:.2f}",
-                meeting_link=tutor.get("meeting_link")  # If coach has set a meeting link
+                meeting_link=tutor.get("meeting_link")
             )
             
             await email_service.send_email(
@@ -2823,6 +2830,59 @@ async def create_booking(data: BookingCreate, request: Request):
                 text=email_data["text"]
             )
             logger.info(f"Booking confirmation email sent to {consumer_user['email']}")
+            
+            # Send email to coach
+            coach_email_subject = f"New Session Booked - {student_name} on {session_date}"
+            coach_email_html = f"""
+            <h2>New Session Booked!</h2>
+            <p>Hi {tutor_user['name']},</p>
+            <p>A new session has been booked with you:</p>
+            <ul>
+                <li><strong>Student:</strong> {student_name}</li>
+                <li><strong>Parent:</strong> {consumer_user['name']}</li>
+                <li><strong>Date:</strong> {session_date}</li>
+                <li><strong>Time:</strong> {session_time}</li>
+                <li><strong>Duration:</strong> {tutor.get('duration_minutes', 60)} minutes</li>
+            </ul>
+            <p>Please make sure to be available at the scheduled time.</p>
+            <p>Best regards,<br>Maestro Habitat Team</p>
+            """
+            
+            await email_service.send_email(
+                to=tutor_user["email"],
+                subject=coach_email_subject,
+                html=coach_email_html,
+                text=f"New session booked! Student: {student_name}, Date: {session_date}, Time: {session_time}"
+            )
+            logger.info(f"Booking notification email sent to coach {tutor_user['email']}")
+            
+            # Create in-app notification for consumer
+            consumer_notif_id = f"notif_{uuid.uuid4().hex[:12]}"
+            await db.notifications.insert_one({
+                "notification_id": consumer_notif_id,
+                "user_id": user.user_id,
+                "type": "booking_confirmed",
+                "title": "Session Booked!",
+                "message": f"Your session with {tutor_user['name']} on {session_date} at {session_time} has been confirmed.",
+                "data": {"booking_id": booking_id, "tutor_id": hold["tutor_id"]},
+                "read": False,
+                "created_at": datetime.now(timezone.utc)
+            })
+            
+            # Create in-app notification for coach
+            coach_notif_id = f"notif_{uuid.uuid4().hex[:12]}"
+            await db.notifications.insert_one({
+                "notification_id": coach_notif_id,
+                "user_id": tutor["user_id"],
+                "type": "new_session_booked",
+                "title": "New Session Booked!",
+                "message": f"{consumer_user['name']} has booked a session with you for {student_name} on {session_date} at {session_time}.",
+                "data": {"booking_id": booking_id, "consumer_id": user.user_id, "student_id": data.student_id},
+                "read": False,
+                "created_at": datetime.now(timezone.utc)
+            })
+            logger.info(f"In-app notifications created for both consumer and coach")
+            
     except Exception as e:
         logger.error(f"Failed to send booking confirmation email: {str(e)}")
     
