@@ -634,6 +634,74 @@ export default function BookingDetailScreen() {
           )}
         </View>
       </ScrollView>
+      
+      {/* Send Notification Modal */}
+      <Modal
+        visible={showNotifyModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowNotifyModal(false)}
+      >
+        <KeyboardAvoidingView 
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.modalOverlay}
+        >
+          <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
+            <View style={styles.modalHeader}>
+              <Text style={[styles.modalTitle, { color: colors.text }]}>
+                {t('pages.booking_detail.send_notification_to_coach')}
+              </Text>
+              <TouchableOpacity onPress={() => setShowNotifyModal(false)}>
+                <Ionicons name="close" size={24} color={colors.textMuted} />
+              </TouchableOpacity>
+            </View>
+            
+            <Text style={[styles.modalSubtitle, { color: colors.textMuted }]}>
+              {t('pages.booking_detail.notification_note_hint')}
+            </Text>
+            
+            <TextInput
+              style={[styles.noteInput, { 
+                backgroundColor: colors.background, 
+                color: colors.text,
+                borderColor: colors.border
+              }]}
+              placeholder={t('pages.booking_detail.notification_note_placeholder')}
+              placeholderTextColor={colors.textMuted}
+              value={notifyNote}
+              onChangeText={setNotifyNote}
+              multiline
+              numberOfLines={3}
+              maxLength={200}
+            />
+            
+            <View style={styles.modalActions}>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.modalCancelButton, { borderColor: colors.border }]}
+                onPress={() => setShowNotifyModal(false)}
+              >
+                <Text style={[styles.modalButtonText, { color: colors.text }]}>
+                  {t('common.cancel')}
+                </Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity
+                style={[styles.modalButton, styles.modalSendButton, { backgroundColor: colors.primary }]}
+                onPress={handleSendNotification}
+                disabled={sendingNotification}
+              >
+                {sendingNotification ? (
+                  <ActivityIndicator color="#fff" size="small" />
+                ) : (
+                  <Text style={[styles.modalButtonText, { color: '#fff' }]}>
+                    {t('pages.booking_detail.send')}
+                  </Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </Modal>
     </SafeAreaView>
   );
 }
