@@ -515,6 +515,7 @@ export default function InviteParentScreen() {
           </View>
         </KeyboardAvoidingView>
       </Modal>
+      </View>
     </SafeAreaView>
   );
 }
