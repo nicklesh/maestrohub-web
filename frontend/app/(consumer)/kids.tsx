@@ -330,7 +330,7 @@ export default function KidsScreen() {
             {/* Contact Information Section */}
             <View style={[styles.sectionDivider, { backgroundColor: colors.border }]} />
             <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('pages.add_child.notification_contact')}</Text>
-            <View style={[styles.privacyNotice, { backgroundColor: 'transparent'Secondary, borderColor: colors.primary }]}>
+            <View style={[styles.privacyNotice, { backgroundColor: colors.backgroundSecondary, borderColor: colors.primary }]}>
               <Ionicons name="shield-checkmark-outline" size={18} color={colors.primary} />
               <Text style={[styles.privacyText, { color: colors.textSecondary }]}>
                 {t('pages.add_child.notification_info')}
