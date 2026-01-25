@@ -678,6 +678,32 @@ export default function SearchScreen() {
                 />
               </View>
 
+              {/* Global/Local Coaches Toggle */}
+              <View style={[styles.countryFilterRow, { borderColor: colors.border }]}>
+                <View style={styles.countryFilterLeft}>
+                  <Ionicons name="globe-outline" size={18} color={colors.primary} />
+                  <Text style={[styles.countryFilterLabel, { color: colors.text }]}>
+                    Show coaches from all countries
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  style={[
+                    styles.countryToggle, 
+                    { backgroundColor: showGlobalCoaches ? colors.primary : colors.gray300 }
+                  ]}
+                  onPress={() => {
+                    setShowGlobalCoaches(!showGlobalCoaches);
+                    // Trigger a new search
+                    setTimeout(() => searchTutors(true), 100);
+                  }}
+                >
+                  <View style={[
+                    styles.countryToggleCircle,
+                    showGlobalCoaches && styles.countryToggleCircleActive
+                  ]} />
+                </TouchableOpacity>
+              </View>
+
               {/* Search Results */}
               {loading ? (
                 <View style={styles.loadingContainer}>
