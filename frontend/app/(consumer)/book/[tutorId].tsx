@@ -645,7 +645,7 @@ export default function BookingScreen() {
       <View style={[styles.summaryCard, isTablet && styles.summaryCardTablet]}>
         <View style={styles.summaryRow}>
           <Text style={[styles.summaryLabel, isDesktop && styles.summaryLabelDesktop]}>{t('pages.booking.tutor_label')}</Text>
-          <Text style={[styles.summaryValue, isDesktop && styles.summaryValueDesktop]}>{tutor?.user_name}</Text>
+          <Text style={[styles.summaryValue, isDesktop && styles.summaryValueDesktop]}>{tutor?.name || tutor?.user_name}</Text>
         </View>
         <View style={styles.summaryRow}>
           <Text style={[styles.summaryLabel, isDesktop && styles.summaryLabelDesktop]}>{t('pages.booking.student_label')}</Text>
