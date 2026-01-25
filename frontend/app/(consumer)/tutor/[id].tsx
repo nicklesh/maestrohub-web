@@ -18,6 +18,7 @@ import { useTheme } from '@/src/context/ThemeContext';
 import { useToast } from '@/src/context/ToastContext';
 import { useTranslation } from '@/src/i18n';
 import AppHeader from '@/src/components/AppHeader';
+import UserAvatar from '@/src/components/UserAvatar';
 import { format, addDays, startOfDay } from 'date-fns';
 import { parseToLocalTime } from '@/src/utils/dateLocalization';
 import AsyncStorage from '@react-native-async-storage/async-storage';
