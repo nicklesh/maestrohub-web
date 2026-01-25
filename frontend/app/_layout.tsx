@@ -42,9 +42,11 @@ export default function RootLayout() {
           <ThemeProvider>
             <ToastProvider>
               <AuthProvider>
-                <MarketProvider>
-                  <AppContent />
-                </MarketProvider>
+                <SubscriptionProvider>
+                  <MarketProvider>
+                    <AppContent />
+                  </MarketProvider>
+                </SubscriptionProvider>
               </AuthProvider>
             </ToastProvider>
           </ThemeProvider>
