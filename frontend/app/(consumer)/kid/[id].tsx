@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   RefreshControl,
+  useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -48,6 +49,10 @@ export default function KidDetailScreen() {
   const { token } = useAuth();
   const { colors } = useTheme();
   const { t, locale } = useTranslation();
+  const { width } = useWindowDimensions();
+  const isTablet = width >= 768;
+  const isDesktop = width >= 1024;
+  const contentMaxWidth = isDesktop ? 640 : isTablet ? 560 : undefined;
   const router = useRouter();
   const [kid, setKid] = useState<Kid | null>(null);
   const [bookings, setBookings] = useState<Booking[]>([]);
