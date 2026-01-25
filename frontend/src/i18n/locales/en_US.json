@@ -422,6 +422,8 @@
     "no_bookings_description": "Your upcoming and past sessions will appear here",
     "no_upcoming_bookings": "No upcoming bookings",
     "no_past_bookings": "No past bookings",
+    "no_rescheduled_bookings": "No rescheduled bookings",
+    "no_cancelled_bookings": "No cancelled bookings",
     "no_reviews": "No reviews yet",
     "no_reviews_description": "Reviews from your sessions will appear here",
     "no_kids": "No children added",
