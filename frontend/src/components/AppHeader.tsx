@@ -39,6 +39,12 @@ export default function AppHeader({ showBack = false, title, showUserName = fals
   const { showSuccess, showError } = useToast();
   const { t } = useTranslation();
   const router = useRouter();
+  const { width } = useWindowDimensions();
+  
+  // Calculate max-width for modal on larger screens
+  const isTablet = width >= 768;
+  const isDesktop = width >= 1024;
+  const contentMaxWidth = isDesktop ? 640 : isTablet ? 560 : undefined;
   
   const [showContactSheet, setShowContactSheet] = useState(false);
   const [contactSubject, setContactSubject] = useState('');
