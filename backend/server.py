@@ -1490,7 +1490,11 @@ async def get_payment_methods(request: Request):
     """Get user's saved payment methods (legacy - use /payment-providers instead)"""
     user = await require_auth(request)
     
-    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    from bson import ObjectId
+    user_doc = await db.users.find_one({"_id": ObjectId(user.user_id)})
+    if not user_doc:
+        return {"payment_methods": [], "payment_providers": []}
+    
     payment_methods = user_doc.get("payment_methods", [])
     payment_providers = user_doc.get("payment_providers", [])
     
