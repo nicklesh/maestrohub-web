@@ -270,7 +270,8 @@ export default function SearchScreen() {
       }
 
       console.log('Making API call to:', `/tutors/search?${queryParams}`);
-      const response = await api.get(`/tutors/search?${queryParams}`);
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      const response = await api.get(`/tutors/search?${queryParams}`, { headers });
       const newTutors = response.data.tutors || [];
       console.log('Received tutors:', newTutors.length);
       
