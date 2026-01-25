@@ -417,35 +417,30 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     alignItems: 'center',
   },
   modalBackdrop: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  modalContent: {
+  bottomSheet: {
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
     width: '100%',
+  },
+  sheetHandle: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
     alignSelf: 'center',
-    maxHeight: '80%',
+    marginBottom: 16,
   },
-  modalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  modalTitle: {
-    fontSize: 20,
+  sheetTitle: {
+    fontSize: 18,
     fontWeight: '600',
+    marginBottom: 16,
   },
   inputLabel: {
-    fontSize: 14,
+    fontSize: 13,
     marginBottom: 6,
-    marginTop: 12,
   },
   textInput: {
     padding: 12,
