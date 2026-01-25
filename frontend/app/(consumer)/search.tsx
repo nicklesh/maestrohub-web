@@ -58,11 +58,12 @@ export default function SearchScreen() {
   const params = useLocalSearchParams();
   const { width } = useWindowDimensions();
   const { colors } = useTheme();
-  const { token } = useAuth();
+  const { token, user } = useAuth();
   const { t, formatNumber } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedSubject, setSelectedSubject] = useState<string>('all');
+  const [showGlobalCoaches, setShowGlobalCoaches] = useState(true); // Show coaches from all countries by default
   const [tutors, setTutors] = useState<Tutor[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
@@ -73,6 +74,7 @@ export default function SearchScreen() {
   // Dropdown modal states
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [showSubjectDropdown, setShowSubjectDropdown] = useState(false);
+  const [showCountryFilter, setShowCountryFilter] = useState(false);
 
   // Get category icon
   const getCategoryIcon = (categoryId: string): keyof typeof Ionicons.glyphMap => {
