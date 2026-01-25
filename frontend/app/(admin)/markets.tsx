@@ -373,6 +373,10 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     padding: 16,
     gap: 12,
   },
+  flagCodeContainer: {
+    alignItems: 'center',
+    gap: 4,
+  },
   flag: {
     fontSize: 32,
     backgroundColor: '#1E3A5F',
@@ -382,6 +386,11 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     lineHeight: 48,
     borderRadius: 8,
     overflow: 'hidden',
+  },
+  countryCode: {
+    fontSize: 10,
+    fontWeight: '600',
+    textTransform: 'uppercase',
   },
   marketInfo: {
     flex: 1,
