@@ -788,10 +788,32 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '500',
   },
+  priceRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 12,
+  },
   priceText: {
     fontSize: 24,
     fontWeight: '700',
-    marginTop: 12,
+  },
+  originalPriceText: {
+    fontSize: 14,
+  },
+  crossMarketNotice: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 12,
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    marginBottom: 16,
+  },
+  crossMarketText: {
+    flex: 1,
+    fontSize: 13,
+    lineHeight: 18,
   },
   section: {
     borderRadius: 16,
