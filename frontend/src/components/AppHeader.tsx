@@ -215,6 +215,24 @@ export default function AppHeader({ showBack = false, title, showUserName = fals
 
         {/* Right - Actions */}
         <View style={styles.headerRight}>
+          {/* Notification Bell - only for non-admin users */}
+          {user?.role !== 'admin' && (
+            <TouchableOpacity 
+              onPress={() => router.push('/(consumer)/notifications')} 
+              style={[styles.iconButton, { backgroundColor: colors.background }]}
+            >
+              <View>
+                <Ionicons name="notifications-outline" size={20} color={colors.primary} />
+                {unreadCount > 0 && (
+                  <View style={[styles.notificationBadge, { backgroundColor: colors.error }]}>
+                    <Text style={styles.notificationBadgeText}>
+                      {unreadCount > 9 ? '9+' : unreadCount}
+                    </Text>
+                  </View>
+                )}
+              </View>
+            </TouchableOpacity>
+          )}
           {/* Hide Contact Us for admin users */}
           {user?.role !== 'admin' && (
             <TouchableOpacity 
