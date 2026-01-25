@@ -2952,7 +2952,16 @@ async def get_tutor_availability(tutor_id: str, date: str = None, from_date: str
                         for h in holds
                     )
                     
-                    if not is_booked and not is_held and slot_current_naive > now_naive:
+                    # Check if the current user already has a booking at this time with ANY coach
+                    has_user_conflict = False
+                    if user_bookings:
+                        has_user_conflict = any(
+                            parse_booking_time(b["start_at"]) < slot_end_naive and 
+                            parse_booking_time(b["end_at"]) > slot_current_naive
+                            for b in user_bookings
+                        )
+                    
+                    if not is_booked and not is_held and not has_user_conflict and slot_current_naive > now_naive:
                         slots.append({
                             "start_at": slot_current.isoformat(),
                             "end_at": slot_end_time.isoformat(),
@@ -2961,8 +2970,8 @@ async def get_tutor_availability(tutor_id: str, date: str = None, from_date: str
                             "is_available": True,
                             "available": True
                         })
-                    elif (is_booked or is_held) and slot_current_naive > now_naive:
-                        # Include booked/held slots but mark as unavailable
+                    elif (is_booked or is_held or has_user_conflict) and slot_current_naive > now_naive:
+                        # Include booked/held/conflict slots but mark as unavailable
                         slots.append({
                             "start_at": slot_current.isoformat(),
                             "end_at": slot_end_time.isoformat(),
@@ -2971,7 +2980,8 @@ async def get_tutor_availability(tutor_id: str, date: str = None, from_date: str
                             "is_available": False,
                             "available": False,
                             "is_booked": is_booked,
-                            "is_held": is_held
+                            "is_held": is_held,
+                            "has_user_conflict": has_user_conflict
                         })
                     
                     slot_current = slot_end_time
