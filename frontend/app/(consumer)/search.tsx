@@ -938,7 +938,13 @@ const styles = StyleSheet.create({
   tutorCardWrapper: {
     width: '32%',
     marginBottom: 12,
-    marginRight: '1.3%',
+    marginRight: '1.33%',
+  },
+  tutorCardWrapperSingle: {
+    width: '100%',
+    maxWidth: 700,
+    alignSelf: 'center',
+    marginBottom: 12,
   },
   loadMoreBtn: {
     padding: 16,
