@@ -1644,7 +1644,7 @@
     },
     "reports": {
       "title": "রিপোর্ট",
-      "download_pdf": "PDF",
+      "download_pdf": "পিডিএফ",
       "total_sessions": "মোট সেশন",
       "completed": "সম্পন্ন",
       "upcoming": "আসন্ন",

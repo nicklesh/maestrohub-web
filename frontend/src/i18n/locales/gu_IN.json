@@ -66,7 +66,7 @@
     "coach_invites": "આમંત્રણો",
     "coach_sponsorship": "સ્પોન્સરશિપ",
     "coach_reports": "રિપોર્ટ્સ",
-    "coach_faq": "FAQ",
+    "coach_faq": "વારંવાર પૂછાતા પ્રશ્નો",
     "coach_schedule": "શેડ્યૂલ",
     "coach_onboarding": "ઑનબોર્ડિંગ"
   },
@@ -110,7 +110,7 @@
     "mandarin": "મંદારિન",
     "japanese": "જાપાની",
     "sat": "SAT",
-    "act": "ACT",
+    "act": "કાર્ય",
     "gre": "GRE",
     "gmat": "GMAT",
     "ielts": "IELTS",
@@ -1644,7 +1644,7 @@
     },
     "reports": {
       "title": "અહેવાલ",
-      "download_pdf": "PDF",
+      "download_pdf": "પીડીએફ",
       "total_sessions": "કુલ સત્રો",
       "completed": "પુર્ણ",
       "upcoming": "આગામી",
