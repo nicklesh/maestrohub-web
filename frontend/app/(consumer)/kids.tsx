@@ -42,6 +42,11 @@ export default function KidsScreen() {
   const { showSuccess, showError } = useToast();
   const { t } = useTranslation();
   const router = useRouter();
+  const { width } = useWindowDimensions();
+  const isTablet = width >= 768;
+  const isDesktop = width >= 1024;
+  const contentMaxWidth = isDesktop ? 640 : isTablet ? 560 : undefined;
+  
   const [kids, setKids] = useState<Kid[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
