@@ -728,9 +728,9 @@ export default function SearchScreen() {
                   </Text>
                 </View>
               ) : (
-                <View style={styles.tutorsList}>
+                <View style={[styles.tutorsList, numColumns > 1 && styles.tutorsListMultiColumn]}>
                   {tutors.map((tutor) => (
-                    <View key={tutor.tutor_id || tutor.id}>
+                    <View key={tutor.tutor_id || tutor.id} style={numColumns > 1 ? styles.tutorCardWrapper : undefined}>
                       {renderTutorCard({ item: tutor, index: 0 })}
                     </View>
                   ))}
