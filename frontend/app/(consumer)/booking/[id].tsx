@@ -21,7 +21,8 @@ import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 import { useToast } from '@/src/context/ToastContext';
 import { useTranslation } from '@/src/i18n';
 import AppHeader from '@/src/components/AppHeader';
-import { parseISO, isPast, format } from 'date-fns';
+import { isPast, format } from 'date-fns';
+import { parseToLocalTime } from '@/src/utils/dateLocalization';
 
 interface KidNotification {
   notification_id: string;
