@@ -4633,6 +4633,40 @@ async def get_provider_report(
             if payout and payout["status"] == "completed":
                 by_student[sid]["earned_cents"] += payout["amount_cents"]
     
+    # Group by consumer (parent) with detailed stats
+    by_consumer = {}
+    current_month = datetime.now().strftime("%Y-%m")
+    for b in bookings:
+        cid = b.get("consumer_id")
+        if cid and cid not in by_consumer:
+            consumer_user = await get_user_doc(cid)
+            by_consumer[cid] = {
+                "consumer_id": cid,
+                "consumer_name": consumer_user.get("name", "Unknown") if consumer_user else "Unknown",
+                "consumer_email": consumer_user.get("email", "") if consumer_user else "",
+                "status": consumer_user.get("status", "active") if consumer_user else "unknown",
+                "total_sessions": 0,
+                "month_sessions": 0,
+                "rescheduled_sessions": 0,
+                "canceled_sessions": 0,
+                "total_spent_cents": 0
+            }
+        if cid:
+            by_consumer[cid]["total_sessions"] += 1
+            if b.get("rescheduled"):
+                by_consumer[cid]["rescheduled_sessions"] += 1
+            if "canceled" in b.get("status", ""):
+                by_consumer[cid]["canceled_sessions"] += 1
+            # Check if booking is in current month
+            created = b.get("created_at")
+            if created:
+                if isinstance(created, str):
+                    created = datetime.fromisoformat(created.replace('Z', '+00:00'))
+                if created.strftime("%Y-%m") == current_month:
+                    by_consumer[cid]["month_sessions"] += 1
+            # Add spent amount
+            by_consumer[cid]["total_spent_cents"] += b.get("amount_cents", 0) if b.get("payment_status") == "paid" else 0
+    
     # Group by month
     by_month = {}
     for b in bookings:
