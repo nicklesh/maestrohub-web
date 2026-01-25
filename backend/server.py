@@ -169,8 +169,8 @@ api_router = APIRouter(prefix="/api")
 security = HTTPBearer(auto_error=False)
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
+setup_logging(log_level="INFO", enable_file_logging=True)
+logger = get_logger(__name__)
 
 # ============== SECURITY: Rate Limiting ==============
 limiter = Limiter(key_func=get_remote_address)
