@@ -20,7 +20,7 @@ export function GlobalBackground({ children }: GlobalBackgroundProps) {
         source={require('../../assets/images/login_background.png')}
         style={styles.backgroundImage}
         resizeMode="cover"
-        blurRadius={Platform.OS === 'ios' ? 25 : 15}
+        blurRadius={Platform.OS === 'ios' ? 15 : 8}
       />
       {/* Semi-transparent overlay for better readability */}
       <View style={[styles.backgroundOverlay, { backgroundColor: colors.background }]} />
@@ -40,13 +40,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     height: '100%',
-    opacity: 0.4,
+    opacity: 0.7, // More visible
   },
   backgroundOverlay: {
     position: 'absolute',
     width: '100%',
     height: '100%',
-    opacity: 0.5,
+    opacity: 0.3, // Less overlay = more visible background
   },
   content: {
     flex: 1,
