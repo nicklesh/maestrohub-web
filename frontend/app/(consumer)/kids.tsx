@@ -59,6 +59,10 @@ export default function KidsScreen() {
   const [formNotifyUpcoming, setFormNotifyUpcoming] = useState(false);
 
   const loadKids = useCallback(async () => {
+    if (!token) {
+      setLoading(false);
+      return;
+    }
     try {
       const response = await api.get('/students', {
         headers: { Authorization: `Bearer ${token}` }
@@ -73,8 +77,10 @@ export default function KidsScreen() {
   }, [token]);
 
   useEffect(() => {
-    loadKids();
-  }, [loadKids]);
+    if (token) {
+      loadKids();
+    }
+  }, [token, loadKids]);
 
   const resetForm = () => {
     setFormName('');
