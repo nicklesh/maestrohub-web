@@ -608,6 +608,9 @@ export default function AdminReportsScreen() {
           pendingPayouts: (s.pending_payouts_cents || 0) / 100,
           totalBookings: s.total_bookings || 0,
           completedBookings: s.completed_bookings || 0,
+          canceledBookings: s.canceled_bookings || 0,
+          rescheduledBookings: s.rescheduled_bookings || 0,
+          canceledRevenue: (s.canceled_revenue_cents || 0) / 100,
         });
       }
 
