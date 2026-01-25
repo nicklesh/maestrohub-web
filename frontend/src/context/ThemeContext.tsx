@@ -27,8 +27,8 @@ export const lightTheme = {
   background: '#F8FAFC',
   backgroundSecondary: '#F1F5F9',  // For cards/sections
   surface: '#FFFFFF',
-  text: '#030785',           // Primary text - Dark blue
-  textSecondary: '#1E3A8A',  // Secondary text - Blue
+  text: '#1A4582',           // Primary text - Dark blue
+  textSecondary: '#1A4582',  // Secondary text - Blue
   textMuted: '#475569',      // Muted text - 5.9:1 on white (WCAG AA)
   textInverse: '#FFFFFF',
   border: '#E2E8F0',
