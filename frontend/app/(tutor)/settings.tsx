@@ -266,7 +266,13 @@ export default function TutorSettings() {
                     });
                     showSuccess(t('pages.tutor_settings.meeting_link_saved'));
                   } catch (error: any) {
-                    const errorMsg = error.response?.data?.detail || t('pages.tutor_settings.meeting_link_save_failed');
+                    let errorMsg = t('pages.tutor_settings.meeting_link_save_failed');
+                    const detail = error.response?.data?.detail;
+                    if (typeof detail === 'string') {
+                      errorMsg = detail;
+                    } else if (Array.isArray(detail) && detail.length > 0 && detail[0].msg) {
+                      errorMsg = detail[0].msg;
+                    }
                     showError(errorMsg);
                   } finally {
                     setSavingMeetingLink(false);
