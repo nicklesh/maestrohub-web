@@ -688,6 +688,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
   },
+  bookedLabel: {
+    fontSize: 10,
+    marginTop: 2,
+  },
   bookButtonContainer: {
     position: 'absolute',
     bottom: 0,
