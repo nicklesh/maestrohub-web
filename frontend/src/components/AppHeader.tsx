@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -18,6 +18,7 @@ import { useTheme } from '@/src/context/ThemeContext';
 import { useToast } from '@/src/context/ToastContext';
 import { useTranslation } from '@/src/i18n';
 import { api } from '@/src/services/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // App branding from environment variables
 const APP_NAME = process.env.EXPO_PUBLIC_APP_NAME || 'Maestro Habitat';
