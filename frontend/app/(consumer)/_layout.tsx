@@ -19,7 +19,7 @@ export default function ConsumerLayout() {
         tabBarInactiveTintColor: colors.textMuted,
         tabBarShowLabel: true,
         tabBarStyle: {
-          backgroundColor: colors.surface + 'F0', // Semi-transparent
+          backgroundColor: colors.surface,
           borderTopColor: colors.border,
           height: Platform.OS === 'ios' ? 88 : 70,
           paddingBottom: Platform.OS === 'ios' ? 28 : 12,
@@ -32,9 +32,6 @@ export default function ConsumerLayout() {
         },
         tabBarIconStyle: {
           marginBottom: -4,
-        },
-        sceneStyle: {
-          backgroundColor: 'transparent', // Allow global background to show through
         },
       }}
     >
