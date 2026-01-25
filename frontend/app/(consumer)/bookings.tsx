@@ -42,6 +42,7 @@ interface Booking {
   currency?: string;
   currency_symbol?: string;
   kid_notifications?: KidNotification[];
+  rescheduled?: boolean;
 }
 
 export default function BookingsScreen() {
