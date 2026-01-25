@@ -559,4 +559,43 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 4,
   },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    padding: 20,
+  },
+  confirmModal: {
+    width: '100%',
+    maxWidth: 400,
+    padding: 24,
+    borderRadius: 16,
+  },
+  confirmTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  confirmMessage: {
+    fontSize: 15,
+    textAlign: 'center',
+    marginBottom: 24,
+    lineHeight: 22,
+  },
+  confirmButtons: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  confirmButton: {
+    flex: 1,
+    padding: 14,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  confirmButtonText: {
+    fontSize: 15,
+    fontWeight: '600',
+  },
 });
