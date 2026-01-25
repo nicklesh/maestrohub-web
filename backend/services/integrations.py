@@ -224,7 +224,7 @@ class SentryService:
         if self.enabled:
             self._initialize()
         else:
-            logger.warning("Sentry not configured - errors will be logged locally")
+            logger.info("Sentry not configured - using built-in Python logging instead")
     
     def _initialize(self):
         """Initialize Sentry SDK"""
