@@ -824,15 +824,15 @@ frontend:
 
 test_plan:
   current_focus:
-    - "Mobile App Login Flow"
-    - "Cross-Market Coach Search"
-    - "Coach Details Page with Cross-Market Features"
-  stuck_tasks:
-    - "Mobile App Login Flow"
+    - "Cancel Booking Fix"
+    - "User Conflict Detection in Availability"
+  stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
 agent_communication:
+  - agent: "main"
+    message: "🔧 FIXED TWO CRITICAL BOOKING BUGS: 1) Cancel booking was not working on mobile (non-web) because handleCancel() only showed an info toast without a callback - fixed by using Alert.alert with Yes/No buttons that trigger performCancel(). 2) 'You already have a session booked at this time' error was confusing users because the availability endpoint didn't show user's own booking conflicts - fixed by modifying GET /tutors/{id}/availability to optionally check authenticated user's bookings and mark conflicting slots with has_user_conflict=true. Frontend updated to show these slots with orange 'Your Booking' label instead of grey 'Booked'. Added new i18n keys: yes, no, cancel_confirm_message, your_booking, held, unavailable."
   - agent: "testing"
     message: "Comprehensive backend API testing completed successfully. All 10 core API endpoints are working correctly including auth flows, student management, tutor profiles, and categories. The API is fully functional with proper authentication, data validation, and response formatting. Backend is ready for production use."
   - agent: "testing"
