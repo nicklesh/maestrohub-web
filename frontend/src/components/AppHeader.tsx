@@ -269,7 +269,7 @@ export default function AppHeader({ showBack = false, title, showUserName = fals
       <Modal visible={showContactSheet} animationType="slide" transparent>
         <KeyboardAvoidingView 
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={styles.modalOverlay}
+          style={[styles.modalOverlay, { alignItems: 'center' }]}
         >
           <TouchableOpacity 
             style={styles.modalBackdrop} 
@@ -282,7 +282,8 @@ export default function AppHeader({ showBack = false, title, showUserName = fals
               backgroundColor: colors.surface,
               // Ensure no white corners in dark mode
               overflow: 'hidden',
-            }
+            },
+            contentMaxWidth ? { maxWidth: contentMaxWidth, width: '100%' } : undefined
           ]}>
             <View style={[styles.sheetHandle, { backgroundColor: colors.gray300 }]} />
             <Text style={[styles.sheetTitle, { color: colors.text }]}>{t('modals.contact_us.title')}</Text>
