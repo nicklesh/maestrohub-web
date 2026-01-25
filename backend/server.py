@@ -834,6 +834,20 @@ async def get_current_user(request: Request) -> Optional[User]:
     
     return None
 
+async def get_user_doc(user_id: str):
+    """Helper to get user document by user_id (which is actually MongoDB _id as string)"""
+    try:
+        return await db.users.find_one({"_id": ObjectId(user_id)})
+    except:
+        return None
+
+async def update_user_doc(user_id: str, update_data: dict):
+    """Helper to update user document by user_id"""
+    try:
+        return await db.users.update_one({"_id": ObjectId(user_id)}, update_data)
+    except:
+        return None
+
 async def require_auth(request: Request) -> User:
     user = await get_current_user(request)
     if not user:
