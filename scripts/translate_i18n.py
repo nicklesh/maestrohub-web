@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
-Batch translation script for i18n files using Emergent LLM
+Batch translation script for i18n files using OpenAI
 """
 import json
 import os
 import asyncio
-from emergentintegrations.llm.chat import LlmChat, UserMessage
+from openai import AsyncOpenAI
 
-# Configuration
-API_KEY = "sk-emergent-c02Bb9a237a3b6e673"
+# Configuration - Use environment variable for API key
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 LOCALES_DIR = "/app/frontend/src/i18n/locales"
 
 # Language mapping
