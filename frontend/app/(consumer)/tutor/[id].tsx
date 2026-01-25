@@ -843,7 +843,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
   },
-  },
   calendarDayText: {
     fontSize: 15,
     fontWeight: '500',
