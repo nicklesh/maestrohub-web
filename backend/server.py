@@ -2195,22 +2195,26 @@ async def search_tutors(
         
         # Build market filter:
         # 1. Same market tutors (always visible)
-        # 2. Online/hybrid tutors from ANY market (globally visible by default)
+        # 2. Online/hybrid tutors from ANY market (globally visible by default) - unless local_only
         # 3. Tutors from markets the consumer has explicitly enabled
         if consumer_market_id:
             # Combine consumer's market + any additional enabled markets
             all_consumer_markets = [consumer_market_id] + (consumer_enabled_markets or [])
             all_consumer_markets = list(set(all_consumer_markets))  # Remove duplicates
             
-            # Store market filter to apply later with $and
-            market_filter = {
-                "$or": [
-                    # Same market tutors (any modality)
-                    {"market_id": {"$in": all_consumer_markets}},
-                    # Online/hybrid tutors are visible globally by default
-                    {"modality": {"$in": ["online", "hybrid"]}}
-                ]
-            }
+            if local_only:
+                # Only show coaches from user's market(s)
+                market_filter = {"market_id": {"$in": all_consumer_markets}}
+            else:
+                # Store market filter to apply later with $and
+                market_filter = {
+                    "$or": [
+                        # Same market tutors (any modality)
+                        {"market_id": {"$in": all_consumer_markets}},
+                        # Online/hybrid tutors are visible globally by default
+                        {"modality": {"$in": ["online", "hybrid"]}}
+                    ]
+                }
         
         # Prevent self-selection: exclude current user's tutor profile from results
         # This handles the case where a parent has also become a tutor
