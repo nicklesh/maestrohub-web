@@ -66,6 +66,11 @@ export default function BillingScreen() {
   const { showSuccess, showError, showInfo } = useToast();
   const { t } = useTranslation();
   const { market } = useMarket();
+  const { width } = useWindowDimensions();
+  const isTablet = width >= 768;
+  const isDesktop = width >= 1024;
+  const contentMaxWidth = isDesktop ? 640 : isTablet ? 560 : undefined;
+  
   const [billing, setBilling] = useState<BillingInfo | null>(null);
   const [availableProviders, setAvailableProviders] = useState<PaymentProvider[]>([]);
   const [linkedProviders, setLinkedProviders] = useState<LinkedProvider[]>([]);
