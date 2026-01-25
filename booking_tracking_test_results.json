@@ -1,0 +1,126 @@
+{
+  "test_run": {
+    "timestamp": "2026-01-25T14:45:20.172344",
+    "backend_url": "https://easydeploy-2.preview.emergentagent.com/api",
+    "total_tests": 8,
+    "passed": 7,
+    "failed": 1,
+    "success_rate": 87.5
+  },
+  "results": [
+    {
+      "test": "Login parent",
+      "status": "\u2705 PASS",
+      "success": true,
+      "details": "Successfully logged in as parent1@test.com",
+      "data": null,
+      "timestamp": "2026-01-25T14:45:17.936925"
+    },
+    {
+      "test": "Consumer Bookings API",
+      "status": "\u274c FAIL",
+      "success": false,
+      "details": "rescheduled field missing from booking objects",
+      "data": {
+        "sample_booking": {
+          "booking_id": "booking_8e1be2e433d7",
+          "tutor_id": "tutor_9aeb9e5481f3e438fb0124dd",
+          "consumer_id": "6975cec6f6f1cd4eef730a3d",
+          "student_id": "student_9d4035f46465",
+          "market_id": "US_USD",
+          "currency": "USD",
+          "start_at": "2026-01-28T22:48:54.345000",
+          "end_at": "2026-01-28T23:48:54.345000",
+          "status": "canceled_by_consumer",
+          "price_snapshot": 75,
+          "amount_cents": 7500,
+          "policy_snapshot": {
+            "cancel_window_hours": 24,
+            "no_show_policy": "Full charge for no-shows without 24-hour notice"
+          },
+          "pricing_policy_snapshot": {
+            "market_id": "US_USD",
+            "trial_days": 90,
+            "provider_fee_percent": 0.0,
+            "consumer_fee_percent": 0.0
+          },
+          "intake_response": {
+            "goals": "Test booking for conflict detection",
+            "current_level": "Intermediate",
+            "notes": null,
+            "policy_acknowledged": true
+          },
+          "payment_id": "pay_806268a56341",
+          "created_at": "2026-01-25T12:48:54.846000",
+          "canceled_at": "2026-01-25T12:50:02.442000",
+          "tutor_name": "Sarah Johnson",
+          "tutor_subject": "Mathematics",
+          "student_name": "F Kid",
+          "currency_symbol": "$",
+          "kid_notifications": []
+        }
+      },
+      "timestamp": "2026-01-25T14:45:18.591125"
+    },
+    {
+      "test": "Consumer Reports API",
+      "status": "\u2705 PASS",
+      "success": true,
+      "details": "All required tracking fields present in summary",
+      "data": {
+        "rescheduled_sessions": 0,
+        "canceled_sessions": 4,
+        "canceled_amount_cents": 32500
+      },
+      "timestamp": "2026-01-25T14:45:19.022938"
+    },
+    {
+      "test": "Login coach",
+      "status": "\u2705 PASS",
+      "success": true,
+      "details": "Successfully logged in as tutor3@test.com",
+      "data": null,
+      "timestamp": "2026-01-25T14:45:19.317142"
+    },
+    {
+      "test": "Provider Reports API - Summary",
+      "status": "\u2705 PASS",
+      "success": true,
+      "details": "All required tracking fields present in summary",
+      "data": {
+        "rescheduled_sessions": 0,
+        "canceled_sessions": 0,
+        "canceled_amount_cents": 0
+      },
+      "timestamp": "2026-01-25T14:45:19.476893"
+    },
+    {
+      "test": "Provider Reports API - by_consumer",
+      "status": "\u2705 PASS",
+      "success": true,
+      "details": "by_consumer array is empty but structure is correct",
+      "data": null,
+      "timestamp": "2026-01-25T14:45:19.476930"
+    },
+    {
+      "test": "Login admin",
+      "status": "\u2705 PASS",
+      "success": true,
+      "details": "Successfully logged in as admin@maestrohub.com",
+      "data": null,
+      "timestamp": "2026-01-25T14:45:19.771833"
+    },
+    {
+      "test": "Admin Reports API",
+      "status": "\u2705 PASS",
+      "success": true,
+      "details": "All required tracking fields present in stats",
+      "data": {
+        "canceled_bookings": 4,
+        "rescheduled_bookings": 0,
+        "canceled_revenue_cents": 325
+      },
+      "timestamp": "2026-01-25T14:45:20.172179"
+    }
+  ]
+}
