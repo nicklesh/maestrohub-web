@@ -274,7 +274,10 @@ export default function BookingsScreen() {
           <View style={styles.emptyContainer}>
             <Ionicons name="calendar-outline" size={64} color={colors.textMuted} />
             <Text style={[styles.emptyText, { color: colors.textMuted }]}>
-              {filter === 'upcoming' ? t('empty_states.no_upcoming_bookings') : t('empty_states.no_past_bookings')}
+              {filter === 'upcoming' ? t('empty_states.no_upcoming_bookings') : 
+               filter === 'past' ? t('empty_states.no_past_bookings') :
+               filter === 'rescheduled' ? (t('empty_states.no_rescheduled_bookings') || 'No rescheduled bookings') :
+               (t('empty_states.no_cancelled_bookings') || 'No cancelled bookings')}
             </Text>
           </View>
         ) : (
