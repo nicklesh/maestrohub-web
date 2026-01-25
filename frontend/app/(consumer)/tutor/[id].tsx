@@ -575,31 +575,31 @@ export default function TutorDetailScreen() {
                   const isBookingDate = currentBooking && format(date, 'yyyy-MM-dd') === format(parseToLocalTime(currentBooking.start_at), 'yyyy-MM-dd');
                   
                   calendarDays.push(
-                    <TouchableOpacity
-                      key={day}
-                      style={[
-                        styles.calendarDayCell,
-                        styles.calendarDayButton,
-                        { borderColor: colors.border },
-                        isSelected && { backgroundColor: colors.primary, borderColor: colors.primary },
-                        isPast && { opacity: 0.4 },
-                        isToday && !isSelected && { borderColor: colors.primary, borderWidth: 2 },
-                        isBookingDate && !isSelected && { backgroundColor: colors.warning + '30' }
-                      ]}
-                      onPress={() => !isPast && setSelectedDate(date)}
-                      disabled={isPast}
-                    >
-                      <Text style={[
-                        styles.calendarDayText,
-                        { color: isSelected ? '#FFFFFF' : colors.text },
-                        isPast && { color: colors.textMuted }
-                      ]}>
-                        {day}
-                      </Text>
-                      {isBookingDate && !isSelected && (
-                        <View style={[styles.bookingDot, { backgroundColor: colors.warning }]} />
-                      )}
-                    </TouchableOpacity>
+                    <View key={day} style={styles.calendarDayCell}>
+                      <TouchableOpacity
+                        style={[
+                          styles.calendarDayButton,
+                          { borderColor: colors.border, backgroundColor: colors.surface },
+                          isSelected && { backgroundColor: colors.primary, borderColor: colors.primary },
+                          isPast && { opacity: 0.4 },
+                          isToday && !isSelected && { borderColor: colors.primary, borderWidth: 2 },
+                          isBookingDate && !isSelected && { backgroundColor: colors.warning + '30' }
+                        ]}
+                        onPress={() => !isPast && setSelectedDate(date)}
+                        disabled={isPast}
+                      >
+                        <Text style={[
+                          styles.calendarDayText,
+                          { color: isSelected ? '#FFFFFF' : colors.text },
+                          isPast && { color: colors.textMuted }
+                        ]}>
+                          {day}
+                        </Text>
+                        {isBookingDate && !isSelected && (
+                          <View style={[styles.bookingDot, { backgroundColor: colors.warning }]} />
+                        )}
+                      </TouchableOpacity>
+                    </View>
                   );
                 }
                 
