@@ -32,10 +32,18 @@ interface Tutor {
   categories: string[];
   modality: string[];
   base_price: number;
+  display_price?: number;
+  original_price?: number;
+  original_currency_symbol?: string;
+  original_price_display?: string;
   rating_avg: number;
   rating_count: number;
   currency_symbol: string;
   is_sponsored?: boolean;
+  market_flag?: string;
+  market_code?: string;
+  market_display?: string;
+  is_cross_market?: boolean;
 }
 
 interface Category {
