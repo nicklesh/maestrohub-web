@@ -4723,6 +4723,7 @@ async def get_provider_report(
         },
         "sponsorship": sponsorship_summary,
         "by_student": list(by_student.values()),
+        "by_consumer": sorted(list(by_consumer.values()), key=lambda x: x["total_sessions"], reverse=True),
         "by_month": sorted(by_month.values(), key=lambda x: x["month"], reverse=True),
         "bookings": bookings[:50],  # Last 50 bookings
         "payouts": payouts[:50]  # Last 50 payouts
