@@ -208,7 +208,10 @@ export default function TutorDetailScreen() {
     if (!tutor) return;
     try {
       const dateStr = format(selectedDate, 'yyyy-MM-dd');
-      const response = await api.get(`/tutors/${tutor.tutor_id}/availability?date=${dateStr}`);
+      const authToken = await AsyncStorage.getItem('token');
+      // Pass auth token to check for user's existing bookings
+      const headers = authToken ? { Authorization: `Bearer ${authToken}` } : {};
+      const response = await api.get(`/tutors/${tutor.tutor_id}/availability?date=${dateStr}`, { headers });
       setAvailableSlots(response.data?.slots || []);
     } catch (error) {
       console.error('Failed to load slots:', error);
