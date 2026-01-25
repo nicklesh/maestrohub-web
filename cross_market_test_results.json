@@ -1,0 +1,154 @@
+{
+  "summary": {
+    "total_tests": 15,
+    "passed_tests": 11,
+    "failed_tests": 4,
+    "success_rate": 73.3
+  },
+  "test_results": [
+    {
+      "test": "Consumer Login",
+      "success": true,
+      "details": "Successfully logged in as parent1@test.com",
+      "response_data": null,
+      "timestamp": "2026-01-25T03:25:44.578254"
+    },
+    {
+      "test": "Cross-Market Search - Default",
+      "success": true,
+      "details": "Search returned 20 tutors, cross-market fields present: True",
+      "response_data": {
+        "tutor_count": 20,
+        "has_cross_market_fields": true
+      },
+      "timestamp": "2026-01-25T03:25:44.601371"
+    },
+    {
+      "test": "Cross-Market Search - Local Only",
+      "success": true,
+      "details": "Local search returned 20 tutors, all local: True",
+      "response_data": {
+        "tutor_count": 20,
+        "all_local": true
+      },
+      "timestamp": "2026-01-25T03:25:44.622811"
+    },
+    {
+      "test": "Exchange Rates - USD Base",
+      "success": false,
+      "details": "USD rates: 166 currencies, has INR: True",
+      "response_data": {
+        "base": null,
+        "currency_count": 166
+      },
+      "timestamp": "2026-01-25T03:25:44.817987"
+    },
+    {
+      "test": "Exchange Rates - INR Base",
+      "success": false,
+      "details": "INR rates: base=None, 166 currencies, has USD: True",
+      "response_data": {
+        "base": null,
+        "currency_count": 166
+      },
+      "timestamp": "2026-01-25T03:25:44.827607"
+    },
+    {
+      "test": "Tutor Login",
+      "success": true,
+      "details": "Successfully logged in as tutor4@test.com",
+      "response_data": null,
+      "timestamp": "2026-01-25T03:25:45.059428"
+    },
+    {
+      "test": "Tutor Market Pricing - GET",
+      "success": true,
+      "details": "Retrieved pricing: base_price=50.0, 2 markets",
+      "response_data": {
+        "base_price": 50.0,
+        "market_count": 2
+      },
+      "timestamp": "2026-01-25T03:25:45.067310"
+    },
+    {
+      "test": "Tutor Market Pricing - PUT",
+      "success": false,
+      "details": "Updated pricing: success=False, markets=['US_USD', 'IN_INR']",
+      "response_data": {
+        "success": false,
+        "updated_markets": [
+          "US_USD",
+          "IN_INR"
+        ]
+      },
+      "timestamp": "2026-01-25T03:25:45.116135"
+    },
+    {
+      "test": "Consumer Login",
+      "success": true,
+      "details": "Successfully logged in as parent1@test.com",
+      "response_data": null,
+      "timestamp": "2026-01-25T03:25:45.347124"
+    },
+    {
+      "test": "Consumer Enabled Markets - GET",
+      "success": true,
+      "details": "Retrieved enabled markets: []",
+      "response_data": {
+        "enabled_markets": []
+      },
+      "timestamp": "2026-01-25T03:25:45.354907"
+    },
+    {
+      "test": "Consumer Enabled Markets - PUT",
+      "success": false,
+      "details": "Updated enabled markets: success=False, markets=['US_USD', 'IN_INR']",
+      "response_data": {
+        "success": false,
+        "enabled_markets": [
+          "US_USD",
+          "IN_INR"
+        ]
+      },
+      "timestamp": "2026-01-25T03:25:45.361925"
+    },
+    {
+      "test": "Tutor Login",
+      "success": true,
+      "details": "Successfully logged in as tutor4@test.com",
+      "response_data": null,
+      "timestamp": "2026-01-25T03:25:45.592327"
+    },
+    {
+      "test": "Tutor Meeting Link - Valid Zoom URL",
+      "success": true,
+      "details": "Updated meeting link: success=True, link=https://zoom.us/j/1234567890?pwd=abcdef123456",
+      "response_data": {
+        "success": true,
+        "meeting_link": "https://zoom.us/j/1234567890?pwd=abcdef123456"
+      },
+      "timestamp": "2026-01-25T03:25:45.641234"
+    },
+    {
+      "test": "Tutor Meeting Link - Google Meet URL",
+      "success": true,
+      "details": "Updated Google Meet link: success=True, waiting_room=False",
+      "response_data": {
+        "success": true,
+        "meeting_link": "https://meet.google.com/abc-defg-hij",
+        "waiting_room_enabled": false
+      },
+      "timestamp": "2026-01-25T03:25:45.690396"
+    },
+    {
+      "test": "Tutor Meeting Link - Invalid URL Validation",
+      "success": true,
+      "details": "Invalid URL properly rejected with 400 status",
+      "response_data": {
+        "status_code": 400
+      },
+      "timestamp": "2026-01-25T03:25:45.698411"
+    }
+  ],
+  "timestamp": "2026-01-25T03:25:45.698528"
+}
