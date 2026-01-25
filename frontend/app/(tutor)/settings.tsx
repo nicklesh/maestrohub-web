@@ -258,8 +258,8 @@ export default function TutorSettings() {
                 onPress={async () => {
                   setSavingMeetingLink(true);
                   try {
-                    await api.put('/tutors/profile', { 
-                      meeting_link: profile.meeting_link,
+                    await api.put('/tutors/meeting-link', { 
+                      meeting_link: profile.meeting_link || null,
                       waiting_room_enabled: profile.waiting_room_enabled !== false
                     }, {
                       headers: { Authorization: `Bearer ${token}` }
