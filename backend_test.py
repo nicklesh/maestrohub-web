@@ -1,529 +1,413 @@
 #!/usr/bin/env python3
 """
-Comprehensive Backend API Testing for Maestro Habitat
-Tests all critical API endpoints with fresh seeded data
+Backend API Testing for Maestro Habitat
+Testing specific bug fixes:
+1. Cancel Booking API
+2. User Conflict Detection in Availability
 """
 
-import requests
+import asyncio
+import httpx
 import json
-import sys
-from datetime import datetime, timedelta
+import os
+from datetime import datetime, timedelta, timezone
 from typing import Dict, Any, Optional
 
-# Configuration
-BASE_URL = "https://easydeploy-2.preview.emergentagent.com/api"
+# Get backend URL from environment
+BACKEND_URL = os.environ.get('EXPO_PUBLIC_BACKEND_URL', 'https://easydeploy-2.preview.emergentagent.com')
+API_BASE = f"{BACKEND_URL}/api"
+
+# Test credentials from review request
 TEST_CREDENTIALS = {
-    "parent": {"email": "parent1@test.com", "password": "password123"},
-    "coach": {"email": "coach.math@test.com", "password": "password123"},
-    "admin": {"email": "admin@maestrohub.com", "password": "password123"}
+    "parent1": {"email": "parent1@test.com", "password": "password123"},
+    "tutor_sarah": "tutor_9aeb9e5481f3e438fb0124dd",  # Sarah Johnson
+    "tutor_michael": "tutor_e895a0daa5e30f9c3d2dfa6e"  # Michael Chen
 }
 
-class APITester:
+class BackendTester:
     def __init__(self):
-        self.session = requests.Session()
-        self.tokens = {}
+        self.client = httpx.AsyncClient(timeout=30.0)
+        self.auth_token = None
+        self.user_id = None
         self.test_results = []
-        self.failed_tests = []
         
-    def log_test(self, test_name: str, success: bool, details: str = "", response_data: Any = None):
-        """Log test results"""
-        status = "✅ PASS" if success else "❌ FAIL"
+    async def __aenter__(self):
+        return self
+        
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self.client.aclose()
+    
+    def log_result(self, test_name: str, success: bool, message: str, details: Dict = None):
+        """Log test result"""
         result = {
             "test": test_name,
-            "status": status,
             "success": success,
-            "details": details,
+            "message": message,
+            "details": details or {},
             "timestamp": datetime.now().isoformat()
         }
-        if response_data:
-            result["response_sample"] = str(response_data)[:200] + "..." if len(str(response_data)) > 200 else response_data
-            
         self.test_results.append(result)
-        print(f"{status} - {test_name}")
+        status = "✅ PASS" if success else "❌ FAIL"
+        print(f"{status} - {test_name}: {message}")
         if details:
-            print(f"    {details}")
-        if not success:
-            self.failed_tests.append(result)
+            print(f"   Details: {json.dumps(details, indent=2)}")
     
-    def make_request(self, method: str, endpoint: str, token: str = None, **kwargs) -> requests.Response:
-        """Make HTTP request with optional authentication"""
-        url = f"{BASE_URL}{endpoint}"
-        headers = kwargs.get('headers', {})
-        
-        if token:
-            headers['Authorization'] = f'Bearer {token}'
-        
-        kwargs['headers'] = headers
-        
+    async def login(self, email: str, password: str) -> bool:
+        """Login and get auth token"""
         try:
-            response = self.session.request(method, url, **kwargs)
-            return response
-        except Exception as e:
-            print(f"Request failed: {e}")
-            raise
-    
-    def test_authentication(self):
-        """Test authentication flows"""
-        print("\n🔐 Testing Authentication Flows...")
-        
-        # Test login for each user type
-        for user_type, creds in TEST_CREDENTIALS.items():
-            try:
-                response = self.make_request('POST', '/auth/login', json=creds)
-                
-                if response.status_code == 200:
-                    data = response.json()
-                    if 'token' in data and 'user_id' in data:
-                        self.tokens[user_type] = data['token']
-                        self.log_test(f"Login - {user_type}", True, 
-                                    f"Role: {data.get('role')}, User ID: {data.get('user_id')}")
-                    else:
-                        self.log_test(f"Login - {user_type}", False, 
-                                    f"Missing token or user_id in response: {data}")
-                else:
-                    self.log_test(f"Login - {user_type}", False, 
-                                f"Status: {response.status_code}, Response: {response.text}")
-            except Exception as e:
-                self.log_test(f"Login - {user_type}", False, f"Exception: {str(e)}")
-        
-        # Test /auth/me for each authenticated user
-        for user_type, token in self.tokens.items():
-            try:
-                response = self.make_request('GET', '/auth/me', token=token)
-                
-                if response.status_code == 200:
-                    data = response.json()
-                    required_fields = ['user_id', 'email', 'name', 'role']
-                    missing_fields = [field for field in required_fields if field not in data]
-                    
-                    if not missing_fields:
-                        self.log_test(f"Auth Me - {user_type}", True, 
-                                    f"User: {data.get('name')}, Role: {data.get('role')}")
-                    else:
-                        self.log_test(f"Auth Me - {user_type}", False, 
-                                    f"Missing fields: {missing_fields}")
-                else:
-                    self.log_test(f"Auth Me - {user_type}", False, 
-                                f"Status: {response.status_code}, Response: {response.text}")
-            except Exception as e:
-                self.log_test(f"Auth Me - {user_type}", False, f"Exception: {str(e)}")
-        
-        # Test token validation with invalid token
-        try:
-            # Clear any existing cookies to ensure clean test
-            self.session.cookies.clear()
-            response = self.make_request('GET', '/auth/me', token='invalid.token.here')
-            if response.status_code == 401:
-                self.log_test("Token Validation - Invalid Token", True, 
-                            "Correctly rejected invalid token with 401")
-            else:
-                self.log_test("Token Validation - Invalid Token", False, 
-                            f"Should return 401, got {response.status_code}: {response.text}")
-        except Exception as e:
-            self.log_test("Token Validation - Invalid Token", False, f"Exception: {str(e)}")
-    
-    def test_categories(self):
-        """Test categories API"""
-        print("\n📚 Testing Categories API...")
-        
-        try:
-            response = self.make_request('GET', '/categories')
+            response = await self.client.post(f"{API_BASE}/auth/login", json={
+                "email": email,
+                "password": password
+            })
             
             if response.status_code == 200:
                 data = response.json()
-                
-                if isinstance(data, dict) and 'categories' in data:
-                    categories = data['categories']
-                    if len(categories) >= 10:
-                        # Check if categories have subcategories
-                        has_subcategories = any('subcategories' in cat or 'subjects' in cat for cat in categories)
-                        self.log_test("Categories API", True, 
-                                    f"Found {len(categories)} categories, has subcategories: {has_subcategories}")
-                    else:
-                        self.log_test("Categories API", False, 
-                                    f"Expected 10+ categories, got {len(categories)}")
-                else:
-                    self.log_test("Categories API", False, 
-                                f"Unexpected response structure: {data}")
+                self.auth_token = data.get("token")
+                self.user_id = data.get("user_id")
+                self.log_result("Login", True, f"Successfully logged in as {email}", {
+                    "user_id": self.user_id,
+                    "role": data.get("role")
+                })
+                return True
             else:
-                self.log_test("Categories API", False, 
-                            f"Status: {response.status_code}, Response: {response.text}")
+                self.log_result("Login", False, f"Login failed: {response.status_code}", {
+                    "response": response.text
+                })
+                return False
+                
         except Exception as e:
-            self.log_test("Categories API", False, f"Exception: {str(e)}")
+            self.log_result("Login", False, f"Login error: {str(e)}")
+            return False
     
-    def test_markets(self):
-        """Test markets API"""
-        print("\n🌍 Testing Markets API...")
-        
+    def get_auth_headers(self) -> Dict[str, str]:
+        """Get authorization headers"""
+        if not self.auth_token:
+            return {}
+        return {"Authorization": f"Bearer {self.auth_token}"}
+    
+    async def get_bookings(self) -> Optional[list]:
+        """Get user's bookings"""
         try:
-            response = self.make_request('GET', '/markets')
+            response = await self.client.get(
+                f"{API_BASE}/bookings",
+                headers=self.get_auth_headers()
+            )
             
             if response.status_code == 200:
                 data = response.json()
-                
-                # Check if response has 'markets' key with list of markets
-                if isinstance(data, dict) and 'markets' in data:
-                    markets = data['markets']
-                    if len(markets) >= 2:
-                        market_ids = [market.get('market_id') for market in markets]
-                        expected_markets = ['US_USD', 'IN_INR']
-                        
-                        if all(market in market_ids for market in expected_markets):
-                            self.log_test("Markets API", True, 
-                                        f"Found expected markets: {market_ids}")
-                        else:
-                            self.log_test("Markets API", False, 
-                                        f"Missing expected markets. Found: {market_ids}")
-                    else:
-                        self.log_test("Markets API", False, 
-                                    f"Expected 2+ markets, got {len(markets)}")
-                else:
-                    self.log_test("Markets API", False, 
-                                f"Expected dict with 'markets' key, got: {type(data)}")
+                bookings = data.get("bookings", [])
+                self.log_result("Get Bookings", True, f"Retrieved {len(bookings)} bookings")
+                return bookings
             else:
-                self.log_test("Markets API", False, 
-                            f"Status: {response.status_code}, Response: {response.text}")
+                self.log_result("Get Bookings", False, f"Failed to get bookings: {response.status_code}", {
+                    "response": response.text
+                })
+                return None
+                
         except Exception as e:
-            self.log_test("Markets API", False, f"Exception: {str(e)}")
+            self.log_result("Get Bookings", False, f"Error getting bookings: {str(e)}")
+            return None
     
-    def test_tutor_search(self):
-        """Test tutor search APIs"""
-        print("\n🔍 Testing Tutor Search APIs...")
+    async def test_cancel_booking(self) -> bool:
+        """Test the cancel booking API endpoint"""
+        print("\n🔧 Testing Cancel Booking API...")
         
-        # Test general tutor search
+        # First get user's bookings
+        bookings = await self.get_bookings()
+        if not bookings:
+            self.log_result("Cancel Booking Test", False, "No bookings found to test cancellation")
+            return False
+        
+        # Find a booking that can be canceled (status: booked or confirmed)
+        cancelable_booking = None
+        for booking in bookings:
+            if booking.get("status") in ["booked", "confirmed"]:
+                cancelable_booking = booking
+                break
+        
+        if not cancelable_booking:
+            self.log_result("Cancel Booking Test", False, "No cancelable bookings found (need status: booked/confirmed)")
+            return False
+        
+        booking_id = cancelable_booking.get("booking_id")
+        original_status = cancelable_booking.get("status")
+        
         try:
-            response = self.make_request('GET', '/tutors/search')
+            # Test the cancel booking endpoint
+            response = await self.client.post(
+                f"{API_BASE}/bookings/{booking_id}/cancel",
+                headers=self.get_auth_headers()
+            )
             
             if response.status_code == 200:
                 data = response.json()
+                new_status = data.get("status")
                 
-                if isinstance(data, dict) and 'tutors' in data:
-                    tutors = data['tutors']
-                    self.log_test("Tutor Search - General", True, 
-                                f"Found {len(tutors)} tutors")
-                    
-                    # Check tutor data structure
-                    if tutors:
-                        tutor = tutors[0]
-                        required_fields = ['tutor_id', 'name', 'bio', 'subjects', 'base_price']
-                        missing_fields = [field for field in required_fields if field not in tutor]
-                        
-                        if not missing_fields:
-                            self.log_test("Tutor Data Structure", True, 
-                                        f"All required fields present")
-                        else:
-                            self.log_test("Tutor Data Structure", False, 
-                                        f"Missing fields: {missing_fields}")
-                        
-                        # Check for known issue fields
-                        optional_fields = ['cancel_window_hours', 'booking_policy', 'policies']
-                        missing_optional = [field for field in optional_fields if field not in tutor]
-                        if missing_optional:
-                            self.log_test("Tutor Optional Fields", True, 
-                                        f"Note: Missing optional fields: {missing_optional} (this is expected)")
-                        else:
-                            self.log_test("Tutor Optional Fields", True, 
-                                        "All optional fields present")
-                else:
-                    self.log_test("Tutor Search - General", False, 
-                                f"Unexpected response structure: {data}")
-            else:
-                self.log_test("Tutor Search - General", False, 
-                            f"Status: {response.status_code}, Response: {response.text}")
-        except Exception as e:
-            self.log_test("Tutor Search - General", False, f"Exception: {str(e)}")
-        
-        # Test category filtering
-        try:
-            response = self.make_request('GET', '/tutors/search?category=academics')
-            
-            if response.status_code == 200:
-                data = response.json()
-                
-                if isinstance(data, dict) and 'tutors' in data:
-                    tutors = data['tutors']
-                    self.log_test("Tutor Search - Category Filter", True, 
-                                f"Category filter returned {len(tutors)} tutors")
-                else:
-                    self.log_test("Tutor Search - Category Filter", False, 
-                                f"Unexpected response structure: {data}")
-            else:
-                self.log_test("Tutor Search - Category Filter", False, 
-                            f"Status: {response.status_code}, Response: {response.text}")
-        except Exception as e:
-            self.log_test("Tutor Search - Category Filter", False, f"Exception: {str(e)}")
-    
-    def test_tutor_details(self):
-        """Test tutor details API"""
-        print("\n👨‍🏫 Testing Tutor Details API...")
-        
-        # First get a tutor ID from search
-        try:
-            search_response = self.make_request('GET', '/tutors/search')
-            if search_response.status_code == 200:
-                search_data = search_response.json()
-                tutors = search_data.get('tutors', [])
-                
-                if tutors:
-                    tutor_id = tutors[0].get('tutor_id')
-                    
-                    # Test tutor details endpoint
-                    response = self.make_request('GET', f'/tutors/{tutor_id}')
-                    
-                    if response.status_code == 200:
-                        data = response.json()
-                        
-                        required_fields = ['tutor_id', 'name', 'bio', 'subjects', 'base_price']
-                        missing_fields = [field for field in required_fields if field not in data]
-                        
-                        if not missing_fields:
-                            self.log_test("Tutor Details", True, 
-                                        f"Tutor details for {data.get('name')}")
-                        else:
-                            self.log_test("Tutor Details", False, 
-                                        f"Missing fields: {missing_fields}")
+                # Verify the booking was actually canceled
+                updated_bookings = await self.get_bookings()
+                if updated_bookings:
+                    updated_booking = next((b for b in updated_bookings if b.get("booking_id") == booking_id), None)
+                    if updated_booking and "canceled" in updated_booking.get("status", ""):
+                        self.log_result("Cancel Booking API", True, f"Successfully canceled booking {booking_id}", {
+                            "booking_id": booking_id,
+                            "original_status": original_status,
+                            "new_status": updated_booking.get("status"),
+                            "response": data
+                        })
+                        return True
                     else:
-                        self.log_test("Tutor Details", False, 
-                                    f"Status: {response.status_code}, Response: {response.text}")
+                        self.log_result("Cancel Booking API", False, "Booking status not updated in database", {
+                            "booking_id": booking_id,
+                            "expected_status_contains": "canceled",
+                            "actual_status": updated_booking.get("status") if updated_booking else "booking_not_found"
+                        })
+                        return False
                 else:
-                    self.log_test("Tutor Details", False, "No tutors found to test details")
+                    self.log_result("Cancel Booking API", False, "Could not verify booking cancellation - failed to retrieve updated bookings")
+                    return False
             else:
-                self.log_test("Tutor Details", False, "Could not get tutors for details test")
+                self.log_result("Cancel Booking API", False, f"Cancel request failed: {response.status_code}", {
+                    "booking_id": booking_id,
+                    "response": response.text
+                })
+                return False
+                
         except Exception as e:
-            self.log_test("Tutor Details", False, f"Exception: {str(e)}")
+            self.log_result("Cancel Booking API", False, f"Error testing cancel booking: {str(e)}")
+            return False
     
-    def test_availability(self):
-        """Test tutor availability API"""
-        print("\n📅 Testing Tutor Availability API...")
-        
-        # First get a tutor ID from search
+    async def create_test_booking(self, tutor_id: str, start_time: datetime) -> Optional[str]:
+        """Create a test booking for conflict testing"""
         try:
-            search_response = self.make_request('GET', '/tutors/search')
-            if search_response.status_code == 200:
-                search_data = search_response.json()
-                tutors = search_data.get('tutors', [])
-                
-                if tutors:
-                    tutor_id = tutors[0].get('tutor_id')
-                    test_date = "2026-01-27"
-                    
-                    # Test availability endpoint
-                    response = self.make_request('GET', f'/tutors/{tutor_id}/availability?date={test_date}')
-                    
-                    if response.status_code == 200:
-                        data = response.json()
-                        
-                        if isinstance(data, dict):
-                            self.log_test("Tutor Availability", True, 
-                                        f"Availability data returned for {test_date}")
-                        else:
-                            self.log_test("Tutor Availability", False, 
-                                        f"Unexpected response structure: {data}")
-                    else:
-                        self.log_test("Tutor Availability", False, 
-                                    f"Status: {response.status_code}, Response: {response.text}")
-                else:
-                    self.log_test("Tutor Availability", False, "No tutors found to test availability")
-            else:
-                self.log_test("Tutor Availability", False, "Could not get tutors for availability test")
-        except Exception as e:
-            self.log_test("Tutor Availability", False, f"Exception: {str(e)}")
-    
-    def test_students(self):
-        """Test students/kids API"""
-        print("\n👶 Testing Students/Kids API...")
-        
-        parent_token = self.tokens.get('parent')
-        if not parent_token:
-            self.log_test("Students API", False, "No parent token available")
-            return
-        
-        # Test GET students
-        try:
-            response = self.make_request('GET', '/students', token=parent_token)
+            # First create a booking hold
+            hold_response = await self.client.post(
+                f"{API_BASE}/booking-holds",
+                headers=self.get_auth_headers(),
+                json={
+                    "tutor_id": tutor_id,
+                    "start_at": start_time.isoformat(),
+                    "duration_minutes": 60
+                }
+            )
             
-            if response.status_code == 200:
-                data = response.json()
-                
-                if isinstance(data, list):
-                    self.log_test("Get Students", True, 
-                                f"Found {len(data)} students")
-                else:
-                    self.log_test("Get Students", False, 
-                                f"Expected list, got: {type(data)}")
-            else:
-                self.log_test("Get Students", False, 
-                            f"Status: {response.status_code}, Response: {response.text}")
-        except Exception as e:
-            self.log_test("Get Students", False, f"Exception: {str(e)}")
-        
-        # Test POST students (create new student)
-        try:
-            student_data = {
-                "name": "Test Student",
-                "age": 12,
-                "grade": "7th",
-                "notes": "Test student for API testing"
-            }
+            if hold_response.status_code != 200:
+                self.log_result("Create Test Booking Hold", False, f"Failed to create hold: {hold_response.status_code}")
+                return None
             
-            response = self.make_request('POST', '/students', token=parent_token, json=student_data)
+            hold_data = hold_response.json()
+            hold_id = hold_data.get("hold_id")
             
-            if response.status_code == 200 or response.status_code == 201:
-                data = response.json()
-                
-                if 'student_id' in data:
-                    self.log_test("Create Student", True, 
-                                f"Created student with ID: {data.get('student_id')}")
-                else:
-                    self.log_test("Create Student", False, 
-                                f"Missing student_id in response: {data}")
-            else:
-                self.log_test("Create Student", False, 
-                            f"Status: {response.status_code}, Response: {response.text}")
-        except Exception as e:
-            self.log_test("Create Student", False, f"Exception: {str(e)}")
-    
-    def test_booking_flow(self):
-        """Test booking related endpoints"""
-        print("\n📝 Testing Booking Flow APIs...")
-        
-        parent_token = self.tokens.get('parent')
-        if not parent_token:
-            self.log_test("Booking Flow", False, "No parent token available")
-            return
-        
-        # Test booking holds endpoint
-        try:
-            # First get a tutor for booking
-            search_response = self.make_request('GET', '/tutors/search')
-            if search_response.status_code == 200:
-                tutors = search_response.json().get('tutors', [])
-                
-                if tutors:
-                    tutor_id = tutors[0].get('tutor_id')
-                    
-                    # Create booking hold
-                    hold_data = {
-                        "tutor_id": tutor_id,
-                        "start_at": (datetime.now() + timedelta(days=1)).isoformat(),
-                        "duration_minutes": 60
+            # Get user's students for booking
+            students_response = await self.client.get(
+                f"{API_BASE}/students",
+                headers=self.get_auth_headers()
+            )
+            
+            if students_response.status_code != 200:
+                self.log_result("Create Test Booking", False, "Failed to get students for booking")
+                return None
+            
+            students = students_response.json().get("students", [])
+            if not students:
+                # Create a test student
+                student_response = await self.client.post(
+                    f"{API_BASE}/students",
+                    headers=self.get_auth_headers(),
+                    json={
+                        "name": "Test Student",
+                        "age": 12,
+                        "grade": "7th"
                     }
-                    
-                    response = self.make_request('POST', '/booking-holds', token=parent_token, json=hold_data)
-                    
-                    if response.status_code == 200 or response.status_code == 201:
-                        data = response.json()
-                        
-                        if 'hold_id' in data:
-                            self.log_test("Create Booking Hold", True, 
-                                        f"Created hold with ID: {data.get('hold_id')}")
-                        else:
-                            self.log_test("Create Booking Hold", False, 
-                                        f"Missing hold_id in response: {data}")
-                    elif response.status_code == 409:
-                        # 409 Conflict is expected if slot is already held - this is correct behavior
-                        self.log_test("Create Booking Hold", True, 
-                                    f"Correctly returned 409 Conflict for already held slot: {response.json().get('detail', 'Slot conflict')}")
-                    else:
-                        self.log_test("Create Booking Hold", False, 
-                                    f"Status: {response.status_code}, Response: {response.text}")
+                )
+                if student_response.status_code == 200:
+                    students = [student_response.json()]
                 else:
-                    self.log_test("Create Booking Hold", False, "No tutors available for booking test")
+                    self.log_result("Create Test Booking", False, "Failed to create test student")
+                    return None
+            
+            student_id = students[0].get("student_id")
+            
+            # Create the actual booking
+            booking_response = await self.client.post(
+                f"{API_BASE}/bookings",
+                headers=self.get_auth_headers(),
+                json={
+                    "hold_id": hold_id,
+                    "student_id": student_id,
+                    "intake": {
+                        "goals": "Test booking for conflict detection",
+                        "current_level": "Intermediate",
+                        "policy_acknowledged": True
+                    }
+                }
+            )
+            
+            if booking_response.status_code == 200:
+                booking_data = booking_response.json()
+                booking_id = booking_data.get("booking_id")
+                self.log_result("Create Test Booking", True, f"Created test booking {booking_id}")
+                return booking_id
             else:
-                self.log_test("Create Booking Hold", False, "Could not get tutors for booking test")
-        except Exception as e:
-            self.log_test("Create Booking Hold", False, f"Exception: {str(e)}")
-    
-    def test_notifications(self):
-        """Test notifications API"""
-        print("\n🔔 Testing Notifications API...")
-        
-        for user_type, token in self.tokens.items():
-            try:
-                response = self.make_request('GET', '/notifications', token=token)
+                self.log_result("Create Test Booking", False, f"Failed to create booking: {booking_response.status_code}")
+                return None
                 
-                if response.status_code == 200:
-                    data = response.json()
-                    
-                    # Check if response has 'notifications' key with list
-                    if isinstance(data, dict) and 'notifications' in data:
-                        notifications = data['notifications']
-                        if isinstance(notifications, list):
-                            self.log_test(f"Notifications - {user_type}", True, 
-                                        f"Found {len(notifications)} notifications, unread: {data.get('unread_count', 0)}")
-                        else:
-                            self.log_test(f"Notifications - {user_type}", False, 
-                                        f"Expected list in 'notifications' key, got: {type(notifications)}")
-                    else:
-                        self.log_test(f"Notifications - {user_type}", False, 
-                                    f"Expected dict with 'notifications' key, got: {type(data)}")
-                else:
-                    self.log_test(f"Notifications - {user_type}", False, 
-                                f"Status: {response.status_code}, Response: {response.text}")
-            except Exception as e:
-                self.log_test(f"Notifications - {user_type}", False, f"Exception: {str(e)}")
+        except Exception as e:
+            self.log_result("Create Test Booking", False, f"Error creating test booking: {str(e)}")
+            return None
     
-    def run_all_tests(self):
-        """Run all test suites"""
-        print("🚀 Starting Comprehensive Backend API Testing for Maestro Habitat")
-        print(f"Base URL: {BASE_URL}")
-        print("=" * 80)
+    async def test_user_conflict_detection(self) -> bool:
+        """Test user conflict detection in availability endpoint"""
+        print("\n🔧 Testing User Conflict Detection in Availability...")
         
-        # Run all test suites
-        self.test_authentication()
-        self.test_categories()
-        self.test_markets()
-        self.test_tutor_search()
-        self.test_tutor_details()
-        self.test_availability()
-        self.test_students()
-        self.test_booking_flow()
-        self.test_notifications()
+        # Test date - use tomorrow to ensure it's in the future
+        test_date = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")
+        test_datetime = datetime.now() + timedelta(days=1, hours=2)  # 2 hours from now tomorrow
         
-        # Print summary
-        self.print_summary()
+        tutor_sarah = TEST_CREDENTIALS["tutor_sarah"]
+        tutor_michael = TEST_CREDENTIALS["tutor_michael"]
+        
+        # Step 1: Create a booking with Sarah at a specific time
+        print(f"Creating test booking with tutor {tutor_sarah} at {test_datetime}")
+        booking_id = await self.create_test_booking(tutor_sarah, test_datetime)
+        
+        if not booking_id:
+            self.log_result("User Conflict Detection", False, "Failed to create test booking for conflict testing")
+            return False
+        
+        # Step 2: Check availability for Michael WITH auth token - should show conflict
+        try:
+            response_with_auth = await self.client.get(
+                f"{API_BASE}/tutors/{tutor_michael}/availability",
+                headers=self.get_auth_headers(),
+                params={"date": test_date}
+            )
+            
+            if response_with_auth.status_code != 200:
+                self.log_result("User Conflict Detection", False, f"Failed to get availability with auth: {response_with_auth.status_code}")
+                return False
+            
+            auth_data = response_with_auth.json()
+            auth_slots = auth_data.get("slots", [])
+            
+            # Step 3: Check availability for Michael WITHOUT auth token - should NOT show conflict
+            response_without_auth = await self.client.get(
+                f"{API_BASE}/tutors/{tutor_michael}/availability",
+                params={"date": test_date}
+            )
+            
+            if response_without_auth.status_code != 200:
+                self.log_result("User Conflict Detection", False, f"Failed to get availability without auth: {response_without_auth.status_code}")
+                return False
+            
+            no_auth_data = response_without_auth.json()
+            no_auth_slots = no_auth_data.get("slots", [])
+            
+            # Step 4: Analyze results
+            conflict_slots_with_auth = [slot for slot in auth_slots if slot.get("has_user_conflict")]
+            conflict_slots_without_auth = [slot for slot in no_auth_slots if slot.get("has_user_conflict")]
+            
+            # Find slots that overlap with our test booking time
+            test_start = test_datetime.replace(second=0, microsecond=0)
+            test_end = test_start + timedelta(hours=1)
+            
+            overlapping_slots_with_auth = []
+            overlapping_slots_without_auth = []
+            
+            for slot in auth_slots:
+                slot_start = datetime.fromisoformat(slot["start_at"].replace("Z", "+00:00")).replace(tzinfo=None)
+                slot_end = datetime.fromisoformat(slot["end_at"].replace("Z", "+00:00")).replace(tzinfo=None)
+                
+                if (slot_start < test_end and slot_end > test_start):
+                    overlapping_slots_with_auth.append(slot)
+            
+            for slot in no_auth_slots:
+                slot_start = datetime.fromisoformat(slot["start_at"].replace("Z", "+00:00")).replace(tzinfo=None)
+                slot_end = datetime.fromisoformat(slot["end_at"].replace("Z", "+00:00")).replace(tzinfo=None)
+                
+                if (slot_start < test_end and slot_end > test_start):
+                    overlapping_slots_without_auth.append(slot)
+            
+            # Verify conflict detection
+            has_conflict_with_auth = any(slot.get("has_user_conflict") for slot in overlapping_slots_with_auth)
+            has_conflict_without_auth = any(slot.get("has_user_conflict") for slot in overlapping_slots_without_auth)
+            
+            success = has_conflict_with_auth and not has_conflict_without_auth
+            
+            if success:
+                self.log_result("User Conflict Detection", True, "Conflict detection working correctly", {
+                    "test_booking_time": test_datetime.isoformat(),
+                    "tutor_with_booking": tutor_sarah,
+                    "tutor_checked": tutor_michael,
+                    "conflict_detected_with_auth": has_conflict_with_auth,
+                    "conflict_detected_without_auth": has_conflict_without_auth,
+                    "overlapping_slots_with_conflict": len([s for s in overlapping_slots_with_auth if s.get("has_user_conflict")]),
+                    "total_overlapping_slots": len(overlapping_slots_with_auth)
+                })
+            else:
+                self.log_result("User Conflict Detection", False, "Conflict detection not working as expected", {
+                    "test_booking_time": test_datetime.isoformat(),
+                    "tutor_with_booking": tutor_sarah,
+                    "tutor_checked": tutor_michael,
+                    "conflict_detected_with_auth": has_conflict_with_auth,
+                    "conflict_detected_without_auth": has_conflict_without_auth,
+                    "expected_with_auth": True,
+                    "expected_without_auth": False,
+                    "overlapping_slots_with_auth": overlapping_slots_with_auth,
+                    "overlapping_slots_without_auth": overlapping_slots_without_auth
+                })
+            
+            return success
+            
+        except Exception as e:
+            self.log_result("User Conflict Detection", False, f"Error testing conflict detection: {str(e)}")
+            return False
     
-    def print_summary(self):
-        """Print test summary"""
-        print("\n" + "=" * 80)
-        print("📊 TEST SUMMARY")
-        print("=" * 80)
+    async def run_all_tests(self):
+        """Run all bug fix tests"""
+        print("🚀 Starting Backend Bug Fix Testing...")
+        print(f"Backend URL: {API_BASE}")
+        
+        # Login as parent1
+        login_success = await self.login(
+            TEST_CREDENTIALS["parent1"]["email"],
+            TEST_CREDENTIALS["parent1"]["password"]
+        )
+        
+        if not login_success:
+            print("❌ Cannot proceed without authentication")
+            return
+        
+        # Test 1: Cancel Booking API
+        await self.test_cancel_booking()
+        
+        # Test 2: User Conflict Detection
+        await self.test_user_conflict_detection()
+        
+        # Summary
+        print("\n📊 TEST SUMMARY")
+        print("=" * 50)
         
         total_tests = len(self.test_results)
-        passed_tests = len([t for t in self.test_results if t['success']])
-        failed_tests = len(self.failed_tests)
+        passed_tests = len([r for r in self.test_results if r["success"]])
+        failed_tests = total_tests - passed_tests
         
         print(f"Total Tests: {total_tests}")
-        print(f"Passed: {passed_tests} ✅")
-        print(f"Failed: {failed_tests} ❌")
-        print(f"Success Rate: {(passed_tests/total_tests)*100:.1f}%")
+        print(f"Passed: {passed_tests}")
+        print(f"Failed: {failed_tests}")
+        print(f"Success Rate: {(passed_tests/total_tests*100):.1f}%")
         
-        if self.failed_tests:
-            print("\n🚨 FAILED TESTS:")
-            for test in self.failed_tests:
-                print(f"  ❌ {test['test']}: {test['details']}")
+        if failed_tests > 0:
+            print("\n❌ FAILED TESTS:")
+            for result in self.test_results:
+                if not result["success"]:
+                    print(f"  - {result['test']}: {result['message']}")
         
-        print("\n📋 DETAILED RESULTS:")
-        for test in self.test_results:
-            print(f"  {test['status']} {test['test']}")
-            if test['details']:
-                print(f"      {test['details']}")
-        
-        # Save results to file
-        with open('/app/test_results_detailed.json', 'w') as f:
-            json.dump({
-                'summary': {
-                    'total_tests': total_tests,
-                    'passed': passed_tests,
-                    'failed': failed_tests,
-                    'success_rate': f"{(passed_tests/total_tests)*100:.1f}%"
-                },
-                'failed_tests': self.failed_tests,
-                'all_results': self.test_results
-            }, f, indent=2)
-        
-        print(f"\n💾 Detailed results saved to: /app/test_results_detailed.json")
+        return passed_tests, failed_tests
+
+async def main():
+    """Main test runner"""
+    async with BackendTester() as tester:
+        await tester.run_all_tests()
 
 if __name__ == "__main__":
-    tester = APITester()
-    tester.run_all_tests()
+    asyncio.run(main())
