@@ -799,24 +799,56 @@ const styles = StyleSheet.create({
     fontSize: 13,
     flex: 1,
   },
-  dateList: {
-    gap: 8,
-  },
-  dateCard: {
-    width: 56,
-    paddingVertical: 12,
-    borderRadius: 12,
+  // Calendar Styles
+  calendarHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 16,
+  },
+  calendarNavButton: {
+    padding: 8,
+    borderRadius: 8,
+  },
+  calendarMonthTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  calendarWeekHeader: {
+    flexDirection: 'row',
+    marginBottom: 8,
+  },
+  calendarDayLabel: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  calendarGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  calendarDayCell: {
+    width: '14.28%',
+    aspectRatio: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  calendarDayButton: {
+    margin: 2,
+    borderRadius: 8,
     borderWidth: 1,
   },
-  dateDay: {
-    fontSize: 11,
+  calendarDayText: {
+    fontSize: 15,
     fontWeight: '500',
   },
-  dateNum: {
-    fontSize: 18,
-    fontWeight: '700',
-    marginTop: 4,
+  bookingDot: {
+    position: 'absolute',
+    bottom: 4,
+    width: 5,
+    height: 5,
+    borderRadius: 3,
   },
   noSlotsText: {
     fontSize: 14,
