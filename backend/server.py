@@ -2911,6 +2911,7 @@ async def get_booking(booking_id: str, request: Request):
     return {
         **booking,
         "tutor_name": tutor_user["name"] if tutor_user else "Unknown",
+        "tutor_subject": booking_tutor.get("subjects", ["General"])[0] if booking_tutor and booking_tutor.get("subjects") else "General",
         "student_name": student["name"] if student else "Unknown",
         "currency": market_config["currency"],
         "currency_symbol": market_config["currency_symbol"],
