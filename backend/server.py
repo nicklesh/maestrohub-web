@@ -1353,8 +1353,7 @@ async def set_default_provider(provider_id: str, request: Request):
     if not found:
         raise HTTPException(status_code=404, detail="Provider not found")
     
-    await db.users.update_one(
-        {"user_id": user.user_id},
+    await update_user_doc(user.user_id,
         {"$set": {"payment_providers": existing_providers}}
     )
     
