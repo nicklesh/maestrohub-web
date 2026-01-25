@@ -930,7 +930,24 @@
       "clear_all": "Clear all",
       "booking_confirmed": "Booking confirmed",
       "new_message": "New message",
-      "payment_received": "Payment received"
+      "payment_received": "Payment received",
+      "just_now": "Just now",
+      "hours_ago": "{{count}}h ago",
+      "days_ago": "{{count}}d ago",
+      "types": {
+        "system_update": "System Update",
+        "platform_improvements": "Platform Improvements",
+        "schedule_sent": "Schedule Sent",
+        "contact_received": "Contact Received",
+        "invite_sent": "Invite Sent",
+        "invite_received": "Invite Received",
+        "invite_accepted": "Invite Accepted",
+        "payment_completed": "Payment Completed",
+        "session_canceled": "Session Canceled",
+        "booking_confirmed": "Booking Confirmed",
+        "reminder": "Reminder",
+        "new_session_booked": "New Session Booked"
+      }
     },
     "reviews": {
       "title": "Reviews",
