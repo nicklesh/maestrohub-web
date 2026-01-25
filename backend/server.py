@@ -1054,6 +1054,39 @@ async def admin_bootstrap(request: Request, data: AdminBootstrapRequest, respons
         "role": "admin"
     }
 
+class AdminBootstrapResetRequest(BaseModel):
+    secret: str
+
+@api_router.post("/auth/admin-bootstrap-reset")
+@limiter.limit("3/hour")
+async def admin_bootstrap_reset(request: Request, data: AdminBootstrapResetRequest):
+    """
+    Re-enable the admin bootstrap endpoint.
+    Use this if you need to create another admin account in the future.
+    Requires the same ADMIN_BOOTSTRAP_SECRET.
+    """
+    # SECURITY CHECK 1: Ensure secret is configured
+    if not ADMIN_BOOTSTRAP_SECRET:
+        raise HTTPException(status_code=403, detail="Endpoint not configured")
+    
+    # SECURITY CHECK 2: Verify the secret
+    if data.secret != ADMIN_BOOTSTRAP_SECRET:
+        logger.warning(f"Admin bootstrap reset failed: invalid secret attempt")
+        raise HTTPException(status_code=403, detail="Invalid credentials")
+    
+    # Reset the bootstrap flag
+    result = await db.system_config.update_one(
+        {"key": "admin_bootstrap_used"},
+        {"$set": {"value": False, "reset_at": datetime.now(timezone.utc)}},
+        upsert=False
+    )
+    
+    if result.modified_count == 0:
+        return {"success": True, "message": "Admin bootstrap endpoint is already enabled"}
+    
+    logger.info("Admin bootstrap endpoint has been re-enabled")
+    return {"success": True, "message": "Admin bootstrap endpoint has been re-enabled"}
+
 @api_router.post("/auth/register")
 @limiter.limit("5/minute")
 async def register(request: Request, data: UserCreate, response: Response):
