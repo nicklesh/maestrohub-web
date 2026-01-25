@@ -2832,11 +2832,25 @@ async def delete_vacation(vacation_id: str, request: Request):
     return {"success": True, "message": "Vacation deleted"}
 
 @api_router.get("/tutors/{tutor_id}/availability")
-async def get_tutor_availability(tutor_id: str, date: str = None, from_date: str = None, to_date: str = None):
-    """Get available time slots for a tutor"""
+async def get_tutor_availability(tutor_id: str, date: str = None, from_date: str = None, to_date: str = None, request: Request = None):
+    """Get available time slots for a tutor. 
+    If authenticated, also marks slots as unavailable if user has other bookings at that time.
+    """
     tutor = await db.tutors.find_one({"tutor_id": tutor_id}, {"_id": 0})
     if not tutor:
         raise HTTPException(status_code=404, detail="Coach not found")
+    
+    # Try to get current user (optional - unauthenticated requests still work)
+    current_user = None
+    user_bookings = []
+    if request:
+        current_user = await get_current_user(request)
+        if current_user:
+            # Get user's existing bookings to mark conflicts
+            user_bookings = await db.bookings.find({
+                "consumer_id": current_user.user_id,
+                "status": {"$in": ["booked", "confirmed"]}
+            }, {"_id": 0}).to_list(1000)
     
     # Get availability rules
     rules = await db.availability_rules.find({"tutor_id": tutor_id}, {"_id": 0}).to_list(100)
