@@ -31,11 +31,17 @@ interface Tutor {
   modality: string[];
   categories?: string[];
   base_price: number;
+  display_price?: number;
   duration_minutes: number;
   rating_avg: number;
   rating_count: number;
   currency_symbol: string;
   user_name: string;
+  market_id?: string;
+  market_flag?: string;
+  market_code?: string;
+  is_cross_market?: boolean;
+  original_price_display?: string;
   policies?: {
     cancel_window_hours?: number;
     no_show_policy?: string;
