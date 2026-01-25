@@ -951,8 +951,10 @@ async def require_admin(request: Request) -> User:
 
 # ============== AUTH ROUTES ==============
 
-# Admin Bootstrap Secret - set this in production environment
-ADMIN_BOOTSTRAP_SECRET = os.environ.get("ADMIN_BOOTSTRAP_SECRET", "maestro-admin-setup-2024")
+# Admin Bootstrap - SECURE ONE-TIME SETUP
+# Set ADMIN_BOOTSTRAP_SECRET in production environment (required - no default!)
+# This endpoint auto-disables after first successful use
+ADMIN_BOOTSTRAP_SECRET = os.environ.get("ADMIN_BOOTSTRAP_SECRET", "")
 
 class AdminBootstrapRequest(BaseModel):
     secret: str
@@ -961,15 +963,29 @@ class AdminBootstrapRequest(BaseModel):
     name: str = "Admin"
 
 @api_router.post("/auth/admin-bootstrap")
+@limiter.limit("3/hour")  # Strict rate limit - only 3 attempts per hour
 async def admin_bootstrap(request: Request, data: AdminBootstrapRequest, response: Response):
     """
-    One-time admin account setup endpoint.
-    Creates a new admin account or upgrades existing account to admin with new password.
-    Requires the ADMIN_BOOTSTRAP_SECRET to authenticate.
+    SECURE One-time admin account setup endpoint.
+    - Requires ADMIN_BOOTSTRAP_SECRET environment variable to be set
+    - Auto-disables after first successful admin creation
+    - Rate limited to 3 attempts per hour
     """
-    # Verify the bootstrap secret
+    # SECURITY CHECK 1: Ensure secret is configured (no default allowed)
+    if not ADMIN_BOOTSTRAP_SECRET:
+        logger.warning("Admin bootstrap attempted but ADMIN_BOOTSTRAP_SECRET not configured")
+        raise HTTPException(status_code=403, detail="Endpoint not configured")
+    
+    # SECURITY CHECK 2: Verify the bootstrap secret
     if data.secret != ADMIN_BOOTSTRAP_SECRET:
-        raise HTTPException(status_code=403, detail="Invalid bootstrap secret")
+        logger.warning(f"Admin bootstrap failed: invalid secret attempt for {data.email}")
+        raise HTTPException(status_code=403, detail="Invalid credentials")
+    
+    # SECURITY CHECK 3: Check if bootstrap was already used (one-time only)
+    bootstrap_used = await db.system_config.find_one({"key": "admin_bootstrap_used"})
+    if bootstrap_used and bootstrap_used.get("value") == True:
+        logger.warning(f"Admin bootstrap attempted but already used - blocked")
+        raise HTTPException(status_code=403, detail="Endpoint disabled")
     
     # Validate password strength
     is_valid, error_msg = validate_password_strength(data.password)
@@ -992,7 +1008,7 @@ async def admin_bootstrap(request: Request, data: AdminBootstrapRequest, respons
                 }
             }
         )
-        user_id = existing.get("user_id")
+        user_id = existing.get("user_id") or str(existing.get("_id"))
         logger.info(f"Admin bootstrap: upgraded existing user {data.email} to admin")
     else:
         # Create new admin user
@@ -1009,6 +1025,14 @@ async def admin_bootstrap(request: Request, data: AdminBootstrapRequest, respons
         await db.users.insert_one(user_doc)
         logger.info(f"Admin bootstrap: created new admin user {data.email}")
     
+    # DISABLE THE ENDPOINT after successful use (one-time only)
+    await db.system_config.update_one(
+        {"key": "admin_bootstrap_used"},
+        {"$set": {"key": "admin_bootstrap_used", "value": True, "used_at": datetime.now(timezone.utc), "admin_email": data.email}},
+        upsert=True
+    )
+    logger.info(f"Admin bootstrap: endpoint disabled after successful setup for {data.email}")
+    
     # Create JWT token
     token = create_jwt_token(user_id)
     
@@ -1024,7 +1048,7 @@ async def admin_bootstrap(request: Request, data: AdminBootstrapRequest, respons
     
     return {
         "success": True,
-        "message": f"Admin account {'upgraded' if existing else 'created'} successfully",
+        "message": f"Admin account {'upgraded' if existing else 'created'} successfully. Endpoint is now disabled.",
         "user_id": user_id,
         "token": token,
         "role": "admin"
