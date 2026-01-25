@@ -951,6 +951,85 @@ async def require_admin(request: Request) -> User:
 
 # ============== AUTH ROUTES ==============
 
+# Admin Bootstrap Secret - set this in production environment
+ADMIN_BOOTSTRAP_SECRET = os.environ.get("ADMIN_BOOTSTRAP_SECRET", "maestro-admin-setup-2024")
+
+class AdminBootstrapRequest(BaseModel):
+    secret: str
+    email: EmailStr
+    password: str
+    name: str = "Admin"
+
+@api_router.post("/auth/admin-bootstrap")
+async def admin_bootstrap(request: Request, data: AdminBootstrapRequest, response: Response):
+    """
+    One-time admin account setup endpoint.
+    Creates a new admin account or upgrades existing account to admin with new password.
+    Requires the ADMIN_BOOTSTRAP_SECRET to authenticate.
+    """
+    # Verify the bootstrap secret
+    if data.secret != ADMIN_BOOTSTRAP_SECRET:
+        raise HTTPException(status_code=403, detail="Invalid bootstrap secret")
+    
+    # Validate password strength
+    is_valid, error_msg = validate_password_strength(data.password)
+    if not is_valid:
+        raise HTTPException(status_code=400, detail=error_msg)
+    
+    # Check if user already exists
+    existing = await db.users.find_one({"email": data.email})
+    
+    if existing:
+        # Update existing user to admin with new password
+        await db.users.update_one(
+            {"email": data.email},
+            {
+                "$set": {
+                    "role": "admin",
+                    "password_hash": hash_password(data.password),
+                    "name": data.name if data.name != "Admin" else existing.get("name", data.name),
+                    "updated_at": datetime.now(timezone.utc)
+                }
+            }
+        )
+        user_id = existing.get("user_id")
+        logger.info(f"Admin bootstrap: upgraded existing user {data.email} to admin")
+    else:
+        # Create new admin user
+        user_id = f"user_{uuid.uuid4().hex[:12]}"
+        user_doc = {
+            "user_id": user_id,
+            "email": data.email,
+            "name": data.name,
+            "role": "admin",
+            "password_hash": hash_password(data.password),
+            "devices": [],
+            "created_at": datetime.now(timezone.utc)
+        }
+        await db.users.insert_one(user_doc)
+        logger.info(f"Admin bootstrap: created new admin user {data.email}")
+    
+    # Create JWT token
+    token = create_jwt_token(user_id)
+    
+    # Set cookie
+    response.set_cookie(
+        key="session_token",
+        value=token,
+        httponly=True,
+        secure=True,
+        samesite="none",
+        max_age=JWT_EXPIRATION_DAYS * 24 * 60 * 60
+    )
+    
+    return {
+        "success": True,
+        "message": f"Admin account {'upgraded' if existing else 'created'} successfully",
+        "user_id": user_id,
+        "token": token,
+        "role": "admin"
+    }
+
 @api_router.post("/auth/register")
 @limiter.limit("5/minute")
 async def register(request: Request, data: UserCreate, response: Response):
