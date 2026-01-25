@@ -3082,15 +3082,18 @@ async def create_booking(data: BookingCreate, request: Request):
     
     # Get consumer's market
     consumer_doc = await get_user_doc(user.user_id)
-    consumer_market_id = consumer_doc.get("market_id")
-    tutor_market_id = tutor.get("market_id")
+    consumer_market_id = consumer_doc.get("market_id") or consumer_doc.get("market")
+    tutor_market_id = tutor.get("market_id") or tutor.get("market")
+    tutor_modality = tutor.get("modality", "in_person")
     
-    # Enforce same-market booking (if feature flag is on)
+    # Enforce same-market booking ONLY for in_person coaches
+    # Allow cross-market booking for online and hybrid coaches
     if FEATURE_FLAGS["IN_MARKET_ONLY_BOOKING_ENFORCED"]:
-        if consumer_market_id and tutor_market_id and consumer_market_id != tutor_market_id:
+        is_cross_market = consumer_market_id and tutor_market_id and consumer_market_id != tutor_market_id
+        if is_cross_market and tutor_modality == "in_person":
             raise HTTPException(
                 status_code=400, 
-                detail=f"Cross-market booking not allowed. Consumer market: {consumer_market_id}, Tutor market: {tutor_market_id}"
+                detail=f"Cross-market booking not allowed for in-person sessions. Consumer market: {consumer_market_id}, Tutor market: {tutor_market_id}"
             )
     
     # Determine market and currency for booking
