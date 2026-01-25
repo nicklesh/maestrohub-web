@@ -34,8 +34,7 @@ interface VacationPeriod {
   reason?: string;
 }
 
-const DAYS_OF_WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+// Days and months will be localized using the translation function
 const TIME_SLOTS = Array.from({ length: 14 }, (_, i) => {
   const hour = i + 7; // 7 AM to 8 PM
   return `${hour.toString().padStart(2, '0')}:00`;
@@ -47,6 +46,33 @@ export default function CalendarScreen() {
   const { showSuccess, showError } = useToast();
   const { t } = useTranslation();
   const router = useRouter();
+  
+  // Localized days and months
+  const DAYS_OF_WEEK = [
+    t('calendar.days_short.sun') || 'Sun',
+    t('calendar.days_short.mon') || 'Mon',
+    t('calendar.days_short.tue') || 'Tue',
+    t('calendar.days_short.wed') || 'Wed',
+    t('calendar.days_short.thu') || 'Thu',
+    t('calendar.days_short.fri') || 'Fri',
+    t('calendar.days_short.sat') || 'Sat'
+  ];
+  
+  const MONTHS = [
+    t('calendar.months.january') || 'January',
+    t('calendar.months.february') || 'February',
+    t('calendar.months.march') || 'March',
+    t('calendar.months.april') || 'April',
+    t('calendar.months.may') || 'May',
+    t('calendar.months.june') || 'June',
+    t('calendar.months.july') || 'July',
+    t('calendar.months.august') || 'August',
+    t('calendar.months.september') || 'September',
+    t('calendar.months.october') || 'October',
+    t('calendar.months.november') || 'November',
+    t('calendar.months.december') || 'December'
+  ];
+  
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [rules, setRules] = useState<AvailabilityRule[]>([]);
