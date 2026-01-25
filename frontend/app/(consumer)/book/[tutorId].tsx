@@ -566,7 +566,7 @@ export default function BookingScreen() {
         <Text style={[styles.paymentSummaryTitle, { color: colors.text }]}>{t('pages.booking.order_summary')}</Text>
         <View style={styles.paymentSummaryRow}>
           <Text style={[styles.paymentSummaryLabel, { color: colors.textMuted }]}>
-            {t('pages.booking.min_lesson_with', { minutes: tutor?.duration_minutes || 60, name: tutor?.user_name })}
+            {t('pages.booking.min_lesson_with', { minutes: tutor?.duration_minutes || 60, name: tutor?.name || tutor?.user_name })}
           </Text>
           <Text style={[styles.paymentSummaryValue, { color: colors.text }]}>
             {tutor?.currency_symbol || '$'}{tutor?.base_price?.toFixed(2)}
