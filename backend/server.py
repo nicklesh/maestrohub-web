@@ -1044,7 +1044,7 @@ async def update_role(request: Request, new_role: str = Query(...)):
     user = await require_auth(request)
     if new_role not in ["consumer", "tutor"]:
         raise HTTPException(status_code=400, detail="Invalid role")
-    await db.users.update_one({"user_id": user.user_id}, {"$set": {"role": new_role}})
+    await update_user_doc(user.user_id, {"$set": {"role": new_role}})
     return {"message": "Role updated", "role": new_role}
 
 # ============== PROFILE MANAGEMENT ==============
@@ -1072,7 +1072,7 @@ async def update_profile(data: ProfileUpdate, request: Request):
     if not update_data:
         raise HTTPException(status_code=400, detail="No fields to update")
     
-    await db.users.update_one({"user_id": user.user_id}, {"$set": update_data})
+    await update_user_doc(user.user_id, {"$set": update_data})
     
     # Get updated user
     updated = await db.users.find_one({"user_id": user.user_id}, {"_id": 0, "password_hash": 0})
@@ -1084,7 +1084,7 @@ async def change_password(data: PasswordChange, request: Request):
     user = await require_auth(request)
     
     # Get current user with password
-    user_doc = await db.users.find_one({"user_id": user.user_id})
+    user_doc = await get_user_doc(user.user_id)
     if not user_doc:
         raise HTTPException(status_code=404, detail="User not found")
     
@@ -1102,7 +1102,7 @@ async def change_password(data: PasswordChange, request: Request):
     
     # Update password
     new_hash = hash_password(data.new_password)
-    await db.users.update_one({"user_id": user.user_id}, {"$set": {"password_hash": new_hash}})
+    await update_user_doc(user.user_id, {"$set": {"password_hash": new_hash}})
     
     return {"success": True, "message": "Password changed successfully"}
 
@@ -1122,7 +1122,7 @@ async def get_billing_info(request: Request):
     user = await require_auth(request)
     
     # Get user's payment methods (if connected to Stripe)
-    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    user_doc = await get_user_doc(user.user_id)
     stripe_customer_id = user_doc.get("stripe_customer_id")
     
     # Get pending payments
@@ -1169,7 +1169,7 @@ async def setup_stripe_billing(request: Request):
     """Create Stripe customer and return setup URL"""
     user = await require_auth(request)
     
-    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    user_doc = await get_user_doc(user.user_id)
     
     if user_doc.get("stripe_customer_id"):
         return {
@@ -1248,7 +1248,7 @@ class PaymentProviderAdd(BaseModel):
 async def get_payment_providers(request: Request):
     """Get available payment providers based on user's market"""
     user = await require_auth(request)
-    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    user_doc = await get_user_doc(user.user_id)
     market_id = user_doc.get("market_id", "US_USD")
     
     # Return market-specific providers
@@ -1270,7 +1270,7 @@ async def get_payment_providers(request: Request):
 async def link_payment_provider(data: PaymentProviderAdd, request: Request):
     """Link a payment provider (no PII stored - just preference)"""
     user = await require_auth(request)
-    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    user_doc = await get_user_doc(user.user_id)
     market_id = user_doc.get("market_id", "US_USD")
     
     # Validate provider is valid for market
@@ -1310,7 +1310,7 @@ async def link_payment_provider(data: PaymentProviderAdd, request: Request):
 async def unlink_payment_provider(provider_id: str, request: Request):
     """Remove a linked payment provider"""
     user = await require_auth(request)
-    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    user_doc = await get_user_doc(user.user_id)
     
     existing_providers = user_doc.get("payment_providers", [])
     provider_to_remove = next((p for p in existing_providers if p["provider_id"] == provider_id), None)
@@ -1335,7 +1335,7 @@ async def unlink_payment_provider(provider_id: str, request: Request):
 async def set_default_provider(provider_id: str, request: Request):
     """Set a provider as default"""
     user = await require_auth(request)
-    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    user_doc = await get_user_doc(user.user_id)
     
     existing_providers = user_doc.get("payment_providers", [])
     found = False
@@ -1367,7 +1367,7 @@ class ProcessPaymentRequest(BaseModel):
 async def process_payment(data: ProcessPaymentRequest, request: Request):
     """Process payment using linked provider with auto-charge and fallback logic"""
     user = await require_auth(request)
-    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    user_doc = await get_user_doc(user.user_id)
     market_id = user_doc.get("market_id", "US_USD")
     currency = "INR" if market_id == "IN_INR" else "USD"
     
@@ -1527,7 +1527,7 @@ async def add_payment_method(data: PaymentMethodCreate, request: Request):
     payment_method_id = f"pm_{uuid.uuid4().hex[:24]}"
     
     # Get current user document
-    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    user_doc = await get_user_doc(user.user_id)
     existing_methods = user_doc.get("payment_methods") or []
     
     # If this is the first payment method or is set as default
@@ -1565,7 +1565,7 @@ async def remove_payment_method(payment_method_id: str, request: Request):
     """Remove a payment method"""
     user = await require_auth(request)
     
-    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    user_doc = await get_user_doc(user.user_id)
     payment_methods = user_doc.get("payment_methods", [])
     
     # Find the method to remove
@@ -1777,7 +1777,7 @@ async def get_reminder_config(request: Request):
     """Get user's reminder configuration"""
     user = await require_auth(request)
     
-    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    user_doc = await get_user_doc(user.user_id)
     config = user_doc.get("reminder_config", {
         "session_reminder_hours": 1,
         "payment_reminder_days": 1,
@@ -1801,12 +1801,12 @@ async def update_reminder_config(data: ReminderConfig, request: Request):
 @api_router.post("/auth/device")
 async def register_device(device: DeviceInfo, request: Request):
     user = await require_auth(request)
-    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    user_doc = await get_user_doc(user.user_id)
     devices = user_doc.get("devices", [])
     device_exists = any(d.get("device_id") == device.device_id for d in devices)
     if not device_exists:
         devices.append(device.dict())
-        await db.users.update_one({"user_id": user.user_id}, {"$set": {"devices": devices}})
+        await update_user_doc(user.user_id, {"$set": {"devices": devices}})
     return {"message": "Device registered"}
 
 # ============== STUDENT ROUTES ==============
@@ -2111,7 +2111,7 @@ async def create_tutor_profile(data: TutorProfileCreate, request: Request):
     await db.tutors.insert_one(tutor_doc)
     
     # Update user role
-    await db.users.update_one({"user_id": user.user_id}, {"$set": {"role": "tutor"}})
+    await update_user_doc(user.user_id, {"$set": {"role": "tutor"}})
     
     return TutorProfile(**tutor_doc)
 
@@ -2237,7 +2237,7 @@ async def search_tutors(
     try:
         user = await require_auth(request)
         current_user_id = user.user_id
-        user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+        user_doc = await get_user_doc(user.user_id)
         consumer_market_id = user_doc.get("market_id") if user_doc else None
         consumer_enabled_markets = user_doc.get("enabled_markets", []) if user_doc else []
         
@@ -2650,7 +2650,7 @@ async def get_tutor(tutor_id: str, request: Request = None):
     if request:
         try:
             user = await require_auth(request)
-            user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+            user_doc = await get_user_doc(user.user_id)
             consumer_market_id = user_doc.get("market_id") if user_doc else None
             
             if consumer_market_id and tutor_market_id and consumer_market_id != tutor_market_id:
@@ -3082,7 +3082,7 @@ async def create_booking(data: BookingCreate, request: Request):
         raise HTTPException(status_code=404, detail="Student not found")
     
     # Get consumer's market
-    consumer_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    consumer_doc = await get_user_doc(user.user_id)
     consumer_market_id = consumer_doc.get("market_id")
     tutor_market_id = tutor.get("market_id")
     
@@ -3148,7 +3148,7 @@ async def create_booking(data: BookingCreate, request: Request):
     # Send confirmation email to consumer
     try:
         tutor_user = await db.users.find_one({"user_id": tutor["user_id"]}, {"_id": 0})
-        consumer_user = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+        consumer_user = await get_user_doc(user.user_id)
         student = await db.students.find_one({"student_id": data.student_id}, {"_id": 0})
         
         if consumer_user and tutor_user:
@@ -3484,7 +3484,7 @@ async def notify_coach(booking_id: str, request: Request):
         raise HTTPException(status_code=404, detail="Coach not found")
     
     tutor_user = await db.users.find_one({"user_id": tutor["user_id"]}, {"_id": 0})
-    consumer_user = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    consumer_user = await get_user_doc(user.user_id)
     student = await db.students.find_one({"student_id": booking.get("student_id")}, {"_id": 0})
     
     # Format booking time
@@ -4382,7 +4382,7 @@ async def get_consumer_report(
     bookings = await db.bookings.find(query, {"_id": 0}).sort("created_at", -1).to_list(1000)
     
     # Get user's market
-    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    user_doc = await get_user_doc(user.user_id)
     market_id = user_doc.get("market_id", "US_USD")
     market_config = MARKETS_CONFIG.get(market_id, MARKETS_CONFIG["US_USD"])
     
@@ -5165,7 +5165,7 @@ async def set_consumer_market(data: MarketSetRequest, request: Request):
         raise HTTPException(status_code=400, detail="Market is not available")
     
     # Check if market switching is allowed (if user already has a market)
-    existing_user = await db.users.find_one({"user_id": user.user_id})
+    existing_user = await get_user_doc(user.user_id)
     if existing_user.get("market_id") and not FEATURE_FLAGS["MARKET_SWITCHING_ENABLED"]:
         raise HTTPException(status_code=400, detail="Market switching is not allowed")
     
@@ -5203,7 +5203,7 @@ async def get_consumer_market(request: Request):
     """Get current consumer's market"""
     user = await require_auth(request)
     
-    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    user_doc = await get_user_doc(user.user_id)
     market_id = user_doc.get("market_id")
     
     if not market_id:
@@ -5257,7 +5257,7 @@ async def get_enabled_markets(request: Request):
     """Get consumer's enabled markets"""
     user = await require_auth(request)
     
-    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    user_doc = await get_user_doc(user.user_id)
     enabled_markets = user_doc.get("enabled_markets", [])
     
     # Include market details
@@ -7120,7 +7120,7 @@ async def purchase_package(package_id: str, request: Request, student_id: str = 
     market_config = MARKETS_CONFIG.get(tutor.get("market_id", "US_USD"), MARKETS_CONFIG["US_USD"])
     
     # Check payment methods
-    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    user_doc = await get_user_doc(user.user_id)
     linked_providers = user_doc.get("payment_providers", [])
     
     if not linked_providers:
@@ -7345,7 +7345,7 @@ async def create_detailed_review(data: DetailedReviewCreate, request: Request):
     overall = (data.teaching_quality + data.communication + data.punctuality + 
                data.knowledge + data.value_for_money) / 5
     
-    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    user_doc = await get_user_doc(user.user_id)
     
     review = {
         "review_id": f"rev_{uuid.uuid4().hex[:12]}",
@@ -7568,7 +7568,7 @@ async def purchase_sponsorship(data: SponsorshipCreate, request: Request):
         raise HTTPException(status_code=404, detail="Plan not found")
     
     # Check payment methods
-    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    user_doc = await get_user_doc(user.user_id)
     linked_providers = user_doc.get("payment_providers", [])
     
     if not linked_providers:
@@ -7665,7 +7665,7 @@ async def renew_sponsorship(sponsorship_id: str, request: Request):
         raise HTTPException(status_code=404, detail="Original plan no longer available")
     
     # Check payment methods
-    user_doc = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
+    user_doc = await get_user_doc(user.user_id)
     linked_providers = user_doc.get("payment_providers", [])
     
     if not linked_providers:
