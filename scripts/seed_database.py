@@ -262,6 +262,7 @@ def create_sample_users(db):
             "is_active": True,
             "is_verified": True,
             "market": parent["market"],
+            "market_id": parent["market"],  # For search filtering
             "created_at": now,
             "updated_at": now,
             "children": [
