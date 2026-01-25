@@ -38,7 +38,7 @@ export default function FAQScreen() {
   
   const isTablet = width >= 768;
   const isDesktop = width >= 1024;
-  const contentMaxWidth = isDesktop ? 800 : isTablet ? 680 : undefined;
+  const contentMaxWidth = isDesktop ? 640 : isTablet ? 560 : undefined;
   
   const styles = getStyles(colors);
 
