@@ -733,4 +733,49 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     marginTop: 8,
     textAlign: 'center',
   },
+  // Parent list styles
+  parentCard: {
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    borderWidth: 1,
+  },
+  parentHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  statusBadge: {
+    paddingVertical: 2,
+    paddingHorizontal: 8,
+    borderRadius: 10,
+    marginTop: 4,
+  },
+  statusText: {
+    fontSize: 10,
+    fontWeight: '600',
+    textTransform: 'capitalize',
+  },
+  parentStats: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+  },
+  parentStat: {
+    alignItems: 'center',
+    gap: 4,
+  },
+  parentStatValue: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: colors.text,
+  },
+  parentStatLabel: {
+    fontSize: 10,
+    color: colors.textMuted,
+    textAlign: 'center',
+  },
 });
