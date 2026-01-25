@@ -75,35 +75,35 @@ export default function SubscriptionScreen() {
     }
   };
 
-  const handleCancel = async () => {
-    Alert.alert(
-      t('subscription.cancel_confirm_title'),
-      t('subscription.cancel_confirm_message'),
-      [
-        { text: t('common.cancel'), style: 'cancel' },
-        {
-          text: t('subscription.cancel_subscription'),
-          style: 'destructive',
-          onPress: () => {
-            performCancel();
-          },
-        },
-      ]
-    );
+  const handleCancel = () => {
+    setShowCancelConfirm(true);
   };
 
   const performCancel = async () => {
+    setShowCancelConfirm(false);
     setProcessing(true);
     try {
       const success = await cancelSubscription();
       if (success) {
-        Alert.alert(t('subscription.cancelled_title'), t('subscription.cancelled_message'));
+        if (Platform.OS === 'web') {
+          window.alert(t('subscription.cancelled_message'));
+        } else {
+          Alert.alert(t('subscription.cancelled_title'), t('subscription.cancelled_message'));
+        }
       } else {
-        Alert.alert(t('subscription.error_title'), 'Failed to cancel subscription');
+        if (Platform.OS === 'web') {
+          window.alert('Failed to cancel subscription');
+        } else {
+          Alert.alert(t('subscription.error_title'), 'Failed to cancel subscription');
+        }
       }
     } catch (error) {
       console.error('Cancel error:', error);
-      Alert.alert(t('subscription.error_title'), 'An error occurred');
+      if (Platform.OS === 'web') {
+        window.alert('An error occurred');
+      } else {
+        Alert.alert(t('subscription.error_title'), 'An error occurred');
+      }
     } finally {
       setProcessing(false);
     }
