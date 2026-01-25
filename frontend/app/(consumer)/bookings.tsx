@@ -149,7 +149,7 @@ export default function BookingsScreen() {
           styles.card,
           { backgroundColor: colors.surface, borderColor: colors.border },
           isTablet && styles.cardTablet,
-          isDesktop && { flex: 0.48, marginHorizontal: 4 },
+          numColumns > 1 && styles.cardMultiColumn,
           isCanceled && { opacity: 0.7 }
         ]}
         onPress={() => router.push(`/(consumer)/booking/${item.booking_id}`)}
