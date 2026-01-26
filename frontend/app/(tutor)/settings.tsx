@@ -20,6 +20,7 @@ import { useToast } from '@/src/context/ToastContext';
 import { useTranslation } from '@/src/i18n';
 import { api } from '@/src/services/api';
 import AppHeader from '@/src/components/AppHeader';
+import ChangePasswordModal from '@/src/components/ChangePasswordModal';
 
 interface TutorProfile {
   tutor_id: string;
