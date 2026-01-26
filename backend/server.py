@@ -184,13 +184,20 @@ app = FastAPI(title="Maestro Habitat API", version="1.0.0")
 api_router = APIRouter(prefix="/api")
 security = HTTPBearer(auto_error=False)
 
+# ============== ROOT HEALTH CHECK - MUST BE FIRST ==============
+# This endpoint is required for Kubernetes health probes
+@app.get("/health")
+async def root_health_check():
+    """Root-level health check for Kubernetes liveness/readiness probes"""
+    return {"status": "healthy", "service": "maestro-habitat-api"}
+
 # Configure logging
 setup_logging(log_level="INFO", enable_file_logging=True)
 logger = get_logger(__name__)
 
 # ============== STARTUP LOG - DEPLOYMENT VERIFICATION ==============
 print("=" * 60)
-print("🚀 MAESTRO HABITAT API - BUILD VERSION: 2026-01-26-v2")
+print("🚀 MAESTRO HABITAT API - BUILD VERSION: 2026-01-26-v3")
 print("=" * 60)
 print("✅ /health endpoint is available at root level")
 print("✅ Admin bootstrap endpoint configured")
