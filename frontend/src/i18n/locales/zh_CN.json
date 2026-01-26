@@ -377,6 +377,7 @@
       "slot_unavailable": "该时间段现已不可用",
       "invalid_referral_code": "无效的推荐码",
       "login_failed": "登录失败",
+      "google_login_failed": "Google登录失败。请重试。",
       "registration_failed": "注册失败",
       "load_booking_failed": "预订详情加载失败",
       "update_failed": "更新失败。请重试。"

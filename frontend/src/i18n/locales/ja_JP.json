@@ -377,6 +377,7 @@
       "slot_unavailable": "この時間スロットはもう利用できません",
       "invalid_referral_code": "無効な紹介コード",
       "login_failed": "ログインに失敗しました",
+      "google_login_failed": "Googleサインインに失敗しました。もう一度お試しください。",
       "registration_failed": "登録に失敗しました",
       "load_booking_failed": "予約詳細の読み込みに失敗しました。",
       "update_failed": "更新に失敗しました。もう一度お試しください。"

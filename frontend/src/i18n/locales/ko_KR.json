@@ -377,6 +377,7 @@
       "slot_unavailable": "이 시간 슬롯은 더 이상 이용할 수 없습니다",
       "invalid_referral_code": "잘못된 추천 코드",
       "login_failed": "로그인 실패",
+      "google_login_failed": "Google 로그인에 실패했습니다. 다시 시도해 주세요.",
       "registration_failed": "등록 실패",
       "load_booking_failed": "예약 세부 정보를 불러오지 못했습니다.",
       "update_failed": "업데이트에 실패했습니다. 다시 시도해 주세요."
