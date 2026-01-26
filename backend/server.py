@@ -1303,22 +1303,21 @@ async def google_callback(request: Request, response: Response):
         user_data = resp.json()
     
     # Check if user exists
-    existing = await db.users.find_one({"email": user_data["email"]}, {"_id": 0})
+    existing = await db.users.find_one({"email": user_data["email"]})
     
     if existing:
-        user_id = existing["user_id"]
+        user_id = str(existing["_id"])
         # Update device if provided
         if device:
             devices = existing.get("devices", [])
             device_exists = any(d.get("device_id") == device.get("device_id") for d in devices)
             if not device_exists:
                 devices.append(device)
-                await db.users.update_one({"user_id": user_id}, {"$set": {"devices": devices}})
+                await db.users.update_one({"_id": existing["_id"]}, {"$set": {"devices": devices}})
         role = existing["role"]
     else:
-        user_id = f"user_{uuid.uuid4().hex[:12]}"
+        # For new users, let MongoDB generate the _id
         user_doc = {
-            "user_id": user_id,
             "email": user_data["email"],
             "name": user_data["name"],
             "picture": user_data.get("picture"),
@@ -1327,7 +1326,8 @@ async def google_callback(request: Request, response: Response):
             "devices": [device] if device else [],
             "created_at": datetime.now(timezone.utc)
         }
-        await db.users.insert_one(user_doc)
+        result = await db.users.insert_one(user_doc)
+        user_id = str(result.inserted_id)
         role = "consumer"
     
     # Store session - ALWAYS create our own JWT token
