@@ -143,7 +143,7 @@ export default function ChangePasswordModal({ visible, onClose }: ChangePassword
           >
             {/* Header */}
             <View style={styles.header}>
-              <Text style={styles.title}>Change Password</Text>
+              <Text style={styles.title}>{t('common.change_password')}</Text>
               <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
                 <Ionicons name="close" size={24} color={colors.textMuted} />
               </TouchableOpacity>
@@ -159,22 +159,22 @@ export default function ChangePasswordModal({ visible, onClose }: ChangePassword
 
             {/* Password Requirements */}
             <View style={styles.requirementsContainer}>
-              <Text style={styles.requirementsTitle}>Password Requirements:</Text>
-              <Text style={styles.requirementItem}>• At least 8 characters</Text>
-              <Text style={styles.requirementItem}>• At least 1 uppercase letter (A-Z)</Text>
-              <Text style={styles.requirementItem}>• At least 1 lowercase letter (a-z)</Text>
-              <Text style={styles.requirementItem}>• At least 1 number (0-9)</Text>
+              <Text style={styles.requirementsTitle}>{t('common.password_requirements')}</Text>
+              <Text style={styles.requirementItem}>• {t('common.password_req_length')}</Text>
+              <Text style={styles.requirementItem}>• {t('common.password_req_uppercase')}</Text>
+              <Text style={styles.requirementItem}>• {t('common.password_req_lowercase')}</Text>
+              <Text style={styles.requirementItem}>• {t('common.password_req_number')}</Text>
             </View>
 
             {/* Current Password */}
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>Current Password</Text>
+              <Text style={styles.label}>{t('common.current_password')}</Text>
               <View style={styles.inputWrapper}>
                 <TextInput
                   style={styles.input}
                   value={currentPassword}
                   onChangeText={setCurrentPassword}
-                  placeholder="Enter current password"
+                  placeholder={t('common.enter_current_password')}
                   placeholderTextColor={colors.textMuted}
                   secureTextEntry={!showCurrentPassword}
                   autoCapitalize="none"
@@ -194,13 +194,13 @@ export default function ChangePasswordModal({ visible, onClose }: ChangePassword
 
             {/* New Password */}
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>New Password</Text>
+              <Text style={styles.label}>{t('common.new_password')}</Text>
               <View style={styles.inputWrapper}>
                 <TextInput
                   style={styles.input}
                   value={newPassword}
                   onChangeText={setNewPassword}
-                  placeholder="Enter new password"
+                  placeholder={t('common.enter_new_password')}
                   placeholderTextColor={colors.textMuted}
                   secureTextEntry={!showNewPassword}
                   autoCapitalize="none"
@@ -220,13 +220,13 @@ export default function ChangePasswordModal({ visible, onClose }: ChangePassword
 
             {/* Confirm Password */}
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>Confirm New Password</Text>
+              <Text style={styles.label}>{t('common.confirm_new_password')}</Text>
               <View style={styles.inputWrapper}>
                 <TextInput
                   style={styles.input}
                   value={confirmPassword}
                   onChangeText={setConfirmPassword}
-                  placeholder="Confirm new password"
+                  placeholder={t('common.confirm_password_placeholder')}
                   placeholderTextColor={colors.textMuted}
                   secureTextEntry={!showConfirmPassword}
                   autoCapitalize="none"
@@ -251,7 +251,7 @@ export default function ChangePasswordModal({ visible, onClose }: ChangePassword
                 onPress={handleClose}
                 disabled={loading}
               >
-                <Text style={styles.cancelButtonText}>Cancel</Text>
+                <Text style={styles.cancelButtonText}>{t('common.cancel')}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.button, styles.submitButton, loading && styles.buttonDisabled]}
@@ -261,7 +261,7 @@ export default function ChangePasswordModal({ visible, onClose }: ChangePassword
                 {loading ? (
                   <ActivityIndicator size="small" color="#fff" />
                 ) : (
-                  <Text style={styles.submitButtonText}>Update Password</Text>
+                  <Text style={styles.submitButtonText}>{t('common.update_password')}</Text>
                 )}
               </TouchableOpacity>
             </View>
