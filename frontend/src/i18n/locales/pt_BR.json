@@ -377,6 +377,7 @@
       "slot_unavailable": "Este horário não está mais disponível",
       "invalid_referral_code": "Código de indicação inválido",
       "login_failed": "Falha no login",
+      "google_login_failed": "Falha no login do Google. Tente novamente.",
       "registration_failed": "Falha no registro",
       "load_booking_failed": "Falha ao carregar detalhes da reserva",
       "update_failed": "Falha ao atualizar. Tente novamente."

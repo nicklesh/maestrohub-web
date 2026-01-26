@@ -377,6 +377,7 @@
       "slot_unavailable": "Dieser Zeit-Slot ist nicht mehr verfügbar",
       "invalid_referral_code": "Ungültiger Einladungscode",
       "login_failed": "Anmeldung fehlgeschlagen",
+      "google_login_failed": "Google-Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut.",
       "registration_failed": "Registrierung fehlgeschlagen",
       "load_booking_failed": "Buchungsdetails konnten nicht geladen werden",
       "update_failed": "Aktualisierung fehlgeschlagen. Bitte versuchen Sie es erneut."

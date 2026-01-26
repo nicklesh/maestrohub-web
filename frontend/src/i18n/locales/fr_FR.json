@@ -377,6 +377,7 @@
       "slot_unavailable": "Ce créneau horaire n'est plus disponible",
       "invalid_referral_code": "Code de parrainage invalide",
       "login_failed": "Échec de la connexion",
+      "google_login_failed": "Échec de la connexion Google. Veuillez réessayer.",
       "registration_failed": "Échec de l'inscription",
       "load_booking_failed": "Échec du chargement des détails de la réservation",
       "update_failed": "Échec de la mise à jour. Veuillez réessayer."
