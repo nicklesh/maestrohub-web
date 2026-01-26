@@ -8813,13 +8813,6 @@ async def check_feature_access(feature: str, request: Request):
 # Include router - MUST be after all @api_router endpoints are defined
 app.include_router(api_router)
 
-# Root-level health check endpoint for Kubernetes
-# This is separate from /api/health to support K8s health probes at /health
-@app.get("/health")
-async def root_health_check():
-    """Root-level health check for Kubernetes liveness/readiness probes"""
-    return {"status": "healthy", "service": "maestro-habitat-api"}
-
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
