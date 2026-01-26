@@ -56,16 +56,16 @@ export default function ChangePasswordModal({ visible, onClose }: ChangePassword
 
   const validatePassword = (password: string): string | null => {
     if (password.length < 8) {
-      return 'Password must be at least 8 characters';
+      return t('common.password_min_length');
     }
     if (!/[A-Z]/.test(password)) {
-      return 'Password must contain at least one uppercase letter';
+      return t('common.password_needs_uppercase');
     }
     if (!/[a-z]/.test(password)) {
-      return 'Password must contain at least one lowercase letter';
+      return t('common.password_needs_lowercase');
     }
     if (!/[0-9]/.test(password)) {
-      return 'Password must contain at least one number';
+      return t('common.password_needs_number');
     }
     return null;
   };
@@ -75,12 +75,12 @@ export default function ChangePasswordModal({ visible, onClose }: ChangePassword
 
     // Validation
     if (!currentPassword) {
-      setError('Please enter your current password');
+      setError(t('common.please_enter_current_password'));
       return;
     }
 
     if (!newPassword) {
-      setError('Please enter a new password');
+      setError(t('common.please_enter_new_password'));
       return;
     }
 
@@ -91,12 +91,12 @@ export default function ChangePasswordModal({ visible, onClose }: ChangePassword
     }
 
     if (newPassword !== confirmPassword) {
-      setError('New passwords do not match');
+      setError(t('common.password_mismatch'));
       return;
     }
 
     if (currentPassword === newPassword) {
-      setError('New password must be different from current password');
+      setError(t('common.password_same_as_current'));
       return;
     }
 
@@ -109,10 +109,10 @@ export default function ChangePasswordModal({ visible, onClose }: ChangePassword
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      showSuccess('Password changed successfully');
+      showSuccess(t('common.password_changed_success'));
       handleClose();
     } catch (err: any) {
-      const message = err.response?.data?.detail || 'Failed to change password';
+      const message = err.response?.data?.detail || t('common.password_change_failed');
       setError(message);
       showError(message);
     } finally {
