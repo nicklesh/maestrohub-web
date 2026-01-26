@@ -83,3 +83,7 @@ android-sdk/
 # Only ignore local override files
 *.env.local
 *.env.*.local
+-e 
+# Environment files
+*.env
+*.env.*
