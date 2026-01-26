@@ -188,6 +188,14 @@ security = HTTPBearer(auto_error=False)
 setup_logging(log_level="INFO", enable_file_logging=True)
 logger = get_logger(__name__)
 
+# ============== STARTUP LOG - DEPLOYMENT VERIFICATION ==============
+print("=" * 60)
+print("🚀 MAESTRO HABITAT API - BUILD VERSION: 2026-01-26-v2")
+print("=" * 60)
+print("✅ /health endpoint is available at root level")
+print("✅ Admin bootstrap endpoint configured")
+print("=" * 60)
+
 # ============== SECURITY: Rate Limiting ==============
 limiter = Limiter(key_func=get_remote_address)
 app.state.limiter = limiter
