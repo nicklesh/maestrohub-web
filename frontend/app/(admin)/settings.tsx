@@ -26,6 +26,7 @@ export default function AdminSettings() {
   const { t } = useTranslation();
   const router = useRouter();
   const { width } = useWindowDimensions();
+  const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
 
   const isTablet = width >= 768;
   const isDesktop = width >= 1024;
