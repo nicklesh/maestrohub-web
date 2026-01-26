@@ -197,7 +197,7 @@ logger = get_logger(__name__)
 
 # ============== STARTUP LOG - DEPLOYMENT VERIFICATION ==============
 print("=" * 60)
-print("🚀 MAESTRO HABITAT API - BUILD VERSION: 2026-01-26-v4")
+print("🚀 MAESTRO HABITAT API - BUILD VERSION: 2026-01-26-v5")
 print("=" * 60)
 print("✅ /health endpoint is available at root level")
 print("✅ Admin bootstrap endpoint configured")
