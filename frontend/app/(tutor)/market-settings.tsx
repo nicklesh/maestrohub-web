@@ -48,6 +48,7 @@ export default function MarketSettings() {
   const { token } = useAuth();
   const { colors } = useTheme();
   const { showSuccess, showError } = useToast();
+  const { t } = useTranslation();
   const router = useRouter();
   const { width } = useWindowDimensions();
 
