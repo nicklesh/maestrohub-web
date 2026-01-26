@@ -163,15 +163,15 @@ export default function MarketSettings() {
             <Ionicons name="information-circle" size={24} color={colors.primary} />
             <Text style={[styles.infoText, { color: colors.primary }]}>
               {canEnableMarkets 
-                ? "Since you offer online/hybrid sessions, you can enable other markets to reach more students globally."
-                : "Multi-market exposure is only available for coaches with online or hybrid modality."}
+                ? t('pages.coach.settings.multi_market_online_hint')
+                : t('pages.coach.settings.multi_market_offline_hint')}
             </Text>
           </View>
 
           {/* Base Market Info */}
           {data && (
             <View style={[styles.card, { backgroundColor: colors.surface }]}>
-              <Text style={[styles.cardTitle, { color: colors.text }]}>Your Base Market</Text>
+              <Text style={[styles.cardTitle, { color: colors.text }]}>{t('pages.coach.settings.your_base_market')}</Text>
               <View style={styles.baseMarketRow}>
                 {data.market_pricing.filter(m => m.is_base_market).map(m => (
                   <View key={m.market_id} style={styles.marketBadge}>
@@ -189,9 +189,9 @@ export default function MarketSettings() {
           {/* Market List */}
           {canEnableMarkets && data && (
             <View style={[styles.card, { backgroundColor: colors.surface }]}>
-              <Text style={[styles.cardTitle, { color: colors.text }]}>Enable Other Markets</Text>
+              <Text style={[styles.cardTitle, { color: colors.text }]}>{t('pages.coach.settings.enable_other_markets')}</Text>
               <Text style={[styles.subtitle, { color: colors.textMuted }]}>
-                Toggle markets where you want to appear in search results and set custom prices
+                {t('pages.coach.settings.enable_markets_subtitle')}
               </Text>
               
               {data.market_pricing.filter(m => !m.is_base_market).map(market => (
