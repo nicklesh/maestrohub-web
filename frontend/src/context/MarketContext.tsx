@@ -45,10 +45,12 @@ export function MarketProvider({ children }: { children: ReactNode }) {
       setMarkets(marketsResponse.data.markets);
 
       // Try to detect country from IP
+      let geoData: { detected_country?: string; suggested_market_id?: string; market_id?: string } = {};
       try {
         const geoResponse = await api.get('/geo/detect');
-        setDetectedCountry(geoResponse.data.detected_country);
-        setSuggestedMarketId(geoResponse.data.suggested_market_id);
+        geoData = geoResponse.data;
+        setDetectedCountry(geoData.detected_country || null);
+        setSuggestedMarketId(geoData.suggested_market_id || null);
       } catch (e) {
         console.log('Geo detection not available');
       }
@@ -64,9 +66,10 @@ export function MarketProvider({ children }: { children: ReactNode }) {
           } else {
             // For authenticated users without market, use suggested market automatically
             // Market selection should only be prompted during registration, not login
-            if (geoResponse.data.market_id) {
+            const suggestedId = geoData.suggested_market_id || geoData.market_id;
+            if (suggestedId) {
               const suggestedMarket = marketsResponse.data.markets.find(
-                (m: Market) => m.market_id === geoResponse.data.market_id
+                (m: Market) => m.market_id === suggestedId
               );
               if (suggestedMarket) {
                 setCurrentMarket(suggestedMarket);
@@ -78,18 +81,49 @@ export function MarketProvider({ children }: { children: ReactNode }) {
                 }
                 setNeedsSelection(false);
               } else {
-                setNeedsSelection(true);
+                // Fallback to first available market instead of showing modal
+                if (marketsResponse.data.markets.length > 0) {
+                  const fallbackMarket = marketsResponse.data.markets[0];
+                  setCurrentMarket(fallbackMarket);
+                  try {
+                    await api.put('/me/market', { market_id: fallbackMarket.market_id });
+                  } catch (e) {
+                    console.error('Failed to auto-save fallback market:', e);
+                  }
+                  setNeedsSelection(false);
+                } else {
+                  setNeedsSelection(true);
+                }
               }
             } else {
-              setNeedsSelection(true);
+              // No geo data available - use first market as fallback for authenticated users
+              if (marketsResponse.data.markets.length > 0) {
+                const fallbackMarket = marketsResponse.data.markets[0];
+                setCurrentMarket(fallbackMarket);
+                try {
+                  await api.put('/me/market', { market_id: fallbackMarket.market_id });
+                } catch (e) {
+                  console.error('Failed to auto-save fallback market:', e);
+                }
+                setNeedsSelection(false);
+              } else {
+                setNeedsSelection(true);
+              }
             }
           }
         } catch (e) {
-          // User not authenticated or no market set
-          setNeedsSelection(true);
+          // User not authenticated or no market set - don't show modal for logged in users
+          // Just use the first available market
+          if (marketsResponse.data.markets.length > 0) {
+            const fallbackMarket = marketsResponse.data.markets[0];
+            setCurrentMarket(fallbackMarket);
+            setNeedsSelection(false);
+          } else {
+            setNeedsSelection(true);
+          }
         }
       } else {
-        // Check local storage for market preference
+        // Check local storage for market preference (for non-authenticated users)
         const storedMarketId = await AsyncStorage.getItem('selected_market_id');
         if (storedMarketId && marketsResponse.data.markets) {
           const found = marketsResponse.data.markets.find(
@@ -102,11 +136,14 @@ export function MarketProvider({ children }: { children: ReactNode }) {
             setNeedsSelection(true);
           }
         } else {
+          // For non-authenticated users without stored preference, show selection
           setNeedsSelection(true);
         }
       }
     } catch (error) {
       console.error('Failed to load market data:', error);
+      // On error, don't show modal - just set loading to false
+      setNeedsSelection(false);
     } finally {
       setLoading(false);
     }
