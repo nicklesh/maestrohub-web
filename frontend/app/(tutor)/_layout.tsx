@@ -1,14 +1,29 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Platform, useWindowDimensions } from 'react-native';
-import { Tabs } from 'expo-router';
+import { Tabs, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '@/src/context/ThemeContext';
 import { useTranslation } from '@/src/i18n';
+import { useAuth } from '@/src/context/AuthContext';
 
 export default function TutorLayout() {
   const { colors } = useTheme();
   const { width } = useWindowDimensions();
   const { t } = useTranslation();
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  // Role guard - redirect if not a tutor
+  useEffect(() => {
+    if (!loading && user && user.role !== 'tutor') {
+      // Redirect to correct dashboard based on role
+      if (user.role === 'admin') {
+        router.replace('/(admin)/dashboard');
+      } else {
+        router.replace('/(consumer)/home');
+      }
+    }
+  }, [user, loading]);
 
   return (
     <Tabs
