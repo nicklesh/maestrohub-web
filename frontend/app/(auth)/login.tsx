@@ -72,11 +72,27 @@ export default function LoginScreen() {
     setErrorMessage('');
     try {
       await loginWithGoogle();
-      router.replace('/');
+      // On mobile, loginWithGoogle completes the full flow
+      // On web, this line won't be reached because the page redirects
+      if (Platform.OS !== 'web') {
+        router.replace('/');
+      }
     } catch (error: any) {
-      const message = t('messages.errors.google_login_failed');
-      setErrorMessage(message);
-      showError(message);
+      // Only show error if we're still on the page (not redirected)
+      // On web, this catch might fire due to navigation, so we check if we're still here
+      if (Platform.OS === 'web') {
+        // On web, if there's no session_id in URL, it means there was an actual error
+        const hash = typeof window !== 'undefined' ? window.location.hash : '';
+        if (!hash.includes('session_id')) {
+          const message = t('messages.errors.google_login_failed');
+          setErrorMessage(message);
+          showError(message);
+        }
+      } else {
+        const message = t('messages.errors.google_login_failed');
+        setErrorMessage(message);
+        showError(message);
+      }
     } finally {
       setGoogleLoading(false);
     }
