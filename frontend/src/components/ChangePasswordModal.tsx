@@ -15,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 import { useToast } from '@/src/context/ToastContext';
 import { useAuth } from '@/src/context/AuthContext';
+import { useTranslation } from '@/src/i18n';
 import { api } from '@/src/services/api';
 
 interface ChangePasswordModalProps {
@@ -26,6 +27,7 @@ export default function ChangePasswordModal({ visible, onClose }: ChangePassword
   const { colors } = useTheme();
   const { token } = useAuth();
   const { showSuccess, showError } = useToast();
+  const { t } = useTranslation();
   const styles = getStyles(colors);
 
   const [currentPassword, setCurrentPassword] = useState('');
