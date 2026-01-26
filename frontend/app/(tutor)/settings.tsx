@@ -453,6 +453,12 @@ export default function TutorSettings() {
           </TouchableOpacity>
         </View>
       </ScrollView>
+
+      {/* Change Password Modal */}
+      <ChangePasswordModal
+        visible={showChangePasswordModal}
+        onClose={() => setShowChangePasswordModal(false)}
+      />
     </SafeAreaView>
   );
 }
