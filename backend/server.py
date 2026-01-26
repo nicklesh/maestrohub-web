@@ -1077,6 +1077,36 @@ class AdminForceFixRequest(BaseModel):
     email: EmailStr
     password: str
 
+@api_router.post("/auth/admin-debug")
+async def admin_debug(request: Request, data: AdminBootstrapResetRequest):
+    """
+    Debug endpoint to check user records in database.
+    """
+    if not ADMIN_BOOTSTRAP_SECRET:
+        raise HTTPException(status_code=403, detail="Endpoint not configured")
+    
+    if data.secret != ADMIN_BOOTSTRAP_SECRET:
+        raise HTTPException(status_code=403, detail="Invalid credentials")
+    
+    # Find ALL users with nicklesh@gmail.com
+    users = await db.users.find({"email": "nicklesh@gmail.com"}).to_list(100)
+    
+    result = []
+    for u in users:
+        result.append({
+            "_id": str(u.get("_id")),
+            "user_id": u.get("user_id"),
+            "email": u.get("email"),
+            "role": u.get("role"),
+            "has_password_hash": bool(u.get("password_hash")),
+            "created_at": str(u.get("created_at")) if u.get("created_at") else None
+        })
+    
+    return {
+        "count": len(users),
+        "users": result
+    }
+
 @api_router.post("/auth/admin-force-fix")
 @limiter.limit("3/hour")
 async def admin_force_fix(request: Request, data: AdminForceFixRequest, response: Response):
