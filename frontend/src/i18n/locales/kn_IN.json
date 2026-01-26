@@ -377,6 +377,7 @@
       "slot_unavailable": "ಈ ಸಮಯದ ಸ್ಲಾಟ್ ಈಗ ಲಭ್ಯವಿಲ್ಲ",
       "invalid_referral_code": "ಅಮಾನ್ಯ ರೆಫರಲ್ ಕೋಡ್",
       "login_failed": "ಲಾಗಿನ್ ವಿಫಲವಾಗಿದೆ",
+      "google_login_failed": "Google ಸೈನ್-ಇನ್ ವಿಫಲವಾಗಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
       "registration_failed": "ನೊಂದಣಿ ವಿಫಲವಾಗಿದೆ",
       "load_booking_failed": "ಬುಕಿಂಗ್ ವಿವರಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ",
       "update_failed": "ನವೀಕರಿಸಲು ವಿಫಲವಾಗಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ."
