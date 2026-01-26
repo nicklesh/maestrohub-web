@@ -30,8 +30,7 @@ next-env.d.ts
 dist/
 dist
 
-# Environment files (comprehensive coverage)
-
+# Sensitive files (NOT .env - those are needed for deployment)
 *token.json*
 *credentials.json*
 
@@ -79,11 +78,9 @@ agenthub/agents/youtube/db
 # Mobile development
 android-sdk/
 
-# Note: .env files are NOT ignored - they are needed for deployment
-# Only ignore local override files
+# IMPORTANT: .env files are NOT ignored - they are required for deployment
+# Only ignore local development override files
 *.env.local
-*.env.*.local
--e 
-# Environment files
-*.env
-*.env.*
+*.env.development.local
+*.env.test.local
+*.env.production.local
