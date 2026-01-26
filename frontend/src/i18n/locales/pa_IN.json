@@ -377,6 +377,7 @@
       "slot_unavailable": "ਇਹ ਸਮੇਂ ਦਾ ਸਲਾਟ ਹੁਣ ਉਪਲੱਬਧ ਨਹੀਂ ਹੈ",
       "invalid_referral_code": "ਗਲਤ ਰੈਫਰਲ ਕੋਡ",
       "login_failed": "ਲੌਗਇਨ ਅਸਫਲ",
+      "google_login_failed": "Google ਸਾਈਨ-ਇਨ ਅਸਫਲ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
       "registration_failed": "ਰਜਿਸਟਰੇਸ਼ਨ ਅਸਫਲ",
       "load_booking_failed": "ਬੁਕਿੰਗ ਵੇਰਵੇ ਲੋਡ ਕਰਨ ਵਿੱਚ ਅਸਫਲ ਰਿਹਾ",
       "update_failed": "ਅੱਪਡੇਟ ਕਰਨ ਵਿੱਚ ਅਸਫਲ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।"

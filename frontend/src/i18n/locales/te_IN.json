@@ -377,6 +377,7 @@
       "slot_unavailable": "ఈ సమయ స్లాట్ ఇప్పుడు అందుబాటులో లేదు",
       "invalid_referral_code": "చెల్లని రిఫరల్ కోడ్",
       "login_failed": "లాగిన్ విఫలం",
+      "google_login_failed": "Google సైన్-ఇన్ విఫలమైంది. దయచేసి మళ్లీ ప్రయత్నించండి.",
       "registration_failed": "నమోదు విఫలం",
       "load_booking_failed": "బుకింగ్ వివరాలను లోడ్ చేయడంలో విఫలమైంది",
       "update_failed": "నవీకరించడంలో విఫలమైంది. దయచేసి మళ్లీ ప్రయత్నించండి."

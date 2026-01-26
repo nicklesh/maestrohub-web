@@ -377,6 +377,7 @@
       "slot_unavailable": "یہ وقت کا سلاٹ اب دستیاب نہیں ہے",
       "invalid_referral_code": "غلط ریفرل کوڈ",
       "login_failed": "لاگ ان ناکام",
+      "google_login_failed": "Google سائن ان ناکام۔ براہ کرم دوبارہ کوشش کریں۔",
       "registration_failed": "رجسٹریشن ناکام",
       "load_booking_failed": "بکنگ کی تفصیلات لوڈ کرنے میں ناکام رہا",
       "update_failed": "اپ ڈیٹ کرنے میں ناکام رہا۔ براہ کرم دوبارہ کوشش کریں۔"

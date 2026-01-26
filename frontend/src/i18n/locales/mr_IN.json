@@ -377,6 +377,7 @@
       "slot_unavailable": "हा टाइम स्लॉट आता उपलब्ध नाही",
       "invalid_referral_code": "अवैध रिफरल कोड",
       "login_failed": "लॉगिन अयशस्वी",
+      "google_login_failed": "Google साइन-इन अयशस्वी. कृपया पुन्हा प्रयत्न करा.",
       "registration_failed": "नोंदणी अयशस्वी",
       "load_booking_failed": "बुकिंग तपशील लोड करण्यात अयशस्वी",
       "update_failed": "अद्यतनित करण्यात अयशस्वी. कृपया पुन्हा प्रयत्न करा."
