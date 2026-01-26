@@ -84,7 +84,7 @@ export default function MarketSettings() {
       setMarketPrices(prices);
     } catch (error) {
       console.error('Failed to load market pricing:', error);
-      showError('Failed to load market settings');
+      showError(t('pages.coach.settings.market_settings_error'));
     } finally {
       setLoading(false);
     }
@@ -128,12 +128,12 @@ export default function MarketSettings() {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      showSuccess('Market settings saved successfully');
+      showSuccess(t('pages.coach.settings.market_settings_saved'));
       router.back();
     } catch (error: any) {
       console.error('Failed to save market pricing:', error);
-      const msg = error.response?.data?.detail || 'Failed to save settings';
-      showError(typeof msg === 'string' ? msg : 'Failed to save settings');
+      const msg = error.response?.data?.detail || t('pages.coach.settings.market_settings_error');
+      showError(typeof msg === 'string' ? msg : t('pages.coach.settings.market_settings_error'));
     } finally {
       setSaving(false);
     }
@@ -142,7 +142,7 @@ export default function MarketSettings() {
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
-        <AppHeader title="Market Settings" showBack />
+        <AppHeader title={t('pages.coach.settings.manage_markets')} showBack />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -154,7 +154,7 @@ export default function MarketSettings() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <AppHeader title="Market Settings" showBack />
+      <AppHeader title={t('pages.coach.settings.manage_markets')} showBack />
       <ScrollView contentContainerStyle={[styles.scrollContent, isTablet && styles.scrollContentTablet]}>
         <View style={[styles.contentWrapper, isDesktop && { maxWidth: 640, alignSelf: 'center', width: '100%' }]}>
           
