@@ -217,7 +217,7 @@ export default function MarketSettings() {
                   {enabledMarkets.includes(market.market_id) && (
                     <View style={styles.priceSection}>
                       <Text style={[styles.priceLabel, { color: colors.textMuted }]}>
-                        Your price for this market:
+                        {t('pages.coach.settings.your_price_for_market')}
                       </Text>
                       <View style={styles.priceRow}>
                         <Text style={[styles.currencySymbol, { color: colors.text }]}>
@@ -245,13 +245,13 @@ export default function MarketSettings() {
                         >
                           <Ionicons name="sparkles" size={14} color={colors.primary} />
                           <Text style={[styles.recommendedText, { color: colors.primary }]}>
-                            Use recommended: {market.currency_symbol}{market.recommended_price}
+                            {t('pages.coach.settings.use_recommended')} {market.currency_symbol}{market.recommended_price}
                           </Text>
                         </TouchableOpacity>
                       )}
                       
                       <Text style={[styles.priceHint, { color: colors.textMuted }]}>
-                        Range: {market.currency_symbol}{market.min_price} - {market.currency_symbol}{market.max_price}
+                        {t('pages.coach.settings.price_range')} {market.currency_symbol}{market.min_price} - {market.currency_symbol}{market.max_price}
                       </Text>
                     </View>
                   )}
@@ -270,7 +270,7 @@ export default function MarketSettings() {
               {saving ? (
                 <ActivityIndicator size="small" color="#fff" />
               ) : (
-                <Text style={styles.saveButtonText}>Save Market Settings</Text>
+                <Text style={styles.saveButtonText}>{t('pages.coach.settings.save_market_settings')}</Text>
               )}
             </TouchableOpacity>
           )}
