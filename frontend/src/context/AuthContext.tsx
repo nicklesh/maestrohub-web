@@ -95,22 +95,37 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const handleWebAuthCallback = async () => {
     if (typeof window !== 'undefined') {
       const hash = window.location.hash;
-      const params = new URLSearchParams(hash.replace('#', ''));
-      const sessionId = params.get('session_id');
+      const searchParams = new URLSearchParams(window.location.search);
+      
+      // Try to get session_id from hash (format: #session_id=xxx) or query params
+      let sessionId = searchParams.get('session_id');
+      if (!sessionId && hash) {
+        const hashParams = new URLSearchParams(hash.replace('#', ''));
+        sessionId = hashParams.get('session_id');
+      }
+      
+      console.log('handleWebAuthCallback - hash:', hash, 'sessionId:', sessionId);
       
       if (sessionId) {
         try {
+          setLoading(true);
           const device = await getDeviceInfo();
           const response = await api.post('/auth/google/callback', {
             session_id: sessionId,
             device,
           });
           
+          console.log('Google auth callback response:', response.data);
           await saveAuth(response.data.token, response.data.role);
-          // Clean URL
-          window.history.replaceState(null, '', window.location.pathname);
+          // Clean URL and redirect to home
+          window.history.replaceState(null, '', '/');
+          window.location.href = '/';
         } catch (error) {
           console.error('Google auth callback failed:', error);
+          // Clean URL even on error
+          window.history.replaceState(null, '', window.location.pathname);
+        } finally {
+          setLoading(false);
         }
       }
     }
