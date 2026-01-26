@@ -1072,6 +1072,68 @@ async def admin_bootstrap(request: Request, data: AdminBootstrapRequest, respons
 class AdminBootstrapResetRequest(BaseModel):
     secret: str
 
+class AdminForceFixRequest(BaseModel):
+    secret: str
+    email: EmailStr
+    password: str
+
+@api_router.post("/auth/admin-force-fix")
+@limiter.limit("3/hour")
+async def admin_force_fix(request: Request, data: AdminForceFixRequest, response: Response):
+    """
+    Force fix an admin account - updates ALL records with the email to admin role.
+    Use this if normal bootstrap didn't work due to duplicate records.
+    """
+    if not ADMIN_BOOTSTRAP_SECRET:
+        raise HTTPException(status_code=403, detail="Endpoint not configured")
+    
+    if data.secret != ADMIN_BOOTSTRAP_SECRET:
+        raise HTTPException(status_code=403, detail="Invalid credentials")
+    
+    # Validate password
+    is_valid, error_msg = validate_password_strength(data.password)
+    if not is_valid:
+        raise HTTPException(status_code=400, detail=error_msg)
+    
+    # Update ALL users with this email
+    result = await db.users.update_many(
+        {"email": data.email},
+        {
+            "$set": {
+                "role": "admin",
+                "password_hash": hash_password(data.password),
+                "updated_at": datetime.now(timezone.utc)
+            }
+        }
+    )
+    
+    # Find the user to return token
+    user_doc = await db.users.find_one({"email": data.email})
+    if not user_doc:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    user_id = str(user_doc["_id"])
+    token = create_jwt_token(user_id)
+    
+    response.set_cookie(
+        key="session_token",
+        value=token,
+        httponly=True,
+        secure=True,
+        samesite="none",
+        max_age=JWT_EXPIRATION_DAYS * 24 * 60 * 60
+    )
+    
+    logger.info(f"Admin force-fix: updated {result.modified_count} records for {data.email}")
+    
+    return {
+        "success": True,
+        "message": f"Updated {result.modified_count} user record(s) to admin",
+        "user_id": user_id,
+        "token": token,
+        "role": "admin"
+    }
+
 @api_router.post("/auth/admin-bootstrap-reset")
 @limiter.limit("3/hour")
 async def admin_bootstrap_reset(request: Request, data: AdminBootstrapResetRequest):
