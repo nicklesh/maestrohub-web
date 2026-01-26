@@ -417,7 +417,7 @@ export default function TutorSettings() {
               onPress={() => setShowChangePasswordModal(true)}
             >
               <Ionicons name="lock-closed-outline" size={isTablet ? 24 : 22} color={colors.primary} />
-              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Change Password</Text>
+              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>{t('common.change_password')}</Text>
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
             <TouchableOpacity 
