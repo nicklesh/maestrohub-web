@@ -1330,8 +1330,8 @@ async def google_callback(request: Request, response: Response):
         await db.users.insert_one(user_doc)
         role = "consumer"
     
-    # Store session
-    session_token = user_data.get("session_token", create_jwt_token(user_id))
+    # Store session - ALWAYS create our own JWT token
+    session_token = create_jwt_token(user_id)
     await db.user_sessions.insert_one({
         "user_id": user_id,
         "session_token": session_token,
