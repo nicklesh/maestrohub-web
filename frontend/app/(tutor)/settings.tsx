@@ -48,6 +48,7 @@ export default function TutorSettings() {
   const [profile, setProfile] = useState<TutorProfile | null>(null);
   const [toggling, setToggling] = useState(false);
   const [savingMeetingLink, setSavingMeetingLink] = useState(false);
+  const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
 
   // Responsive breakpoints
   const isTablet = width >= 768;
