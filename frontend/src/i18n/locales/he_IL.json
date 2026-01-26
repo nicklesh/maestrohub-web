@@ -377,6 +377,7 @@
       "slot_unavailable": "חלון הזמן הזה אינו זמין יותר",
       "invalid_referral_code": "קוד הפניה אינו תקין",
       "login_failed": "התחברות נכשלה",
+      "google_login_failed": "ההתחברות עם Google נכשלה. אנא נסה שוב.",
       "registration_failed": "ההרשמה נכשלה",
       "load_booking_failed": "נכשל בטעינת פרטי ההזמנה",
       "update_failed": "העדכון נכשל. אנא נסה שוב."

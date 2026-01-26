@@ -377,6 +377,7 @@
       "slot_unavailable": "هذه الفترة الزمنية لم تعد متاحة",
       "invalid_referral_code": "رمز إحالة غير صالح",
       "login_failed": "فشل تسجيل الدخول",
+      "google_login_failed": "فشل تسجيل الدخول بـ Google. يرجى المحاولة مرة أخرى.",
       "registration_failed": "فشل التسجيل",
       "load_booking_failed": "فشل تحميل تفاصيل الحجز",
       "update_failed": "فشل التحديث. يرجى المحاولة مرة أخرى."
