@@ -130,6 +130,14 @@ export default function AdminSettings() {
           <View style={[styles.menu, isTablet && styles.menuTablet]}>
             <TouchableOpacity 
               style={[styles.menuItem, isTablet && styles.menuItemTablet]}
+              onPress={() => setShowChangePasswordModal(true)}
+            >
+              <Ionicons name="lock-closed-outline" size={isTablet ? 24 : 22} color={colors.primary} />
+              <Text style={[styles.menuItemText, isDesktop && styles.menuItemTextDesktop]}>Change Password</Text>
+              <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={[styles.menuItem, isTablet && styles.menuItemTablet]}
               onPress={() => router.push('/(admin)/pricing')}
             >
               <Ionicons name="pricetag-outline" size={isTablet ? 24 : 22} color={colors.primary} />
