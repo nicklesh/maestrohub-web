@@ -1926,7 +1926,30 @@
         "stripe_not_connected": "Stripe Not Connected",
         "multi_market_exposure": "Multi-Market Exposure",
         "multi_market_hint": "Since you offer online/hybrid sessions, you can choose to appear in search results for other markets.",
-        "manage_markets": "Manage Markets & Pricing"
+        "manage_markets": "Manage Markets & Pricing",
+        "your_base_market": "Your Base Market",
+        "enable_other_markets": "Enable Other Markets",
+        "enable_markets_subtitle": "Toggle markets where you want to appear in search results and set custom prices",
+        "multi_market_online_hint": "Since you offer online/hybrid sessions, you can enable other markets to reach more students globally.",
+        "multi_market_offline_hint": "Multi-market exposure is only available for coaches with online or hybrid modality.",
+        "your_price_for_market": "Your price for this market:",
+        "use_recommended": "Use recommended:",
+        "price_range": "Range:",
+        "save_market_settings": "Save Market Settings",
+        "market_settings_saved": "Market settings saved successfully",
+        "market_settings_error": "Failed to save market settings",
+        "markets": {
+          "US": "United States",
+          "IN": "India",
+          "GB": "United Kingdom",
+          "CA": "Canada",
+          "AU": "Australia",
+          "DE": "Germany",
+          "FR": "France",
+          "SG": "Singapore",
+          "AE": "United Arab Emirates",
+          "JP": "Japan"
+        }
       },
       "billing": {
         "title": "Billing",
