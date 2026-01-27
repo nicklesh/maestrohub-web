@@ -517,5 +517,195 @@ def no_show_notification_email(
     }
 
 
+def welcome_verification_email(
+    user_name: str,
+    verification_url: str
+) -> Dict[str, str]:
+    """Generate welcome email with verification link for new registrations"""
+    
+    html = f"""
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f5f5f5;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+    <!-- Header -->
+    <tr>
+      <td style="background-color: #4F46E5; padding: 24px; text-align: center;">
+        <h1 style="color: #ffffff; margin: 0; font-size: 24px;">🎉 Welcome to Maestro Habitat!</h1>
+      </td>
+    </tr>
+    
+    <!-- Content -->
+    <tr>
+      <td style="padding: 32px 24px;">
+        <h2 style="color: #1a1a1a; margin: 0 0 16px 0;">Hi {user_name}!</h2>
+        <p style="color: #666; font-size: 16px; line-height: 1.5; margin: 0 0 24px 0;">
+          Thank you for joining Maestro Habitat! We're excited to have you on board.
+        </p>
+        
+        <p style="color: #666; font-size: 16px; line-height: 1.5; margin: 0 0 24px 0;">
+          To complete your registration and activate your account, please verify your email address by clicking the button below:
+        </p>
+        
+        <div style="text-align: center; margin: 32px 0;">
+          <a href="{verification_url}" style="display: inline-block; background-color: #4F46E5; color: #ffffff; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
+            Verify My Email
+          </a>
+        </div>
+        
+        <p style="color: #999; font-size: 14px; line-height: 1.5; margin: 24px 0;">
+          Or copy and paste this link in your browser:<br>
+          <a href="{verification_url}" style="color: #4F46E5; word-break: break-all;">{verification_url}</a>
+        </p>
+        
+        <div style="background-color: #fef3c7; border-radius: 8px; padding: 16px; margin-top: 24px;">
+          <p style="color: #92400e; font-size: 14px; margin: 0;">
+            ⏰ <strong>Important:</strong> This link will expire in 24 hours. If you don't verify your email within this time, you'll need to register again.
+          </p>
+        </div>
+        
+        <p style="color: #999; font-size: 14px; margin-top: 24px;">
+          If you didn't create an account with Maestro Habitat, you can safely ignore this email.
+        </p>
+      </td>
+    </tr>
+    
+    <!-- Footer -->
+    <tr>
+      <td style="background-color: #f8f9fa; padding: 24px; text-align: center;">
+        <p style="color: #999; font-size: 12px; margin: 0;">
+          © 2025 Maestro Habitat. All rights reserved.<br>
+          Find the perfect coach for your learning journey.
+        </p>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+"""
+    
+    text = f"""
+Welcome to Maestro Habitat, {user_name}!
+
+Thank you for joining us. We're excited to have you on board.
+
+To complete your registration and activate your account, please verify your email by clicking the link below:
+
+{verification_url}
+
+IMPORTANT: This link will expire in 24 hours. If you don't verify your email within this time, you'll need to register again.
+
+If you didn't create an account with Maestro Habitat, you can safely ignore this email.
+
+© 2025 Maestro Habitat
+"""
+    
+    return {
+        "subject": "🎉 Welcome to Maestro Habitat - Please Verify Your Email",
+        "html": html,
+        "text": text
+    }
+
+
+def password_reset_email(
+    user_name: str,
+    reset_url: str
+) -> Dict[str, str]:
+    """Generate password reset email"""
+    
+    html = f"""
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f5f5f5;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+    <!-- Header -->
+    <tr>
+      <td style="background-color: #4F46E5; padding: 24px; text-align: center;">
+        <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Maestro Habitat</h1>
+      </td>
+    </tr>
+    
+    <!-- Content -->
+    <tr>
+      <td style="padding: 32px 24px;">
+        <h2 style="color: #1a1a1a; margin: 0 0 16px 0;">🔐 Reset Your Password</h2>
+        <p style="color: #666; font-size: 16px; line-height: 1.5; margin: 0 0 24px 0;">
+          Hi {user_name},
+        </p>
+        
+        <p style="color: #666; font-size: 16px; line-height: 1.5; margin: 0 0 24px 0;">
+          We received a request to reset your password. Click the button below to create a new password:
+        </p>
+        
+        <div style="text-align: center; margin: 32px 0;">
+          <a href="{reset_url}" style="display: inline-block; background-color: #4F46E5; color: #ffffff; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
+            Reset Password
+          </a>
+        </div>
+        
+        <p style="color: #999; font-size: 14px; line-height: 1.5; margin: 24px 0;">
+          Or copy and paste this link in your browser:<br>
+          <a href="{reset_url}" style="color: #4F46E5; word-break: break-all;">{reset_url}</a>
+        </p>
+        
+        <div style="background-color: #fef3c7; border-radius: 8px; padding: 16px; margin-top: 24px;">
+          <p style="color: #92400e; font-size: 14px; margin: 0;">
+            ⏰ <strong>Important:</strong> This link will expire in 1 hour for security reasons.
+          </p>
+        </div>
+        
+        <div style="background-color: #fef2f2; border-radius: 8px; padding: 16px; margin-top: 16px;">
+          <p style="color: #991b1b; font-size: 14px; margin: 0;">
+            🔒 <strong>Security Notice:</strong> If you didn't request a password reset, please ignore this email. Your password will remain unchanged.
+          </p>
+        </div>
+      </td>
+    </tr>
+    
+    <!-- Footer -->
+    <tr>
+      <td style="background-color: #f8f9fa; padding: 24px; text-align: center;">
+        <p style="color: #999; font-size: 12px; margin: 0;">
+          © 2025 Maestro Habitat. All rights reserved.<br>
+          This is an automated email, please do not reply.
+        </p>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+"""
+    
+    text = f"""
+Reset Your Password
+
+Hi {user_name},
+
+We received a request to reset your password. Click the link below to create a new password:
+
+{reset_url}
+
+IMPORTANT: This link will expire in 1 hour for security reasons.
+
+SECURITY NOTICE: If you didn't request a password reset, please ignore this email. Your password will remain unchanged.
+
+© 2025 Maestro Habitat
+"""
+    
+    return {
+        "subject": "🔐 Reset Your Password - Maestro Habitat",
+        "html": html,
+        "text": text
+    }
+
+
 # Singleton instance
 email_service = EmailService()
