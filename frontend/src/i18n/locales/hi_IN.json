@@ -6,6 +6,65 @@
     "support_email": "support@maestrohabitat.com",
     "admin_email": "admin@maestrohabitat.com"
   },
+  "auth": {
+    "verify_email": {
+      "verifying": "आपका ईमेल सत्यापित हो रहा है",
+      "please_wait": "कृपया प्रतीक्षा करें जब तक हम आपके ईमेल पते को सत्यापित करते हैं...",
+      "success_title": "ईमेल सत्यापित!",
+      "success_message": "आपका ईमेल सफलतापूर्वक सत्यापित हो गया है। अब आप सभी सुविधाओं का उपयोग कर सकते हैं।",
+      "redirecting": "ऐप पर रीडायरेक्ट हो रहा है...",
+      "error_title": "सत्यापन विफल",
+      "invalid_link": "अमान्य या समाप्त सत्यापन लिंक",
+      "verification_failed": "ईमेल सत्यापित करने में विफल। कृपया पुनः प्रयास करें।",
+      "back_to_login": "लॉगिन पर वापस जाएं"
+    },
+    "forgot_password": {
+      "title": "पासवर्ड भूल गए",
+      "subtitle": "अपना ईमेल पता दर्ज करें और हम आपको पासवर्ड रीसेट करने का लिंक भेजेंगे।",
+      "email_label": "ईमेल पता",
+      "email_placeholder": "अपना ईमेल दर्ज करें",
+      "send_reset_link": "रीसेट लिंक भेजें",
+      "check_email": "अपना ईमेल जांचें",
+      "check_email_message": "हमने पासवर्ड रीसेट लिंक भेजा है:",
+      "back_to_login": "लॉगिन पर वापस जाएं",
+      "try_different_email": "दूसरा ईमेल आज़माएं",
+      "remember_password": "पासवर्ड याद है? साइन इन करें",
+      "enter_email": "कृपया अपना ईमेल पता दर्ज करें",
+      "email_sent": "पासवर्ड रीसेट लिंक भेजा गया!"
+    },
+    "reset_password": {
+      "title": "पासवर्ड रीसेट करें",
+      "subtitle": "नीचे अपना नया पासवर्ड दर्ज करें",
+      "validating": "रीसेट लिंक सत्यापित हो रहा है...",
+      "new_password": "नया पासवर्ड",
+      "new_password_placeholder": "नया पासवर्ड दर्ज करें",
+      "confirm_password": "पासवर्ड की पुष्टि करें",
+      "confirm_password_placeholder": "नए पासवर्ड की पुष्टि करें",
+      "password_requirements": "पासवर्ड कम से कम 8 अक्षरों का होना चाहिए",
+      "reset_button": "पासवर्ड रीसेट करें",
+      "success_title": "पासवर्ड रीसेट सफल",
+      "success_message": "आपका पासवर्ड रीसेट हो गया है। अब आप अपने नए पासवर्ड से लॉगिन कर सकते हैं।",
+      "go_to_login": "लॉगिन पर जाएं",
+      "error_title": "रीसेट विफल",
+      "invalid_link": "अमान्य या समाप्त रीसेट लिंक",
+      "request_new_link": "नया लिंक अनुरोध करें",
+      "enter_password": "कृपया एक नया पासवर्ड दर्ज करें",
+      "passwords_mismatch": "पासवर्ड मेल नहीं खाते",
+      "password_too_short": "पासवर्ड कम से कम 8 अक्षरों का होना चाहिए",
+      "failed": "पासवर्ड रीसेट करने में विफल",
+      "success": "पासवर्ड सफलतापूर्वक रीसेट हो गया!"
+    },
+    "register": {
+      "verification_email_sent": "सत्यापन ईमेल भेजा गया! कृपया अपना इनबॉक्स जांचें।",
+      "check_email_title": "अपना ईमेल जांचें",
+      "check_email_message": "हमने सत्यापन लिंक भेजा है:",
+      "link_expires_24h": "यह लिंक 24 घंटों में समाप्त हो जाएगा",
+      "go_to_login": "लॉगिन पर जाएं",
+      "verification_resent": "सत्यापन ईमेल पुनः भेजा गया!",
+      "resend_failed": "सत्यापन ईमेल पुनः भेजने में विफल",
+      "resend_email": "ईमेल नहीं मिला? पुनः भेजें"
+    }
+  },
   "modality": {
     "online": "ऑनलाइन",
     "in_person": "व्यक्तिगत",

@@ -6,6 +6,65 @@
     "support_email": "support@maestrohabitat.com",
     "admin_email": "admin@maestrohabitat.com"
   },
+  "auth": {
+    "verify_email": {
+      "verifying": "Verifying Your Email",
+      "please_wait": "Please wait while we verify your email address...",
+      "success_title": "Email Verified!",
+      "success_message": "Your email has been verified successfully. You can now access all features.",
+      "redirecting": "Redirecting you to the app...",
+      "error_title": "Verification Failed",
+      "invalid_link": "Invalid or expired verification link",
+      "verification_failed": "Failed to verify email. Please try again.",
+      "back_to_login": "Back to Login"
+    },
+    "forgot_password": {
+      "title": "Forgot Password",
+      "subtitle": "Enter your email address and we'll send you a link to reset your password.",
+      "email_label": "Email Address",
+      "email_placeholder": "Enter your email",
+      "send_reset_link": "Send Reset Link",
+      "check_email": "Check Your Email",
+      "check_email_message": "We've sent a password reset link to:",
+      "back_to_login": "Back to Login",
+      "try_different_email": "Try a different email",
+      "remember_password": "Remember your password? Sign In",
+      "enter_email": "Please enter your email address",
+      "email_sent": "Password reset link sent!"
+    },
+    "reset_password": {
+      "title": "Reset Password",
+      "subtitle": "Enter your new password below",
+      "validating": "Validating reset link...",
+      "new_password": "New Password",
+      "new_password_placeholder": "Enter new password",
+      "confirm_password": "Confirm Password",
+      "confirm_password_placeholder": "Confirm new password",
+      "password_requirements": "Password must be at least 8 characters long",
+      "reset_button": "Reset Password",
+      "success_title": "Password Reset Successful",
+      "success_message": "Your password has been reset. You can now login with your new password.",
+      "go_to_login": "Go to Login",
+      "error_title": "Reset Failed",
+      "invalid_link": "Invalid or expired reset link",
+      "request_new_link": "Request New Link",
+      "enter_password": "Please enter a new password",
+      "passwords_mismatch": "Passwords do not match",
+      "password_too_short": "Password must be at least 8 characters",
+      "failed": "Failed to reset password",
+      "success": "Password reset successfully!"
+    },
+    "register": {
+      "verification_email_sent": "Verification email sent! Please check your inbox.",
+      "check_email_title": "Check Your Email",
+      "check_email_message": "We've sent a verification link to:",
+      "link_expires_24h": "This link expires in 24 hours",
+      "go_to_login": "Go to Login",
+      "verification_resent": "Verification email resent successfully!",
+      "resend_failed": "Failed to resend verification email",
+      "resend_email": "Didn't receive the email? Resend"
+    }
+  },
   "modality": {
     "online": "ஆன்லைன்",
     "in_person": "நாட்காட்டி",

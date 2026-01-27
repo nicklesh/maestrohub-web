@@ -6,6 +6,65 @@
     "support_email": "support@maestrohabitat.com",
     "admin_email": "admin@maestrohabitat.com"
   },
+  "auth": {
+    "verify_email": {
+      "verifying": "Vérification de votre e-mail",
+      "please_wait": "Veuillez patienter pendant que nous vérifions votre adresse e-mail...",
+      "success_title": "E-mail vérifié !",
+      "success_message": "Votre e-mail a été vérifié avec succès. Vous pouvez maintenant accéder à toutes les fonctionnalités.",
+      "redirecting": "Redirection vers l'application...",
+      "error_title": "Échec de la vérification",
+      "invalid_link": "Lien de vérification invalide ou expiré",
+      "verification_failed": "Échec de la vérification de l'e-mail. Veuillez réessayer.",
+      "back_to_login": "Retour à la connexion"
+    },
+    "forgot_password": {
+      "title": "Mot de passe oublié",
+      "subtitle": "Entrez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.",
+      "email_label": "Adresse e-mail",
+      "email_placeholder": "Entrez votre e-mail",
+      "send_reset_link": "Envoyer le lien de réinitialisation",
+      "check_email": "Vérifiez votre e-mail",
+      "check_email_message": "Nous avons envoyé un lien de réinitialisation à :",
+      "back_to_login": "Retour à la connexion",
+      "try_different_email": "Essayer un autre e-mail",
+      "remember_password": "Vous vous souvenez de votre mot de passe ? Connexion",
+      "enter_email": "Veuillez entrer votre adresse e-mail",
+      "email_sent": "Lien de réinitialisation envoyé !"
+    },
+    "reset_password": {
+      "title": "Réinitialiser le mot de passe",
+      "subtitle": "Entrez votre nouveau mot de passe ci-dessous",
+      "validating": "Validation du lien...",
+      "new_password": "Nouveau mot de passe",
+      "new_password_placeholder": "Entrez le nouveau mot de passe",
+      "confirm_password": "Confirmer le mot de passe",
+      "confirm_password_placeholder": "Confirmez le nouveau mot de passe",
+      "password_requirements": "Le mot de passe doit contenir au moins 8 caractères",
+      "reset_button": "Réinitialiser le mot de passe",
+      "success_title": "Mot de passe réinitialisé",
+      "success_message": "Votre mot de passe a été réinitialisé. Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.",
+      "go_to_login": "Aller à la connexion",
+      "error_title": "Échec de la réinitialisation",
+      "invalid_link": "Lien de réinitialisation invalide ou expiré",
+      "request_new_link": "Demander un nouveau lien",
+      "enter_password": "Veuillez entrer un nouveau mot de passe",
+      "passwords_mismatch": "Les mots de passe ne correspondent pas",
+      "password_too_short": "Le mot de passe doit contenir au moins 8 caractères",
+      "failed": "Échec de la réinitialisation du mot de passe",
+      "success": "Mot de passe réinitialisé avec succès !"
+    },
+    "register": {
+      "verification_email_sent": "E-mail de vérification envoyé ! Veuillez vérifier votre boîte de réception.",
+      "check_email_title": "Vérifiez votre e-mail",
+      "check_email_message": "Nous avons envoyé un lien de vérification à :",
+      "link_expires_24h": "Ce lien expire dans 24 heures",
+      "go_to_login": "Aller à la connexion",
+      "verification_resent": "E-mail de vérification renvoyé avec succès !",
+      "resend_failed": "Échec du renvoi de l'e-mail de vérification",
+      "resend_email": "E-mail non reçu ? Renvoyer"
+    }
+  },
   "modality": {
     "online": "En ligne",
     "in_person": "En personne",

@@ -6,6 +6,65 @@
     "support_email": "support@maestrohabitat.com",
     "admin_email": "admin@maestrohabitat.com"
   },
+  "auth": {
+    "verify_email": {
+      "verifying": "Verificando tu correo",
+      "please_wait": "Por favor espera mientras verificamos tu correo electrónico...",
+      "success_title": "¡Correo verificado!",
+      "success_message": "Tu correo ha sido verificado exitosamente. Ahora puedes acceder a todas las funciones.",
+      "redirecting": "Redirigiendo a la aplicación...",
+      "error_title": "Verificación fallida",
+      "invalid_link": "Enlace de verificación inválido o expirado",
+      "verification_failed": "Error al verificar el correo. Por favor intenta de nuevo.",
+      "back_to_login": "Volver al inicio de sesión"
+    },
+    "forgot_password": {
+      "title": "Olvidé mi contraseña",
+      "subtitle": "Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.",
+      "email_label": "Correo electrónico",
+      "email_placeholder": "Ingresa tu correo",
+      "send_reset_link": "Enviar enlace de restablecimiento",
+      "check_email": "Revisa tu correo",
+      "check_email_message": "Hemos enviado un enlace para restablecer tu contraseña a:",
+      "back_to_login": "Volver al inicio de sesión",
+      "try_different_email": "Probar con otro correo",
+      "remember_password": "¿Recuerdas tu contraseña? Iniciar sesión",
+      "enter_email": "Por favor ingresa tu correo electrónico",
+      "email_sent": "¡Enlace de restablecimiento enviado!"
+    },
+    "reset_password": {
+      "title": "Restablecer contraseña",
+      "subtitle": "Ingresa tu nueva contraseña a continuación",
+      "validating": "Validando enlace de restablecimiento...",
+      "new_password": "Nueva contraseña",
+      "new_password_placeholder": "Ingresa nueva contraseña",
+      "confirm_password": "Confirmar contraseña",
+      "confirm_password_placeholder": "Confirma nueva contraseña",
+      "password_requirements": "La contraseña debe tener al menos 8 caracteres",
+      "reset_button": "Restablecer contraseña",
+      "success_title": "Contraseña restablecida",
+      "success_message": "Tu contraseña ha sido restablecida. Ahora puedes iniciar sesión con tu nueva contraseña.",
+      "go_to_login": "Ir al inicio de sesión",
+      "error_title": "Restablecimiento fallido",
+      "invalid_link": "Enlace de restablecimiento inválido o expirado",
+      "request_new_link": "Solicitar nuevo enlace",
+      "enter_password": "Por favor ingresa una nueva contraseña",
+      "passwords_mismatch": "Las contraseñas no coinciden",
+      "password_too_short": "La contraseña debe tener al menos 8 caracteres",
+      "failed": "Error al restablecer la contraseña",
+      "success": "¡Contraseña restablecida exitosamente!"
+    },
+    "register": {
+      "verification_email_sent": "¡Correo de verificación enviado! Por favor revisa tu bandeja de entrada.",
+      "check_email_title": "Revisa tu correo",
+      "check_email_message": "Hemos enviado un enlace de verificación a:",
+      "link_expires_24h": "Este enlace expira en 24 horas",
+      "go_to_login": "Ir al inicio de sesión",
+      "verification_resent": "¡Correo de verificación reenviado exitosamente!",
+      "resend_failed": "Error al reenviar el correo de verificación",
+      "resend_email": "¿No recibiste el correo? Reenviar"
+    }
+  },
   "modality": {
     "online": "En línea",
     "in_person": "Presencial",
