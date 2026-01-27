@@ -206,6 +206,15 @@ export default function LoginScreen() {
                 )}
               </TouchableOpacity>
 
+              <TouchableOpacity
+                style={styles.forgotPasswordLink}
+                onPress={() => router.push('/(auth)/forgot-password')}
+              >
+                <Text style={[styles.forgotPasswordText, { color: colors.primary }]}>
+                  {t('pages.login.forgot_password')}
+                </Text>
+              </TouchableOpacity>
+
               <View style={styles.divider}>
                 <View style={styles.dividerLine} />
                 <Text style={styles.dividerText}>{t('pages.login.or_continue_with')}</Text>
