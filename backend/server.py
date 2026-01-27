@@ -450,6 +450,18 @@ class UserLogin(BaseModel):
     password: str
     device: Optional[DeviceInfo] = None
 
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+class ResetPasswordRequest(BaseModel):
+    code: str
+    token: str
+    new_password: str
+
+class VerifyEmailRequest(BaseModel):
+    code: str
+    token: str
+
 class User(UserBase):
     user_id: str
     role: str
