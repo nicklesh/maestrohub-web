@@ -902,6 +902,14 @@ def decode_jwt_token(token: str) -> Optional[str]:
         logger.error(f"Unexpected JWT error: {str(e)}")
         return None
 
+def generate_verification_code() -> str:
+    """Generate a 32-character alphanumeric verification code"""
+    return secrets.token_urlsafe(24)  # 32 characters
+
+def generate_verification_token() -> str:
+    """Generate a 32-character alphanumeric verification token"""
+    return secrets.token_urlsafe(24)  # 32 characters
+
 async def get_current_user(request: Request) -> Optional[User]:
     # Check cookie first
     session_token = request.cookies.get("session_token")
