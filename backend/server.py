@@ -35,6 +35,7 @@ import bcrypt
 import jwt
 from jwt.exceptions import InvalidTokenError, ExpiredSignatureError, DecodeError
 import io
+import secrets
 
 # Rate limiting
 from slowapi import Limiter
