@@ -110,6 +110,55 @@ export default function RegisterScreen() {
     }
   };
 
+  // Show success screen after registration
+  if (registrationComplete) {
+    return (
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+        <View style={styles.successContainer}>
+          <View style={[styles.successIconContainer, { backgroundColor: colors.primary + '20' }]}>
+            <Ionicons name="mail" size={64} color={colors.primary} />
+          </View>
+          <Text style={[styles.successTitle, { color: colors.text }]}>
+            {t('auth.register.check_email_title')}
+          </Text>
+          <Text style={[styles.successSubtitle, { color: colors.textMuted }]}>
+            {t('auth.register.check_email_message')}
+          </Text>
+          <Text style={[styles.emailHighlight, { color: colors.text }]}>
+            {email}
+          </Text>
+          <View style={[styles.infoBox, { backgroundColor: colors.warning + '20' }]}>
+            <Ionicons name="time-outline" size={20} color={colors.warning} />
+            <Text style={[styles.infoText, { color: colors.warning }]}>
+              {t('auth.register.link_expires_24h')}
+            </Text>
+          </View>
+          <TouchableOpacity
+            style={[styles.successButton, { backgroundColor: colors.primary }]}
+            onPress={() => router.replace('/(auth)/login')}
+          >
+            <Text style={styles.successButtonText}>{t('auth.register.go_to_login')}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.resendLink}
+            onPress={async () => {
+              try {
+                await api.post('/auth/resend-verification', { email });
+                showSuccess(t('auth.register.verification_resent'));
+              } catch (e) {
+                showError(t('auth.register.resend_failed'));
+              }
+            }}
+          >
+            <Text style={[styles.resendText, { color: colors.primary }]}>
+              {t('auth.register.resend_email')}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
