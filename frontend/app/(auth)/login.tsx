@@ -414,6 +414,15 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   primaryButtonTextTablet: {
     fontSize: 18,
   },
+  forgotPasswordLink: {
+    alignItems: 'center',
+    marginTop: 16,
+    paddingVertical: 8,
+  },
+  forgotPasswordText: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
   divider: {
     flexDirection: 'row',
     alignItems: 'center',
