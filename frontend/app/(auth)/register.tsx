@@ -539,4 +539,66 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
   },
+  // Success screen styles
+  successContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  successIconContainer: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  successTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 12,
+  },
+  successSubtitle: {
+    fontSize: 16,
+    textAlign: 'center',
+    paddingHorizontal: 32,
+    marginBottom: 8,
+  },
+  emailHighlight: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 24,
+  },
+  infoBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    borderRadius: 8,
+    gap: 12,
+    marginBottom: 24,
+  },
+  infoText: {
+    fontSize: 14,
+    flex: 1,
+  },
+  successButton: {
+    paddingHorizontal: 32,
+    paddingVertical: 14,
+    borderRadius: 8,
+    marginBottom: 16,
+  },
+  successButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  resendLink: {
+    padding: 8,
+  },
+  resendText: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
 });
