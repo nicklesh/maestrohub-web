@@ -1434,7 +1434,7 @@ async def forgot_password(request: Request, data: ForgotPasswordRequest):
             reset_url=reset_url
         )
         await email_service.send_email(
-            to_email=data.email,
+            to=data.email,
             subject=email_content["subject"],
             html=email_content["html"],
             text=email_content["text"]
