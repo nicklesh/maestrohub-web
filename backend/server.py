@@ -1387,7 +1387,7 @@ async def resend_verification(request: Request, body: dict = Body(...)):
             verification_url=verification_url
         )
         await email_service.send_email(
-            to_email=email,
+            to=email,
             subject=email_content["subject"],
             html=email_content["html"],
             text=email_content["text"]
