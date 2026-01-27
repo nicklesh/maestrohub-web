@@ -132,6 +132,9 @@ PLATFORM_FEE_PERCENT = float(os.environ.get('PLATFORM_FEE_PERCENT', '10'))  # 10
 # Resend Config (placeholder)
 RESEND_API_KEY = os.environ.get('RESEND_API_KEY', 're_placeholder')
 
+# Frontend URL for email links
+FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:3000')
+
 # Third Party Integrations
 CLOUDINARY_CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD_NAME', '')
 CLOUDINARY_API_KEY = os.environ.get('CLOUDINARY_API_KEY', '')
