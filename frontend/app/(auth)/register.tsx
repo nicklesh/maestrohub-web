@@ -64,8 +64,18 @@ export default function RegisterScreen() {
     
     setLoading(true);
     try {
-      await register(email, password, name, role);
-      router.replace('/');
+      // Call registration API directly (doesn't log user in anymore)
+      const response = await api.post('/auth/register', {
+        email,
+        password,
+        name,
+        role,
+      });
+      
+      if (response.data.success) {
+        setRegistrationComplete(true);
+        showSuccess(t('auth.register.verification_email_sent'));
+      }
     } catch (error: any) {
       showError(
         error.response?.data?.detail || t('messages.errors.could_not_create_account'),
