@@ -583,7 +583,17 @@
       "account_created": "Account created successfully",
       "logged_in": "Welcome back!",
       "logged_out": "You have been logged out",
-      "session_expired": "Your session has expired. Please sign in again."
+      "session_expired": "Your session has expired. Please sign in again.",
+      "register": {
+        "verification_email_sent": "Verification email sent! Please check your inbox.",
+        "check_email_title": "Check Your Email",
+        "check_email_message": "We've sent a verification link to:",
+        "link_expires_24h": "This link expires in 24 hours",
+        "go_to_login": "Go to Login",
+        "verification_resent": "Verification email resent successfully",
+        "resend_failed": "Failed to resend verification email",
+        "resend_email": "Resend verification email"
+      }
     },
     "profile": {
       "title": "My Profile",
