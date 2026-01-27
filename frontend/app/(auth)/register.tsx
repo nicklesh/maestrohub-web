@@ -19,6 +19,7 @@ import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 import { useToast } from '@/src/context/ToastContext';
 import { useTranslation } from '@/src/i18n';
 import LogoHeader from '@/src/components/LogoHeader';
+import { api } from '@/src/services/api';
 
 export default function RegisterScreen() {
   const [name, setName] = useState('');
@@ -29,8 +30,9 @@ export default function RegisterScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [registrationComplete, setRegistrationComplete] = useState(false);
   
-  const { register, loginWithGoogle } = useAuth();
+  const { loginWithGoogle } = useAuth();
   const { colors } = useTheme();
   const { showSuccess, showError } = useToast();
   const { t } = useTranslation();
