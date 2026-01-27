@@ -1275,7 +1275,7 @@ async def register(request: Request, data: UserCreate, response: Response):
             verification_url=verification_url
         )
         await email_service.send_email(
-            to_email=data.email,
+            to=data.email,
             subject=email_content["subject"],
             html=email_content["html"],
             text=email_content["text"]
