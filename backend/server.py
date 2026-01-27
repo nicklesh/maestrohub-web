@@ -1220,12 +1220,20 @@ async def admin_bootstrap_reset(request: Request, data: AdminBootstrapResetReque
     return {"success": True, "message": "Admin bootstrap endpoint has been re-enabled"}
 
 @api_router.post("/auth/register")
-@limiter.limit("5/minute")
+@limiter.limit("3/hour")  # Rate limit: max 3 registration attempts per email per hour
 async def register(request: Request, data: UserCreate, response: Response):
-    # Check if email exists
-    existing = await db.users.find_one({"email": data.email}, {"_id": 0})
+    # Check if email exists (including pending users)
+    existing = await db.users.find_one({"email": data.email})
     if existing:
-        raise HTTPException(status_code=400, detail="Email already registered")
+        # If user exists and is verified, reject
+        if existing.get("status") == "verified" or existing.get("status") is None:
+            raise HTTPException(status_code=400, detail="Email already registered")
+        # If user exists but is pending and expired, delete and allow re-registration
+        if existing.get("status") == "pending":
+            if existing.get("verification_expires") and existing["verification_expires"] < datetime.now(timezone.utc):
+                await db.users.delete_one({"_id": existing["_id"]})
+            else:
+                raise HTTPException(status_code=400, detail="Email already registered. Please check your email for verification link.")
     
     # Validate password strength (password is required for registration)
     is_valid, error_msg = validate_password_strength(data.password or "")
@@ -1235,20 +1243,87 @@ async def register(request: Request, data: UserCreate, response: Response):
     # Sanitize user inputs
     sanitized_name = sanitize_html(data.name) if data.name else data.name
     
-    user_id = f"user_{uuid.uuid4().hex[:12]}"
+    # Generate verification codes
+    verification_code = generate_verification_code()
+    verification_token = generate_verification_token()
+    
+    # Create user in pending status
     user_doc = {
-        "user_id": user_id,
         "email": data.email,
         "name": sanitized_name,
         "picture": data.picture,
         "role": data.role,
         "password_hash": hash_password(data.password) if data.password else None,
         "devices": [data.device.dict()] if data.device else [],
+        "status": "pending",  # User is pending until email is verified
+        "verification_code": verification_code,
+        "verification_token": verification_token,
+        "verification_expires": datetime.now(timezone.utc) + timedelta(hours=24),
         "created_at": datetime.now(timezone.utc)
     }
-    await db.users.insert_one(user_doc)
+    result = await db.users.insert_one(user_doc)
+    user_id = str(result.inserted_id)
     
-    # Create JWT token
+    # Generate verification URL
+    verification_url = f"{FRONTEND_URL}/verify-email?code={verification_code}&token={verification_token}"
+    
+    # Send verification email
+    try:
+        email_content = welcome_verification_email(
+            user_name=sanitized_name or data.email.split("@")[0],
+            verification_url=verification_url
+        )
+        await email_service.send_email(
+            to_email=data.email,
+            subject=email_content["subject"],
+            html=email_content["html"],
+            text=email_content["text"]
+        )
+        logger.info(f"Verification email sent to {data.email}")
+    except Exception as e:
+        logger.error(f"Failed to send verification email to {data.email}: {e}")
+        # Still return success - user can request resend
+    
+    return {
+        "success": True,
+        "message": "Registration successful. Please check your email to verify your account.",
+        "email": data.email
+    }
+
+
+@api_router.post("/auth/verify-email")
+@limiter.limit("10/minute")
+async def verify_email(request: Request, data: VerifyEmailRequest, response: Response):
+    """Verify user email with code and token"""
+    # Find user with matching verification credentials
+    user_doc = await db.users.find_one({
+        "verification_code": data.code,
+        "verification_token": data.token,
+        "status": "pending"
+    })
+    
+    if not user_doc:
+        raise HTTPException(status_code=400, detail="Invalid or expired verification link")
+    
+    # Check if verification has expired
+    if user_doc.get("verification_expires") and user_doc["verification_expires"] < datetime.now(timezone.utc):
+        raise HTTPException(status_code=400, detail="Verification link has expired. Please register again.")
+    
+    # Update user status to verified
+    user_id = str(user_doc["_id"])
+    await db.users.update_one(
+        {"_id": user_doc["_id"]},
+        {
+            "$set": {"status": "verified"},
+            "$unset": {
+                "verification_code": "",
+                "verification_token": "",
+                "verification_expires": ""
+            }
+        }
+    )
+    
+    # Create JWT token and log user in
     token = create_jwt_token(user_id)
     
     # Set cookie
@@ -1261,7 +1336,179 @@ async def register(request: Request, data: UserCreate, response: Response):
         max_age=JWT_EXPIRATION_DAYS * 24 * 60 * 60
     )
     
-    return {"user_id": user_id, "token": token, "role": data.role}
+    logger.info(f"Email verified successfully for {user_doc['email']}")
+    
+    return {
+        "success": True,
+        "message": "Email verified successfully",
+        "token": token,
+        "role": user_doc["role"],
+        "user_id": user_id
+    }
+
+
+@api_router.post("/auth/resend-verification")
+@limiter.limit("3/hour")  # Rate limit: max 3 resends per hour
+async def resend_verification(request: Request, body: dict = Body(...)):
+    """Resend verification email"""
+    email = body.get("email")
+    if not email:
+        raise HTTPException(status_code=400, detail="Email is required")
+    
+    user_doc = await db.users.find_one({"email": email, "status": "pending"})
+    if not user_doc:
+        # Don't reveal if email exists or not
+        return {"success": True, "message": "If your email is registered and pending, you will receive a verification email."}
+    
+    # Generate new verification codes
+    verification_code = generate_verification_code()
+    verification_token = generate_verification_token()
+    
+    # Update user with new codes
+    await db.users.update_one(
+        {"_id": user_doc["_id"]},
+        {
+            "$set": {
+                "verification_code": verification_code,
+                "verification_token": verification_token,
+                "verification_expires": datetime.now(timezone.utc) + timedelta(hours=24)
+            }
+        }
+    )
+    
+    # Generate verification URL
+    verification_url = f"{FRONTEND_URL}/verify-email?code={verification_code}&token={verification_token}"
+    
+    # Send verification email
+    try:
+        email_content = welcome_verification_email(
+            user_name=user_doc.get("name") or email.split("@")[0],
+            verification_url=verification_url
+        )
+        await email_service.send_email(
+            to_email=email,
+            subject=email_content["subject"],
+            html=email_content["html"],
+            text=email_content["text"]
+        )
+        logger.info(f"Verification email resent to {email}")
+    except Exception as e:
+        logger.error(f"Failed to resend verification email to {email}: {e}")
+    
+    return {"success": True, "message": "If your email is registered and pending, you will receive a verification email."}
+
+
+@api_router.post("/auth/forgot-password")
+@limiter.limit("3/hour")  # Rate limit: max 3 reset requests per hour
+async def forgot_password(request: Request, data: ForgotPasswordRequest):
+    """Request password reset email"""
+    user_doc = await db.users.find_one({"email": data.email, "status": {"$ne": "pending"}})
+    
+    # Always return success to prevent email enumeration
+    if not user_doc:
+        return {"success": True, "message": "If your email is registered, you will receive a password reset link."}
+    
+    # Generate reset codes
+    reset_code = generate_verification_code()
+    reset_token = generate_verification_token()
+    
+    # Store reset credentials
+    await db.password_resets.delete_many({"email": data.email})  # Remove any existing reset requests
+    await db.password_resets.insert_one({
+        "email": data.email,
+        "user_id": str(user_doc["_id"]),
+        "reset_code": reset_code,
+        "reset_token": reset_token,
+        "expires_at": datetime.now(timezone.utc) + timedelta(hours=1),  # 1 hour expiry
+        "created_at": datetime.now(timezone.utc)
+    })
+    
+    # Generate reset URL
+    reset_url = f"{FRONTEND_URL}/reset-password?code={reset_code}&token={reset_token}"
+    
+    # Send password reset email
+    try:
+        email_content = password_reset_email(
+            user_name=user_doc.get("name") or data.email.split("@")[0],
+            reset_url=reset_url
+        )
+        await email_service.send_email(
+            to_email=data.email,
+            subject=email_content["subject"],
+            html=email_content["html"],
+            text=email_content["text"]
+        )
+        logger.info(f"Password reset email sent to {data.email}")
+    except Exception as e:
+        logger.error(f"Failed to send password reset email to {data.email}: {e}")
+    
+    return {"success": True, "message": "If your email is registered, you will receive a password reset link."}
+
+
+@api_router.post("/auth/validate-reset-token")
+@limiter.limit("10/minute")
+async def validate_reset_token(request: Request, body: dict = Body(...)):
+    """Validate reset code and token before showing reset form"""
+    code = body.get("code")
+    token = body.get("token")
+    
+    if not code or not token:
+        raise HTTPException(status_code=400, detail="Invalid reset link")
+    
+    reset_doc = await db.password_resets.find_one({
+        "reset_code": code,
+        "reset_token": token
+    })
+    
+    if not reset_doc:
+        raise HTTPException(status_code=400, detail="Invalid or expired reset link")
+    
+    if reset_doc["expires_at"] < datetime.now(timezone.utc):
+        await db.password_resets.delete_one({"_id": reset_doc["_id"]})
+        raise HTTPException(status_code=400, detail="Reset link has expired. Please request a new one.")
+    
+    return {"valid": True, "email": reset_doc["email"]}
+
+
+@api_router.post("/auth/reset-password")
+@limiter.limit("5/minute")
+async def reset_password(request: Request, data: ResetPasswordRequest, response: Response):
+    """Reset password with code and token"""
+    # Find reset request
+    reset_doc = await db.password_resets.find_one({
+        "reset_code": data.code,
+        "reset_token": data.token
+    })
+    
+    if not reset_doc:
+        raise HTTPException(status_code=400, detail="Invalid or expired reset link")
+    
+    if reset_doc["expires_at"] < datetime.now(timezone.utc):
+        await db.password_resets.delete_one({"_id": reset_doc["_id"]})
+        raise HTTPException(status_code=400, detail="Reset link has expired. Please request a new one.")
+    
+    # Validate new password strength
+    is_valid, error_msg = validate_password_strength(data.new_password)
+    if not is_valid:
+        raise HTTPException(status_code=400, detail=error_msg)
+    
+    # Update user password
+    from bson import ObjectId
+    user_id = reset_doc["user_id"]
+    await db.users.update_one(
+        {"_id": ObjectId(user_id)},
+        {"$set": {"password_hash": hash_password(data.new_password)}}
+    )
+    
+    # Delete reset request
+    await db.password_resets.delete_one({"_id": reset_doc["_id"]})
+    
+    # Invalidate all existing sessions for security
+    await db.user_sessions.delete_many({"user_id": user_id})
+    
+    logger.info(f"Password reset successful for user {user_id}")
+    
+    return {"success": True, "message": "Password reset successful. Please login with your new password."}
 
 @api_router.post("/auth/login")
 @limiter.limit("5/minute")
@@ -1270,6 +1517,10 @@ async def login(request: Request, data: UserLogin, response: Response):
     if not user_doc:
         logger.error(f"Login failed: user not found for {data.email}")
         raise HTTPException(status_code=401, detail="Invalid credentials")
+    
+    # Check if user is pending verification
+    if user_doc.get("status") == "pending":
+        raise HTTPException(status_code=403, detail="Please verify your email before logging in. Check your inbox for the verification link.")
     
     logger.info(f"Login attempt for {data.email}, has password_hash: {'password_hash' in user_doc}, role: {user_doc.get('role')}")
     
