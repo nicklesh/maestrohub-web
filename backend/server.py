@@ -49,7 +49,9 @@ from email_service import (
     booking_cancellation_email,
     session_reminder_email,
     new_review_notification_email,
-    no_show_notification_email
+    no_show_notification_email,
+    welcome_verification_email,
+    password_reset_email
 )
 
 # Import exchange rate service
