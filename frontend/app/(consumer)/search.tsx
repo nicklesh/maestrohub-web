@@ -346,6 +346,45 @@ export default function SearchScreen() {
     }
   };
 
+  // Search with explicit global flag (to avoid stale state issue)
+  const searchTutorsWithGlobalFlag = async (isGlobal: boolean) => {
+    setPage(1);
+    setTutors([]);
+    setLoading(true);
+
+    try {
+      const queryParams = new URLSearchParams({
+        page: '1',
+        limit: '20',
+      });
+      
+      if (selectedCategory !== 'all') {
+        queryParams.append('category', selectedCategory);
+      }
+      if (selectedSubject !== 'all') {
+        queryParams.append('subject', selectedSubject);
+      }
+      if (searchQuery) {
+        queryParams.append('query', searchQuery);
+      }
+      // Use the passed value instead of state (which may be stale)
+      if (!isGlobal) {
+        queryParams.append('local_only', 'true');
+      }
+
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      const response = await api.get(`/tutors/search?${queryParams}`, { headers });
+      const newTutors = response.data.tutors || [];
+      
+      setTutors(newTutors);
+      setHasMore(newTutors.length === 20);
+    } catch (error) {
+      console.error('Failed to search tutors:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const getCategoryDisplayName = () => {
     if (selectedCategory === 'all') return t('pages.search.all_categories');
     const cat = categories.find(c => c.id === selectedCategory);
