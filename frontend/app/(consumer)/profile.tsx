@@ -497,6 +497,17 @@ export default function ProfileScreen() {
           <View style={[styles.bottomSheet, { backgroundColor: colors.surface, overflow: 'hidden' }, containerMaxWidth ? { maxWidth: containerMaxWidth, width: '100%' } : undefined]}>
             <View style={[styles.sheetHandle, { backgroundColor: colors.gray300 }]} />
             
+            {/* Close Button */}
+            {!contactSuccess && (
+              <TouchableOpacity 
+                style={styles.sheetCloseButton}
+                onPress={() => setShowContactSheet(false)}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              >
+                <Ionicons name="close" size={24} color={colors.textMuted} />
+              </TouchableOpacity>
+            )}
+            
             {contactSuccess ? (
               <View style={styles.successContainer}>
                 <Ionicons name="checkmark-circle" size={64} color={colors.success} />
