@@ -593,7 +593,8 @@
       "in_person": "In-Person",
       "no_tutors_found": "No coaches found",
       "try_adjusting_filters": "Try adjusting your filters",
-      "clear_all": "Clear all"
+      "clear_all": "Clear all",
+      "show_global_coaches": "Show coaches from all countries"
     },
     "login": {
       "title": "Welcome Back",
