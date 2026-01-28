@@ -261,6 +261,18 @@ export default function FAQScreen() {
           />
           <View style={[styles.bottomSheet, { backgroundColor: colors.surface, overflow: 'hidden' }, contentMaxWidth ? { maxWidth: contentMaxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
             <View style={[styles.sheetHandle, { backgroundColor: colors.gray300 }]} />
+            
+            {/* Close Button */}
+            {!contactSuccess && (
+              <TouchableOpacity 
+                style={styles.sheetCloseButton}
+                onPress={() => setShowContactModal(false)}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              >
+                <Ionicons name="close" size={24} color={colors.textMuted} />
+              </TouchableOpacity>
+            )}
+            
             {contactSuccess ? (
               <View style={styles.successContainer}>
                 <Ionicons name="checkmark-circle" size={64} color={colors.primary} />
