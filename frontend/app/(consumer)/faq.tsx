@@ -445,6 +445,13 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 16,
   },
+  sheetCloseButton: {
+    position: 'absolute',
+    top: 16,
+    right: 16,
+    zIndex: 10,
+    padding: 4,
+  },
   sheetTitle: {
     fontSize: 18,
     fontWeight: '600',
