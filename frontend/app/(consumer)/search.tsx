@@ -691,7 +691,7 @@ export default function SearchScreen() {
                 <View style={styles.countryFilterLeft}>
                   <Ionicons name="globe-outline" size={18} color={colors.primary} />
                   <Text style={[styles.countryFilterLabel, { color: colors.text }]}>
-                    Show coaches from all countries
+                    {t('pages.search.show_global_coaches')}
                   </Text>
                 </View>
                 <TouchableOpacity
@@ -700,9 +700,10 @@ export default function SearchScreen() {
                     { backgroundColor: showGlobalCoaches ? colors.primary : colors.gray300 }
                   ]}
                   onPress={() => {
-                    setShowGlobalCoaches(!showGlobalCoaches);
-                    // Trigger a new search
-                    setTimeout(() => searchTutors(true), 100);
+                    const newValue = !showGlobalCoaches;
+                    setShowGlobalCoaches(newValue);
+                    // Trigger a new search with the NEW value (not the old state)
+                    searchTutorsWithGlobalFlag(newValue);
                   }}
                 >
                   <View style={[
