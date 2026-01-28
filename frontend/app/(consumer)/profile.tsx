@@ -427,8 +427,14 @@ export default function ProfileScreen() {
 
       {/* Notifications Modal */}
       <Modal visible={showNotifications} animationType="slide" transparent>
-        <View style={[styles.modalOverlay, { backgroundColor: 'rgba(0,0,0,0.5)' }]}>
-          <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
+        <View style={[styles.modalOverlay, { alignItems: 'center' }]}>
+          <TouchableOpacity 
+            style={styles.modalBackdrop} 
+            activeOpacity={1} 
+            onPress={() => setShowNotifications(false)}
+          />
+          <View style={[styles.bottomSheet, { backgroundColor: colors.surface }, containerMaxWidth ? { maxWidth: containerMaxWidth, width: '100%' } : undefined]}>
+            <View style={[styles.sheetHandle, { backgroundColor: colors.gray300 }]} />
             <View style={styles.modalHeader}>
               <Text style={[styles.modalTitle, { color: colors.text }]}>{t('pages.profile.notifications')}</Text>
               <TouchableOpacity onPress={() => setShowNotifications(false)}>
@@ -456,9 +462,14 @@ export default function ProfileScreen() {
 
       {/* Reminders Modal */}
       <Modal visible={showReminders} animationType="slide" transparent>
-        <View style={[styles.modalOverlay, { backgroundColor: 'rgba(0,0,0,0.5)' }]}>
-          <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
-            <View style={styles.modalHeader}>
+        <View style={[styles.modalOverlay, { alignItems: 'center' }]}>
+          <TouchableOpacity 
+            style={styles.modalBackdrop} 
+            activeOpacity={1} 
+            onPress={() => setShowReminders(false)}
+          />
+          <View style={[styles.bottomSheet, { backgroundColor: colors.surface }, containerMaxWidth ? { maxWidth: containerMaxWidth, width: '100%' } : undefined]}>
+            <View style={[styles.sheetHandle, { backgroundColor: colors.gray300 }]} />
               <Text style={[styles.modalTitle, { color: colors.text }]}>{t('navigation.reminders')}</Text>
               <TouchableOpacity onPress={() => setShowReminders(false)}>
                 <Ionicons name="close" size={24} color={colors.text} />
