@@ -23,7 +23,7 @@ import sys
 import os
 
 # Configuration
-BASE_URL = "https://dev-deploy-fix.preview.emergentagent.com/api"
+BASE_URL = "https://secure-login-121.preview.emergentagent.com/api"
 TIMEOUT = 30
 
 # Test credentials from the request
