@@ -699,14 +699,14 @@ def password_reset_email(
     reset_url: str,
     lang: str = "en"
 ) -> Dict[str, str]:
-    """Generate password reset email - Branded"""
+    """Generate password reset email - Branded to match login page"""
     
-    # Brand colors matching the app
-    primary_color = "#4F46E5"  # Indigo
-    primary_light = "#EEF2FF"
-    gold_accent = "#D4AF37"
-    text_dark = "#1a1a1a"
-    text_muted = "#666666"
+    # Brand colors matching the app login page
+    primary_blue = "#3B82F6"  # Blue from login page
+    gold_accent = "#D4AF37"   # Gold accent
+    text_dark = "#1F2937"
+    text_muted = "#6B7280"
+    bg_light = "#F8FAFC"
     
     html = f"""
 <!DOCTYPE html>
@@ -716,34 +716,33 @@ def password_reset_email(
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Reset Your Password - Maestro Habitat</title>
 </head>
-<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5; padding: 40px 20px;">
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #E8F4FD 0%, #FDF8E8 50%, #F0E6D8 100%);">
+  <table width="100%" cellpadding="0" cellspacing="0" style="padding: 40px 20px; background: linear-gradient(135deg, #E8F4FD 0%, #FDF8E8 50%, #F0E6D8 100%);">
     <tr>
       <td align="center">
-        <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 560px; background-color: rgba(255, 255, 255, 0.95); border-radius: 24px; overflow: hidden; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);">
           
-          <!-- Header with gradient background -->
+          <!-- Logo Header -->
           <tr>
-            <td style="background: linear-gradient(135deg, {primary_color} 0%, #6366F1 100%); padding: 40px 24px; text-align: center;">
-              <table width="100%" cellpadding="0" cellspacing="0">
-                <tr>
-                  <td align="center">
-                    <h1 style="color: #ffffff; margin: 0 0 8px 0; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
-                      <span style="color: {gold_accent};">M</span>aestro <span style="color: {gold_accent};">H</span>abitat
-                    </h1>
-                    <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 14px; font-weight: 400;">
-                      Find Your Perfect Coach
-                    </p>
-                  </td>
-                </tr>
-              </table>
+            <td style="padding: 40px 24px 20px 24px; text-align: center; background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(248,250,252,1) 100%);">
+              <!-- MH Logo Stylized -->
+              <div style="margin-bottom: 16px;">
+                <span style="font-family: 'Georgia', serif; font-size: 56px; font-weight: bold; font-style: italic; color: {primary_blue}; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">m</span>
+                <span style="font-family: 'Georgia', serif; font-size: 56px; font-weight: bold; font-style: italic; color: {primary_blue}; position: relative; left: -10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">h</span>
+              </div>
+              <h1 style="color: {primary_blue}; margin: 0 0 8px 0; font-size: 28px; font-weight: 700; font-family: 'Georgia', serif;">
+                <span style="color: {primary_blue};">Maestro</span> <span style="color: {primary_blue};">Habitat</span>
+              </h1>
+              <p style="color: {gold_accent}; margin: 0; font-size: 14px; font-style: italic; font-family: 'Georgia', serif;">
+                Where potential resolves into mastery!
+              </p>
             </td>
           </tr>
           
           <!-- Password Reset Banner -->
           <tr>
-            <td style="background-color: {primary_light}; padding: 24px; text-align: center;">
-              <h2 style="color: {primary_color}; margin: 0; font-size: 24px; font-weight: 600;">
+            <td style="padding: 24px 24px 16px 24px; text-align: center;">
+              <h2 style="color: {text_dark}; margin: 0; font-size: 22px; font-weight: 600;">
                 🔐 Password Reset Request
               </h2>
             </td>
@@ -751,20 +750,20 @@ def password_reset_email(
           
           <!-- Main Content -->
           <tr>
-            <td style="padding: 32px 24px;">
-              <p style="color: {text_dark}; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+            <td style="padding: 0 32px 24px 32px;">
+              <p style="color: {text_dark}; font-size: 15px; line-height: 1.7; margin: 0 0 8px 0; text-align: center;">
                 Hi <strong>{user_name}</strong>,
               </p>
               
-              <p style="color: {text_muted}; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0;">
+              <p style="color: {text_muted}; font-size: 15px; line-height: 1.7; margin: 0 0 24px 0; text-align: center;">
                 We received a request to reset your password for your Maestro Habitat account. Click the button below to create a new password:
               </p>
               
               <!-- CTA Button -->
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
-                  <td align="center" style="padding: 16px 0;">
-                    <a href="{reset_url}" style="display: inline-block; background: linear-gradient(135deg, {primary_color} 0%, #6366F1 100%); color: #ffffff; padding: 16px 48px; text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);">
+                  <td align="center" style="padding: 8px 0 24px 0;">
+                    <a href="{reset_url}" style="display: inline-block; background: {primary_blue}; color: #ffffff; padding: 16px 48px; text-decoration: none; border-radius: 50px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);">
                       🔑 Reset Password
                     </a>
                   </td>
@@ -772,20 +771,20 @@ def password_reset_email(
               </table>
               
               <!-- Link fallback -->
-              <p style="color: {text_muted}; font-size: 13px; line-height: 1.5; margin: 24px 0 0 0; text-align: center;">
+              <p style="color: {text_muted}; font-size: 12px; line-height: 1.5; margin: 0; text-align: center;">
                 Or copy and paste this link:<br>
-                <a href="{reset_url}" style="color: {primary_color}; word-break: break-all; font-size: 12px;">{reset_url}</a>
+                <a href="{reset_url}" style="color: {primary_blue}; word-break: break-all; font-size: 11px;">{reset_url}</a>
               </p>
             </td>
           </tr>
           
           <!-- Warning Box -->
           <tr>
-            <td style="padding: 0 24px 16px 24px;">
-              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #FEF3C7; border-radius: 12px; border-left: 4px solid #F59E0B;">
+            <td style="padding: 0 24px 12px 24px;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #FEF3C7; border-radius: 12px; border-left: 4px solid {gold_accent};">
                 <tr>
-                  <td style="padding: 16px 20px;">
-                    <p style="color: #92400E; font-size: 14px; margin: 0; line-height: 1.5;">
+                  <td style="padding: 14px 18px;">
+                    <p style="color: #92400E; font-size: 13px; margin: 0; line-height: 1.5;">
                       <strong>⏰ Link expires in 1 hour</strong><br>
                       For security reasons, this password reset link will expire soon.
                     </p>
@@ -800,8 +799,8 @@ def password_reset_email(
             <td style="padding: 0 24px 24px 24px;">
               <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #FEF2F2; border-radius: 12px; border-left: 4px solid #EF4444;">
                 <tr>
-                  <td style="padding: 16px 20px;">
-                    <p style="color: #991B1B; font-size: 14px; margin: 0; line-height: 1.5;">
+                  <td style="padding: 14px 18px;">
+                    <p style="color: #991B1B; font-size: 13px; margin: 0; line-height: 1.5;">
                       <strong>🔒 Didn't request this?</strong><br>
                       If you didn't request a password reset, please ignore this email. Your password will remain unchanged and your account is secure.
                     </p>
@@ -813,14 +812,14 @@ def password_reset_email(
           
           <!-- Footer -->
           <tr>
-            <td style="background-color: #F8F9FA; padding: 24px; text-align: center; border-top: 1px solid #E5E7EB;">
-              <p style="color: #9CA3AF; font-size: 12px; margin: 0 0 8px 0;">
+            <td style="background: linear-gradient(180deg, {bg_light} 0%, #EDF2F7 100%); padding: 20px 24px; text-align: center; border-top: 1px solid #E2E8F0;">
+              <p style="color: #9CA3AF; font-size: 11px; margin: 0 0 6px 0;">
                 © 2025 Maestro Habitat. All rights reserved.
               </p>
               <p style="color: #9CA3AF; font-size: 11px; margin: 0;">
-                <a href="https://www.maestrohabitat.com" style="color: {primary_color}; text-decoration: none;">www.maestrohabitat.com</a>
+                <a href="https://www.maestrohabitat.com" style="color: {primary_blue}; text-decoration: none;">www.maestrohabitat.com</a>
               </p>
-              <p style="color: #D1D5DB; font-size: 11px; margin: 16px 0 0 0;">
+              <p style="color: #D1D5DB; font-size: 10px; margin: 12px 0 0 0;">
                 This is an automated security email. Please do not reply.
               </p>
             </td>
@@ -835,7 +834,9 @@ def password_reset_email(
 """
     
     text = f"""
-Password Reset Request
+Maestro Habitat - Password Reset Request
+
+Where potential resolves into mastery!
 
 Hi {user_name},
 
