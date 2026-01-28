@@ -1489,7 +1489,12 @@ async def reset_password(request: Request, data: ResetPasswordRequest, response:
     if not reset_doc:
         raise HTTPException(status_code=400, detail="Invalid or expired reset link")
     
-    if reset_doc["expires_at"] < datetime.now(timezone.utc):
+    # Handle timezone-aware comparison
+    expires_at = reset_doc["expires_at"]
+    if expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+    
+    if expires_at < datetime.now(timezone.utc):
         await db.password_resets.delete_one({"_id": reset_doc["_id"]})
         raise HTTPException(status_code=400, detail="Reset link has expired. Please request a new one.")
     
