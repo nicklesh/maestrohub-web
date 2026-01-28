@@ -29,10 +29,8 @@ export default function RegisterScreen() {
   const [role, setRole] = useState<'consumer' | 'tutor'>('consumer');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
   const [registrationComplete, setRegistrationComplete] = useState(false);
   
-  const { loginWithGoogle } = useAuth();
   const { colors } = useTheme();
   const { showSuccess, showError } = useToast();
   const { t } = useTranslation();
@@ -83,30 +81,6 @@ export default function RegisterScreen() {
       );
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleGoogleLogin = async () => {
-    setGoogleLoading(true);
-    try {
-      await loginWithGoogle();
-      // On mobile, loginWithGoogle completes the full flow
-      // On web, this line won't be reached because the page redirects
-      if (Platform.OS !== 'web') {
-        router.replace('/');
-      }
-    } catch (error) {
-      // Only show error if we're still on the page (not redirected)
-      if (Platform.OS === 'web') {
-        const hash = typeof window !== 'undefined' ? window.location.hash : '';
-        if (!hash.includes('session_id')) {
-          showError(t('messages.errors.google_login_failed'));
-        }
-      } else {
-        showError(t('messages.errors.google_login_failed'));
-      }
-    } finally {
-      setGoogleLoading(false);
     }
   };
 
