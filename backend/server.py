@@ -1231,8 +1231,15 @@ async def register(request: Request, data: UserCreate, response: Response):
             raise HTTPException(status_code=400, detail="Email already registered")
         # If user exists but is pending and expired, delete and allow re-registration
         if existing.get("status") == "pending":
-            if existing.get("verification_expires") and existing["verification_expires"] < datetime.now(timezone.utc):
-                await db.users.delete_one({"_id": existing["_id"]})
+            verification_expires = existing.get("verification_expires")
+            if verification_expires:
+                # Make both datetimes timezone-aware for comparison
+                if verification_expires.tzinfo is None:
+                    verification_expires = verification_expires.replace(tzinfo=timezone.utc)
+                if verification_expires < datetime.now(timezone.utc):
+                    await db.users.delete_one({"_id": existing["_id"]})
+                else:
+                    raise HTTPException(status_code=400, detail="Email already registered. Please check your email for verification link.")
             else:
                 raise HTTPException(status_code=400, detail="Email already registered. Please check your email for verification link.")
     
