@@ -519,68 +519,152 @@ def no_show_notification_email(
 
 def welcome_verification_email(
     user_name: str,
-    verification_url: str
+    verification_url: str,
+    lang: str = "en"
 ) -> Dict[str, str]:
-    """Generate welcome email with verification link for new registrations"""
+    """Generate welcome email with verification link for new registrations - Branded"""
+    
+    # Brand colors matching the app
+    primary_color = "#4F46E5"  # Indigo
+    primary_light = "#EEF2FF"
+    gold_accent = "#D4AF37"
+    text_dark = "#1a1a1a"
+    text_muted = "#666666"
+    
+    # Logo URL (hosted version for emails)
+    logo_url = "https://www.maestrohabitat.com/logo.png"
     
     html = f"""
 <!DOCTYPE html>
-<html>
+<html lang="{lang}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to Maestro Habitat</title>
 </head>
-<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f5f5f5;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
-    <!-- Header -->
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5; padding: 40px 20px;">
     <tr>
-      <td style="background-color: #4F46E5; padding: 24px; text-align: center;">
-        <h1 style="color: #ffffff; margin: 0; font-size: 24px;">🎉 Welcome to Maestro Habitat!</h1>
-      </td>
-    </tr>
-    
-    <!-- Content -->
-    <tr>
-      <td style="padding: 32px 24px;">
-        <h2 style="color: #1a1a1a; margin: 0 0 16px 0;">Hi {user_name}!</h2>
-        <p style="color: #666; font-size: 16px; line-height: 1.5; margin: 0 0 24px 0;">
-          Thank you for joining Maestro Habitat! We're excited to have you on board.
-        </p>
-        
-        <p style="color: #666; font-size: 16px; line-height: 1.5; margin: 0 0 24px 0;">
-          To complete your registration and activate your account, please verify your email address by clicking the button below:
-        </p>
-        
-        <div style="text-align: center; margin: 32px 0;">
-          <a href="{verification_url}" style="display: inline-block; background-color: #4F46E5; color: #ffffff; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
-            Verify My Email
-          </a>
-        </div>
-        
-        <p style="color: #999; font-size: 14px; line-height: 1.5; margin: 24px 0;">
-          Or copy and paste this link in your browser:<br>
-          <a href="{verification_url}" style="color: #4F46E5; word-break: break-all;">{verification_url}</a>
-        </p>
-        
-        <div style="background-color: #fef3c7; border-radius: 8px; padding: 16px; margin-top: 24px;">
-          <p style="color: #92400e; font-size: 14px; margin: 0;">
-            ⏰ <strong>Important:</strong> This link will expire in 24 hours. If you don't verify your email within this time, you'll need to register again.
-          </p>
-        </div>
-        
-        <p style="color: #999; font-size: 14px; margin-top: 24px;">
-          If you didn't create an account with Maestro Habitat, you can safely ignore this email.
-        </p>
-      </td>
-    </tr>
-    
-    <!-- Footer -->
-    <tr>
-      <td style="background-color: #f8f9fa; padding: 24px; text-align: center;">
-        <p style="color: #999; font-size: 12px; margin: 0;">
-          © 2025 Maestro Habitat. All rights reserved.<br>
-          Find the perfect coach for your learning journey.
-        </p>
+      <td align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+          
+          <!-- Header with gradient background -->
+          <tr>
+            <td style="background: linear-gradient(135deg, {primary_color} 0%, #6366F1 100%); padding: 40px 24px; text-align: center;">
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center">
+                    <!-- Logo placeholder - text version -->
+                    <h1 style="color: #ffffff; margin: 0 0 8px 0; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
+                      <span style="color: {gold_accent};">M</span>aestro <span style="color: {gold_accent};">H</span>abitat
+                    </h1>
+                    <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 14px; font-weight: 400;">
+                      Find Your Perfect Coach
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          
+          <!-- Welcome Banner -->
+          <tr>
+            <td style="background-color: {primary_light}; padding: 24px; text-align: center;">
+              <h2 style="color: {primary_color}; margin: 0; font-size: 24px; font-weight: 600;">
+                🎉 Welcome, {user_name}!
+              </h2>
+            </td>
+          </tr>
+          
+          <!-- Main Content -->
+          <tr>
+            <td style="padding: 32px 24px;">
+              <p style="color: {text_dark}; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                Thank you for joining <strong>Maestro Habitat</strong>! We're thrilled to have you as part of our community.
+              </p>
+              
+              <p style="color: {text_muted}; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0;">
+                To complete your registration and unlock all features, please verify your email address:
+              </p>
+              
+              <!-- CTA Button -->
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center" style="padding: 16px 0;">
+                    <a href="{verification_url}" style="display: inline-block; background: linear-gradient(135deg, {primary_color} 0%, #6366F1 100%); color: #ffffff; padding: 16px 48px; text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);">
+                      ✉️ Verify My Email
+                    </a>
+                  </td>
+                </tr>
+              </table>
+              
+              <!-- Link fallback -->
+              <p style="color: {text_muted}; font-size: 13px; line-height: 1.5; margin: 24px 0 0 0; text-align: center;">
+                Or copy and paste this link:<br>
+                <a href="{verification_url}" style="color: {primary_color}; word-break: break-all; font-size: 12px;">{verification_url}</a>
+              </p>
+            </td>
+          </tr>
+          
+          <!-- Warning Box -->
+          <tr>
+            <td style="padding: 0 24px 24px 24px;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #FEF3C7; border-radius: 12px; border-left: 4px solid #F59E0B;">
+                <tr>
+                  <td style="padding: 16px 20px;">
+                    <p style="color: #92400E; font-size: 14px; margin: 0; line-height: 1.5;">
+                      <strong>⏰ Link expires in 24 hours</strong><br>
+                      If you don't verify within this time, you'll need to register again.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          
+          <!-- What's Next Section -->
+          <tr>
+            <td style="padding: 0 24px 32px 24px;">
+              <h3 style="color: {text_dark}; font-size: 16px; margin: 0 0 16px 0;">What's next?</h3>
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="padding: 8px 0;">
+                    <span style="color: {primary_color}; font-size: 18px;">✓</span>
+                    <span style="color: {text_muted}; font-size: 14px; margin-left: 12px;">Browse our expert coaches</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0;">
+                    <span style="color: {primary_color}; font-size: 18px;">✓</span>
+                    <span style="color: {text_muted}; font-size: 14px; margin-left: 12px;">Book your first session</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0;">
+                    <span style="color: {primary_color}; font-size: 18px;">✓</span>
+                    <span style="color: {text_muted}; font-size: 14px; margin-left: 12px;">Start your learning journey</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #F8F9FA; padding: 24px; text-align: center; border-top: 1px solid #E5E7EB;">
+              <p style="color: #9CA3AF; font-size: 12px; margin: 0 0 8px 0;">
+                © 2025 Maestro Habitat. All rights reserved.
+              </p>
+              <p style="color: #9CA3AF; font-size: 11px; margin: 0;">
+                <a href="https://www.maestrohabitat.com" style="color: {primary_color}; text-decoration: none;">www.maestrohabitat.com</a>
+              </p>
+              <p style="color: #D1D5DB; font-size: 11px; margin: 16px 0 0 0;">
+                If you didn't create this account, please ignore this email.
+              </p>
+            </td>
+          </tr>
+          
+        </table>
       </td>
     </tr>
   </table>
@@ -593,19 +677,21 @@ Welcome to Maestro Habitat, {user_name}!
 
 Thank you for joining us. We're excited to have you on board.
 
-To complete your registration and activate your account, please verify your email by clicking the link below:
-
+To complete your registration, please verify your email by visiting:
 {verification_url}
 
-IMPORTANT: This link will expire in 24 hours. If you don't verify your email within this time, you'll need to register again.
+⏰ IMPORTANT: This link expires in 24 hours.
 
-If you didn't create an account with Maestro Habitat, you can safely ignore this email.
+What's next?
+✓ Browse our expert coaches
+✓ Book your first session  
+✓ Start your learning journey
 
-© 2025 Maestro Habitat
+© 2025 Maestro Habitat | www.maestrohabitat.com
 """
     
     return {
-        "subject": "🎉 Welcome to Maestro Habitat - Please Verify Your Email",
+        "subject": "🎉 Welcome to Maestro Habitat - Verify Your Email",
         "html": html,
         "text": text
     }
