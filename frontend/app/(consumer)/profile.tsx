@@ -470,6 +470,7 @@ export default function ProfileScreen() {
           />
           <View style={[styles.bottomSheet, { backgroundColor: colors.surface }, containerMaxWidth ? { maxWidth: containerMaxWidth, width: '100%' } : undefined]}>
             <View style={[styles.sheetHandle, { backgroundColor: colors.gray300 }]} />
+            <View style={styles.modalHeader}>
               <Text style={[styles.modalTitle, { color: colors.text }]}>{t('navigation.reminders')}</Text>
               <TouchableOpacity onPress={() => setShowReminders(false)}>
                 <Ionicons name="close" size={24} color={colors.text} />
