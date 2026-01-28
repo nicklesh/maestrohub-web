@@ -305,29 +305,6 @@ export default function RegisterScreen() {
                 )}
               </TouchableOpacity>
 
-              <View style={styles.divider}>
-                <View style={styles.dividerLine} />
-                <Text style={styles.dividerText}>{t('pages.login.or_continue_with')}</Text>
-                <View style={styles.dividerLine} />
-              </View>
-
-              <TouchableOpacity
-                style={[styles.googleButton, isTablet && styles.googleButtonTablet]}
-                onPress={handleGoogleLogin}
-                disabled={googleLoading}
-              >
-                {googleLoading ? (
-                  <ActivityIndicator color={colors.text} />
-                ) : (
-                  <>
-                    <Ionicons name="logo-google" size={20} color={colors.text} />
-                    <Text style={[styles.googleButtonText, isTablet && styles.googleButtonTextTablet]}>
-                      {t('pages.login.continue_with_google')}
-                    </Text>
-                  </>
-                )}
-              </TouchableOpacity>
-
               <View style={styles.footer}>
                 <Text style={styles.footerText}>{t('pages.register.have_account')} </Text>
                 <Link href="/(auth)/login" asChild>
