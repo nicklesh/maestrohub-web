@@ -2365,7 +2365,6 @@
         "parent_list": "Parents",
         "active": "Active",
         "total": "Total",
-        "this_month": "This Month",
         "rescheduled": "Rescheduled",
         "cancelled": "Cancelled"
       },
@@ -2652,91 +2651,6 @@
     "user": "User"
   },
   "calendar": {
-    "days_short": {
-      "sun": "Sun",
-      "mon": "Mon",
-      "tue": "Tue",
-      "wed": "Wed",
-      "thu": "Thu",
-      "fri": "Fri",
-      "sat": "Sat"
-    },
-    "days_full": {
-      "sunday": "Sunday",
-      "monday": "Monday",
-      "tuesday": "Tuesday",
-      "wednesday": "Wednesday",
-      "thursday": "Thursday",
-      "friday": "Friday",
-      "saturday": "Saturday"
-    },
-    "months": {
-      "january": "January",
-      "february": "February",
-      "march": "March",
-      "april": "April",
-      "may": "May",
-      "june": "June",
-      "july": "July",
-      "august": "August",
-      "september": "September",
-      "october": "October",
-      "november": "November",
-      "december": "December"
-    },
-    "months_short": {
-      "jan": "Jan",
-      "feb": "Feb",
-      "mar": "Mar",
-      "apr": "Apr",
-      "may": "May",
-      "jun": "Jun",
-      "jul": "Jul",
-      "aug": "Aug",
-      "sep": "Sep",
-      "oct": "Oct",
-      "nov": "Nov",
-      "dec": "Dec"
-    }
-  },
-  "modals": {
-    "contact_us": {
-      "title": "Contact Us",
-      "subject": "Subject",
-      "subject_placeholder": "Enter subject",
-      "message": "Message",
-      "message_placeholder": "Enter your message",
-      "send": "Send",
-      "sending": "Sending...",
-      "success": "Your message has been sent!",
-      "error": "Failed to send message",
-      "fill_all_fields": "Please fill in all fields"
-    }
-  },
-  "countries": {
-    "US": "United States",
-    "IN": "India",
-    "GB": "United Kingdom",
-    "CA": "Canada",
-    "AU": "Australia",
-    "DE": "Germany",
-    "FR": "France",
-    "BR": "Brazil",
-    "MX": "Mexico",
-    "JP": "Japan",
-    "KR": "South Korea",
-    "CN": "China",
-    "SG": "Singapore",
-    "AE": "United Arab Emirates",
-    "IL": "Israel",
-    "RU": "Russia",
-    "SA": "Saudi Arabia",
-    "PK": "Pakistan",
-    "ES": "Spain",
-    "IT": "Italy",
-    "BD": "Bangladesh"
-  },
-  "calendar": {
     "months": {
       "january": "January",
       "february": "February",
@@ -2783,6 +2697,43 @@
       "fri": "Fri",
       "sat": "Sat"
     }
+  },
+  "modals": {
+    "contact_us": {
+      "title": "Contact Us",
+      "subject": "Subject",
+      "subject_placeholder": "Enter subject",
+      "message": "Message",
+      "message_placeholder": "Enter your message",
+      "send": "Send",
+      "sending": "Sending...",
+      "success": "Your message has been sent!",
+      "error": "Failed to send message",
+      "fill_all_fields": "Please fill in all fields"
+    }
+  },
+  "countries": {
+    "US": "United States",
+    "IN": "India",
+    "GB": "United Kingdom",
+    "CA": "Canada",
+    "AU": "Australia",
+    "DE": "Germany",
+    "FR": "France",
+    "BR": "Brazil",
+    "MX": "Mexico",
+    "JP": "Japan",
+    "KR": "South Korea",
+    "CN": "China",
+    "SG": "Singapore",
+    "AE": "United Arab Emirates",
+    "IL": "Israel",
+    "RU": "Russia",
+    "SA": "Saudi Arabia",
+    "PK": "Pakistan",
+    "ES": "Spain",
+    "IT": "Italy",
+    "BD": "Bangladesh"
   },
   "medium": {
     "online": "Online",
