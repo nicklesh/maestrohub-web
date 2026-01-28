@@ -778,6 +778,13 @@ const createStyles = (colors: any) => StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 16,
   },
+  sheetCloseButton: {
+    position: 'absolute',
+    top: 16,
+    right: 16,
+    zIndex: 10,
+    padding: 4,
+  },
   sheetHeader: {
     flexDirection: 'row',
     alignItems: 'center',
