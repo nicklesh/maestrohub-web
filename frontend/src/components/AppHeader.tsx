@@ -286,6 +286,16 @@ export default function AppHeader({ showBack = false, title, showUserName = fals
             contentMaxWidth ? { maxWidth: contentMaxWidth, width: '100%' } : undefined
           ]}>
             <View style={[styles.sheetHandle, { backgroundColor: colors.gray300 }]} />
+            
+            {/* Close Button */}
+            <TouchableOpacity 
+              style={styles.sheetCloseButton}
+              onPress={() => setShowContactSheet(false)}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <Ionicons name="close" size={24} color={colors.textMuted} />
+            </TouchableOpacity>
+            
             <Text style={[styles.sheetTitle, { color: colors.text }]}>{t('modals.contact_us.title')}</Text>
             
             <Text style={[styles.inputLabel, { color: colors.textMuted }]}>{t('modals.contact_us.subject')}</Text>
