@@ -699,70 +699,137 @@ What's next?
 
 def password_reset_email(
     user_name: str,
-    reset_url: str
+    reset_url: str,
+    lang: str = "en"
 ) -> Dict[str, str]:
-    """Generate password reset email"""
+    """Generate password reset email - Branded"""
+    
+    # Brand colors matching the app
+    primary_color = "#4F46E5"  # Indigo
+    primary_light = "#EEF2FF"
+    gold_accent = "#D4AF37"
+    text_dark = "#1a1a1a"
+    text_muted = "#666666"
     
     html = f"""
 <!DOCTYPE html>
-<html>
+<html lang="{lang}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reset Your Password - Maestro Habitat</title>
 </head>
-<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f5f5f5;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
-    <!-- Header -->
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5; padding: 40px 20px;">
     <tr>
-      <td style="background-color: #4F46E5; padding: 24px; text-align: center;">
-        <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Maestro Habitat</h1>
-      </td>
-    </tr>
-    
-    <!-- Content -->
-    <tr>
-      <td style="padding: 32px 24px;">
-        <h2 style="color: #1a1a1a; margin: 0 0 16px 0;">🔐 Reset Your Password</h2>
-        <p style="color: #666; font-size: 16px; line-height: 1.5; margin: 0 0 24px 0;">
-          Hi {user_name},
-        </p>
-        
-        <p style="color: #666; font-size: 16px; line-height: 1.5; margin: 0 0 24px 0;">
-          We received a request to reset your password. Click the button below to create a new password:
-        </p>
-        
-        <div style="text-align: center; margin: 32px 0;">
-          <a href="{reset_url}" style="display: inline-block; background-color: #4F46E5; color: #ffffff; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
-            Reset Password
-          </a>
-        </div>
-        
-        <p style="color: #999; font-size: 14px; line-height: 1.5; margin: 24px 0;">
-          Or copy and paste this link in your browser:<br>
-          <a href="{reset_url}" style="color: #4F46E5; word-break: break-all;">{reset_url}</a>
-        </p>
-        
-        <div style="background-color: #fef3c7; border-radius: 8px; padding: 16px; margin-top: 24px;">
-          <p style="color: #92400e; font-size: 14px; margin: 0;">
-            ⏰ <strong>Important:</strong> This link will expire in 1 hour for security reasons.
-          </p>
-        </div>
-        
-        <div style="background-color: #fef2f2; border-radius: 8px; padding: 16px; margin-top: 16px;">
-          <p style="color: #991b1b; font-size: 14px; margin: 0;">
-            🔒 <strong>Security Notice:</strong> If you didn't request a password reset, please ignore this email. Your password will remain unchanged.
-          </p>
-        </div>
-      </td>
-    </tr>
-    
-    <!-- Footer -->
-    <tr>
-      <td style="background-color: #f8f9fa; padding: 24px; text-align: center;">
-        <p style="color: #999; font-size: 12px; margin: 0;">
-          © 2025 Maestro Habitat. All rights reserved.<br>
-          This is an automated email, please do not reply.
-        </p>
+      <td align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+          
+          <!-- Header with gradient background -->
+          <tr>
+            <td style="background: linear-gradient(135deg, {primary_color} 0%, #6366F1 100%); padding: 40px 24px; text-align: center;">
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center">
+                    <h1 style="color: #ffffff; margin: 0 0 8px 0; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
+                      <span style="color: {gold_accent};">M</span>aestro <span style="color: {gold_accent};">H</span>abitat
+                    </h1>
+                    <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 14px; font-weight: 400;">
+                      Find Your Perfect Coach
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          
+          <!-- Password Reset Banner -->
+          <tr>
+            <td style="background-color: {primary_light}; padding: 24px; text-align: center;">
+              <h2 style="color: {primary_color}; margin: 0; font-size: 24px; font-weight: 600;">
+                🔐 Password Reset Request
+              </h2>
+            </td>
+          </tr>
+          
+          <!-- Main Content -->
+          <tr>
+            <td style="padding: 32px 24px;">
+              <p style="color: {text_dark}; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                Hi <strong>{user_name}</strong>,
+              </p>
+              
+              <p style="color: {text_muted}; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0;">
+                We received a request to reset your password for your Maestro Habitat account. Click the button below to create a new password:
+              </p>
+              
+              <!-- CTA Button -->
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center" style="padding: 16px 0;">
+                    <a href="{reset_url}" style="display: inline-block; background: linear-gradient(135deg, {primary_color} 0%, #6366F1 100%); color: #ffffff; padding: 16px 48px; text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);">
+                      🔑 Reset Password
+                    </a>
+                  </td>
+                </tr>
+              </table>
+              
+              <!-- Link fallback -->
+              <p style="color: {text_muted}; font-size: 13px; line-height: 1.5; margin: 24px 0 0 0; text-align: center;">
+                Or copy and paste this link:<br>
+                <a href="{reset_url}" style="color: {primary_color}; word-break: break-all; font-size: 12px;">{reset_url}</a>
+              </p>
+            </td>
+          </tr>
+          
+          <!-- Warning Box -->
+          <tr>
+            <td style="padding: 0 24px 16px 24px;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #FEF3C7; border-radius: 12px; border-left: 4px solid #F59E0B;">
+                <tr>
+                  <td style="padding: 16px 20px;">
+                    <p style="color: #92400E; font-size: 14px; margin: 0; line-height: 1.5;">
+                      <strong>⏰ Link expires in 1 hour</strong><br>
+                      For security reasons, this password reset link will expire soon.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          
+          <!-- Security Notice -->
+          <tr>
+            <td style="padding: 0 24px 24px 24px;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #FEF2F2; border-radius: 12px; border-left: 4px solid #EF4444;">
+                <tr>
+                  <td style="padding: 16px 20px;">
+                    <p style="color: #991B1B; font-size: 14px; margin: 0; line-height: 1.5;">
+                      <strong>🔒 Didn't request this?</strong><br>
+                      If you didn't request a password reset, please ignore this email. Your password will remain unchanged and your account is secure.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #F8F9FA; padding: 24px; text-align: center; border-top: 1px solid #E5E7EB;">
+              <p style="color: #9CA3AF; font-size: 12px; margin: 0 0 8px 0;">
+                © 2025 Maestro Habitat. All rights reserved.
+              </p>
+              <p style="color: #9CA3AF; font-size: 11px; margin: 0;">
+                <a href="https://www.maestrohabitat.com" style="color: {primary_color}; text-decoration: none;">www.maestrohabitat.com</a>
+              </p>
+              <p style="color: #D1D5DB; font-size: 11px; margin: 16px 0 0 0;">
+                This is an automated security email. Please do not reply.
+              </p>
+            </td>
+          </tr>
+          
+        </table>
       </td>
     </tr>
   </table>
@@ -771,19 +838,20 @@ def password_reset_email(
 """
     
     text = f"""
-Reset Your Password
+Password Reset Request
 
 Hi {user_name},
 
-We received a request to reset your password. Click the link below to create a new password:
+We received a request to reset your password for your Maestro Habitat account.
 
+Click here to reset your password:
 {reset_url}
 
-IMPORTANT: This link will expire in 1 hour for security reasons.
+⏰ IMPORTANT: This link expires in 1 hour for security reasons.
 
-SECURITY NOTICE: If you didn't request a password reset, please ignore this email. Your password will remain unchanged.
+🔒 SECURITY NOTICE: If you didn't request this password reset, please ignore this email. Your password will remain unchanged.
 
-© 2025 Maestro Habitat
+© 2025 Maestro Habitat | www.maestrohabitat.com
 """
     
     return {
