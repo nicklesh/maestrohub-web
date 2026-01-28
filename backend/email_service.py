@@ -708,6 +708,9 @@ def password_reset_email(
     text_muted = "#6B7280"
     bg_light = "#F8FAFC"
     
+    # Logo URL - hosted on your production domain
+    logo_url = "https://www.maestrohabitat.com/assets/mh_logo_1024_transparent.png"
+    
     html = f"""
 <!DOCTYPE html>
 <html lang="{lang}">
@@ -725,13 +728,10 @@ def password_reset_email(
           <!-- Logo Header -->
           <tr>
             <td style="padding: 40px 24px 20px 24px; text-align: center; background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(248,250,252,1) 100%);">
-              <!-- MH Logo Stylized -->
-              <div style="margin-bottom: 16px;">
-                <span style="font-family: 'Georgia', serif; font-size: 56px; font-weight: bold; font-style: italic; color: {primary_blue}; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">m</span>
-                <span style="font-family: 'Georgia', serif; font-size: 56px; font-weight: bold; font-style: italic; color: {primary_blue}; position: relative; left: -10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">h</span>
-              </div>
+              <!-- MH Logo Image -->
+              <img src="{logo_url}" alt="Maestro Habitat" style="width: 120px; height: auto; margin-bottom: 16px;" />
               <h1 style="color: {primary_blue}; margin: 0 0 8px 0; font-size: 28px; font-weight: 700; font-family: 'Georgia', serif;">
-                <span style="color: {primary_blue};">Maestro</span> <span style="color: {primary_blue};">Habitat</span>
+                Maestro Habitat
               </h1>
               <p style="color: {gold_accent}; margin: 0; font-size: 14px; font-style: italic; font-family: 'Georgia', serif;">
                 Where potential resolves into mastery!
