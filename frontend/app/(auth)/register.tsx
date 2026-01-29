@@ -10,6 +10,7 @@ import {
   ScrollView,
   ActivityIndicator,
   useWindowDimensions,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, Link } from 'expo-router';
@@ -17,7 +18,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTheme, ThemeColors } from '@/src/context/ThemeContext';
 import { useToast } from '@/src/context/ToastContext';
 import { useTranslation } from '@/src/i18n';
-import LogoHeader from '@/src/components/LogoHeader';
 import { api } from '@/src/services/api';
 
 export default function RegisterScreen() {
@@ -30,7 +30,7 @@ export default function RegisterScreen() {
   const [loading, setLoading] = useState(false);
   const [registrationComplete, setRegistrationComplete] = useState(false);
   
-  const { colors } = useTheme();
+  const { colors, isDark } = useTheme();
   const { showSuccess, showError } = useToast();
   const { t } = useTranslation();
   const router = useRouter();
@@ -40,6 +40,10 @@ export default function RegisterScreen() {
   const isTablet = width >= 768;
   const isDesktop = width >= 1024;
   const formMaxWidth = isDesktop ? 480 : isTablet ? 440 : undefined;
+
+  // Logo sizes
+  const logoWidth = isDesktop ? 400 : isTablet ? 350 : Math.min(width - 32, 260);
+  const logoHeight = isDesktop ? 160 : isTablet ? 140 : 120;
 
   const styles = getStyles(colors);
 
@@ -86,211 +90,247 @@ export default function RegisterScreen() {
   // Show success screen after registration
   if (registrationComplete) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-        <View style={styles.successContainer}>
-          <View style={[styles.successIconContainer, { backgroundColor: colors.primary + '20' }]}>
-            <Ionicons name="mail" size={64} color={colors.primary} />
-          </View>
-          <Text style={[styles.successTitle, { color: colors.text }]}>
-            {t('auth.register.check_email_title')}
-          </Text>
-          <Text style={[styles.successSubtitle, { color: colors.textMuted }]}>
-            {t('auth.register.check_email_message')}
-          </Text>
-          <Text style={[styles.emailHighlight, { color: colors.text }]}>
-            {email}
-          </Text>
-          <View style={[styles.infoBox, { backgroundColor: colors.warning + '20' }]}>
-            <Ionicons name="time-outline" size={20} color={colors.warning} />
-            <Text style={[styles.infoText, { color: colors.warning }]}>
-              {t('auth.register.link_expires_24h')}
+      <View style={styles.container}>
+        {/* Blurred Background Image */}
+        <Image
+          source={require('../../assets/images/login_background.png')}
+          style={styles.backgroundImage}
+          resizeMode="cover"
+          blurRadius={Platform.OS === 'ios' ? 20 : 10}
+        />
+        <View style={[styles.backgroundOverlay, { backgroundColor: colors.background }]} />
+        
+        <SafeAreaView style={styles.safeArea}>
+          <View style={styles.successContainer}>
+            <View style={[styles.successIconContainer, { backgroundColor: colors.primary + '20' }]}>
+              <Ionicons name="mail" size={64} color={colors.primary} />
+            </View>
+            <Text style={[styles.successTitle, { color: colors.text }]}>
+              {t('auth.register.check_email_title')}
             </Text>
-          </View>
-          <TouchableOpacity
-            style={[styles.successButton, { backgroundColor: colors.primary }]}
-            onPress={() => router.replace('/(auth)/login')}
-          >
-            <Text style={styles.successButtonText}>{t('auth.register.go_to_login')}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.resendLink}
-            onPress={async () => {
-              try {
-                await api.post('/auth/resend-verification', { email });
-                showSuccess(t('auth.register.verification_resent'));
-              } catch (e) {
-                showError(t('auth.register.resend_failed'));
-              }
-            }}
-          >
-            <Text style={[styles.resendText, { color: colors.primary }]}>
-              {t('auth.register.resend_email')}
+            <Text style={[styles.successSubtitle, { color: colors.textMuted }]}>
+              {t('auth.register.check_email_message')}
             </Text>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
+            <Text style={[styles.emailHighlight, { color: colors.text }]}>
+              {email}
+            </Text>
+            <View style={[styles.infoBox, { backgroundColor: colors.warning + '20' }]}>
+              <Ionicons name="time-outline" size={20} color={colors.warning} />
+              <Text style={[styles.infoText, { color: colors.warning }]}>
+                {t('auth.register.link_expires_24h')}
+              </Text>
+            </View>
+            <TouchableOpacity
+              style={[styles.successButton, { backgroundColor: colors.primary }]}
+              onPress={() => router.replace('/(auth)/login')}
+            >
+              <Text style={styles.successButtonText}>{t('auth.register.go_to_login')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.resendLink}
+              onPress={async () => {
+                try {
+                  await api.post('/auth/resend-verification', { email });
+                  showSuccess(t('auth.register.verification_resent'));
+                } catch (e) {
+                  showError(t('auth.register.resend_failed'));
+                }
+              }}
+            >
+              <Text style={[styles.resendText, { color: colors.primary }]}>
+                {t('auth.register.resend_email')}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      </View>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboardView}
-      >
-        <ScrollView
-          contentContainerStyle={[
-            styles.scrollContent,
-            isTablet && styles.scrollContentTablet,
-          ]}
-          keyboardShouldPersistTaps="handled"
+    <View style={styles.container}>
+      {/* Blurred Background Image */}
+      <Image
+        source={require('../../assets/images/login_background.png')}
+        style={styles.backgroundImage}
+        resizeMode="cover"
+        blurRadius={Platform.OS === 'ios' ? 20 : 10}
+      />
+      <View style={[styles.backgroundOverlay, { backgroundColor: colors.background }]} />
+      
+      <SafeAreaView style={styles.safeArea}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.keyboardView}
         >
-          <View style={[styles.formWrapper, formMaxWidth ? { maxWidth: formMaxWidth } : undefined]}>
-            <View style={[styles.header, isDesktop && styles.headerDesktop]}>
-              <LogoHeader size="large" showTagline={false} />
-            </View>
+          <ScrollView
+            contentContainerStyle={[
+              styles.scrollContent,
+              isTablet && styles.scrollContentTablet,
+            ]}
+            keyboardShouldPersistTaps="handled"
+          >
+            <View style={[styles.formWrapper, formMaxWidth ? { maxWidth: formMaxWidth } : undefined]}>
+              {/* Logo Header */}
+              <View style={[styles.header, isDesktop && styles.headerDesktop]}>
+                <Image
+                  source={isDark 
+                    ? require('../../assets/images/mh_logo_dark_trimmed.png')
+                    : require('../../assets/images/mh_logo_trimmed.png')
+                  }
+                  style={{ width: logoWidth, height: logoHeight }}
+                  resizeMode="contain"
+                />
+                <Text style={[styles.appTitle, isDesktop && styles.appTitleDesktop]}>
+                  {t('branding.app_name')}
+                </Text>
+                <Text style={[styles.tagline, isDesktop && styles.taglineDesktop]}>
+                  {t('branding.tagline')}
+                </Text>
+              </View>
 
-            <View style={[styles.form, isTablet && styles.formTablet]}>
-              <Text style={[styles.title, isDesktop && styles.titleDesktop]}>
-                {t('pages.register.title')}
-              </Text>
-              <Text style={[styles.subtitle, isDesktop && styles.subtitleDesktop]}>
-                {t('pages.register.subtitle')}
-              </Text>
+              <View style={[styles.form, isTablet && styles.formTablet]}>
+                <Text style={[styles.title, isDesktop && styles.titleDesktop]}>
+                  {t('pages.register.title')}
+                </Text>
+                <Text style={[styles.subtitle, isDesktop && styles.subtitleDesktop]}>
+                  {t('pages.register.subtitle')}
+                </Text>
 
-              {/* Role Selection */}
-              <View style={styles.roleContainer}>
-                <TouchableOpacity
-                  style={[
-                    styles.roleButton,
-                    role === 'consumer' && styles.roleButtonActive,
-                  ]}
-                  onPress={() => setRole('consumer')}
-                >
-                  <Ionicons
-                    name="school-outline"
-                    size={24}
-                    color={role === 'consumer' ? colors.primary : colors.textMuted}
-                  />
-                  <Text
+                {/* Role Selection */}
+                <View style={styles.roleContainer}>
+                  <TouchableOpacity
                     style={[
-                      styles.roleText,
-                      role === 'consumer' && styles.roleTextActive,
+                      styles.roleButton,
+                      role === 'consumer' && styles.roleButtonActive,
                     ]}
+                    onPress={() => setRole('consumer')}
                   >
-                    {t('pages.register.role_parent')}
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[
-                    styles.roleButton,
-                    role === 'tutor' && styles.roleButtonActive,
-                  ]}
-                  onPress={() => setRole('tutor')}
-                >
-                  <Ionicons
-                    name="person-outline"
-                    size={24}
-                    color={role === 'tutor' ? colors.primary : colors.textMuted}
-                  />
-                  <Text
-                    style={[
-                      styles.roleText,
-                      role === 'tutor' && styles.roleTextActive,
-                    ]}
-                  >
-                    {t('pages.register.role_tutor')}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-
-              <View style={[styles.inputContainer, isTablet && styles.inputContainerTablet]}>
-                <Ionicons name="person-outline" size={20} color={colors.textMuted} style={styles.inputIcon} />
-                <TextInput
-                  style={[styles.input, isTablet && styles.inputTablet]}
-                  placeholder={t('forms.labels.full_name')}
-                  placeholderTextColor={colors.textMuted}
-                  value={name}
-                  onChangeText={setName}
-                  autoCapitalize="words"
-                />
-              </View>
-
-              <View style={[styles.inputContainer, isTablet && styles.inputContainerTablet]}>
-                <Ionicons name="mail-outline" size={20} color={colors.textMuted} style={styles.inputIcon} />
-                <TextInput
-                  style={[styles.input, isTablet && styles.inputTablet]}
-                  placeholder={t('forms.labels.email_address')}
-                  placeholderTextColor={colors.textMuted}
-                  value={email}
-                  onChangeText={setEmail}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                />
-              </View>
-
-              <View style={[styles.inputContainer, isTablet && styles.inputContainerTablet]}>
-                <Ionicons name="lock-closed-outline" size={20} color={colors.textMuted} style={styles.inputIcon} />
-                <TextInput
-                  style={[styles.input, isTablet && styles.inputTablet]}
-                  placeholder={t('forms.labels.password')}
-                  placeholderTextColor={colors.textMuted}
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry={!showPassword}
-                />
-                <TouchableOpacity
-                  onPress={() => setShowPassword(!showPassword)}
-                  style={styles.eyeIcon}
-                >
-                  <Ionicons
-                    name={showPassword ? 'eye-off-outline' : 'eye-outline'}
-                    size={20}
-                    color={colors.textMuted}
-                  />
-                </TouchableOpacity>
-              </View>
-
-              <View style={[styles.inputContainer, isTablet && styles.inputContainerTablet]}>
-                <Ionicons name="lock-closed-outline" size={20} color={colors.textMuted} style={styles.inputIcon} />
-                <TextInput
-                  style={[styles.input, isTablet && styles.inputTablet]}
-                  placeholder={t('forms.labels.confirm_password')}
-                  placeholderTextColor={colors.textMuted}
-                  value={confirmPassword}
-                  onChangeText={setConfirmPassword}
-                  secureTextEntry={!showPassword}
-                />
-              </View>
-
-              <TouchableOpacity
-                style={[styles.primaryButton, isTablet && styles.primaryButtonTablet]}
-                onPress={handleRegister}
-                disabled={loading}
-              >
-                {loading ? (
-                  <ActivityIndicator color="#fff" />
-                ) : (
-                  <Text style={[styles.primaryButtonText, isTablet && styles.primaryButtonTextTablet]}>
-                    {t('pages.register.title')}
-                  </Text>
-                )}
-              </TouchableOpacity>
-
-              <View style={styles.footer}>
-                <Text style={styles.footerText}>{t('pages.register.have_account')} </Text>
-                <Link href="/(auth)/login" asChild>
-                  <TouchableOpacity>
-                    <Text style={styles.footerLink}>{t('pages.register.sign_in_link')}</Text>
+                    <Ionicons
+                      name="school-outline"
+                      size={24}
+                      color={role === 'consumer' ? colors.primary : colors.textMuted}
+                    />
+                    <Text
+                      style={[
+                        styles.roleText,
+                        role === 'consumer' && styles.roleTextActive,
+                      ]}
+                    >
+                      {t('pages.register.role_parent')}
+                    </Text>
                   </TouchableOpacity>
-                </Link>
+                  <TouchableOpacity
+                    style={[
+                      styles.roleButton,
+                      role === 'tutor' && styles.roleButtonActive,
+                    ]}
+                    onPress={() => setRole('tutor')}
+                  >
+                    <Ionicons
+                      name="person-outline"
+                      size={24}
+                      color={role === 'tutor' ? colors.primary : colors.textMuted}
+                    />
+                    <Text
+                      style={[
+                        styles.roleText,
+                        role === 'tutor' && styles.roleTextActive,
+                      ]}
+                    >
+                      {t('pages.register.role_tutor')}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+
+                <View style={[styles.inputContainer, isTablet && styles.inputContainerTablet]}>
+                  <Ionicons name="person-outline" size={20} color={colors.textMuted} style={styles.inputIcon} />
+                  <TextInput
+                    style={[styles.input, isTablet && styles.inputTablet]}
+                    placeholder={t('forms.labels.full_name')}
+                    placeholderTextColor={colors.textMuted}
+                    value={name}
+                    onChangeText={setName}
+                    autoCapitalize="words"
+                  />
+                </View>
+
+                <View style={[styles.inputContainer, isTablet && styles.inputContainerTablet]}>
+                  <Ionicons name="mail-outline" size={20} color={colors.textMuted} style={styles.inputIcon} />
+                  <TextInput
+                    style={[styles.input, isTablet && styles.inputTablet]}
+                    placeholder={t('forms.labels.email_address')}
+                    placeholderTextColor={colors.textMuted}
+                    value={email}
+                    onChangeText={setEmail}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                  />
+                </View>
+
+                <View style={[styles.inputContainer, isTablet && styles.inputContainerTablet]}>
+                  <Ionicons name="lock-closed-outline" size={20} color={colors.textMuted} style={styles.inputIcon} />
+                  <TextInput
+                    style={[styles.input, isTablet && styles.inputTablet]}
+                    placeholder={t('forms.labels.password')}
+                    placeholderTextColor={colors.textMuted}
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry={!showPassword}
+                  />
+                  <TouchableOpacity
+                    onPress={() => setShowPassword(!showPassword)}
+                    style={styles.eyeIcon}
+                  >
+                    <Ionicons
+                      name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                      size={20}
+                      color={colors.textMuted}
+                    />
+                  </TouchableOpacity>
+                </View>
+
+                <View style={[styles.inputContainer, isTablet && styles.inputContainerTablet]}>
+                  <Ionicons name="lock-closed-outline" size={20} color={colors.textMuted} style={styles.inputIcon} />
+                  <TextInput
+                    style={[styles.input, isTablet && styles.inputTablet]}
+                    placeholder={t('forms.labels.confirm_password')}
+                    placeholderTextColor={colors.textMuted}
+                    value={confirmPassword}
+                    onChangeText={setConfirmPassword}
+                    secureTextEntry={!showPassword}
+                  />
+                </View>
+
+                <TouchableOpacity
+                  style={[styles.primaryButton, isTablet && styles.primaryButtonTablet]}
+                  onPress={handleRegister}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <ActivityIndicator color="#fff" />
+                  ) : (
+                    <Text style={[styles.primaryButtonText, isTablet && styles.primaryButtonTextTablet]}>
+                      {t('pages.register.title')}
+                    </Text>
+                  )}
+                </TouchableOpacity>
+
+                <View style={styles.footer}>
+                  <Text style={styles.footerText}>{t('pages.register.have_account')} </Text>
+                  <Link href="/(auth)/login" asChild>
+                    <TouchableOpacity>
+                      <Text style={styles.footerLink}>{t('pages.register.sign_in_link')}</Text>
+                    </TouchableOpacity>
+                  </Link>
+                </View>
               </View>
             </View>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </View>
   );
 }
 
@@ -298,6 +338,21 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+  backgroundImage: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    opacity: 0.8,
+  },
+  backgroundOverlay: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    opacity: 0.5,
+  },
+  safeArea: {
+    flex: 1,
   },
   keyboardView: {
     flex: 1,
@@ -317,12 +372,30 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    marginTop: 24,
-    marginBottom: 24,
+    marginTop: 16,
+    marginBottom: 20,
   },
   headerDesktop: {
     marginTop: 0,
     marginBottom: 32,
+  },
+  appTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: colors.primary,
+    marginTop: 8,
+  },
+  appTitleDesktop: {
+    fontSize: 36,
+  },
+  tagline: {
+    fontSize: 14,
+    color: colors.textMuted,
+    marginTop: 4,
+    fontStyle: 'italic',
+  },
+  taglineDesktop: {
+    fontSize: 16,
   },
   form: {
     flex: 1,
@@ -434,45 +507,6 @@ const getStyles = (colors: ThemeColors) => StyleSheet.create({
   },
   primaryButtonTextTablet: {
     fontSize: 18,
-  },
-  divider: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 24,
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    backgroundColor: colors.border,
-  },
-  dividerText: {
-    color: colors.textMuted,
-    paddingHorizontal: 16,
-    fontSize: 14,
-  },
-  googleButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    height: 52,
-    borderWidth: 1,
-    borderColor: colors.border,
-    gap: 12,
-  },
-  googleButtonTablet: {
-    height: 56,
-    borderRadius: 14,
-    backgroundColor: colors.gray100,
-  },
-  googleButtonText: {
-    color: colors.text,
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  googleButtonTextTablet: {
-    fontSize: 17,
   },
   footer: {
     flexDirection: 'row',
