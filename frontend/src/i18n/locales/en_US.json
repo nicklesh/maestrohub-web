@@ -783,6 +783,8 @@
       "delete": "Delete",
       "no_kids": "No children added yet",
       "no_kids_desc": "Add your children to book sessions for them",
+      "no_kids_title": "No children added yet",
+      "no_kids_message": "Add your children to book sessions for them",
       "sessions": "Sessions",
       "upcoming_sessions": "Upcoming Sessions",
       "past_sessions": "Past Sessions",
