@@ -167,19 +167,65 @@
 .tutor-info h3 {
   font-size: 17px;
   font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.tutor-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin-bottom: 8px;
+}
+
+.tutor-name-row h3 {
+  margin-bottom: 0;
+}
+
+.country-flag {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.country-code {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.tutor-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.category-pill {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.more-count {
+  font-size: 11px;
+  font-weight: 500;
 }
 
 .tutor-topics {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+  align-items: center;
 }
 
 .topic-tag {
   font-size: 11px;
   padding: 4px 10px;
   border-radius: 8px;
+  font-weight: 500;
+}
+
+.subject-count {
+  font-size: 11px;
   font-weight: 500;
 }
 
