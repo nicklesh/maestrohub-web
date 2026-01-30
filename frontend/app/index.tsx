@@ -42,6 +42,8 @@ export default function Index() {
           case 'tutor':
             router.replace('/(tutor)/dashboard');
             break;
+          case 'consumer':
+          case 'parent':
           default:
             router.replace('/(consumer)/home');
         }
