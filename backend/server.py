@@ -190,6 +190,22 @@ app = FastAPI(title="Maestro Habitat API", version="1.0.0")
 api_router = APIRouter(prefix="/api")
 security = HTTPBearer(auto_error=False)
 
+# ============== STATIC FILES FOR ASSETS ==============
+# Mount static files to serve assets like logo at /assets/
+from fastapi.staticfiles import StaticFiles
+static_assets_path = Path(__file__).parent.parent / "frontend" / "public" / "assets"
+if static_assets_path.exists():
+    app.mount("/assets", StaticFiles(directory=str(static_assets_path)), name="assets")
+    print(f"✅ Static assets mounted from: {static_assets_path}")
+else:
+    # Try alternative path
+    alt_assets_path = Path(__file__).parent.parent / "frontend" / "assets" / "images"
+    if alt_assets_path.exists():
+        app.mount("/assets", StaticFiles(directory=str(alt_assets_path)), name="assets")
+        print(f"✅ Static assets mounted from: {alt_assets_path}")
+    else:
+        print(f"⚠️ Static assets directory not found at {static_assets_path} or {alt_assets_path}")
+
 # ============== ROOT HEALTH CHECK - MUST BE FIRST ==============
 # This endpoint is required for Kubernetes health probes
 @app.get("/health")
