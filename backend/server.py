@@ -4576,12 +4576,22 @@ async def admin_get_tutors(request: Request, status: Optional[str] = None):
     
     results = []
     for t in tutors:
+        # Try to find user by user_id field first, then by _id (ObjectId)
         user = await db.users.find_one({"user_id": t["user_id"]}, {"_id": 0})
+        if not user:
+            # Fallback: try finding by _id (some users have _id as their identifier)
+            try:
+                user = await db.users.find_one({"_id": ObjectId(t["user_id"])}, {"_id": 0})
+            except:
+                user = None
         market_info = MARKETS_CONFIG.get(t.get("market_id"), MARKETS_CONFIG.get("US_USD"))
+        # Use tutor's name field as fallback if user lookup fails
+        tutor_name = t.get("name") or (user["name"] if user else "Unknown")
+        tutor_email = t.get("email") or (user["email"] if user else "Unknown")
         results.append({
             **t,
-            "user_name": user["name"] if user else "Unknown",
-            "user_email": user["email"] if user else "Unknown",
+            "user_name": tutor_name,
+            "user_email": tutor_email,
             "currency": market_info.get("currency", "USD"),
             "currency_symbol": market_info.get("currency_symbol", "$")
         })
