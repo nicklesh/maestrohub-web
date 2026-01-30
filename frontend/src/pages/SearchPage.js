@@ -84,7 +84,7 @@ const SearchPage = () => {
         to={`/tutor/${tutor.tutor_id || tutor.user_id}`}
         className="tutor-card"
         style={{ backgroundColor: colors.surface, borderColor: colors.border }}
-        data-testid={`tutor-card-${tutor.user_id}`}
+        data-testid={`tutor-card-${tutor.tutor_id || tutor.user_id}`}
       >
         <div className="tutor-card-header">
           <div className="tutor-avatar" style={{ backgroundColor: colors.primary }}>
