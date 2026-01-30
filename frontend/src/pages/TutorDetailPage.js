@@ -31,10 +31,10 @@ const TutorDetailPage = () => {
       setLoading(true);
       const [tutorRes, slotsRes] = await Promise.all([
         api.get(`/tutors/${tutorId}`),
-        api.get(`/tutors/${tutorId}/slots`),
+        api.get(`/tutors/${tutorId}/availability`),
       ]);
       setTutor(tutorRes.data);
-      setSlots(slotsRes.data.slots || []);
+      setSlots(slotsRes.data.slots || slotsRes.data.available_slots || []);
     } catch (err) {
       console.error('Error fetching tutor:', err);
       showError(t('messages.errors.generic'));
