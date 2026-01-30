@@ -135,9 +135,18 @@ function AppRoutes() {
         <Route path="/bookings" element={<ProtectedRoute><BookingsPage /></ProtectedRoute>} />
         <Route path="/kids" element={<ProtectedRoute allowedRoles={['consumer', 'parent']}><KidsPage /></ProtectedRoute>} />
         <Route path="/tutor/:tutorId" element={<ProtectedRoute><TutorDetailPage /></ProtectedRoute>} />
+        <Route path="/billing" element={<ProtectedRoute><BillingPage /></ProtectedRoute>} />
+        <Route path="/referrals" element={<ProtectedRoute><ReferralsPage /></ProtectedRoute>} />
+        <Route path="/reviews" element={<ProtectedRoute><ReviewsPage /></ProtectedRoute>} />
+        <Route path="/faq" element={<ProtectedRoute><FAQPage /></ProtectedRoute>} />
+        <Route path="/contact" element={<ProtectedRoute><ContactPage /></ProtectedRoute>} />
+        <Route path="/notifications-settings" element={<ProtectedRoute><NotificationsSettingsPage /></ProtectedRoute>} />
 
         {/* Tutor routes */}
         <Route path="/tutor/dashboard" element={<ProtectedRoute allowedRoles={['tutor', 'admin']}><TutorDashboardPage /></ProtectedRoute>} />
+        <Route path="/tutor/calendar" element={<ProtectedRoute allowedRoles={['tutor', 'admin']}><TutorCalendarPage /></ProtectedRoute>} />
+        <Route path="/tutor/billing" element={<ProtectedRoute allowedRoles={['tutor', 'admin']}><BillingPage /></ProtectedRoute>} />
+        <Route path="/tutor/reviews" element={<ProtectedRoute allowedRoles={['tutor', 'admin']}><ReviewsPage /></ProtectedRoute>} />
 
         {/* Admin routes */}
         <Route path="/admin" element={<ProtectedRoute allowedRoles={['admin']}><AdminDashboardPage /></ProtectedRoute>} />
