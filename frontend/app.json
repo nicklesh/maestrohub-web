@@ -41,7 +41,8 @@
       "shortName": "Maestro",
       "description": "Find the coach. Master your learning.",
       "backgroundColor": "#ffffff",
-      "themeColor": "#2563EB"
+      "themeColor": "#2563EB",
+      "staticPath": "public"
     },
     "plugins": [
       "expo-router",
