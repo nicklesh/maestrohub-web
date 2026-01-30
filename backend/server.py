@@ -191,18 +191,21 @@ api_router = APIRouter(prefix="/api")
 security = HTTPBearer(auto_error=False)
 
 # ============== STATIC FILES FOR ASSETS ==============
-# Mount static files to serve assets like logo at /assets/
+# Mount static files to serve assets like logo at /api/assets/ (through API router)
+# This ensures assets are accessible via the ingress routing
 from fastapi.staticfiles import StaticFiles
 static_assets_path = Path(__file__).parent.parent / "frontend" / "public" / "assets"
 if static_assets_path.exists():
-    app.mount("/assets", StaticFiles(directory=str(static_assets_path)), name="assets")
-    print(f"✅ Static assets mounted from: {static_assets_path}")
+    # Mount at API level so it's accessible through /api/assets/
+    api_router_assets = APIRouter()
+    app.mount("/api/assets", StaticFiles(directory=str(static_assets_path)), name="api_assets")
+    print(f"✅ Static assets mounted at /api/assets/ from: {static_assets_path}")
 else:
     # Try alternative path
     alt_assets_path = Path(__file__).parent.parent / "frontend" / "assets" / "images"
     if alt_assets_path.exists():
-        app.mount("/assets", StaticFiles(directory=str(alt_assets_path)), name="assets")
-        print(f"✅ Static assets mounted from: {alt_assets_path}")
+        app.mount("/api/assets", StaticFiles(directory=str(alt_assets_path)), name="api_assets")
+        print(f"✅ Static assets mounted at /api/assets/ from: {alt_assets_path}")
     else:
         print(f"⚠️ Static assets directory not found at {static_assets_path} or {alt_assets_path}")
 
