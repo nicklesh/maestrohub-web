@@ -14,22 +14,36 @@
 
 .profile-header .header-content {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 16px;
   max-width: 600px;
   margin: 0 auto;
 }
 
 .profile-header h1 {
-  flex: 1;
   font-size: 20px;
   font-weight: 600;
 }
 
-.edit-btn,
-.save-btn {
-  background: none;
-  padding: 8px;
+.notification-btn {
+  position: relative;
+  padding: 10px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notification-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  font-size: 10px;
+  font-weight: 600;
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -37,7 +51,7 @@
 
 .profile-main {
   flex: 1;
-  padding: 24px;
+  padding: 16px;
 }
 
 .profile-container {
@@ -45,145 +59,336 @@
   margin: 0 auto;
 }
 
-.avatar-section {
-  text-align: center;
-  margin-bottom: 32px;
+/* User Header */
+.user-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  margin-bottom: 8px;
 }
 
-.avatar-wrapper {
-  position: relative;
-  display: inline-block;
-  margin-bottom: 16px;
-}
-
-.avatar {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
+.user-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 40px;
+  font-size: 24px;
   font-weight: 600;
   overflow: hidden;
 }
 
-.avatar img {
+.user-avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.camera-btn {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 3px solid var(--surface);
-}
-
-.avatar-section h2 {
-  font-size: 24px;
+.user-info h2 {
+  font-size: 18px;
   font-weight: 600;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
-.avatar-section > p {
-  font-size: 14px;
+.user-info p {
+  font-size: 13px;
+}
+
+/* Section */
+.section {
+  border-radius: 12px;
+  padding: 16px;
   margin-bottom: 12px;
-}
-
-.role-badge {
-  display: inline-block;
-  padding: 6px 16px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 500;
-  text-transform: capitalize;
-}
-
-.profile-card {
-  border-radius: 16px;
   border: 1px solid;
-  padding: 24px;
-  margin-bottom: 16px;
 }
 
-.profile-card h3 {
-  font-size: 16px;
+.section-title {
+  font-size: 14px;
   font-weight: 600;
-  margin-bottom: 20px;
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-group:last-child {
-  margin-bottom: 0;
-}
-
-.form-group label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  font-weight: 500;
   margin-bottom: 8px;
 }
 
-.form-group input,
-.form-group textarea {
-  width: 100%;
-  padding: 12px 16px;
-  border: 1px solid;
-  border-radius: 12px;
-  font-size: 15px;
-}
-
-.form-group p {
-  font-size: 15px;
-  padding: 4px 0;
-}
-
-.setting-item {
-  width: 100%;
+.section-header-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 0;
-  border-bottom: 1px solid var(--border);
+}
+
+.reminders-section {
+  width: 100%;
+  text-align: left;
+}
+
+.reminder-badge {
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: white;
+}
+
+.reminder-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  font-size: 13px;
+}
+
+/* Menu Item */
+.menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  width: 100%;
   background: none;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
 }
 
-.setting-item:last-child {
-  border-bottom: none;
-}
-
-.setting-item span {
+.menu-item-left {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.menu-item-left span {
   font-size: 15px;
 }
 
-@media (max-width: 640px) {
+.menu-item-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.menu-badge {
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: white;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+  width: 50px;
+  height: 28px;
+  border-radius: 14px;
+  position: relative;
+  transition: background-color 0.3s;
+}
+
+.toggle-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+
+/* Logout Button */
+.logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  margin-top: 8px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.version-text {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 12px;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.modal-sheet {
+  width: 100%;
+  max-width: 500px;
+  max-height: 80vh;
+  border-radius: 24px 24px 0 0;
+  padding: 20px;
+  padding-bottom: 34px;
+  position: relative;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.sheet-handle {
+  width: 40px;
+  height: 4px;
+  border-radius: 2px;
+  margin: 0 auto 16px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.modal-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.modal-header button {
+  background: none;
+  padding: 4px;
+}
+
+.modal-content {
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+.empty-text {
+  text-align: center;
+  padding: 32px;
+}
+
+.notif-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.notif-item.reminder {
+  border-left: 3px solid;
+}
+
+.notif-content {
+  flex: 1;
+}
+
+.notif-content h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.notif-content p {
+  font-size: 13px;
+}
+
+/* Contact Sheet */
+.close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  padding: 4px;
+  z-index: 10;
+}
+
+.sheet-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.sheet-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.success-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  text-align: center;
+}
+
+.success-container h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 16px;
+}
+
+.success-container p {
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.contact-form .form-group {
+  margin-bottom: 12px;
+}
+
+.contact-form label {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid;
+  border-radius: 8px;
+  font-size: 15px;
+  resize: none;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: white;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 480px) {
   .profile-header {
     padding: 12px 16px;
   }
-
+  
   .profile-main {
-    padding: 16px;
-  }
-
-  .avatar {
-    width: 80px;
-    height: 80px;
-    font-size: 32px;
+    padding: 12px;
   }
 }
