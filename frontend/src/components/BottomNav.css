@@ -1,0 +1,92 @@
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  border-top: 1px solid;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.bottom-nav-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 8px 0;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  min-width: 64px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border-radius: 12px;
+}
+
+.nav-item:hover {
+  background-color: var(--gray-100);
+}
+
+.nav-item.active {
+  background-color: transparent;
+}
+
+.nav-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+  transition: color 0.2s ease;
+}
+
+.nav-label {
+  font-size: 11px;
+  text-align: center;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+}
+
+/* Tablet and Desktop - Hide bottom nav on larger screens */
+@media (min-width: 769px) {
+  .bottom-nav {
+    display: none;
+  }
+}
+
+/* Adjust spacing on smaller screens */
+@media (max-width: 400px) {
+  .nav-item {
+    padding: 8px 8px;
+    min-width: 56px;
+  }
+  
+  .nav-label {
+    font-size: 10px;
+  }
+}
+
+/* Admin nav with more items */
+.bottom-nav-container:has(.nav-item:nth-child(6)) {
+  padding: 6px 0;
+}
+
+.bottom-nav-container:has(.nav-item:nth-child(6)) .nav-item {
+  min-width: 52px;
+  padding: 6px 8px;
+}
+
+.bottom-nav-container:has(.nav-item:nth-child(6)) .nav-label {
+  font-size: 10px;
+}
+
+.bottom-nav-container:has(.nav-item:nth-child(6)) .nav-icon svg {
+  width: 20px;
+  height: 20px;
+}
