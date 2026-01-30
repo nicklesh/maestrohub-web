@@ -120,43 +120,54 @@ const ThemeLoader = ({ children }) => {
 };
 
 function AppRoutes() {
+  const { user } = useAuth();
+  const location = useLocation();
+  
+  // Hide bottom nav on auth pages
+  const hideBottomNav = ['/login', '/register', '/forgot-password', '/reset-password', '/verify-email'].includes(location.pathname);
+  
   return (
     <ThemeLoader>
-      <Routes>
-        {/* Public routes */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route path="/login" element={<AuthRoute><LoginPage /></AuthRoute>} />
-        <Route path="/register" element={<AuthRoute><RegisterPage /></AuthRoute>} />
-        <Route path="/forgot-password" element={<AuthRoute><ForgotPasswordPage /></AuthRoute>} />
-        <Route path="/reset-password" element={<ResetPasswordPage />} />
-        <Route path="/verify-email" element={<VerifyEmailPage />} />
+      <div className="app-container">
+        <Routes>
+          {/* Public routes */}
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/login" element={<AuthRoute><LoginPage /></AuthRoute>} />
+          <Route path="/register" element={<AuthRoute><RegisterPage /></AuthRoute>} />
+          <Route path="/forgot-password" element={<AuthRoute><ForgotPasswordPage /></AuthRoute>} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
 
-        {/* Consumer routes */}
-        <Route path="/home" element={<ProtectedRoute allowedRoles={['consumer', 'parent']}><HomePage /></ProtectedRoute>} />
-        <Route path="/search" element={<ProtectedRoute allowedRoles={['consumer', 'parent']}><SearchPage /></ProtectedRoute>} />
-        <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
-        <Route path="/bookings" element={<ProtectedRoute><BookingsPage /></ProtectedRoute>} />
-        <Route path="/kids" element={<ProtectedRoute allowedRoles={['consumer', 'parent']}><KidsPage /></ProtectedRoute>} />
-        <Route path="/tutor/:tutorId" element={<ProtectedRoute><TutorDetailPage /></ProtectedRoute>} />
-        <Route path="/billing" element={<ProtectedRoute><BillingPage /></ProtectedRoute>} />
-        <Route path="/referrals" element={<ProtectedRoute><ReferralsPage /></ProtectedRoute>} />
-        <Route path="/reviews" element={<ProtectedRoute><ReviewsPage /></ProtectedRoute>} />
-        <Route path="/faq" element={<ProtectedRoute><FAQPage /></ProtectedRoute>} />
-        <Route path="/contact" element={<ProtectedRoute><ContactPage /></ProtectedRoute>} />
-        <Route path="/notifications-settings" element={<ProtectedRoute><NotificationsSettingsPage /></ProtectedRoute>} />
+          {/* Consumer routes */}
+          <Route path="/home" element={<ProtectedRoute allowedRoles={['consumer', 'parent']}><HomePage /></ProtectedRoute>} />
+          <Route path="/search" element={<ProtectedRoute allowedRoles={['consumer', 'parent']}><SearchPage /></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+          <Route path="/bookings" element={<ProtectedRoute><BookingsPage /></ProtectedRoute>} />
+          <Route path="/kids" element={<ProtectedRoute allowedRoles={['consumer', 'parent']}><KidsPage /></ProtectedRoute>} />
+          <Route path="/tutor/:tutorId" element={<ProtectedRoute><TutorDetailPage /></ProtectedRoute>} />
+          <Route path="/billing" element={<ProtectedRoute><BillingPage /></ProtectedRoute>} />
+          <Route path="/referrals" element={<ProtectedRoute><ReferralsPage /></ProtectedRoute>} />
+          <Route path="/reviews" element={<ProtectedRoute><ReviewsPage /></ProtectedRoute>} />
+          <Route path="/faq" element={<ProtectedRoute><FAQPage /></ProtectedRoute>} />
+          <Route path="/contact" element={<ProtectedRoute><ContactPage /></ProtectedRoute>} />
+          <Route path="/notifications-settings" element={<ProtectedRoute><NotificationsSettingsPage /></ProtectedRoute>} />
 
-        {/* Tutor routes */}
-        <Route path="/tutor/dashboard" element={<ProtectedRoute allowedRoles={['tutor', 'admin']}><TutorDashboardPage /></ProtectedRoute>} />
-        <Route path="/tutor/calendar" element={<ProtectedRoute allowedRoles={['tutor', 'admin']}><TutorCalendarPage /></ProtectedRoute>} />
-        <Route path="/tutor/billing" element={<ProtectedRoute allowedRoles={['tutor', 'admin']}><BillingPage /></ProtectedRoute>} />
-        <Route path="/tutor/reviews" element={<ProtectedRoute allowedRoles={['tutor', 'admin']}><ReviewsPage /></ProtectedRoute>} />
+          {/* Tutor routes */}
+          <Route path="/tutor/dashboard" element={<ProtectedRoute allowedRoles={['tutor', 'admin']}><TutorDashboardPage /></ProtectedRoute>} />
+          <Route path="/tutor/calendar" element={<ProtectedRoute allowedRoles={['tutor', 'admin']}><TutorCalendarPage /></ProtectedRoute>} />
+          <Route path="/tutor/billing" element={<ProtectedRoute allowedRoles={['tutor', 'admin']}><BillingPage /></ProtectedRoute>} />
+          <Route path="/tutor/reviews" element={<ProtectedRoute allowedRoles={['tutor', 'admin']}><ReviewsPage /></ProtectedRoute>} />
 
-        {/* Admin routes */}
-        <Route path="/admin" element={<ProtectedRoute allowedRoles={['admin']}><AdminDashboardPage /></ProtectedRoute>} />
+          {/* Admin routes */}
+          <Route path="/admin" element={<ProtectedRoute allowedRoles={['admin']}><AdminDashboardPage /></ProtectedRoute>} />
 
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
-      </Routes>
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+        
+        {/* Bottom Navigation - shown on all authenticated pages */}
+        {user && !hideBottomNav && <BottomNav />}
+      </div>
     </ThemeLoader>
   );
 }
