@@ -204,7 +204,7 @@ const ProfilePage = () => {
               </div>
               {reminders.slice(0, 2).map((reminder, idx) => (
                 <div key={idx} className="reminder-item">
-                  <Alarm size={18} color={reminder.priority === 'high' ? colors.error : colors.warning} />
+                  <AlarmClock size={18} color={reminder.priority === 'high' ? colors.error : colors.warning} />
                   <span style={{ color: colors.text }}>{reminder.message}</span>
                 </div>
               ))}
@@ -218,7 +218,7 @@ const ProfilePage = () => {
             <MenuItem icon={User} label={t('pages.profile.edit_profile')} to="/edit-profile" />
             <MenuItem icon={Bell} label={t('pages.profile.notifications')} badge={unreadCount} to="/notifications-settings" />
             <MenuItem icon={Diamond} label={t('subscription.title')} iconColor={colors.warning} to="/subscription" />
-            <MenuItem icon={Alarm} label={t('navigation.reminders')} badge={reminders.length} badgeColor={colors.warning} to="/reminders" />
+            <MenuItem icon={AlarmClock} label={t('navigation.reminders')} badge={reminders.length} badgeColor={colors.warning} to="/reminders" />
             <MenuItem icon={Star} label={t('navigation.reviews')} to="/reviews" />
             <MenuItem icon={CreditCard} label={t('navigation.billing')} to="/billing" />
             <MenuItem icon={BarChart3} label={t('navigation.reports')} to="/reports" />
@@ -325,7 +325,7 @@ const ProfilePage = () => {
                     className="notif-item reminder"
                     style={{ borderLeftColor: reminder.priority === 'high' ? colors.error : colors.warning }}
                   >
-                    <Alarm size={24} color={reminder.priority === 'high' ? colors.error : colors.warning} />
+                    <AlarmClock size={24} color={reminder.priority === 'high' ? colors.error : colors.warning} />
                     <div className="notif-content">
                       <h4 style={{ color: colors.text }}>{reminder.title}</h4>
                       <p style={{ color: colors.textMuted }}>{reminder.message}</p>
