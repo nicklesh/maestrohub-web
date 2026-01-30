@@ -26,6 +26,7 @@
   --gray-700: #334155;
   --gray-800: #1E293B;
   --gray-900: #0F172A;
+  --bottom-nav-height: 72px;
 }
 
 [data-theme="dark"] {
