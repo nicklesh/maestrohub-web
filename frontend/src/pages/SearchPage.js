@@ -1,12 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, Filter, MapPin, Star, ArrowLeft, ChevronRight, Clock, Users, Loader, X } from 'lucide-react';
+import { Search, Filter, MapPin, Star, ArrowLeft, ChevronRight, Clock, Users, Loader, X, DollarSign, BookOpen } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useToast } from '../contexts/ToastContext';
 import { useTranslation } from '../i18n';
 import api from '../services/api';
 import './SearchPage.css';
+
+// Country flag emoji helper
+const getCountryFlag = (countryCode) => {
+  if (!countryCode) return '';
+  const codePoints = countryCode
+    .toUpperCase()
+    .split('')
+    .map(char => 127397 + char.charCodeAt());
+  return String.fromCodePoint(...codePoints);
+};
 
 const SearchPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -43,7 +53,6 @@ const SearchPage = () => {
       setTutors(response.data.tutors || []);
     } catch (err) {
       console.error('Error fetching tutors:', err);
-      // showError(t('messages.errors.generic'));
     } finally {
       setLoading(false);
     }
@@ -64,75 +73,138 @@ const SearchPage = () => {
     fetchTutors(searchQuery, {});
   };
 
-  const renderTutorCard = (tutor) => (
-    <Link
-      key={tutor.user_id}
-      to={`/tutor/${tutor.user_id}`}
-      className="tutor-card"
-      style={{ backgroundColor: colors.surface, borderColor: colors.border }}
-      data-testid={`tutor-card-${tutor.user_id}`}
-    >
-      <div className="tutor-card-header">
-        <div className="tutor-avatar" style={{ backgroundColor: colors.primary }}>
-          {tutor.profile_picture ? (
-            <img src={tutor.profile_picture} alt={tutor.name} />
-          ) : (
-            <span style={{ color: colors.textInverse }}>{tutor.name?.charAt(0)?.toUpperCase()}</span>
-          )}
-        </div>
-        <div className="tutor-info">
-          <h3 style={{ color: colors.text }}>{tutor.name}</h3>
-          {tutor.topics?.length > 0 && (
-            <div className="tutor-topics">
-              {tutor.topics.slice(0, 3).map((topic, idx) => (
-                <span 
-                  key={idx} 
-                  className="topic-tag" 
-                  style={{ backgroundColor: colors.primaryLight, color: colors.primary }}
-                >
-                  {topic}
+  const renderTutorCard = (tutor) => {
+    const categoryCount = tutor.categories?.length || 0;
+    const subjectCount = tutor.topics?.length || tutor.subjects?.length || 0;
+    const countryFlag = getCountryFlag(tutor.country_code);
+    
+    return (
+      <Link
+        key={tutor.user_id}
+        to={`/tutor/${tutor.user_id}`}
+        className="tutor-card"
+        style={{ backgroundColor: colors.surface, borderColor: colors.border }}
+        data-testid={`tutor-card-${tutor.user_id}`}
+      >
+        <div className="tutor-card-header">
+          <div className="tutor-avatar" style={{ backgroundColor: colors.primary }}>
+            {tutor.profile_picture ? (
+              <img src={tutor.profile_picture} alt={tutor.name} />
+            ) : (
+              <span style={{ color: colors.textInverse }}>{tutor.name?.charAt(0)?.toUpperCase()}</span>
+            )}
+          </div>
+          <div className="tutor-info">
+            <div className="tutor-name-row">
+              <h3 style={{ color: colors.text }}>{tutor.name}</h3>
+              {countryFlag && (
+                <span className="country-flag" title={tutor.country_code}>
+                  {countryFlag}
                 </span>
-              ))}
+              )}
+              {tutor.country_code && (
+                <span className="country-code" style={{ color: colors.textMuted }}>
+                  {tutor.country_code}
+                </span>
+              )}
+            </div>
+            
+            {/* Categories */}
+            {tutor.categories?.length > 0 && (
+              <div className="tutor-categories">
+                {tutor.categories.slice(0, 2).map((cat, idx) => (
+                  <span 
+                    key={idx} 
+                    className="category-pill" 
+                    style={{ backgroundColor: colors.primaryLight, color: colors.primary }}
+                  >
+                    {cat}
+                  </span>
+                ))}
+                {tutor.categories.length > 2 && (
+                  <span className="more-count" style={{ color: colors.textMuted }}>
+                    +{tutor.categories.length - 2}
+                  </span>
+                )}
+              </div>
+            )}
+            
+            {/* Topics/Subjects */}
+            {(tutor.topics?.length > 0 || tutor.subjects?.length > 0) && (
+              <div className="tutor-topics">
+                {(tutor.topics || tutor.subjects).slice(0, 3).map((topic, idx) => (
+                  <span 
+                    key={idx} 
+                    className="topic-tag" 
+                    style={{ backgroundColor: colors.gray100, color: colors.text }}
+                  >
+                    {topic}
+                  </span>
+                ))}
+                {subjectCount > 3 && (
+                  <span className="subject-count" style={{ color: colors.primary }}>
+                    +{subjectCount - 3} {t('pages.search.more_subjects')}
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+          
+          {tutor.rating && (
+            <div className="tutor-rating" style={{ backgroundColor: colors.warning + '20' }}>
+              <Star size={14} fill={colors.warning} color={colors.warning} />
+              <span style={{ color: colors.warning }}>{tutor.rating.toFixed(1)}</span>
             </div>
           )}
         </div>
-        {tutor.rating && (
-          <div className="tutor-rating" style={{ backgroundColor: colors.warning + '20' }}>
-            <Star size={14} fill={colors.warning} color={colors.warning} />
-            <span style={{ color: colors.warning }}>{tutor.rating.toFixed(1)}</span>
-          </div>
-        )}
-      </div>
 
-      {tutor.bio && (
-        <p className="tutor-bio" style={{ color: colors.textMuted }}>
-          {tutor.bio.length > 100 ? tutor.bio.substring(0, 100) + '...' : tutor.bio}
-        </p>
-      )}
+        {tutor.bio && (
+          <p className="tutor-bio" style={{ color: colors.textMuted }}>
+            {tutor.bio.length > 100 ? tutor.bio.substring(0, 100) + '...' : tutor.bio}
+          </p>
+        )}
 
-      <div className="tutor-meta">
-        {tutor.location && (
-          <span style={{ color: colors.textMuted }}>
-            <MapPin size={14} /> {tutor.location}
-          </span>
-        )}
-        {tutor.session_rate && (
-          <span style={{ color: colors.success }}>
-            ${tutor.session_rate}/hr
-          </span>
-        )}
-        {tutor.session_count > 0 && (
-          <span style={{ color: colors.textMuted }}>
-            <Users size={14} /> {tutor.session_count} sessions
-          </span>
-        )}
-      </div>
+        <div className="tutor-meta">
+          {tutor.location && (
+            <span className="meta-item" style={{ color: colors.textMuted }}>
+              <MapPin size={14} /> {tutor.location}
+            </span>
+          )}
+          
+          {/* Price per hour with translated price in parenthesis */}
+          {(tutor.session_rate || tutor.hourly_rate) && (
+            <span className="meta-item price" style={{ color: colors.success }}>
+              <DollarSign size={14} />
+              ${tutor.session_rate || tutor.hourly_rate}/{t('pages.search.per_hour')}
+              {tutor.local_rate && tutor.local_currency && (
+                <span className="local-price" style={{ color: colors.textMuted }}>
+                  ({tutor.local_currency} {tutor.local_rate})
+                </span>
+              )}
+            </span>
+          )}
+          
+          {/* Session count */}
+          {(tutor.session_count > 0 || tutor.total_sessions > 0) && (
+            <span className="meta-item" style={{ color: colors.textMuted }}>
+              <Users size={14} /> {tutor.session_count || tutor.total_sessions} {t('pages.search.sessions')}
+            </span>
+          )}
+          
+          {/* Subject count */}
+          {subjectCount > 0 && (
+            <span className="meta-item" style={{ color: colors.textMuted }}>
+              <BookOpen size={14} /> {subjectCount} {t('pages.search.subjects')}
+            </span>
+          )}
+        </div>
 
-      <div className="tutor-card-arrow" style={{ color: colors.primary }}>
-        <ChevronRight size={20} />
-      </div>
-    </Link>
-  );
+        <div className="tutor-card-arrow" style={{ color: colors.primary }}>
+          <ChevronRight size={20} />
+        </div>
+      </Link>
+    );
+  };
 
   return (
     <div className="search-page" style={{ backgroundColor: colors.background }}>
@@ -165,7 +237,7 @@ const SearchPage = () => {
             <Search size={20} color={colors.textMuted} />
             <input
               type="text"
-              placeholder={t('pages.search.placeholder')}
+              placeholder={t('pages.search.search_placeholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               style={{ color: colors.text }}
@@ -196,7 +268,7 @@ const SearchPage = () => {
         ) : (
           <div className="tutors-list">
             <p className="results-count" style={{ color: colors.textMuted }}>
-              {tutors.length} {tutors.length === 1 ? 'coach' : 'coaches'} found
+              {tutors.length} {tutors.length === 1 ? t('pages.search.coach_found') : t('pages.search.coaches_found')}
             </p>
             {tutors.map(renderTutorCard)}
           </div>
@@ -223,7 +295,7 @@ const SearchPage = () => {
                 <label style={{ color: colors.text }}>{t('pages.search.filters.topic')}</label>
                 <input
                   type="text"
-                  placeholder="e.g., Piano, Tennis, Math"
+                  placeholder={t('pages.search.filters.topic_placeholder')}
                   value={filters.topic}
                   onChange={(e) => setFilters({ ...filters, topic: e.target.value })}
                   style={{ backgroundColor: colors.gray100, color: colors.text, borderColor: colors.border }}
