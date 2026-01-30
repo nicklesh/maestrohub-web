@@ -14,9 +14,11 @@ export default function ConsumerLayout() {
   const { user, loading } = useAuth();
   const router = useRouter();
 
-  // Role guard - redirect if not a consumer
+  // Role guard - redirect if not a consumer (accepts both 'consumer' and 'parent' roles)
+  const isConsumerRole = user?.role === 'consumer' || user?.role === 'parent';
+  
   useEffect(() => {
-    if (!loading && user && user.role !== 'consumer') {
+    if (!loading && user && !isConsumerRole) {
       // Redirect to correct dashboard based on role
       if (user.role === 'admin') {
         router.replace('/(admin)/dashboard');
@@ -24,7 +26,7 @@ export default function ConsumerLayout() {
         router.replace('/(tutor)/dashboard');
       }
     }
-  }, [user, loading]);
+  }, [user, loading, isConsumerRole]);
 
   return (
     <Tabs
