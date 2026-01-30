@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Home, Search, Calendar, User, LayoutDashboard, Mail, Users, Globe, BarChart3, Settings } from 'lucide-react';
+import { Home, Search, Calendar, User, LayoutDashboard, Mail, Users, Globe, BarChart3, Settings, Baby } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useTranslation } from '../i18n';
@@ -11,6 +11,7 @@ const CONSUMER_NAV = [
   { id: 'home', path: '/home', icon: Home, labelKey: 'navigation.home' },
   { id: 'search', path: '/search', icon: Search, labelKey: 'navigation.search' },
   { id: 'bookings', path: '/bookings', icon: Calendar, labelKey: 'navigation.bookings' },
+  { id: 'kids', path: '/kids', icon: Baby, labelKey: 'navigation.my_kids' },
   { id: 'profile', path: '/profile', icon: User, labelKey: 'navigation.account' },
 ];
 
