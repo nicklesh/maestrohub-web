@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, User, Mail, Bell, CreditCard, Star, Gift, Users, 
   HelpCircle, MessageCircle, Globe, LogOut, ChevronRight, Sun, Moon, 
-  Settings, BarChart3, FileText, Alarm, School, UserPlus, Loader, X,
+  Settings, BarChart3, FileText, AlarmClock, School, UserPlus, Loader, X,
   CheckCircle, Diamond
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
