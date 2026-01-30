@@ -985,7 +985,13 @@
       "off": "OFF",
       "total": "Total",
       "would_recommend": "{{percent}}% would recommend",
-      "coach_response": "Coach's Response:"
+      "coach_response": "Coach's Response:",
+      "not_found": "Coach not found",
+      "back_to_search": "Back to Search",
+      "select_slot": "Please select a time slot",
+      "specialties": "Specialties",
+      "session_rate": "Session Rate",
+      "booking_success": "Session booked successfully!"
     },
     "book_session": {
       "title": "Book Session",
