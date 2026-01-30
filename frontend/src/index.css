@@ -74,6 +74,50 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* App container for bottom nav spacing */
+.app-container {
+  min-height: 100vh;
+}
+
+/* Add bottom padding to all page containers when bottom nav is present */
+.home-page,
+.search-page,
+.profile-page,
+.bookings-page,
+.kids-page,
+.tutor-detail-page,
+.billing-page,
+.referrals-page,
+.reviews-page,
+.faq-page,
+.contact-page,
+.notifications-settings-page,
+.tutor-dashboard,
+.admin-dashboard,
+.calendar-page {
+  padding-bottom: calc(var(--bottom-nav-height) + 16px);
+}
+
+@media (min-width: 769px) {
+  .home-page,
+  .search-page,
+  .profile-page,
+  .bookings-page,
+  .kids-page,
+  .tutor-detail-page,
+  .billing-page,
+  .referrals-page,
+  .reviews-page,
+  .faq-page,
+  .contact-page,
+  .notifications-settings-page,
+  .tutor-dashboard,
+  .admin-dashboard,
+  .calendar-page {
+    padding-bottom: 24px;
+  }
+}
+
 a {
   text-decoration: none;
   color: inherit;
