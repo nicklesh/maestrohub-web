@@ -1,0 +1,208 @@
+.referrals-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.referrals-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid;
+  padding: 16px 24px;
+}
+
+.referrals-header .header-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.referrals-header h1 {
+  flex: 1;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.referrals-main {
+  flex: 1;
+  padding: 24px;
+}
+
+.referrals-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.loading-state {
+  display: flex;
+  justify-content: center;
+  padding: 64px;
+}
+
+.reward-card {
+  text-align: center;
+  padding: 32px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+
+.reward-card h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 16px 0 8px;
+}
+
+.reward-card p {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.section {
+  border-radius: 16px;
+  border: 1px solid;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.section h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.code-display {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.code {
+  flex: 1;
+  padding: 16px 20px;
+  border-radius: 12px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-align: center;
+}
+
+.code-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.code-actions button {
+  padding: 12px;
+  border-radius: 10px;
+  background: none;
+}
+
+.apply-form {
+  display: flex;
+  gap: 12px;
+}
+
+.apply-form input {
+  flex: 1;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid;
+  font-size: 16px;
+  letter-spacing: 1px;
+}
+
+.apply-form button {
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  color: white;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  border-radius: 14px;
+  border: 1px solid;
+  gap: 8px;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.stat-label {
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.referral-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.referral-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid;
+}
+
+.referral-item:last-child {
+  border-bottom: none;
+}
+
+.referral-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.referral-info {
+  flex: 1;
+}
+
+.referral-info h4 {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.referral-info p {
+  font-size: 13px;
+}
+
+.referral-status {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .apply-form {
+    flex-direction: column;
+  }
+}
