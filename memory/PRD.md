@@ -41,6 +41,7 @@ Build a webapp from GitHub repo [https://github.com/nicklesh/maestrohub-web.git]
 ├── frontend/          # Pure React webapp (converted)
 │   ├── src/
 │   │   ├── App.js          # Main router (40+ routes)
+│   │   ├── components/     # Shared components (BottomNav)
 │   │   ├── contexts/       # Auth, Theme, Toast, i18n
 │   │   ├── pages/          # 18 page components
 │   │   ├── services/       # API service
@@ -49,6 +50,19 @@ Build a webapp from GitHub repo [https://github.com/nicklesh/maestrohub-web.git]
 └── memory/
     └── PRD.md
 ```
+
+---
+
+## Components
+
+### Bottom Navigation (Mobile)
+Role-specific navigation matching mobile app design:
+- **Consumer/Parent**: Home, Search, Bookings, Account
+- **Tutor**: Dashboard, Calendar, Students, Settings  
+- **Admin**: Dashboard, Inbox, Coaches, Markets, Reports, Settings
+
+Hidden on: Login, Register, Forgot Password, Reset Password, Verify Email
+Hidden on: Desktop/Tablet (min-width: 769px)
 
 ---
 
