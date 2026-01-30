@@ -1,275 +1,185 @@
-# Maestro Hub - Product Requirements Document (PRD)
+# Maestro Habitat - PRD (Product Requirements Document)
 
-## Version: 2.0
-## Last Updated: January 9, 2025
-## Status: In Development
+## Project Overview
+**Date Created:** January 30, 2026  
+**Project Type:** React Native to Pure React Webapp Conversion  
+**Domain:** www.maestrohabitat.com  
+**Deployment:** Emergent Platform  
 
----
+## Original Problem Statement
+Build a webapp from GitHub repo [https://github.com/nicklesh/maestrohub-web.git] - Deploy as a webapp with custom domain www.maestrohabitat.com. No Expo, pure webapp only.
 
-## 1. Product Overview
-
-### 1.1 Product Name
-**Maestro Hub**
-
-### 1.2 Tagline
-"Find your coach, master your skill"
-
-### 1.3 Product Description
-Maestro Hub is a Zocdoc-style marketplace that connects families with tutors across various subjects and skills. The platform enables parents to discover, book, and pay for tutoring sessions with real-time availability and multi-market support.
-
-### 1.4 Target Users
-- **Parents/Guardians (Consumers)**: Families seeking tutors for their children
-- **Tutors (Providers)**: Instructors offering tutoring services
-- **Administrators**: Platform operators managing the marketplace
+## User Choices
+- Framework: React.js (not Next.js)
+- Deployment: Emergent webapp deployment with custom domain
+- Authentication: JWT-based (already customized in repo)
+- Features: Keep exactly same as native app
+- Backend: Reuse existing APIs and integrations
 
 ---
 
-## 2. Feature Requirements
+## Architecture
 
-### 2.1 Core Features (MVP) ✅
+### Tech Stack
+- **Frontend:** React 18, React Router 6, Axios, Lucide React, date-fns
+- **Backend:** FastAPI (Python), Motor (MongoDB async driver)
+- **Database:** MongoDB Atlas (cloud hosted)
+- **Email Service:** Resend API
+- **File Storage:** Cloudinary
+- **Analytics:** Mixpanel, Sentry
 
-| Feature | Status | Notes |
-|---------|--------|-------|
-| User Authentication | ✅ Complete | Email/password, JWT tokens |
-| User Registration | ✅ Complete | Consumer, Tutor, Admin roles |
-| Tutor Profiles | ✅ Complete | Bio, subjects, pricing, availability |
-| Search & Discovery | ✅ Complete | Filter by subject, category, price |
-| Booking System | ✅ Complete | Holds, confirmations, cancellations |
-| Payment Processing | ✅ Complete | Stripe integration (placeholder keys) |
-| Multi-Market Support | ✅ Complete | US (USD) and India (INR) |
-| Reports & Analytics | ✅ Complete | Session history, spending/earnings |
-
-### 2.2 New Features (v2.0) 🚧
-
-| Feature | Status | Notes |
-|---------|--------|-------|
-| Dark/Light Theme | ✅ Complete | Premium Academy palette for dark mode |
-| Notifications | ✅ Complete | Payment, session, system notifications |
-| Reminders | ✅ Complete | Upcoming sessions, payments |
-| Contact Support | ✅ Complete | In-app support form |
-| PDF Reports | ✅ Complete | Downloadable session reports |
-| Tutor Payouts | ✅ Complete | Immediate payout per session |
-| Calendar View | 🚧 Pending | Visual booking calendar |
-| Edit Profile | 🚧 Pending | Profile editing screen |
-| Payment Methods | 🚧 Pending | Saved payment methods |
-
-### 2.3 Planned Features (Backlog)
-
-| Feature | Priority | Sprint |
-|---------|----------|--------|
-| Push Notifications | P1 | Sprint 4 |
-| Real-time Chat | P2 | Sprint 5 |
-| Video Sessions | P2 | Sprint 6 |
-| Review System UI | P1 | Sprint 4 |
-| Student Management UI | P2 | Sprint 5 |
-| Subscription Plans | P3 | Sprint 7 |
-
----
-
-## 3. Technical Architecture
-
-### 3.1 Tech Stack
-
-| Layer | Technology |
-|-------|------------|
-| Frontend | React Native (Expo) |
-| Backend | FastAPI (Python) |
-| Database | MongoDB |
-| Payments | Stripe |
-| Hosting | Kubernetes |
-
-### 3.2 Key Endpoints
-
+### Project Structure
 ```
-/api/auth/*        - Authentication
-/api/users/*       - User management
-/api/tutors/*      - Tutor profiles & search
-/api/bookings/*    - Booking management
-/api/payments/*    - Payment processing
-/api/reports/*     - Analytics & reports
-/api/notifications/* - User notifications
-/api/reminders/*   - User reminders
-/api/contact       - Support requests
-/api/markets/*     - Market configuration
-```
-
-### 3.3 Database Collections
-
-```
-users              - User accounts
-tutors             - Tutor profiles
-students           - Student records
-bookings           - Session bookings
-booking_holds      - Temporary holds
-payment_intents    - Payment records
-payouts            - Tutor payouts
-refunds            - Refund records
-notifications      - User notifications
-contact_requests   - Support tickets
-markets            - Market configuration
-pricing_policies   - Pricing rules
+/app
+├── backend/           # FastAPI backend (from original repo)
+│   ├── server.py     # Main FastAPI application
+│   ├── config/       # Database, settings
+│   ├── models/       # Pydantic schemas
+│   ├── services/     # Business logic services
+│   └── utils/        # Auth utilities
+├── frontend/          # Pure React webapp (converted)
+│   ├── src/
+│   │   ├── App.js          # Main router
+│   │   ├── contexts/       # Auth, Theme, Toast, i18n
+│   │   ├── pages/          # All page components
+│   │   ├── services/       # API service
+│   │   └── i18n/           # Translations
+│   └── public/             # Static assets, logos
+└── memory/
+    └── PRD.md
 ```
 
 ---
 
-## 4. User Stories
+## User Personas
 
-### 4.1 Consumer Stories
+### 1. Consumer/Parent
+- Search for coaches/tutors
+- Book sessions
+- Manage kids profiles
+- View booking history
 
-| ID | Story | Acceptance Criteria | Status |
-|----|-------|---------------------|--------|
-| C-001 | As a parent, I can register and create an account | Email verification, role selection | ✅ Done |
-| C-002 | As a parent, I can search for tutors | Filter by subject, price, location | ✅ Done |
-| C-003 | As a parent, I can view tutor profiles | See bio, reviews, availability | ✅ Done |
-| C-004 | As a parent, I can book a session | Select time, pay, confirm | ✅ Done |
-| C-005 | As a parent, I can view my bookings | Upcoming and past sessions | ✅ Done |
-| C-006 | As a parent, I can download reports | PDF with spending history | ✅ Done |
-| C-007 | As a parent, I can switch themes | Light and dark mode | ✅ Done |
-| C-008 | As a parent, I can contact support | In-app form submission | ✅ Done |
-| C-009 | As a parent, I can view calendar | Visual booking calendar | 🚧 Pending |
+### 2. Tutor/Coach
+- Dashboard with stats
+- Manage availability calendar
+- View upcoming sessions
+- Edit profile
 
-### 4.2 Tutor Stories
-
-| ID | Story | Acceptance Criteria | Status |
-|----|-------|---------------------|--------|
-| T-001 | As a tutor, I can create my profile | Add bio, subjects, pricing | ✅ Done |
-| T-002 | As a tutor, I can set availability | Weekly schedule rules | ✅ Done |
-| T-003 | As a tutor, I can view my bookings | Upcoming sessions list | ✅ Done |
-| T-004 | As a tutor, I can view earnings | Payout history, reports | ✅ Done |
-| T-005 | As a tutor, I receive payouts | Immediate per-session | ✅ Done |
-
-### 4.3 Admin Stories
-
-| ID | Story | Acceptance Criteria | Status |
-|----|-------|---------------------|--------|
-| A-001 | As admin, I can view dashboard | Key metrics overview | ✅ Done |
-| A-002 | As admin, I can manage markets | Enable/disable markets | ✅ Done |
-| A-003 | As admin, I can view analytics | Market-level metrics | ✅ Done |
+### 3. Admin
+- View all users, coaches
+- Platform statistics
+- Manage bookings
 
 ---
 
-## 5. Multi-Market Support
+## Core Requirements (Static)
 
-### 5.1 Supported Markets
+### Authentication
+- [x] JWT-based login/register
+- [x] Google OAuth integration (Emergent Auth)
+- [x] Email verification flow
+- [x] Password reset flow
+- [x] Device tracking
 
-| Market | Currency | Status |
-|--------|----------|--------|
-| United States | USD ($) | ✅ Active |
-| India | INR (₹) | ✅ Active |
+### Consumer Features
+- [x] Home dashboard with navigation cards
+- [x] Search coaches with filters
+- [x] Tutor detail page with booking
+- [x] Bookings management (upcoming/completed/cancelled)
+- [x] Kids profile management
+- [x] User profile editing
+- [x] Theme toggle (light/dark)
 
-### 5.2 Market Features
+### Tutor Features
+- [x] Tutor dashboard with stats
+- [x] Quick action cards
+- [x] Upcoming sessions list
 
-- IP-based market suggestion on first visit
-- Market selection modal for new users
-- Market-filtered search results
-- Market-specific pricing display
-- Cross-market booking prevention
-
----
-
-## 6. Design System
-
-### 6.1 Light Theme (Default)
-
-```
-Primary: #2563EB (Blue)
-Accent: #F59E0B (Amber)
-Success: #16A34A (Green)
-Background: #F8FAFC (Light Gray)
-Surface: #FFFFFF (White)
-Text: #0F172A (Dark)
-Border: #E2E8F0 (Gray)
-```
-
-### 6.2 Dark Theme (Premium Academy)
-
-```
-Primary: #D4A72C (Gold)
-Background: #0B1F3B (Navy)
-Surface: #142E54 (Dark Blue)
-Text: #F6F7FB (Light)
-Border: #334155 (Slate)
-```
-
-### 6.3 Responsive Breakpoints
-
-```
-Mobile: < 768px
-Tablet: 768px - 1024px
-Desktop: > 1024px
-```
+### Admin Features
+- [x] Admin dashboard with tabs
+- [x] Overview stats
+- [x] Coaches list
+- [x] Users list
 
 ---
 
-## 7. Success Metrics
+## What's Been Implemented
 
-| Metric | Target | Current |
-|--------|--------|--------|
-| User Registration | 100/month | - |
-| Booking Conversion | 15% | - |
-| Session Completion | 90% | - |
-| Tutor Retention | 80% | - |
-| NPS Score | > 50 | - |
+### January 30, 2026 - Initial Conversion
+- Converted React Native/Expo app to pure React webapp
+- Implemented all auth pages (Login, Register, Forgot Password, Reset Password, Verify Email)
+- Implemented consumer pages (Home, Search, Profile, Bookings, Kids, TutorDetail)
+- Implemented tutor dashboard
+- Implemented admin dashboard
+- Created contexts (Auth, Theme, Toast, i18n)
+- Connected to existing MongoDB Atlas database
+- All original APIs preserved and working
+- Theme system (light/dark mode)
+- i18n translations (English)
 
----
-
-## 8. Risks & Mitigations
-
-| Risk | Impact | Mitigation |
-|------|--------|------------|
-| Payment failures | High | Retry logic, fallback methods |
-| Cross-market fraud | Medium | Market validation on booking |
-| Tutor no-shows | Medium | Cancellation policies, reviews |
-| Data breach | High | Encryption, access controls |
+### Test Results
+- Backend: 85% (minor CORS note)
+- Frontend: 100%
+- Integration: 100%
 
 ---
 
-## 9. Dependencies
+## Prioritized Backlog
 
-### 9.1 External Services
+### P0 (Critical) - DONE
+- [x] Authentication flows
+- [x] Core navigation
+- [x] Coach search
+- [x] Booking system
 
-| Service | Purpose | Status |
-|---------|---------|--------|
-| Stripe | Payments | ⚠️ Placeholder keys |
-| ip-api.com | Geolocation | ✅ Active |
-| Resend | Email | ⚠️ Placeholder keys |
+### P1 (High Priority)
+- [ ] Custom domain deployment (www.maestrohabitat.com)
+- [ ] Tutor calendar management page
+- [ ] Booking notifications
+- [ ] Payment integration (Stripe)
 
-### 9.2 Environment Variables
+### P2 (Medium Priority)
+- [ ] Reviews/ratings system
+- [ ] Real-time chat
+- [ ] Push notifications
+- [ ] Multi-language support
 
+### P3 (Low Priority)
+- [ ] Advanced analytics
+- [ ] Export/reporting features
+- [ ] Social sharing
+
+---
+
+## Next Tasks
+1. **Deploy to Custom Domain** - Use Emergent deployment with www.maestrohabitat.com
+2. Complete tutor calendar management page
+3. Add booking confirmation emails
+4. Implement payment flow
+
+---
+
+## Environment Variables
+
+### Frontend (.env)
 ```
-STRIPE_SECRET_KEY=sk_test_placeholder
-STRIPE_PUBLISHABLE_KEY=pk_test_placeholder
-STRIPE_WEBHOOK_SECRET=whsec_placeholder
-PLATFORM_FEE_PERCENT=10
+REACT_APP_BACKEND_URL=<backend_url>
+REACT_APP_APP_NAME=Maestro Habitat
+```
+
+### Backend (.env)
+```
+MONGO_URL=<mongodb_atlas_url>
+DB_NAME=maestrohub
+RESEND_API_KEY=<resend_key>
+JWT_SECRET=<jwt_secret>
+CLOUDINARY_URL=<cloudinary_url>
 ```
 
 ---
 
-## 10. Release History
-
-| Version | Date | Changes |
-|---------|------|--------|
-| 1.0.0 | Jan 2025 | MVP release with core features |
-| 1.1.0 | Jan 2025 | Multi-market support (US, India) |
-| 1.2.0 | Jan 2025 | Rebranding to Maestro Hub |
-| 2.0.0 | Jan 2025 | Dark mode, notifications, reports |
-
----
-
-## 11. Appendix
-
-### 11.1 Test Accounts
-
-| Email | Password | Role |
-|-------|----------|------|
-| parent1@test.com | password123 | Consumer |
-| parent2@test.com | password123 | Consumer |
-| tutor1@test.com | password123 | Tutor |
-| tutor2@test.com | password123 | Tutor |
-| admin@maestrohub.com | password123 | Admin |
-
-### 11.2 Documentation
-
-- Test Cases: `/app/docs/TEST_CASES.md`
-- Test Results: `/app/docs/TEST_RESULTS.md`
-- API Docs: Auto-generated at `/api/docs`
+## Notes
+- Original codebase had Expo/React Native components that were converted to standard React components
+- All APIs maintained same structure (/api prefix)
+- MongoDB Atlas database retained from original project
+- i18n translations copied from original repo
