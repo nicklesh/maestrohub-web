@@ -248,14 +248,23 @@
 .tutor-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 12px;
   font-size: 13px;
 }
 
-.tutor-meta span {
+.tutor-meta .meta-item {
   display: flex;
   align-items: center;
   gap: 4px;
+}
+
+.tutor-meta .price {
+  font-weight: 600;
+}
+
+.tutor-meta .local-price {
+  margin-left: 4px;
+  font-weight: 400;
 }
 
 .tutor-card-arrow {
