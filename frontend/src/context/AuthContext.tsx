@@ -12,7 +12,7 @@ interface User {
   email: string;
   name: string;
   picture?: string;
-  role: 'consumer' | 'tutor' | 'admin';
+  role: 'consumer' | 'parent' | 'tutor' | 'admin';
 }
 
 interface DeviceInfo {
