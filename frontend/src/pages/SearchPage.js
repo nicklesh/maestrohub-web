@@ -81,7 +81,7 @@ const SearchPage = () => {
     return (
       <Link
         key={tutor.user_id}
-        to={`/tutor/${tutor.user_id}`}
+        to={`/tutor/${tutor.tutor_id || tutor.user_id}`}
         className="tutor-card"
         style={{ backgroundColor: colors.surface, borderColor: colors.border }}
         data-testid={`tutor-card-${tutor.user_id}`}
