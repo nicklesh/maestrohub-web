@@ -5,6 +5,9 @@ import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 import { ToastProvider } from './contexts/ToastContext';
 import { I18nProvider } from './i18n';
 
+// Components
+import BottomNav from './components/BottomNav';
+
 // Auth Pages
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
