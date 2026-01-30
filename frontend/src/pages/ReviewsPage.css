@@ -1,0 +1,150 @@
+.reviews-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.reviews-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid;
+  padding: 16px 24px;
+}
+
+.reviews-header .header-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.reviews-header h1 {
+  flex: 1;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.tabs-container {
+  border-bottom: 1px solid;
+  padding: 0 24px;
+}
+
+.tabs {
+  display: flex;
+  gap: 24px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.tab {
+  padding: 16px 0;
+  font-size: 15px;
+  font-weight: 500;
+  background: none;
+  border-bottom: 2px solid transparent;
+}
+
+.reviews-main {
+  flex: 1;
+  padding: 24px;
+}
+
+.reviews-container {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.loading-state,
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  text-align: center;
+  gap: 16px;
+}
+
+.empty-state h3 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.review-card {
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.tutor-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tutor-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tutor-info h4 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.tutor-info span {
+  font-size: 13px;
+}
+
+.stars {
+  display: flex;
+  gap: 2px;
+}
+
+.write-review-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  font-weight: 600;
+  color: white;
+}
+
+.review-comment {
+  font-size: 14px;
+  line-height: 1.6;
+  font-style: italic;
+  margin-bottom: 16px;
+}
+
+.review-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.review-footer span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
