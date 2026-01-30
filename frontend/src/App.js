@@ -5,19 +5,32 @@ import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 import { ToastProvider } from './contexts/ToastContext';
 import { I18nProvider } from './i18n';
 
-// Pages
+// Auth Pages
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import VerifyEmailPage from './pages/VerifyEmailPage';
+
+// Consumer Pages
 import HomePage from './pages/HomePage';
 import SearchPage from './pages/SearchPage';
 import ProfilePage from './pages/ProfilePage';
 import BookingsPage from './pages/BookingsPage';
 import KidsPage from './pages/KidsPage';
 import TutorDetailPage from './pages/TutorDetailPage';
+import BillingPage from './pages/BillingPage';
+import ReferralsPage from './pages/ReferralsPage';
+import ReviewsPage from './pages/ReviewsPage';
+import FAQPage from './pages/FAQPage';
+import ContactPage from './pages/ContactPage';
+import NotificationsSettingsPage from './pages/NotificationsSettingsPage';
+
+// Tutor Pages
 import TutorDashboardPage from './pages/TutorDashboardPage';
+import TutorCalendarPage from './pages/TutorCalendarPage';
+
+// Admin Pages
 import AdminDashboardPage from './pages/AdminDashboardPage';
 
 // Protected Route Wrapper
