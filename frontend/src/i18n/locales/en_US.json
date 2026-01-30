@@ -602,7 +602,20 @@
       "no_tutors_found": "No coaches found",
       "try_adjusting_filters": "Try adjusting your filters",
       "clear_all": "Clear all",
-      "show_global_coaches": "Show coaches from all countries"
+      "show_global_coaches": "Show coaches from all countries",
+      "filters": {
+        "title": "Filters",
+        "topic": "Topic/Subject",
+        "topic_placeholder": "e.g., Piano, Tennis, Math",
+        "price_min": "Min Price",
+        "price_max": "Max Price",
+        "session_type": "Session Type",
+        "all_types": "All Types",
+        "in_person": "In-Person",
+        "online": "Online",
+        "clear": "Clear",
+        "apply": "Apply Filters"
+      }
     },
     "login": {
       "title": "Welcome Back",
