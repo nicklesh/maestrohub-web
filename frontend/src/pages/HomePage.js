@@ -1,11 +1,14 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Search, Calendar, Users, User, Lightbulb, ChevronRight, LogOut, Sun, Moon, Menu } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Search, Calendar, Users, User, Lightbulb, ArrowRight } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useTranslation } from '../i18n';
+import AppHeader from '../components/AppHeader';
+import BottomNav from '../components/BottomNav';
 import './HomePage.css';
 
+// Navigation card configuration matching mobile app exactly
 const NAV_CARDS = [
   {
     id: 'search',
@@ -41,106 +44,94 @@ const NAV_CARDS = [
   },
 ];
 
-const HomePage = () => {
-  const { user, logout } = useAuth();
-  const { colors, isDark, toggleTheme } = useTheme();
+export default function HomePage() {
+  const { user } = useAuth();
+  const { colors, isDark } = useTheme();
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const firstName = user?.name?.split(' ')[0] || '';
+  const handleCardPress = (route) => {
+    navigate(route);
+  };
+
+  const renderNavigationCard = (card) => {
+    const Icon = card.icon;
+    
+    return (
+      <button
+        key={card.id}
+        className="nav-card"
+        style={{ 
+          backgroundColor: colors.surface, 
+          borderColor: colors.border 
+        }}
+        onClick={() => handleCardPress(card.route)}
+        data-testid={`home-card-${card.id}`}
+      >
+        <div 
+          className="nav-card-icon-container" 
+          style={{ backgroundColor: card.gradient[0] + '20' }}
+        >
+          <Icon
+            size={32}
+            color={isDark ? colors.primary : card.gradient[0]}
+          />
+        </div>
+        <h3 className="nav-card-title" style={{ color: colors.text }}>
+          {t(card.titleKey)}
+        </h3>
+        <p className="nav-card-description" style={{ color: colors.textMuted }}>
+          {t(card.descriptionKey)}
+        </p>
+        <div className="nav-card-arrow" style={{ backgroundColor: colors.gray100 }}>
+          <ArrowRight size={18} color={colors.textMuted} />
+        </div>
+      </button>
+    );
+  };
 
   return (
     <div className="home-page" style={{ backgroundColor: colors.background }}>
-      {/* Header */}
-      <header className="home-header" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
-        <div className="header-content">
-          <div className="header-left">
-            <img
-              src={isDark ? '/mh_logo_dark_trimmed.png' : '/mh_logo_trimmed.png'}
-              alt="Maestro Habitat"
-              className="header-logo"
-            />
-          </div>
-          <div className="header-right">
-            <button 
-              className="icon-btn" 
-              onClick={toggleTheme}
-              style={{ color: colors.textMuted }}
-              data-testid="theme-toggle-btn"
-            >
-              {isDark ? <Sun size={20} /> : <Moon size={20} />}
-            </button>
-            <button 
-              className="icon-btn" 
-              onClick={logout}
-              style={{ color: colors.textMuted }}
-              data-testid="logout-btn"
-            >
-              <LogOut size={20} />
-            </button>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="home-main">
-        <div className="home-container">
+      <AppHeader />
+      
+      <main className="home-content">
+        <div className="content-wrapper">
           {/* Welcome Section */}
           <div className="welcome-section">
             <h1 className="welcome-text" style={{ color: colors.text }}>
-              {t('pages.home.welcome_back')}{firstName ? `, ${firstName}` : ''}! 👋
+              {t('pages.home.welcome_back')}{user?.name ? `, ${user.name.split(' ')[0]}` : ''}! 👋
             </h1>
             <p className="welcome-subtext" style={{ color: colors.textMuted }}>
               {t('pages.home.what_would_you_like')}
             </p>
           </div>
 
-          {/* Navigation Cards */}
+          {/* 2x2 Navigation Grid */}
           <div className="nav-grid">
-            {NAV_CARDS.map((card) => {
-              const Icon = card.icon;
-              return (
-                <Link
-                  key={card.id}
-                  to={card.route}
-                  className="nav-card"
-                  style={{ backgroundColor: colors.surface, borderColor: colors.border }}
-                  data-testid={`nav-card-${card.id}`}
-                >
-                  <div 
-                    className="nav-card-icon" 
-                    style={{ backgroundColor: `${card.gradient[0]}20` }}
-                  >
-                    <Icon size={28} color={isDark ? colors.primary : card.gradient[0]} />
-                  </div>
-                  <h3 className="nav-card-title" style={{ color: colors.text }}>
-                    {t(card.titleKey)}
-                  </h3>
-                  <p className="nav-card-desc" style={{ color: colors.textMuted }}>
-                    {t(card.descriptionKey)}
-                  </p>
-                  <div className="nav-card-arrow" style={{ backgroundColor: colors.gray100 }}>
-                    <ChevronRight size={18} color={colors.textMuted} />
-                  </div>
-                </Link>
-              );
-            })}
+            {NAV_CARDS.map(renderNavigationCard)}
           </div>
 
-          {/* Quick Tip Section */}
+          {/* Quick Tips Section */}
           <div className="info-section">
-            <div className="info-card" style={{ backgroundColor: colors.primaryLight }}>
+            <div 
+              className="info-card" 
+              style={{ backgroundColor: isDark ? colors.primaryLight : colors.primaryLight }}
+            >
               <Lightbulb size={24} color={colors.primary} />
-              <div className="info-text">
-                <h4 style={{ color: colors.text }}>{t('pages.home.quick_tip_title')}</h4>
-                <p style={{ color: colors.textMuted }}>{t('pages.home.quick_tip_text')}</p>
+              <div className="info-text-container">
+                <h4 className="info-title" style={{ color: colors.text }}>
+                  {t('pages.home.quick_tip_title')}
+                </h4>
+                <p className="info-text" style={{ color: colors.textMuted }}>
+                  {t('pages.home.quick_tip_text')}
+                </p>
               </div>
             </div>
           </div>
         </div>
       </main>
+
+      <BottomNav />
     </div>
   );
-};
-
-export default HomePage;
+}
