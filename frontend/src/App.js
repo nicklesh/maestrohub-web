@@ -161,6 +161,16 @@ function AppRoutes() {
           <Route path="/faq" element={<ProtectedRoute><FAQPage /></ProtectedRoute>} />
           <Route path="/contact" element={<ProtectedRoute><ContactPage /></ProtectedRoute>} />
           <Route path="/notifications-settings" element={<ProtectedRoute><NotificationsSettingsPage /></ProtectedRoute>} />
+          <Route path="/edit-profile" element={<ProtectedRoute><EditProfilePage /></ProtectedRoute>} />
+          <Route path="/language" element={<ProtectedRoute><LanguagePage /></ProtectedRoute>} />
+          <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
+          <Route path="/subscription" element={<ProtectedRoute><SubscriptionPage /></ProtectedRoute>} />
+          <Route path="/reminders" element={<ProtectedRoute><RemindersPage /></ProtectedRoute>} />
+          <Route path="/reports" element={<ProtectedRoute><ReportsPage /></ProtectedRoute>} />
+          <Route path="/tax-reports" element={<ProtectedRoute><TaxReportsPage /></ProtectedRoute>} />
+          <Route path="/invite-parent" element={<ProtectedRoute><InviteParentPage /></ProtectedRoute>} />
+          <Route path="/invite-provider" element={<ProtectedRoute><InviteProviderPage /></ProtectedRoute>} />
+          <Route path="/become-tutor" element={<ProtectedRoute allowedRoles={['consumer', 'parent']}><BecomeTutorPage /></ProtectedRoute>} />
 
           {/* Tutor routes */}
           <Route path="/tutor/dashboard" element={<ProtectedRoute allowedRoles={['tutor', 'admin']}><TutorDashboardPage /></ProtectedRoute>} />
