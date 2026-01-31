@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Users, Plus, Edit2, Trash2, Loader, User, Calendar, Save, X } from 'lucide-react';
+import { ArrowLeft, Users, Plus, Edit2, Trash2, Loader, User, Calendar, Save, X, Mail, Phone } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useToast } from '../contexts/ToastContext';
 import { useTranslation } from '../i18n';
+import AppHeader from '../components/AppHeader';
+import BottomNav from '../components/BottomNav';
 import api from '../services/api';
 import './KidsPage.css';
 
