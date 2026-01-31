@@ -1,69 +1,166 @@
-import React from 'react';
-import { ArrowLeft, BarChart3, TrendingUp, Calendar, Users } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { BarChart3, TrendingUp, Calendar, Users, Clock, DollarSign, Loader2 } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useTranslation } from '../i18n';
+import AppHeader from '../components/AppHeader';
+import api from '../services/api';
 
 export default function ReportsPage() {
   const { colors } = useTheme();
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [reportData, setReportData] = useState({
+    total_sessions: 0,
+    total_spent: 0,
+    total_hours: 0,
+    coaches_worked: 0,
+    this_month_sessions: 0,
+    this_month_spent: 0,
+    monthly_data: []
+  });
 
-  const stats = [
-    { label: t('reports.total_sessions') || 'Total Sessions', value: '0', icon: Calendar, color: colors.primary },
-    { label: t('reports.total_spent') || 'Total Spent', value: '$0', icon: TrendingUp, color: colors.success },
-    { label: t('reports.coaches_worked') || 'Coaches Worked With', value: '0', icon: Users, color: colors.warning },
-  ];
+  useEffect(() => {
+    fetchReportData();
+  }, []);
 
-  return (
-    <div style={{ minHeight: '100vh', backgroundColor: colors.background, padding: '16px' }}>
-      <header style={{
+  const fetchReportData = async () => {
+    try {
+      const response = await api.get('/reports/summary').catch(() => ({ data: {} }));
+      setReportData(prev => ({ ...prev, ...response.data }));
+    } catch (err) {
+      console.error('Failed to fetch reports:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const StatCard = ({ icon: Icon, label, value, subValue, color }) => (
+    <div style={{
+      backgroundColor: colors.surface,
+      borderRadius: '16px',
+      padding: '20px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '12px'
+    }}>
+      <div style={{
+        width: '44px',
+        height: '44px',
+        borderRadius: '12px',
+        backgroundColor: `${color}20`,
         display: 'flex',
         alignItems: 'center',
-        gap: '16px',
-        marginBottom: '24px',
-        paddingTop: '8px'
+        justifyContent: 'center'
       }}>
-        <button onClick={() => navigate(-1)} style={{ background: 'none', padding: '8px' }}>
-          <ArrowLeft size={24} color={colors.text} />
-        </button>
-        <h1 style={{ color: colors.text, fontSize: '20px', fontWeight: 600 }}>
-          {t('navigation.reports')}
-        </h1>
-      </header>
+        <Icon size={24} color={color} />
+      </div>
+      <div>
+        <p style={{ color: colors.text, fontSize: '28px', fontWeight: 700 }}>{value}</p>
+        <p style={{ color: colors.textMuted, fontSize: '14px' }}>{label}</p>
+        {subValue && (
+          <p style={{ color: colors.success, fontSize: '13px', marginTop: '4px' }}>{subValue}</p>
+        )}
+      </div>
+    </div>
+  );
 
-      <div style={{ maxWidth: '600px', margin: '0 auto' }}>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-          gap: '12px',
-          marginBottom: '24px'
-        }}>
-          {stats.map((stat, idx) => (
-            <div key={idx} style={{
+  return (
+    <div style={{ minHeight: '100vh', backgroundColor: colors.background }}>
+      <AppHeader showBack={true} title={t('navigation.reports') || 'Reports'} showUserName={true} />
+
+      <div style={{ padding: '76px 16px 100px', maxWidth: '600px', margin: '0 auto' }}>
+        {loading ? (
+          <div style={{ display: 'flex', justifyContent: 'center', padding: '48px' }}>
+            <Loader2 size={32} color={colors.primary} className="spinner" />
+          </div>
+        ) : (
+          <>
+            {/* Summary Cards */}
+            <h2 style={{ color: colors.text, fontSize: '18px', fontWeight: 600, marginBottom: '16px' }}>
+              {t('reports.overview') || 'Overview'}
+            </h2>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              gap: '12px',
+              marginBottom: '24px'
+            }}>
+              <StatCard 
+                icon={Calendar}
+                label={t('reports.total_sessions') || 'Total Sessions'}
+                value={reportData.total_sessions}
+                color={colors.primary}
+              />
+              <StatCard 
+                icon={DollarSign}
+                label={t('reports.total_spent') || 'Total Spent'}
+                value={`$${reportData.total_spent.toFixed(0)}`}
+                color={colors.success}
+              />
+              <StatCard 
+                icon={Clock}
+                label={t('reports.total_hours') || 'Hours Learned'}
+                value={`${reportData.total_hours}h`}
+                color={colors.warning}
+              />
+              <StatCard 
+                icon={Users}
+                label={t('reports.coaches_worked') || 'Coaches'}
+                value={reportData.coaches_worked}
+                color={colors.error}
+              />
+            </div>
+
+            {/* This Month */}
+            <div style={{
               backgroundColor: colors.surface,
               borderRadius: '16px',
               padding: '20px',
+              marginBottom: '24px'
+            }}>
+              <h3 style={{ color: colors.text, fontSize: '16px', fontWeight: 600, marginBottom: '16px' }}>
+                {t('reports.this_month') || 'This Month'}
+              </h3>
+              <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+                <div style={{ textAlign: 'center' }}>
+                  <p style={{ color: colors.primary, fontSize: '24px', fontWeight: 700 }}>
+                    {reportData.this_month_sessions}
+                  </p>
+                  <p style={{ color: colors.textMuted, fontSize: '13px' }}>
+                    {t('reports.sessions') || 'Sessions'}
+                  </p>
+                </div>
+                <div style={{ width: '1px', backgroundColor: colors.border }} />
+                <div style={{ textAlign: 'center' }}>
+                  <p style={{ color: colors.success, fontSize: '24px', fontWeight: 700 }}>
+                    ${reportData.this_month_spent.toFixed(0)}
+                  </p>
+                  <p style={{ color: colors.textMuted, fontSize: '13px' }}>
+                    {t('reports.spent') || 'Spent'}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Monthly Chart Placeholder */}
+            <div style={{
+              backgroundColor: colors.surface,
+              borderRadius: '16px',
+              padding: '24px',
               textAlign: 'center'
             }}>
-              <stat.icon size={32} color={stat.color} style={{ marginBottom: '8px' }} />
-              <p style={{ color: colors.text, fontSize: '24px', fontWeight: 700 }}>{stat.value}</p>
-              <p style={{ color: colors.textMuted, fontSize: '14px' }}>{stat.label}</p>
+              <BarChart3 size={48} color={colors.gray300} style={{ marginBottom: '16px' }} />
+              <h3 style={{ color: colors.text, marginBottom: '8px' }}>
+                {t('reports.monthly_activity') || 'Monthly Activity'}
+              </h3>
+              <p style={{ color: colors.textMuted, fontSize: '14px' }}>
+                {reportData.total_sessions > 0 
+                  ? t('reports.chart_coming_soon') || 'Detailed charts coming soon'
+                  : t('reports.no_data') || 'Book sessions to see your activity reports'}
+              </p>
             </div>
-          ))}
-        </div>
-
-        <div style={{
-          backgroundColor: colors.surface,
-          borderRadius: '16px',
-          padding: '24px',
-          textAlign: 'center'
-        }}>
-          <BarChart3 size={48} color={colors.gray300} style={{ marginBottom: '16px' }} />
-          <p style={{ color: colors.textMuted }}>
-            {t('reports.no_data') || 'No report data available yet. Book sessions to see your activity reports.'}
-          </p>
-        </div>
+          </>
+        )}
       </div>
     </div>
   );
