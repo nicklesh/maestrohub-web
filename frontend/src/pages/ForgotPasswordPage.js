@@ -43,6 +43,12 @@ const ForgotPasswordPage = () => {
   if (success) {
     return (
       <div className="forgot-page" style={{ backgroundColor: colors.background }}>
+        {/* Background */}
+        <div className="login-background">
+          <img src="/login_background.png" alt="" className="bg-image" />
+          <div className="bg-overlay" style={{ backgroundColor: colors.background }} />
+        </div>
+
         <div className="forgot-container">
           <div className="forgot-form-wrapper">
             {/* Logo Section */}
