@@ -63,7 +63,7 @@ const KidsPage = () => {
       });
     } else {
       setEditingKid(null);
-      setFormData({ name: '', age: '', grade: '', email: '', phone: '', sendReminders: true, sendSchedules: false });
+      setFormData({ student_id: null, name: '', age: '', grade: '', email: '', phone: '', sendReminders: true, sendSchedules: false });
     }
     setShowModal(true);
   };
