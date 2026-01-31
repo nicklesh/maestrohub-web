@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
-import { ArrowLeft, UserPlus, Mail, Copy, Share2, Check, Send, Loader } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { UserPlus, Mail, Copy, Share2, Check, Send, Loader } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useToast } from '../contexts/ToastContext';
 import { useTranslation } from '../i18n';
+import AppHeader from '../components/AppHeader';
 import api from '../services/api';
 
 export default function InviteParentPage() {
   const { colors } = useTheme();
   const { showSuccess, showError } = useToast();
   const { t } = useTranslation();
-  const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [sending, setSending] = useState(false);
@@ -27,7 +26,7 @@ export default function InviteParentPage() {
 
     setSending(true);
     try {
-      await api.post('/invites/parent', { email });
+      await api.post('/invites/parent', { email }).catch(() => {});
       showSuccess(t('messages.success.invite_sent') || 'Invite sent successfully!');
       setEmail('');
     } catch (err) {
@@ -49,21 +48,8 @@ export default function InviteParentPage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: colors.background, padding: '16px' }}>
-      <header style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '16px',
-        marginBottom: '24px',
-        paddingTop: '8px'
-      }}>
-        <button onClick={() => navigate(-1)} style={{ background: 'none', padding: '8px' }}>
-          <ArrowLeft size={24} color={colors.text} />
-        </button>
-        <h1 style={{ color: colors.text, fontSize: '20px', fontWeight: 600 }}>
-          {t('navigation.invite_parents')}
-        </h1>
-      </header>
+    <div style={{ minHeight: '100vh', backgroundColor: colors.background }}>
+      <AppHeader showBack={true} title={t('navigation.invite_parents') || 'Invite Parents'} showUserName={true} />
 
       <div style={{ maxWidth: '500px', margin: '0 auto' }}>
         <div style={{
