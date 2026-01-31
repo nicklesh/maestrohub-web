@@ -13,8 +13,8 @@ import './BookingsPage.css';
 
 const TABS = [
   { id: 'upcoming', labelKey: 'pages.bookings.tab_upcoming' },
+  { id: 'past', labelKey: 'pages.bookings.tab_past' },
   { id: 'rescheduled', labelKey: 'pages.bookings.tab_rescheduled' },
-  { id: 'completed', labelKey: 'pages.bookings.tab_completed' },
   { id: 'cancelled', labelKey: 'pages.bookings.tab_cancelled' },
 ];
 
