@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, HelpCircle, ChevronDown, ChevronUp, Search, MessageCircle } from 'lucide-react';
+import React, { useState } from 'react';
+import { HelpCircle, ChevronDown, ChevronUp, Search, MessageCircle } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useTranslation } from '../i18n';
+import AppHeader from '../components/AppHeader';
 import './FAQPage.css';
 
 const FAQ_CATEGORIES = [
