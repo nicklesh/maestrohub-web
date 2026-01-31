@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { ArrowLeft, User, Mail, Phone, Loader, Check } from 'lucide-react';
+import { User, Mail, Phone, Loader, Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useToast } from '../contexts/ToastContext';
 import { useTranslation } from '../i18n';
 import api from '../services/api';
+import AppHeader from '../components/AppHeader';
 
 export default function EditProfilePage() {
   const { user, updateUser } = useAuth();
@@ -38,23 +39,11 @@ export default function EditProfilePage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: colors.background, padding: '16px' }}>
-      <header style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '16px',
-        marginBottom: '24px',
-        paddingTop: '8px'
-      }}>
-        <button onClick={() => navigate(-1)} style={{ background: 'none', padding: '8px' }}>
-          <ArrowLeft size={24} color={colors.text} />
-        </button>
-        <h1 style={{ color: colors.text, fontSize: '20px', fontWeight: 600 }}>
-          {t('navigation.edit_profile')}
-        </h1>
-      </header>
+    <div style={{ minHeight: '100vh', backgroundColor: colors.background }}>
+      <AppHeader showBack={true} title={t('navigation.edit_profile') || 'Edit Profile'} showUserName={true} />
 
-      <form onSubmit={handleSubmit} style={{ maxWidth: '500px', margin: '0 auto' }}>
+      <div style={{ padding: '76px 16px 100px' }}>
+        <form onSubmit={handleSubmit} style={{ maxWidth: '500px', margin: '0 auto' }}>
         <div style={{
           backgroundColor: colors.surface,
           borderRadius: '16px',
