@@ -50,10 +50,18 @@ const KidsPage = () => {
   const openModal = (kid = null) => {
     if (kid) {
       setEditingKid(kid);
-      setFormData({ name: kid.name, age: kid.age?.toString() || '', notes: kid.notes || '' });
+      setFormData({ 
+        name: kid.name || '', 
+        age: kid.age?.toString() || '', 
+        grade: kid.grade || '',
+        email: kid.email || '',
+        phone: kid.phone || '',
+        sendReminders: kid.send_reminders !== false,
+        sendSchedules: kid.send_schedules || false
+      });
     } else {
       setEditingKid(null);
-      setFormData({ name: '', age: '', notes: '' });
+      setFormData({ name: '', age: '', grade: '', email: '', phone: '', sendReminders: true, sendSchedules: false });
     }
     setShowModal(true);
   };
@@ -61,7 +69,7 @@ const KidsPage = () => {
   const closeModal = () => {
     setShowModal(false);
     setEditingKid(null);
-    setFormData({ name: '', age: '', notes: '' });
+    setFormData({ name: '', age: '', grade: '', email: '', phone: '', sendReminders: true, sendSchedules: false });
   };
 
   const handleSave = async () => {
