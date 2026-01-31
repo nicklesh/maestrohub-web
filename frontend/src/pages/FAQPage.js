@@ -49,6 +49,7 @@ const FAQPage = () => {
 
   const { colors } = useTheme();
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const toggleItem = (index) => {
     setExpandedItems((prev) => ({ ...prev, [index]: !prev[index] }));
