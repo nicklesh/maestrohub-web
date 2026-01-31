@@ -10,6 +10,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useToast } from '../contexts/ToastContext';
 import { useTranslation } from '../i18n';
+import BottomNav from '../components/BottomNav';
+import AppHeader from '../components/AppHeader';
 import api from '../services/api';
 import './ProfilePage.css';
 
