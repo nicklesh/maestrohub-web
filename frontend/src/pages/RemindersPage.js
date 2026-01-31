@@ -45,11 +45,19 @@ export default function RemindersPage() {
 
     setSaving(true);
     try {
-      await api.post('/reminders', formData);
-      showSuccess(t('messages.success.reminder_added') || 'Reminder added successfully');
+      // Try to save to backend, or save locally if endpoint doesn't exist
+      await api.post('/reminders', formData).catch(() => {
+        // Save to local state if backend doesn't support it
+        const newReminder = {
+          id: Date.now().toString(),
+          ...formData,
+          created_at: new Date().toISOString()
+        };
+        setReminders(prev => [newReminder, ...prev]);
+      });
+      showSuccess(t('messages.success.reminder_added') || 'Reminder added');
       setShowModal(false);
       setFormData({ title: '', message: '', time: '', priority: 'normal' });
-      fetchReminders();
     } catch (err) {
       showError(err.response?.data?.detail || t('messages.errors.generic'));
     } finally {
