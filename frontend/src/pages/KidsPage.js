@@ -131,10 +131,10 @@ const KidsPage = () => {
 
   const renderKidCard = (kid) => (
     <div 
-      key={kid.kid_id} 
+      key={kid.student_id || kid.kid_id} 
       className="kid-card"
       style={{ backgroundColor: colors.surface, borderColor: colors.border }}
-      data-testid={`kid-card-${kid.kid_id}`}
+      data-testid={`kid-card-${kid.student_id || kid.kid_id}`}
     >
       <div className="kid-avatar" style={{ backgroundColor: colors.primaryLight }}>
         <User size={24} color={colors.primary} />
@@ -154,14 +154,14 @@ const KidsPage = () => {
         <button 
           onClick={() => openModal(kid)}
           style={{ color: colors.primary }}
-          data-testid={`edit-kid-${kid.kid_id}`}
+          data-testid={`edit-kid-${kid.student_id || kid.kid_id}`}
         >
           <Edit2 size={18} />
         </button>
         <button 
-          onClick={() => deleteKid(kid.kid_id)}
+          onClick={() => deleteKid(kid.student_id || kid.kid_id)}
           style={{ color: colors.error }}
-          data-testid={`delete-kid-${kid.kid_id}`}
+          data-testid={`delete-kid-${kid.student_id || kid.kid_id}`}
         >
           <Trash2 size={18} />
         </button>
