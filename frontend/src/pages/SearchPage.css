@@ -216,11 +216,17 @@
   transform: translateX(22px);
 }
 
-/* Tutors List */
+/* Tutors List - 2 column grid */
 .tutors-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .tutors-list {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Tutor Card */
