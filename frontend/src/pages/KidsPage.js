@@ -83,7 +83,11 @@ const KidsPage = () => {
       const data = {
         name: formData.name,
         age: formData.age ? parseInt(formData.age) : null,
-        notes: formData.notes,
+        grade: formData.grade || null,
+        email: formData.email || null,
+        phone: formData.phone || null,
+        send_reminders: formData.sendReminders,
+        send_schedules: formData.sendSchedules,
       };
 
       if (editingKid) {
