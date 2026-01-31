@@ -5,6 +5,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useToast } from '../contexts/ToastContext';
 import { useTranslation } from '../i18n';
+import AppHeader from '../components/AppHeader';
+import BottomNav from '../components/BottomNav';
 import api from '../services/api';
 import { format, parseISO } from 'date-fns';
 import './BookingsPage.css';
