@@ -1,366 +1,557 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Search, Filter, MapPin, Star, ArrowLeft, ChevronRight, Clock, Users, Loader, X, DollarSign, BookOpen } from 'lucide-react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { 
+  Search, X, ChevronDown, Star, Folder, BookOpen, Video, MapPin, 
+  Rocket, Leaf, Heart, Briefcase, DollarSign, Globe, Mic, GraduationCap, 
+  Palette, Dumbbell, Check, Loader2
+} from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useToast } from '../contexts/ToastContext';
 import { useTranslation } from '../i18n';
+import AppHeader from '../components/AppHeader';
+import BottomNav from '../components/BottomNav';
 import api from '../services/api';
 import './SearchPage.css';
 
-// Country flag emoji helper
-const getCountryFlag = (countryCode) => {
-  if (!countryCode) return '';
-  const codePoints = countryCode
-    .toUpperCase()
-    .split('')
-    .map(char => 127397 + char.charCodeAt());
-  return String.fromCodePoint(...codePoints);
+// Flag component
+const FlagIcon = ({ countryCode, size = 16 }) => {
+  const flagEmoji = {
+    'US': '🇺🇸', 'GB': '🇬🇧', 'CA': '🇨🇦', 'AU': '🇦🇺', 'IN': '🇮🇳',
+    'DE': '🇩🇪', 'FR': '🇫🇷', 'ES': '🇪🇸', 'IT': '🇮🇹', 'BR': '🇧🇷',
+    'MX': '🇲🇽', 'JP': '🇯🇵', 'KR': '🇰🇷', 'CN': '🇨🇳', 'NL': '🇳🇱',
+    'SE': '🇸🇪', 'NO': '🇳🇴', 'DK': '🇩🇰', 'FI': '🇫🇮', 'PL': '🇵🇱',
+  };
+  return <span style={{ fontSize: size }}>{flagEmoji[countryCode] || '🌍'}</span>;
 };
 
-const SearchPage = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [tutors, setTutors] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [filterOpen, setFilterOpen] = useState(false);
-  const [filters, setFilters] = useState({
-    topic: '',
-    priceMin: '',
-    priceMax: '',
-    sessionType: '',
-  });
+// Category icon mapping
+const getCategoryIcon = (categoryId) => {
+  const iconMap = {
+    'coaching_personal': Rocket,
+    'health_mindfulness': Leaf,
+    'fitness_nutrition': Dumbbell,
+    'relationships_family': Heart,
+    'business_communication': Briefcase,
+    'finance_legal': DollarSign,
+    'culture_inclusion': Globe,
+    'performance_arts': Mic,
+    'academics': GraduationCap,
+    'activities_hobbies': Palette,
+  };
+  return iconMap[categoryId] || Folder;
+};
 
-  const { colors, isDark } = useTheme();
-  const { t } = useTranslation();
-  const { showError } = useToast();
+export default function SearchPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const { colors, isDark } = useTheme();
+  const { token } = useAuth();
+  const { showError } = useToast();
+  const { t, formatNumber } = useTranslation();
+  
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedSubject, setSelectedSubject] = useState('all');
+  const [showGlobalCoaches, setShowGlobalCoaches] = useState(true);
+  const [tutors, setTutors] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showResults, setShowResults] = useState(false);
+  
+  // Dropdown states
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+  const [showSubjectDropdown, setShowSubjectDropdown] = useState(false);
 
+  // Get subjects for selected category
+  const availableSubjects = useMemo(() => {
+    if (selectedCategory === 'all') {
+      const allSubjects = categories.flatMap(cat => cat.subjects || []);
+      return [...new Set(allSubjects)].sort();
+    }
+    const cat = categories.find(c => c.id === selectedCategory);
+    return cat?.subjects || [];
+  }, [selectedCategory, categories]);
+
+  // Helper functions for translations
+  const getCategoryName = (categoryId, originalName) => {
+    if (!categoryId) return originalName || t('common.general');
+    const key = `categories.${categoryId}`;
+    const translated = t(key);
+    return translated === key ? (originalName || categoryId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())) : translated;
+  };
+
+  const getSubjectName = (subjectId) => {
+    if (!subjectId) return '';
+    const normalizedKey = subjectId.toLowerCase().replace(/[&\s\-\/]+/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '');
+    const key = `subjects.${normalizedKey}`;
+    const translated = t(key);
+    return translated === key ? subjectId : translated;
+  };
+
+  const getModalityName = (modality) => {
+    const m = modality.toLowerCase().replace('-', '_');
+    switch (m) {
+      case 'online': return t('pages.search.online');
+      case 'in_person': return t('pages.search.in_person');
+      case 'hybrid': return t('pages.search.hybrid');
+      default: return modality;
+    }
+  };
+
+  // Load categories on mount
   useEffect(() => {
-    fetchTutors();
+    loadCategories();
   }, []);
 
-  const fetchTutors = async (query = '', appliedFilters = {}) => {
-    try {
-      setLoading(true);
-      const params = new URLSearchParams();
-      if (query) params.append('search', query);
-      if (appliedFilters.topic) params.append('topic', appliedFilters.topic);
-      if (appliedFilters.priceMin) params.append('price_min', appliedFilters.priceMin);
-      if (appliedFilters.priceMax) params.append('price_max', appliedFilters.priceMax);
-      if (appliedFilters.sessionType) params.append('session_type', appliedFilters.sessionType);
+  // Handle URL params for category
+  useEffect(() => {
+    const categoryParam = searchParams.get('category');
+    if (categoryParam) {
+      setSelectedCategory(categoryParam);
+      setShowResults(true);
+    }
+  }, [searchParams]);
 
-      const response = await api.get(`/tutors/search?${params.toString()}`);
-      setTutors(response.data.tutors || []);
-    } catch (err) {
-      console.error('Error fetching tutors:', err);
+  // Search tutors when filters change
+  useEffect(() => {
+    if (showResults) {
+      searchTutors();
+    }
+  }, [selectedCategory, selectedSubject, showGlobalCoaches, showResults]);
+
+  const loadCategories = async () => {
+    try {
+      const response = await api.get('/categories');
+      const transformedCategories = (response.data.categories || []).map(cat => ({
+        id: cat.id || cat.name?.toLowerCase().replace(/[&\s]+/g, '_'),
+        name: cat.name,
+        subjects: (cat.subcategories || []).map(sub => typeof sub === 'string' ? sub : sub.name),
+      }));
+      setCategories(transformedCategories);
+    } catch (error) {
+      console.error('Failed to load categories:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    fetchTutors(searchQuery, filters);
+  const handleCategorySelect = (categoryId) => {
+    setSelectedCategory(categoryId);
+    setSelectedSubject('all');
+    setShowResults(true);
+    searchTutorsWithCategory(categoryId);
   };
 
-  const applyFilters = () => {
-    fetchTutors(searchQuery, filters);
-    setFilterOpen(false);
+  const searchTutorsWithCategory = async (categoryId) => {
+    setLoading(true);
+    setTutors([]);
+    
+    try {
+      const params = new URLSearchParams({ page: '1', limit: '20' });
+      if (categoryId !== 'all') params.append('category', categoryId);
+      if (searchQuery) params.append('query', searchQuery);
+      if (!showGlobalCoaches) params.append('local_only', 'true');
+
+      const response = await api.get(`/tutors/search?${params}`);
+      setTutors(response.data.tutors || []);
+    } catch (error) {
+      console.error('Failed to search tutors:', error);
+      showError(t('messages.errors.generic'));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const searchTutors = async () => {
+    setLoading(true);
+    
+    try {
+      const params = new URLSearchParams({ page: '1', limit: '20' });
+      if (selectedCategory !== 'all') params.append('category', selectedCategory);
+      if (selectedSubject !== 'all') params.append('subject', selectedSubject);
+      if (searchQuery) params.append('query', searchQuery);
+      if (!showGlobalCoaches) params.append('local_only', 'true');
+
+      const response = await api.get(`/tutors/search?${params}`);
+      setTutors(response.data.tutors || []);
+    } catch (error) {
+      console.error('Failed to search tutors:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      setShowResults(true);
+      searchTutors();
+    }
   };
 
   const clearFilters = () => {
-    setFilters({ topic: '', priceMin: '', priceMax: '', sessionType: '' });
-    fetchTutors(searchQuery, {});
+    setSelectedCategory('all');
+    setSelectedSubject('all');
+    setSearchQuery('');
+    setShowResults(false);
+    setTutors([]);
   };
 
-  const renderTutorCard = (tutor) => {
-    const categoryCount = tutor.categories?.length || 0;
-    const subjectCount = tutor.topics?.length || tutor.subjects?.length || 0;
-    const countryFlag = getCountryFlag(tutor.country_code);
+  const getCategoryDisplayName = () => {
+    if (selectedCategory === 'all') return t('pages.search.all_categories');
+    const cat = categories.find(c => c.id === selectedCategory);
+    return getCategoryName(selectedCategory, cat?.name);
+  };
+
+  const getSubjectDisplayName = () => {
+    if (selectedSubject === 'all') return t('pages.search.all_subjects');
+    return getSubjectName(selectedSubject);
+  };
+
+  // Render category card
+  const renderCategoryCard = (category) => {
+    const Icon = getCategoryIcon(category.id);
     
     return (
-      <Link
-        key={tutor.user_id}
-        to={`/tutor/${tutor.tutor_id || tutor.user_id}`}
-        className="tutor-card"
+      <button
+        key={category.id}
+        className="category-card"
         style={{ backgroundColor: colors.surface, borderColor: colors.border }}
-        data-testid={`tutor-card-${tutor.tutor_id || tutor.user_id}`}
+        onClick={() => handleCategorySelect(category.id)}
+        data-testid={`category-${category.id}`}
       >
-        <div className="tutor-card-header">
-          <div className="tutor-avatar" style={{ backgroundColor: colors.primary }}>
-            {tutor.profile_picture ? (
-              <img src={tutor.profile_picture} alt={tutor.name} />
-            ) : (
-              <span style={{ color: colors.textInverse }}>{tutor.name?.charAt(0)?.toUpperCase()}</span>
-            )}
-          </div>
-          <div className="tutor-info">
-            <div className="tutor-name-row">
-              <h3 style={{ color: colors.text }}>{tutor.name}</h3>
-              {countryFlag && (
-                <span className="country-flag" title={tutor.country_code}>
-                  {countryFlag}
-                </span>
-              )}
-              {tutor.country_code && (
-                <span className="country-code" style={{ color: colors.textMuted }}>
-                  {tutor.country_code}
-                </span>
-              )}
-            </div>
-            
-            {/* Categories */}
-            {tutor.categories?.length > 0 && (
-              <div className="tutor-categories">
-                {tutor.categories.slice(0, 2).map((cat, idx) => (
-                  <span 
-                    key={idx} 
-                    className="category-pill" 
-                    style={{ backgroundColor: colors.primaryLight, color: colors.primary }}
-                  >
-                    {cat}
-                  </span>
-                ))}
-                {tutor.categories.length > 2 && (
-                  <span className="more-count" style={{ color: colors.textMuted }}>
-                    +{tutor.categories.length - 2}
-                  </span>
-                )}
-              </div>
-            )}
-            
-            {/* Topics/Subjects */}
-            {(tutor.topics?.length > 0 || tutor.subjects?.length > 0) && (
-              <div className="tutor-topics">
-                {(tutor.topics || tutor.subjects).slice(0, 3).map((topic, idx) => (
-                  <span 
-                    key={idx} 
-                    className="topic-tag" 
-                    style={{ backgroundColor: colors.gray100, color: colors.text }}
-                  >
-                    {topic}
-                  </span>
-                ))}
-                {subjectCount > 3 && (
-                  <span className="subject-count" style={{ color: colors.primary }}>
-                    +{subjectCount - 3} {t('pages.search.more_subjects')}
-                  </span>
-                )}
-              </div>
-            )}
-          </div>
-          
-          {tutor.rating && (
-            <div className="tutor-rating" style={{ backgroundColor: colors.warning + '20' }}>
-              <Star size={14} fill={colors.warning} color={colors.warning} />
-              <span style={{ color: colors.warning }}>{tutor.rating.toFixed(1)}</span>
-            </div>
-          )}
+        <div className="category-icon-container" style={{ backgroundColor: colors.primaryLight }}>
+          <Icon size={24} color={colors.primary} />
         </div>
-
-        {tutor.bio && (
-          <p className="tutor-bio" style={{ color: colors.textMuted }}>
-            {tutor.bio.length > 100 ? tutor.bio.substring(0, 100) + '...' : tutor.bio}
-          </p>
-        )}
-
-        <div className="tutor-meta">
-          {tutor.location && (
-            <span className="meta-item" style={{ color: colors.textMuted }}>
-              <MapPin size={14} /> {tutor.location}
-            </span>
-          )}
-          
-          {/* Price per hour with translated price in parenthesis */}
-          {(tutor.session_rate || tutor.hourly_rate) && (
-            <span className="meta-item price" style={{ color: colors.success }}>
-              <DollarSign size={14} />
-              ${tutor.session_rate || tutor.hourly_rate}/{t('pages.search.per_hour')}
-              {tutor.local_rate && tutor.local_currency && (
-                <span className="local-price" style={{ color: colors.textMuted }}>
-                  ({tutor.local_currency} {tutor.local_rate})
-                </span>
-              )}
-            </span>
-          )}
-          
-          {/* Session count */}
-          {(tutor.session_count > 0 || tutor.total_sessions > 0) && (
-            <span className="meta-item" style={{ color: colors.textMuted }}>
-              <Users size={14} /> {tutor.session_count || tutor.total_sessions} {t('pages.search.sessions')}
-            </span>
-          )}
-          
-          {/* Subject count */}
-          {subjectCount > 0 && (
-            <span className="meta-item" style={{ color: colors.textMuted }}>
-              <BookOpen size={14} /> {subjectCount} {t('pages.search.subjects')}
-            </span>
-          )}
-        </div>
-
-        <div className="tutor-card-arrow" style={{ color: colors.primary }}>
-          <ChevronRight size={20} />
-        </div>
-      </Link>
+        <span className="category-name" style={{ color: colors.text }}>
+          {getCategoryName(category.id, category.name)}
+        </span>
+        <span className="category-subjects" style={{ color: colors.textMuted }}>
+          {t('pages.home.subjects_count', { count: formatNumber(category.subjects?.length || 0) })}
+        </span>
+      </button>
     );
   };
 
-  return (
-    <div className="search-page" style={{ backgroundColor: colors.background }}>
-      {/* Header */}
-      <header className="search-header" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
-        <div className="header-content">
-          <button 
-            className="back-btn" 
-            onClick={() => navigate('/home')}
-            style={{ color: colors.text }}
-          >
-            <ArrowLeft size={24} />
-          </button>
-          <h1 style={{ color: colors.text }}>{t('pages.search.title')}</h1>
-          <button 
-            className="filter-btn" 
-            onClick={() => setFilterOpen(true)}
-            style={{ color: colors.primary, backgroundColor: colors.primaryLight }}
-            data-testid="filter-btn"
-          >
-            <Filter size={18} />
-          </button>
+  // Render tutor card
+  const renderTutorCard = (tutor) => (
+    <button
+      key={tutor.tutor_id || tutor.user_id}
+      className={`tutor-card ${tutor.is_sponsored ? 'sponsored' : ''}`}
+      style={{ 
+        backgroundColor: colors.surface, 
+        borderColor: tutor.is_sponsored ? colors.warning : colors.border 
+      }}
+      onClick={() => navigate(`/tutor/${tutor.tutor_id || tutor.user_id}`)}
+      data-testid={`tutor-card-${tutor.tutor_id || tutor.user_id}`}
+    >
+      {/* Sponsored Badge */}
+      {tutor.is_sponsored && (
+        <div className="sponsored-badge" style={{ backgroundColor: colors.warning }}>
+          <Star size={10} color="#fff" />
+          <span>{t('pages.search.sponsored')}</span>
         </div>
-      </header>
-
-      {/* Search Bar */}
-      <div className="search-bar-container">
-        <form onSubmit={handleSearch} className="search-form">
-          <div className="search-input-wrapper" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
-            <Search size={20} color={colors.textMuted} />
-            <input
-              type="text"
-              placeholder={t('pages.search.search_placeholder')}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              style={{ color: colors.text }}
-              data-testid="search-input"
-            />
-            {searchQuery && (
-              <button type="button" onClick={() => { setSearchQuery(''); fetchTutors('', filters); }}>
-                <X size={18} color={colors.textMuted} />
-              </button>
-            )}
+      )}
+      
+      {/* Market Flag Badge */}
+      {tutor.market_code && (
+        <div className="market-badge" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
+          <span className="market-code" style={{ color: colors.textMuted }}>{tutor.market_code}</span>
+          <FlagIcon countryCode={tutor.market_code} size={14} />
+        </div>
+      )}
+      
+      {/* Card Header */}
+      <div className="card-header">
+        <div className="tutor-avatar" style={{ backgroundColor: colors.primary }}>
+          <span>{(tutor.user_name || tutor.name || 'T').charAt(0)}</span>
+        </div>
+        <div className="card-info">
+          <span className="tutor-name" style={{ color: colors.text }}>
+            {tutor.user_name || tutor.name}
+          </span>
+          <div className="rating-row">
+            <Star size={14} color="#FFB800" fill="#FFB800" />
+            <span className="rating" style={{ color: colors.text }}>
+              {formatNumber((tutor.rating_avg || 0).toFixed(1))}
+            </span>
+            <span className="rating-count" style={{ color: colors.textMuted }}>
+              {tutor.rating_count > 0 
+                ? `(${formatNumber(tutor.rating_count)} ${t('pages.search.reviews')})` 
+                : t('common.new')
+              }
+            </span>
           </div>
-        </form>
+        </div>
+        <div className="price-container">
+          <span className="price" style={{ color: colors.primary }}>
+            {tutor.currency_symbol || '$'}{formatNumber(tutor.display_price || tutor.base_price)}{t('pages.search.per_hour')}
+          </span>
+          {tutor.original_price_display && (
+            <span className="original-price" style={{ color: colors.textMuted }}>
+              ({tutor.original_price_display})
+            </span>
+          )}
+        </div>
       </div>
 
-      {/* Content */}
+      {/* Bio */}
+      <p className="tutor-bio" style={{ color: colors.textMuted }}>
+        {tutor.bio || t('pages.search.no_bio')}
+      </p>
+
+      {/* Category & Subject Info */}
+      <div className="category-info">
+        <div className="category-item">
+          <Folder size={14} color={colors.textMuted} />
+          <span style={{ color: colors.textSecondary }}>
+            {(tutor.categories || []).slice(0, 2).map(c => getCategoryName(c)).join(', ') || t('common.general')}
+          </span>
+        </div>
+        <div className="category-item">
+          <BookOpen size={14} color={colors.textMuted} />
+          <span style={{ color: colors.textSecondary }}>
+            {formatNumber((tutor.subjects || []).length)} {t('pages.search.subject')}{(tutor.subjects || []).length !== 1 ? 's' : ''}
+          </span>
+        </div>
+      </div>
+
+      {/* Modality */}
+      <div className="modality-row">
+        {(Array.isArray(tutor.modality) ? tutor.modality : [tutor.modality].filter(Boolean)).map((m) => (
+          <div key={m} className="modality-item">
+            <Video size={14} color={colors.textMuted} />
+            <span style={{ color: colors.textMuted }}>{getModalityName(m)}</span>
+          </div>
+        ))}
+      </div>
+    </button>
+  );
+
+  return (
+    <div className="search-page" style={{ backgroundColor: colors.background }}>
+      <AppHeader />
+      
       <main className="search-content">
-        {loading ? (
-          <div className="loading-state">
-            <Loader className="spinner" size={32} color={colors.primary} />
-            <p style={{ color: colors.textMuted }}>{t('pages.search.searching')}</p>
-          </div>
-        ) : tutors.length === 0 ? (
-          <div className="empty-state">
-            <Search size={64} color={colors.gray300} />
-            <h3 style={{ color: colors.text }}>{t('pages.search.no_results_title')}</h3>
-            <p style={{ color: colors.textMuted }}>{t('pages.search.no_results_message')}</p>
-          </div>
-        ) : (
-          <div className="tutors-list">
-            <p className="results-count" style={{ color: colors.textMuted }}>
-              {tutors.length} {tutors.length === 1 ? t('pages.search.coach_found') : t('pages.search.coaches_found')}
-            </p>
-            {tutors.map(renderTutorCard)}
-          </div>
-        )}
+        <div className="content-wrapper">
+          {/* Search Bar */}
+          <form onSubmit={handleSearchSubmit} className="search-bar-container">
+            <div className="search-bar" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
+              <Search size={20} color={colors.textMuted} />
+              <input
+                type="text"
+                className="search-input"
+                style={{ color: colors.text }}
+                placeholder={t('forms.placeholders.search_subjects')}
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                data-testid="search-input"
+              />
+              {searchQuery && (
+                <button type="button" onClick={() => setSearchQuery('')} className="clear-search">
+                  <X size={20} color={colors.textMuted} />
+                </button>
+              )}
+            </div>
+          </form>
+
+          {/* BROWSE MODE: Show category cards */}
+          {!showResults && (
+            <div className="categories-section">
+              <h2 className="section-title" style={{ color: colors.text }}>
+                {t('pages.home.browse_categories')}
+              </h2>
+              <div className="categories-grid">
+                {loading ? (
+                  <div className="loading-container">
+                    <Loader2 size={32} color={colors.primary} className="spinner" />
+                  </div>
+                ) : (
+                  categories.map(renderCategoryCard)
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* RESULTS MODE: Show filters and results */}
+          {showResults && (
+            <div className="results-section">
+              {/* Filter Pill */}
+              <div className="filter-pill-container">
+                <div className="filter-pill" style={{ backgroundColor: colors.primaryLight }}>
+                  <span style={{ color: colors.primary }}>
+                    {searchQuery.trim() || getCategoryDisplayName()}
+                  </span>
+                  <button onClick={clearFilters} className="filter-pill-close">
+                    <X size={16} color={colors.primary} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Dropdowns */}
+              <div className="dropdowns-container">
+                {/* Category Dropdown */}
+                <div className="dropdown-wrapper">
+                  <button 
+                    className="dropdown-button"
+                    style={{ backgroundColor: colors.surface, borderColor: colors.border }}
+                    onClick={() => setShowCategoryDropdown(true)}
+                  >
+                    <Folder size={16} color={colors.primary} />
+                    <div className="dropdown-text">
+                      <span className="dropdown-label" style={{ color: colors.textMuted }}>
+                        {t('pages.search.category')}
+                      </span>
+                      <span className="dropdown-value" style={{ color: colors.text }}>
+                        {getCategoryDisplayName()}
+                      </span>
+                    </div>
+                    <ChevronDown size={18} color={colors.textMuted} />
+                  </button>
+                </div>
+
+                {/* Subject Dropdown */}
+                <div className="dropdown-wrapper">
+                  <button 
+                    className="dropdown-button"
+                    style={{ backgroundColor: colors.surface, borderColor: colors.border }}
+                    onClick={() => setShowSubjectDropdown(true)}
+                  >
+                    <BookOpen size={16} color={colors.primary} />
+                    <div className="dropdown-text">
+                      <span className="dropdown-label" style={{ color: colors.textMuted }}>
+                        {t('pages.search.subject')}
+                      </span>
+                      <span className="dropdown-value" style={{ color: colors.text }}>
+                        {getSubjectDisplayName()}
+                      </span>
+                    </div>
+                    <ChevronDown size={18} color={colors.textMuted} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Global Toggle */}
+              <div className="toggle-container">
+                <span style={{ color: colors.text }}>{t('pages.search.show_global_coaches')}</span>
+                <button 
+                  className={`toggle-switch ${showGlobalCoaches ? 'active' : ''}`}
+                  style={{ backgroundColor: showGlobalCoaches ? colors.primary : colors.gray300 }}
+                  onClick={() => setShowGlobalCoaches(!showGlobalCoaches)}
+                  data-testid="global-toggle"
+                >
+                  <div className="toggle-thumb" />
+                </button>
+              </div>
+
+              {/* Results */}
+              <div className="tutors-list">
+                {loading ? (
+                  <div className="loading-container">
+                    <Loader2 size={32} color={colors.primary} className="spinner" />
+                  </div>
+                ) : tutors.length === 0 ? (
+                  <div className="empty-state" style={{ color: colors.textMuted }}>
+                    <Search size={48} color={colors.gray300} />
+                    <p>{t('pages.search.no_results')}</p>
+                  </div>
+                ) : (
+                  tutors.map(renderTutorCard)
+                )}
+              </div>
+            </div>
+          )}
+        </div>
       </main>
 
-      {/* Filter Modal */}
-      {filterOpen && (
-        <div className="filter-modal-overlay" onClick={() => setFilterOpen(false)}>
+      {/* Category Dropdown Modal */}
+      {showCategoryDropdown && (
+        <div className="dropdown-modal-overlay" onClick={() => setShowCategoryDropdown(false)}>
           <div 
-            className="filter-modal" 
+            className="dropdown-modal" 
             style={{ backgroundColor: colors.surface }}
-            onClick={(e) => e.stopPropagation()}
+            onClick={e => e.stopPropagation()}
           >
-            <div className="filter-header">
-              <h2 style={{ color: colors.text }}>{t('pages.search.filters.title')}</h2>
-              <button onClick={() => setFilterOpen(false)}>
-                <X size={24} color={colors.text} />
+            <div className="dropdown-modal-header">
+              <h3 style={{ color: colors.text }}>{t('pages.search.select_category')}</h3>
+              <button onClick={() => setShowCategoryDropdown(false)}>
+                <X size={24} color={colors.textMuted} />
               </button>
             </div>
-
-            <div className="filter-content">
-              <div className="filter-group">
-                <label style={{ color: colors.text }}>{t('pages.search.filters.topic')}</label>
-                <input
-                  type="text"
-                  placeholder={t('pages.search.filters.topic_placeholder')}
-                  value={filters.topic}
-                  onChange={(e) => setFilters({ ...filters, topic: e.target.value })}
-                  style={{ backgroundColor: colors.gray100, color: colors.text, borderColor: colors.border }}
-                />
-              </div>
-
-              <div className="filter-row">
-                <div className="filter-group">
-                  <label style={{ color: colors.text }}>{t('pages.search.filters.price_min')}</label>
-                  <input
-                    type="number"
-                    placeholder="$0"
-                    value={filters.priceMin}
-                    onChange={(e) => setFilters({ ...filters, priceMin: e.target.value })}
-                    style={{ backgroundColor: colors.gray100, color: colors.text, borderColor: colors.border }}
-                  />
-                </div>
-                <div className="filter-group">
-                  <label style={{ color: colors.text }}>{t('pages.search.filters.price_max')}</label>
-                  <input
-                    type="number"
-                    placeholder="$500"
-                    value={filters.priceMax}
-                    onChange={(e) => setFilters({ ...filters, priceMax: e.target.value })}
-                    style={{ backgroundColor: colors.gray100, color: colors.text, borderColor: colors.border }}
-                  />
-                </div>
-              </div>
-
-              <div className="filter-group">
-                <label style={{ color: colors.text }}>{t('pages.search.filters.session_type')}</label>
-                <select
-                  value={filters.sessionType}
-                  onChange={(e) => setFilters({ ...filters, sessionType: e.target.value })}
-                  style={{ backgroundColor: colors.gray100, color: colors.text, borderColor: colors.border }}
+            <div className="dropdown-modal-list">
+              <button
+                className={`dropdown-option ${selectedCategory === 'all' ? 'selected' : ''}`}
+                style={{ backgroundColor: selectedCategory === 'all' ? colors.primaryLight : 'transparent' }}
+                onClick={() => { setSelectedCategory('all'); setShowCategoryDropdown(false); }}
+              >
+                <span style={{ color: selectedCategory === 'all' ? colors.primary : colors.text }}>
+                  {t('pages.search.all_categories')}
+                </span>
+                {selectedCategory === 'all' && <Check size={20} color={colors.primary} />}
+              </button>
+              {categories.map(cat => (
+                <button
+                  key={cat.id}
+                  className={`dropdown-option ${selectedCategory === cat.id ? 'selected' : ''}`}
+                  style={{ backgroundColor: selectedCategory === cat.id ? colors.primaryLight : 'transparent' }}
+                  onClick={() => { setSelectedCategory(cat.id); setSelectedSubject('all'); setShowCategoryDropdown(false); }}
                 >
-                  <option value="">{t('pages.search.filters.all_types')}</option>
-                  <option value="in_person">{t('pages.search.filters.in_person')}</option>
-                  <option value="online">{t('pages.search.filters.online')}</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="filter-actions">
-              <button 
-                className="clear-btn" 
-                onClick={clearFilters}
-                style={{ color: colors.primary, borderColor: colors.primary }}
-              >
-                {t('pages.search.filters.clear')}
-              </button>
-              <button 
-                className="apply-btn" 
-                onClick={applyFilters}
-                style={{ backgroundColor: colors.primary }}
-                data-testid="apply-filters-btn"
-              >
-                {t('pages.search.filters.apply')}
-              </button>
+                  <span style={{ color: selectedCategory === cat.id ? colors.primary : colors.text }}>
+                    {getCategoryName(cat.id, cat.name)}
+                  </span>
+                  {selectedCategory === cat.id && <Check size={20} color={colors.primary} />}
+                </button>
+              ))}
             </div>
           </div>
         </div>
       )}
+
+      {/* Subject Dropdown Modal */}
+      {showSubjectDropdown && (
+        <div className="dropdown-modal-overlay" onClick={() => setShowSubjectDropdown(false)}>
+          <div 
+            className="dropdown-modal" 
+            style={{ backgroundColor: colors.surface }}
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="dropdown-modal-header">
+              <h3 style={{ color: colors.text }}>{t('pages.search.select_subject')}</h3>
+              <button onClick={() => setShowSubjectDropdown(false)}>
+                <X size={24} color={colors.textMuted} />
+              </button>
+            </div>
+            <div className="dropdown-modal-list">
+              <button
+                className={`dropdown-option ${selectedSubject === 'all' ? 'selected' : ''}`}
+                style={{ backgroundColor: selectedSubject === 'all' ? colors.primaryLight : 'transparent' }}
+                onClick={() => { setSelectedSubject('all'); setShowSubjectDropdown(false); }}
+              >
+                <span style={{ color: selectedSubject === 'all' ? colors.primary : colors.text }}>
+                  {t('pages.search.all_subjects')}
+                </span>
+                {selectedSubject === 'all' && <Check size={20} color={colors.primary} />}
+              </button>
+              {availableSubjects.map(subj => (
+                <button
+                  key={subj}
+                  className={`dropdown-option ${selectedSubject === subj ? 'selected' : ''}`}
+                  style={{ backgroundColor: selectedSubject === subj ? colors.primaryLight : 'transparent' }}
+                  onClick={() => { setSelectedSubject(subj); setShowSubjectDropdown(false); }}
+                >
+                  <span style={{ color: selectedSubject === subj ? colors.primary : colors.text }}>
+                    {getSubjectName(subj)}
+                  </span>
+                  {selectedSubject === subj && <Check size={20} color={colors.primary} />}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      <BottomNav />
     </div>
   );
-};
-
-export default SearchPage;
+}
