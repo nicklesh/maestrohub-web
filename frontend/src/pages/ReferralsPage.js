@@ -81,17 +81,9 @@ const ReferralsPage = () => {
 
   return (
     <div className="referrals-page" style={{ backgroundColor: colors.background }}>
-      <header className="referrals-header" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
-        <div className="header-content">
-          <button className="back-btn" onClick={() => navigate(-1)} style={{ color: colors.text }}>
-            <ArrowLeft size={24} />
-          </button>
-          <h1 style={{ color: colors.text }}>{t('pages.referrals.title')}</h1>
-          <div style={{ width: 40 }} />
-        </div>
-      </header>
+      <AppHeader showBack={true} title={t('pages.referrals.title') || 'Referrals'} showUserName={true} />
 
-      <main className="referrals-main">
+      <main className="referrals-main" style={{ paddingTop: '76px' }}>
         {loading ? (
           <div className="loading-state">
             <Loader className="spinner" size={32} color={colors.primary} />
