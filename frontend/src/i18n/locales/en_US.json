@@ -2590,6 +2590,14 @@
     "trial_active": "Trial Active",
     "premium_active": "Premium Active",
     "free_plan": "Free Plan",
+    "current_plan": "You are currently on the free plan",
+    "premium": "Premium",
+    "features": {
+      "priority_booking": "Priority booking with coaches",
+      "no_fees": "No booking fees",
+      "premium_support": "Premium customer support",
+      "exclusive_content": "Access to exclusive content"
+    },
     "renews_on": "Renews on {{date}}",
     "cancels_on": "Cancels on {{date}}",
     "reactivate": "Reactivate Subscription",
