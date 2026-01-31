@@ -163,26 +163,12 @@ const BookingsPage = () => {
 
   return (
     <div className="bookings-page" style={{ backgroundColor: colors.background }}>
-      {/* Header */}
-      <header className="bookings-header" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
-        <div className="header-content">
-          <button 
-            className="back-btn" 
-            onClick={() => navigate(getHomeRoute())}
-            style={{ color: colors.text }}
-          >
-            <ArrowLeft size={24} />
-          </button>
-          <h1 style={{ color: colors.text }}>{t('pages.bookings.title')}</h1>
-          <button 
-            className="refresh-btn" 
-            onClick={fetchBookings}
-            style={{ color: colors.primary }}
-          >
-            <RefreshCw size={20} />
-          </button>
-        </div>
-      </header>
+      <AppHeader />
+
+      {/* Title */}
+      <div className="page-title" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
+        <h1 style={{ color: colors.text }}>{t('pages.bookings.title')}</h1>
+      </div>
 
       {/* Tabs */}
       <div className="tabs-container" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
