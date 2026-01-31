@@ -24,7 +24,7 @@ export default function EditProfilePage() {
     e.preventDefault();
     setSaving(true);
     try {
-      const response = await api.put('/user/profile', formData);
+      const response = await api.put('/profile', formData);
       if (updateUser) {
         updateUser(response.data);
       }
