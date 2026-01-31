@@ -295,9 +295,9 @@ export default function TutorDetailPage() {
                   key={slot.slot_id || slot.id || `slot-${index}`}
                   className={`slot-btn ${selectedSlot?.slot_id === slot.slot_id ? 'selected' : ''}`}
                   style={{
-                    backgroundColor: selectedSlot?.slot_id === slot.slot_id ? colors.primary : colors.surface,
-                    borderColor: selectedSlot?.slot_id === slot.slot_id ? colors.primary : colors.border,
-                    color: selectedSlot?.slot_id === slot.slot_id ? '#fff' : colors.text,
+                    backgroundColor: selectedSlot?.slot_id === slot.slot_id ? colors.primary : colors.primaryLight,
+                    borderColor: selectedSlot?.slot_id === slot.slot_id ? colors.primary : 'transparent',
+                    color: selectedSlot?.slot_id === slot.slot_id ? '#fff' : colors.primary,
                   }}
                   onClick={() => setSelectedSlot(slot)}
                 >
