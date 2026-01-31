@@ -50,8 +50,14 @@ export const I18nProvider = ({ children }) => {
     }
   };
 
+  // Format number based on locale
+  const formatNumber = (num) => {
+    if (num === null || num === undefined) return '';
+    return new Intl.NumberFormat(locale.replace('_', '-')).format(num);
+  };
+
   return (
-    <I18nContext.Provider value={{ t, locale, changeLocale }}>
+    <I18nContext.Provider value={{ t, locale, changeLocale, formatNumber }}>
       {children}
     </I18nContext.Provider>
   );
