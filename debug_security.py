@@ -7,7 +7,7 @@ import requests
 import json
 import time
 
-BASE_URL = "https://maestro-web.preview.emergentagent.com/api"
+BASE_URL = "https://maestro-web-1.preview.emergentagent.com/api"
 
 def test_jwt_detailed():
     """Test JWT validation in detail"""

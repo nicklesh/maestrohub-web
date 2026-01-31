@@ -1,7 +1,7 @@
 {
   "test_run": {
     "timestamp": "2026-01-25T14:46:35.792006",
-    "backend_url": "https://maestro-web.preview.emergentagent.com/api",
+    "backend_url": "https://maestro-web-1.preview.emergentagent.com/api",
     "total_tests": 8,
     "passed": 8,
     "failed": 0,
