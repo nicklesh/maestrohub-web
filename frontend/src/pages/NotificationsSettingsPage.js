@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Bell, Mail, MessageSquare, Volume2, Loader } from 'lucide-react';
+import { Bell, Mail, MessageSquare, Volume2, Loader } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useToast } from '../contexts/ToastContext';
 import { useTranslation } from '../i18n';
+import AppHeader from '../components/AppHeader';
 import api from '../services/api';
 import './NotificationsSettingsPage.css';
 
@@ -21,8 +21,7 @@ const NotificationsSettingsPage = () => {
 
   const { colors } = useTheme();
   const { t } = useTranslation();
-  const { showSuccess, showError } = useToast();
-  const navigate = useNavigate();
+  const { showSuccess } = useToast();
 
   useEffect(() => {
     fetchSettings();
