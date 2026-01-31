@@ -2,7 +2,7 @@
 
 ## Project Overview
 **Date Created:** January 30, 2026  
-**Last Updated:** January 30, 2026  
+**Last Updated:** January 31, 2026  
 **Project Type:** React Native to Pure React Webapp Conversion  
 **Domain:** www.maestrohabitat.com  
 **Deployment:** Emergent Platform  
@@ -41,12 +41,15 @@ Build a webapp from GitHub repo [https://github.com/nicklesh/maestrohub-web.git]
 ├── frontend/          # Pure React webapp (converted)
 │   ├── src/
 │   │   ├── App.js          # Main router (40+ routes)
-│   │   ├── components/     # Shared components (BottomNav)
+│   │   ├── components/     # AppHeader, BottomNav
 │   │   ├── contexts/       # Auth, Theme, Toast, i18n
-│   │   ├── pages/          # 18 page components
+│   │   ├── pages/          # 20+ page components
 │   │   ├── services/       # API service
+│   │   ├── theme/          # Color theme (colors.js)
 │   │   └── i18n/           # 2760+ translation keys
 │   └── public/             # Static assets, logos
+├── mobile_screenshots/    # Reference screenshots from mobile app
+│   └── UI_REFERENCE.md    # Comprehensive UI documentation
 └── memory/
     └── PRD.md
 ```
