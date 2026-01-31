@@ -51,6 +51,7 @@ const KidsPage = () => {
     if (kid) {
       setEditingKid(kid);
       setFormData({ 
+        student_id: kid.student_id || kid.kid_id,
         name: kid.name || '', 
         age: kid.age?.toString() || '', 
         grade: kid.grade || '',
