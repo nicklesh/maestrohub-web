@@ -38,8 +38,8 @@ const KidsPage = () => {
   const fetchKids = async () => {
     try {
       setLoading(true);
-      const response = await api.get('/kids');
-      setKids(response.data.kids || []);
+      const response = await api.get('/students');
+      setKids(response.data || []);
     } catch (err) {
       console.error('Error fetching kids:', err);
     } finally {
