@@ -206,83 +206,134 @@ const KidsPage = () => {
         )}
       </main>
 
-      {/* Modal */}
+      {/* Modal - Bottom Sheet Style */}
       {showModal && (
         <div className="modal-overlay" onClick={closeModal}>
           <div 
-            className="modal" 
+            className="bottom-sheet" 
             style={{ backgroundColor: colors.surface }}
             onClick={(e) => e.stopPropagation()}
           >
+            <div className="sheet-handle" style={{ backgroundColor: colors.gray300 }} />
+            
             <div className="modal-header">
               <h2 style={{ color: colors.text }}>
                 {editingKid ? t('pages.kids.edit_child') : t('pages.kids.add_child')}
               </h2>
-              <button onClick={closeModal}>
-                <X size={24} color={colors.text} />
+              <button onClick={closeModal} className="close-btn">
+                <X size={24} color={colors.textMuted} />
               </button>
             </div>
 
             <div className="modal-content">
+              {/* Name (required) */}
               <div className="form-group">
-                <label style={{ color: colors.text }}>{t('forms.labels.name')}</label>
+                <label style={{ color: colors.textMuted }}>{t('forms.labels.name')} *</label>
                 <input
                   type="text"
                   placeholder={t('forms.placeholders.child_name')}
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  style={{ backgroundColor: colors.gray100, color: colors.text, borderColor: colors.border }}
+                  style={{ backgroundColor: colors.background, color: colors.text, borderColor: colors.border }}
                   data-testid="kid-name-input"
                 />
               </div>
 
+              {/* Age and Grade side by side */}
+              <div className="form-row">
+                <div className="form-group">
+                  <label style={{ color: colors.textMuted }}>{t('forms.labels.age')}</label>
+                  <input
+                    type="number"
+                    placeholder={t('forms.placeholders.age')}
+                    value={formData.age}
+                    onChange={(e) => setFormData({ ...formData, age: e.target.value })}
+                    style={{ backgroundColor: colors.background, color: colors.text, borderColor: colors.border }}
+                    data-testid="kid-age-input"
+                  />
+                </div>
+                <div className="form-group">
+                  <label style={{ color: colors.textMuted }}>{t('pages.kids.child_grade')}</label>
+                  <input
+                    type="text"
+                    placeholder={t('pages.kids.grade_placeholder')}
+                    value={formData.grade}
+                    onChange={(e) => setFormData({ ...formData, grade: e.target.value })}
+                    style={{ backgroundColor: colors.background, color: colors.text, borderColor: colors.border }}
+                  />
+                </div>
+              </div>
+
+              {/* Notification Contact Section */}
+              <div className="section-header" style={{ borderTopColor: colors.border }}>
+                <h3 style={{ color: colors.text }}>{t('pages.kids.notification_contact')}</h3>
+                <p style={{ color: colors.textMuted }}>{t('pages.kids.notification_contact_info')}</p>
+              </div>
+
+              {/* Email */}
               <div className="form-group">
-                <label style={{ color: colors.text }}>{t('forms.labels.age')}</label>
+                <label style={{ color: colors.textMuted }}>{t('forms.labels.email')}</label>
                 <input
-                  type="number"
-                  placeholder={t('forms.placeholders.age')}
-                  value={formData.age}
-                  onChange={(e) => setFormData({ ...formData, age: e.target.value })}
-                  style={{ backgroundColor: colors.gray100, color: colors.text, borderColor: colors.border }}
-                  data-testid="kid-age-input"
+                  type="email"
+                  placeholder={t('forms.placeholders.email')}
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  style={{ backgroundColor: colors.background, color: colors.text, borderColor: colors.border }}
                 />
               </div>
 
+              {/* Phone */}
               <div className="form-group">
-                <label style={{ color: colors.text }}>{t('forms.labels.notes')}</label>
-                <textarea
-                  placeholder={t('forms.placeholders.notes')}
-                  value={formData.notes}
-                  onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                  rows={3}
-                  style={{ backgroundColor: colors.gray100, color: colors.text, borderColor: colors.border }}
-                  data-testid="kid-notes-input"
+                <label style={{ color: colors.textMuted }}>{t('forms.labels.phone')}</label>
+                <input
+                  type="tel"
+                  placeholder={t('forms.placeholders.phone')}
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  style={{ backgroundColor: colors.background, color: colors.text, borderColor: colors.border }}
                 />
+              </div>
+
+              {/* Checkboxes */}
+              <div className="checkbox-group">
+                <label className="checkbox-label" style={{ color: colors.text }}>
+                  <input
+                    type="checkbox"
+                    checked={formData.sendReminders}
+                    onChange={(e) => setFormData({ ...formData, sendReminders: e.target.checked })}
+                    style={{ accentColor: colors.primary }}
+                  />
+                  {t('pages.kids.send_reminders')}
+                </label>
+                <label className="checkbox-label" style={{ color: colors.text }}>
+                  <input
+                    type="checkbox"
+                    checked={formData.sendSchedules}
+                    onChange={(e) => setFormData({ ...formData, sendSchedules: e.target.checked })}
+                    style={{ accentColor: colors.primary }}
+                  />
+                  {t('pages.kids.auto_send_schedules')}
+                </label>
               </div>
             </div>
 
             <div className="modal-footer">
               <button 
-                className="cancel-btn"
-                onClick={closeModal}
-                style={{ color: colors.text, borderColor: colors.border }}
-              >
-                {t('buttons.cancel')}
-              </button>
-              <button 
-                className="save-btn"
+                className="submit-btn"
                 onClick={handleSave}
                 disabled={saving}
                 style={{ backgroundColor: colors.primary }}
                 data-testid="save-kid-btn"
               >
-                {saving ? <Loader className="spinner" size={18} /> : <Save size={18} />}
-                {editingKid ? t('buttons.save') : t('buttons.add')}
+                {saving ? <Loader className="spinner" size={18} /> : null}
+                {editingKid ? t('buttons.save') : t('pages.kids.add_child')}
               </button>
             </div>
           </div>
         </div>
       )}
+      
+      <BottomNav />
     </div>
   );
 };
