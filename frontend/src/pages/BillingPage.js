@@ -386,7 +386,7 @@ const BillingPage = () => {
             <div className="sheet-handle" style={{ backgroundColor: colors.gray300 }} />
             <h2 style={{ color: colors.text }}>{t('pages.billing.add_payment_method') || 'Add Payment Method'}</h2>
             <p className="sheet-subtitle" style={{ color: colors.textMuted }}>
-              {t('pages.billing.select_provider') || 'Select a payment provider'}
+              {t('pages.billing.select_provider_desc') || 'Select a payment provider to link'}
             </p>
 
             <div className="provider-options">
