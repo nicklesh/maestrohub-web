@@ -15,7 +15,15 @@ const KidsPage = () => {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingKid, setEditingKid] = useState(null);
-  const [formData, setFormData] = useState({ name: '', age: '', notes: '' });
+  const [formData, setFormData] = useState({ 
+    name: '', 
+    age: '', 
+    grade: '',
+    email: '',
+    phone: '',
+    sendReminders: true,
+    sendSchedules: false
+  });
   const [saving, setSaving] = useState(false);
 
   const { colors } = useTheme();
