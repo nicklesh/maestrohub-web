@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { CreditCard, Plus, Trash2, Loader, DollarSign, X, Building, Smartphone, CheckCircle } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Wallet, Plus, Trash2, Loader2, CreditCard, Check, ChevronRight, Shield, RefreshCw } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useToast } from '../contexts/ToastContext';
 import { useTranslation } from '../i18n';
@@ -7,141 +7,191 @@ import AppHeader from '../components/AppHeader';
 import api from '../services/api';
 import './BillingPage.css';
 
+// Payment provider icons and colors
+const PROVIDER_CONFIG = {
+  paypal: { name: 'PayPal', color: '#003087', icon: '💳' },
+  google_pay: { name: 'Google Pay', color: '#4285F4', icon: '🔵' },
+  apple_pay: { name: 'Apple Pay', color: '#000000', icon: '🍎' },
+  venmo: { name: 'Venmo', color: '#008CFF', icon: '💸' },
+  zelle: { name: 'Zelle', color: '#6D1ED4', icon: '⚡' },
+  phonepe: { name: 'PhonePe', color: '#5F259F', icon: '📱' },
+  paytm: { name: 'Paytm', color: '#00BAF2', icon: '💰' },
+  amazon_pay: { name: 'Amazon Pay', color: '#FF9900', icon: '🛒' },
+  stripe: { name: 'Stripe', color: '#635BFF', icon: '💳' },
+};
+
+const DAY_OPTIONS = [1, 5, 10, 15, 20, 25, 28];
+
 const BillingPage = () => {
-  const [paymentMethods, setPaymentMethods] = useState([]);
-  const [transactions, setTransactions] = useState([]);
+  const [billing, setBilling] = useState(null);
+  const [availableProviders, setAvailableProviders] = useState([]);
+  const [linkedProviders, setLinkedProviders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [pendingBalance, setPendingBalance] = useState(0);
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [addingCard, setAddingCard] = useState(false);
-  const [autoPay, setAutoPay] = useState(true);
-  const [selectedPaymentType, setSelectedPaymentType] = useState('card');
-  const [cardForm, setCardForm] = useState({
-    cardNumber: '',
-    expMonth: '',
-    expYear: '',
-    cvv: '',
-    cardHolder: ''
-  });
+  const [showProviderModal, setShowProviderModal] = useState(false);
+  const [showDayPickerModal, setShowDayPickerModal] = useState(false);
+  const [selectedDay, setSelectedDay] = useState(1);
+  const [linkingProvider, setLinkingProvider] = useState(null);
+  const [savingAutoPay, setSavingAutoPay] = useState(false);
 
   const { colors } = useTheme();
   const { t } = useTranslation();
-  const { showSuccess, showError } = useToast();
+  const { showSuccess, showError, showInfo } = useToast();
 
-  useEffect(() => {
-    fetchBillingData();
-  }, []);
-
-  const fetchBillingData = async () => {
+  const loadData = useCallback(async () => {
     try {
-      setLoading(true);
-      const [methodsRes, transactionsRes] = await Promise.all([
-        api.get('/billing/payment-methods').catch(() => ({ data: { methods: [] } })),
-        api.get('/billing/transactions').catch(() => ({ data: { transactions: [], pending_balance: 0 } })),
+      const [billingRes, providersRes] = await Promise.all([
+        api.get('/billing').catch(() => ({ 
+          data: { 
+            pending_balance: 0, 
+            pending_payments: [],
+            auto_pay: { enabled: false, day_of_month: 1, next_auto_pay_date: null, next_auto_pay_amount: 0 }
+          } 
+        })),
+        api.get('/payment-providers').catch(() => ({ 
+          data: { 
+            available_providers: [
+              { id: 'paypal', name: 'PayPal' },
+              { id: 'google_pay', name: 'Google Pay' },
+              { id: 'apple_pay', name: 'Apple Pay' },
+              { id: 'venmo', name: 'Venmo' },
+              { id: 'zelle', name: 'Zelle' },
+            ],
+            linked_providers: [] 
+          } 
+        })),
       ]);
-      setPaymentMethods(methodsRes.data.methods || []);
-      setTransactions(transactionsRes.data.transactions || []);
-      setPendingBalance(transactionsRes.data.pending_balance || 0);
-    } catch (err) {
-      console.error('Error fetching billing data:', err);
+      
+      setBilling(billingRes.data);
+      setAvailableProviders(providersRes.data.available_providers || []);
+      setLinkedProviders(providersRes.data.linked_providers || []);
+      setSelectedDay(billingRes.data.auto_pay?.day_of_month || 1);
+    } catch (error) {
+      console.error('Failed to load billing:', error);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const removePaymentMethod = async (methodId) => {
-    if (!window.confirm(t('messages.confirm.remove_payment') || 'Remove this payment method?')) return;
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  const handleToggleAutoPay = async (enabled) => {
+    if (linkedProviders.length === 0) {
+      showInfo(t('pages.billing.add_payment_to_enable') || 'Add a payment method first');
+      return;
+    }
+
+    setSavingAutoPay(true);
+    const newBilling = { ...billing, auto_pay: { ...billing.auto_pay, enabled } };
+    setBilling(newBilling);
 
     try {
-      await api.delete(`/billing/payment-methods/${methodId}`);
-      showSuccess(t('pages.billing.payment_removed') || 'Payment method removed');
-      fetchBillingData();
-    } catch (err) {
-      showError(t('messages.errors.generic'));
+      await api.put('/billing/auto-pay', { enabled, day_of_month: selectedDay }).catch(() => {});
+      showSuccess(t('messages.success.saved') || 'Settings saved');
+    } finally {
+      setSavingAutoPay(false);
     }
   };
 
-  const setDefaultMethod = async (methodId) => {
+  const handleDayChange = async (day) => {
+    setSelectedDay(day);
+    setSavingAutoPay(true);
+    
     try {
-      await api.put(`/billing/payment-methods/${methodId}/default`);
-      showSuccess(t('messages.success.saved') || 'Saved');
-      fetchBillingData();
-    } catch (err) {
-      showError(t('messages.errors.generic'));
+      await api.put('/billing/auto-pay', { 
+        enabled: billing?.auto_pay?.enabled || false, 
+        day_of_month: day 
+      }).catch(() => {});
+      setShowDayPickerModal(false);
+      showSuccess(t('messages.success.saved') || 'Payment day updated');
+    } finally {
+      setSavingAutoPay(false);
     }
   };
 
-  const handleAddPaymentMethod = async () => {
-    if (selectedPaymentType === 'card') {
-      if (!cardForm.cardNumber || !cardForm.expMonth || !cardForm.expYear || !cardForm.cvv) {
-        showError(t('pages.billing.fill_card_details') || 'Please fill in all card details');
-        return;
-      }
-    }
-
-    setAddingCard(true);
+  const handleLinkProvider = async (providerId) => {
+    setLinkingProvider(providerId);
     try {
-      // Simulate adding payment method
-      await api.post('/billing/payment-methods', {
-        type: selectedPaymentType,
-        ...cardForm
+      const isFirst = linkedProviders.length === 0;
+      
+      await api.post('/payment-providers', {
+        provider_id: providerId,
+        is_default: isFirst
       }).catch(() => {
-        // If API doesn't exist, add to local state
-        const newMethod = {
-          id: Date.now().toString(),
-          type: selectedPaymentType,
-          last4: cardForm.cardNumber.slice(-4) || '0000',
-          exp_month: cardForm.expMonth,
-          exp_year: cardForm.expYear,
-          is_default: paymentMethods.length === 0
+        // Simulate linking if API doesn't exist
+        const provider = availableProviders.find(p => p.id === providerId);
+        const newLinked = {
+          provider_id: providerId,
+          display_name: provider?.name || providerId,
+          is_default: isFirst,
+          linked_at: new Date().toISOString()
         };
-        setPaymentMethods(prev => [...prev, newMethod]);
+        setLinkedProviders(prev => [...prev, newLinked]);
       });
       
-      showSuccess(t('pages.billing.payment_added') || 'Payment method added');
-      setShowAddModal(false);
-      setCardForm({ cardNumber: '', expMonth: '', expYear: '', cvv: '', cardHolder: '' });
-    } catch (err) {
-      showError(err.response?.data?.detail || t('messages.errors.generic'));
+      showSuccess(t('pages.billing.payment_linked') || 'Payment method linked successfully!');
+      setShowProviderModal(false);
+      loadData();
+    } catch (error) {
+      showError(error.response?.data?.detail || t('messages.errors.generic'));
     } finally {
-      setAddingCard(false);
+      setLinkingProvider(null);
     }
   };
 
-  const PaymentTypeOption = ({ type, icon: Icon, label, description }) => (
-    <button
-      onClick={() => setSelectedPaymentType(type)}
-      style={{
-        width: '100%',
-        padding: '16px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '12px',
-        backgroundColor: selectedPaymentType === type ? colors.primaryLight : colors.background,
-        border: `2px solid ${selectedPaymentType === type ? colors.primary : colors.border}`,
-        borderRadius: '12px',
-        marginBottom: '12px'
-      }}
-    >
-      <div style={{
-        width: '40px',
-        height: '40px',
-        borderRadius: '10px',
-        backgroundColor: selectedPaymentType === type ? colors.primary : colors.gray200,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}>
-        <Icon size={22} color={selectedPaymentType === type ? '#fff' : colors.textMuted} />
-      </div>
-      <div style={{ flex: 1, textAlign: 'left' }}>
-        <h4 style={{ color: colors.text, fontWeight: 600, marginBottom: '2px' }}>{label}</h4>
-        <p style={{ color: colors.textMuted, fontSize: '13px' }}>{description}</p>
-      </div>
-      {selectedPaymentType === type && (
-        <CheckCircle size={22} color={colors.primary} />
-      )}
-    </button>
+  const handleUnlinkProvider = async (providerId, displayName) => {
+    if (!window.confirm(`Remove ${displayName}?`)) return;
+    
+    try {
+      await api.delete(`/payment-providers/${providerId}`).catch(() => {
+        setLinkedProviders(prev => prev.filter(p => p.provider_id !== providerId));
+      });
+      showSuccess(t('pages.billing.payment_removed') || 'Payment method removed');
+      loadData();
+    } catch (error) {
+      showError(t('messages.errors.generic'));
+    }
+  };
+
+  const handleSetDefault = async (providerId) => {
+    try {
+      await api.put(`/payment-providers/${providerId}/default`).catch(() => {
+        setLinkedProviders(prev => prev.map(p => ({
+          ...p,
+          is_default: p.provider_id === providerId
+        })));
+      });
+      showSuccess(t('messages.success.saved') || 'Default updated');
+      loadData();
+    } catch (error) {
+      showError(t('messages.errors.generic'));
+    }
+  };
+
+  const getOrdinalSuffix = (day) => {
+    if (day > 3 && day < 21) return 'th';
+    switch (day % 10) {
+      case 1: return 'st';
+      case 2: return 'nd';
+      case 3: return 'rd';
+      default: return 'th';
+    }
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    return new Date(dateString).toLocaleDateString('en-US', {
+      month: 'short', day: 'numeric', year: 'numeric'
+    });
+  };
+
+  const getProviderConfig = (providerId) => {
+    return PROVIDER_CONFIG[providerId] || { name: providerId, color: colors.primary, icon: '💳' };
+  };
+
+  const unlinkedProviders = availableProviders.filter(
+    p => !linkedProviders.some(lp => lp.provider_id === p.id)
   );
 
   return (
@@ -151,290 +201,253 @@ const BillingPage = () => {
       <main className="billing-main" style={{ paddingTop: '76px' }}>
         {loading ? (
           <div className="loading-state">
-            <Loader className="spinner" size={32} color={colors.primary} />
+            <Loader2 className="spinner" size={32} color={colors.primary} />
           </div>
         ) : (
           <div className="billing-container">
             {/* Pending Balance */}
-            <div className="balance-section" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
-              <div className="balance-header">
-                <DollarSign size={24} color={colors.primary} />
+            <div className="section" style={{ backgroundColor: colors.surface }}>
+              <div className="section-header">
+                <Wallet size={24} color={colors.warning} />
                 <h3 style={{ color: colors.text }}>{t('pages.billing.pending_balance') || 'Pending Balance'}</h3>
               </div>
-              <p className="balance-amount" style={{ color: colors.primary }}>
-                ${pendingBalance.toFixed(2)}
-              </p>
-              {pendingBalance > 0 && (
-                <button className="pay-btn" style={{ backgroundColor: colors.primary }}>
-                  {t('buttons.pay_now') || 'Pay Now'}
-                </button>
-              )}
+
+              <div className="balance-card">
+                <p className="balance-amount" style={{ 
+                  color: billing?.pending_balance > 0 ? colors.warning : colors.success 
+                }}>
+                  ${(billing?.pending_balance || 0).toFixed(2)}
+                </p>
+                <p className="balance-label" style={{ color: colors.textMuted }}>
+                  {billing?.pending_balance > 0 
+                    ? (t('pages.billing.due_for_sessions') || 'Due for upcoming sessions')
+                    : (t('pages.billing.no_pending_payments') || 'No pending payments')}
+                </p>
+              </div>
             </div>
 
-            {/* Payment Methods */}
-            <div className="section" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
+            {/* Linked Payment Methods */}
+            <div className="section" style={{ backgroundColor: colors.surface }}>
               <div className="section-header">
-                <h2 style={{ color: colors.text }}>{t('pages.billing.payment_methods') || 'Payment Methods'}</h2>
-                <button 
-                  className="add-btn" 
-                  style={{ color: colors.primary }}
-                  onClick={() => setShowAddModal(true)}
-                  data-testid="add-payment-btn"
-                >
-                  <Plus size={20} />
-                  {t('pages.billing.add_card') || 'Add'}
-                </button>
+                <CreditCard size={24} color={colors.primary} />
+                <h3 style={{ color: colors.text }}>{t('pages.billing.payment_methods') || 'Payment Methods'}</h3>
               </div>
 
-              {paymentMethods.length === 0 ? (
+              {linkedProviders.length === 0 ? (
                 <div className="empty-state">
                   <CreditCard size={48} color={colors.gray300} />
-                  <p style={{ color: colors.textMuted }}>{t('pages.billing.no_payment_methods') || 'No payment methods added'}</p>
-                  <button
-                    onClick={() => setShowAddModal(true)}
-                    style={{
-                      marginTop: '16px',
-                      padding: '12px 24px',
-                      backgroundColor: colors.primary,
-                      color: '#fff',
-                      borderRadius: '10px',
-                      fontWeight: 600
-                    }}
-                  >
-                    + {t('pages.billing.add_payment_method') || 'Add Payment Method'}
-                  </button>
+                  <p style={{ color: colors.textMuted }}>{t('pages.billing.no_payment_methods') || 'No payment methods linked yet'}</p>
+                  <p className="empty-subtext" style={{ color: colors.textMuted }}>
+                    {t('pages.billing.add_payment_method_desc') || 'Add a payment method to book sessions'}
+                  </p>
                 </div>
               ) : (
-                <div className="payment-list">
-                  {paymentMethods.map((method) => (
-                    <div key={method.id} className="payment-item" style={{ borderColor: colors.border }}>
-                      <CreditCard size={24} color={colors.primary} />
-                      <div className="payment-info">
-                        <h4 style={{ color: colors.text }}>
-                          •••• {method.last4}
-                          {method.is_default && (
-                            <span className="default-badge" style={{ backgroundColor: colors.successLight, color: colors.success }}>
+                <div className="providers-list">
+                  {linkedProviders.map((provider) => {
+                    const config = getProviderConfig(provider.provider_id);
+                    return (
+                      <div 
+                        key={provider.provider_id}
+                        className="linked-provider"
+                        style={{ borderColor: provider.is_default ? colors.primary : colors.border }}
+                      >
+                        <div 
+                          className="provider-icon"
+                          style={{ backgroundColor: config.color + '15' }}
+                        >
+                          <span style={{ fontSize: '24px' }}>{config.icon}</span>
+                        </div>
+                        <div className="provider-info">
+                          <h4 style={{ color: colors.text }}>{provider.display_name}</h4>
+                          {provider.is_default && (
+                            <span className="default-badge" style={{ 
+                              backgroundColor: colors.primary + '20',
+                              color: colors.primary 
+                            }}>
                               {t('pages.billing.default') || 'Default'}
                             </span>
                           )}
-                        </h4>
-                        <p style={{ color: colors.textMuted }}>Expires {method.exp_month}/{method.exp_year}</p>
-                      </div>
-                      <div className="payment-actions">
-                        {!method.is_default && (
-                          <button onClick={() => setDefaultMethod(method.id)} style={{ color: colors.primary }}>
-                            {t('pages.billing.set_default') || 'Set Default'}
+                        </div>
+                        <div className="provider-actions">
+                          {!provider.is_default && (
+                            <button 
+                              onClick={() => handleSetDefault(provider.provider_id)}
+                              className="set-default-btn"
+                              style={{ color: colors.primary, backgroundColor: colors.background }}
+                            >
+                              {t('pages.billing.set_default') || 'Set Default'}
+                            </button>
+                          )}
+                          <button 
+                            onClick={() => handleUnlinkProvider(provider.provider_id, provider.display_name)}
+                            className="remove-btn"
+                          >
+                            <Trash2 size={18} color={colors.error} />
                           </button>
-                        )}
-                        <button onClick={() => removePaymentMethod(method.id)} style={{ color: colors.error }}>
-                          <Trash2 size={18} />
-                        </button>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
+              )}
+
+              {unlinkedProviders.length > 0 && (
+                <button
+                  className="add-method-btn"
+                  style={{ borderColor: colors.primary, color: colors.primary }}
+                  onClick={() => setShowProviderModal(true)}
+                  data-testid="add-payment-btn"
+                >
+                  <Plus size={20} />
+                  {t('pages.billing.add_payment_method') || 'Add Payment Method'}
+                </button>
               )}
             </div>
 
-            {/* Auto-Pay Toggle */}
-            <div className="section" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
+            {/* Auto-Pay Settings */}
+            <div className="section" style={{ backgroundColor: colors.surface }}>
+              <div className="section-header">
+                <RefreshCw size={24} color={colors.primary} />
+                <h3 style={{ color: colors.text }}>{t('pages.billing.auto_pay') || 'Auto-Pay'}</h3>
+              </div>
+
               <div className="auto-pay-row">
                 <div className="auto-pay-info">
-                  <h3 style={{ color: colors.text }}>{t('pages.billing.auto_pay') || 'Auto-Pay'}</h3>
-                  <p style={{ color: colors.textMuted }}>{t('pages.billing.auto_pay_desc') || 'Automatically pay for bookings'}</p>
+                  <h4 style={{ color: colors.text }}>{t('pages.billing.enable_auto_pay') || 'Enable Auto-Pay'}</h4>
+                  <p style={{ color: colors.textMuted }}>{t('pages.billing.auto_pay_desc') || 'Automatically pay pending balance monthly'}</p>
                 </div>
                 <label className="toggle">
                   <input
                     type="checkbox"
-                    checked={autoPay}
-                    onChange={(e) => setAutoPay(e.target.checked)}
+                    checked={billing?.auto_pay?.enabled || false}
+                    onChange={(e) => handleToggleAutoPay(e.target.checked)}
+                    disabled={savingAutoPay}
                   />
-                  <span className="toggle-slider" style={{ backgroundColor: autoPay ? colors.primary : colors.gray300 }} />
+                  <span className="toggle-slider" style={{ 
+                    backgroundColor: billing?.auto_pay?.enabled ? colors.primary : colors.gray300 
+                  }} />
                 </label>
               </div>
-              <p className="security-note" style={{ color: colors.textMuted }}>
-                {t('pages.billing.security_note') || 'Your payment information is securely stored and encrypted.'}
-              </p>
-            </div>
 
-            {/* Transaction History */}
-            <div className="section" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
-              <h2 style={{ color: colors.text }}>{t('pages.billing.transaction_history') || 'Transaction History'}</h2>
+              {linkedProviders.length === 0 && (
+                <p className="warning-text" style={{ color: colors.warning }}>
+                  {t('pages.billing.add_payment_to_enable') || 'Add a payment method to enable auto-pay'}
+                </p>
+              )}
 
-              {transactions.length === 0 ? (
-                <div className="empty-state">
-                  <DollarSign size={48} color={colors.gray300} />
-                  <p style={{ color: colors.textMuted }}>{t('empty_states.no_transactions') || 'No transactions yet'}</p>
-                </div>
-              ) : (
-                <div className="transaction-list">
-                  {transactions.map((tx) => (
-                    <div key={tx.id} className="transaction-item" style={{ borderColor: colors.border }}>
-                      <div className="transaction-info">
-                        <h4 style={{ color: colors.text }}>{tx.description}</h4>
-                        <p style={{ color: colors.textMuted }}>{tx.date}</p>
-                      </div>
-                      <span 
-                        className="transaction-amount"
-                        style={{ color: tx.type === 'refund' ? colors.success : colors.text }}
-                      >
-                        {tx.type === 'refund' ? '+' : '-'}${tx.amount.toFixed(2)}
+              {billing?.auto_pay?.enabled && (
+                <>
+                  <button
+                    className="day-selector"
+                    style={{ backgroundColor: colors.background, borderColor: colors.border }}
+                    onClick={() => setShowDayPickerModal(true)}
+                  >
+                    <div>
+                      <span className="day-label" style={{ color: colors.textMuted }}>
+                        {t('pages.billing.payment_day') || 'Payment Day'}
+                      </span>
+                      <span className="day-value" style={{ color: colors.text }}>
+                        {selectedDay}{getOrdinalSuffix(selectedDay)} {t('pages.billing.of_each_month') || 'of each month'}
                       </span>
                     </div>
-                  ))}
-                </div>
+                    <ChevronRight size={20} color={colors.textMuted} />
+                  </button>
+
+                  <div className="next-auto-pay" style={{ backgroundColor: colors.background }}>
+                    <span className="next-label" style={{ color: colors.textMuted }}>
+                      {t('pages.billing.next_auto_pay') || 'Next Auto-Pay'}
+                    </span>
+                    <span className="next-date" style={{ color: colors.text }}>
+                      {formatDate(billing.auto_pay.next_auto_pay_date)}
+                    </span>
+                    <span className="next-amount" style={{ color: colors.primary }}>
+                      ${(billing.auto_pay.next_auto_pay_amount || 0).toFixed(2)}
+                    </span>
+                  </div>
+                </>
               )}
+            </div>
+
+            {/* Security Note */}
+            <div className="security-note" style={{ backgroundColor: colors.primaryLight }}>
+              <Shield size={20} color={colors.primary} />
+              <p style={{ color: colors.primary }}>
+                {t('pages.billing.security_note') || 'Maestro Habitat does not store your payment details. All payments are processed securely through your selected payment provider.'}
+              </p>
             </div>
           </div>
         )}
       </main>
 
-      {/* Add Payment Method Modal */}
-      {showAddModal && (
-        <div className="modal-overlay" onClick={() => setShowAddModal(false)}>
-          <div 
-            className="add-payment-modal"
-            style={{ backgroundColor: colors.surface }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="modal-header">
-              <h2 style={{ color: colors.text }}>{t('pages.billing.add_payment_method') || 'Add Payment Method'}</h2>
-              <button onClick={() => setShowAddModal(false)} style={{ padding: '8px' }}>
-                <X size={24} color={colors.textMuted} />
-              </button>
+      {/* Add Payment Provider Modal */}
+      {showProviderModal && (
+        <div className="modal-overlay" onClick={() => setShowProviderModal(false)}>
+          <div className="bottom-sheet" style={{ backgroundColor: colors.surface }} onClick={e => e.stopPropagation()}>
+            <div className="sheet-handle" style={{ backgroundColor: colors.gray300 }} />
+            <h2 style={{ color: colors.text }}>{t('pages.billing.add_payment_method') || 'Add Payment Method'}</h2>
+            <p className="sheet-subtitle" style={{ color: colors.textMuted }}>
+              {t('pages.billing.select_provider') || 'Select a payment provider'}
+            </p>
+
+            <div className="provider-options">
+              {unlinkedProviders.map((provider) => {
+                const config = getProviderConfig(provider.id);
+                const isLinking = linkingProvider === provider.id;
+                return (
+                  <button
+                    key={provider.id}
+                    className="provider-option"
+                    style={{ borderColor: colors.border }}
+                    onClick={() => handleLinkProvider(provider.id)}
+                    disabled={isLinking}
+                    data-testid={`link-${provider.id}`}
+                  >
+                    <div className="provider-icon" style={{ backgroundColor: config.color + '15' }}>
+                      <span style={{ fontSize: '24px' }}>{config.icon}</span>
+                    </div>
+                    <span className="provider-name" style={{ color: colors.text }}>{config.name}</span>
+                    {isLinking ? (
+                      <Loader2 size={20} color={colors.primary} className="spinner" />
+                    ) : (
+                      <Plus size={24} color={colors.primary} />
+                    )}
+                  </button>
+                );
+              })}
             </div>
 
-            <div className="modal-body">
-              {/* Payment Type Selection */}
-              <h3 style={{ color: colors.text, marginBottom: '12px', fontSize: '16px' }}>
-                {t('pages.billing.select_type') || 'Select Payment Type'}
-              </h3>
+            {unlinkedProviders.length === 0 && (
+              <p className="all-linked" style={{ color: colors.textMuted }}>
+                {t('pages.billing.all_methods_linked') || 'All available payment methods have been linked'}
+              </p>
+            )}
+          </div>
+        </div>
+      )}
 
-              <PaymentTypeOption 
-                type="card" 
-                icon={CreditCard} 
-                label={t('pages.billing.credit_debit') || 'Credit / Debit Card'}
-                description={t('pages.billing.card_desc') || 'Visa, Mastercard, American Express'}
-              />
-
-              <PaymentTypeOption 
-                type="bank" 
-                icon={Building} 
-                label={t('pages.billing.bank_account') || 'Bank Account'}
-                description={t('pages.billing.bank_desc') || 'Direct debit from your bank'}
-              />
-
-              <PaymentTypeOption 
-                type="upi" 
-                icon={Smartphone} 
-                label={t('pages.billing.upi') || 'UPI'}
-                description={t('pages.billing.upi_desc') || 'Google Pay, PhonePe, Paytm'}
-              />
-
-              {/* Card Form (shown when card is selected) */}
-              {selectedPaymentType === 'card' && (
-                <div className="card-form">
-                  <div className="form-group">
-                    <label style={{ color: colors.textMuted }}>{t('forms.labels.card_number') || 'Card Number'}</label>
-                    <input
-                      type="text"
-                      placeholder="1234 5678 9012 3456"
-                      value={cardForm.cardNumber}
-                      onChange={(e) => setCardForm({ ...cardForm, cardNumber: e.target.value.replace(/\D/g, '').slice(0, 16) })}
-                      style={{ backgroundColor: colors.background, borderColor: colors.border, color: colors.text }}
-                      data-testid="card-number-input"
-                    />
-                  </div>
-                  <div className="form-row">
-                    <div className="form-group">
-                      <label style={{ color: colors.textMuted }}>{t('forms.labels.expiry') || 'Expiry'}</label>
-                      <div style={{ display: 'flex', gap: '8px' }}>
-                        <input
-                          type="text"
-                          placeholder="MM"
-                          value={cardForm.expMonth}
-                          onChange={(e) => setCardForm({ ...cardForm, expMonth: e.target.value.replace(/\D/g, '').slice(0, 2) })}
-                          style={{ backgroundColor: colors.background, borderColor: colors.border, color: colors.text, width: '60px' }}
-                        />
-                        <input
-                          type="text"
-                          placeholder="YY"
-                          value={cardForm.expYear}
-                          onChange={(e) => setCardForm({ ...cardForm, expYear: e.target.value.replace(/\D/g, '').slice(0, 2) })}
-                          style={{ backgroundColor: colors.background, borderColor: colors.border, color: colors.text, width: '60px' }}
-                        />
-                      </div>
-                    </div>
-                    <div className="form-group">
-                      <label style={{ color: colors.textMuted }}>{t('forms.labels.cvv') || 'CVV'}</label>
-                      <input
-                        type="password"
-                        placeholder="***"
-                        value={cardForm.cvv}
-                        onChange={(e) => setCardForm({ ...cardForm, cvv: e.target.value.replace(/\D/g, '').slice(0, 4) })}
-                        style={{ backgroundColor: colors.background, borderColor: colors.border, color: colors.text, width: '80px' }}
-                      />
-                    </div>
-                  </div>
-                  <div className="form-group">
-                    <label style={{ color: colors.textMuted }}>{t('forms.labels.card_holder') || 'Cardholder Name'}</label>
-                    <input
-                      type="text"
-                      placeholder="John Doe"
-                      value={cardForm.cardHolder}
-                      onChange={(e) => setCardForm({ ...cardForm, cardHolder: e.target.value })}
-                      style={{ backgroundColor: colors.background, borderColor: colors.border, color: colors.text }}
-                    />
-                  </div>
-                </div>
-              )}
-
-              {/* Bank Account Form */}
-              {selectedPaymentType === 'bank' && (
-                <div className="bank-form" style={{ marginTop: '16px', padding: '16px', backgroundColor: colors.background, borderRadius: '12px' }}>
-                  <p style={{ color: colors.textMuted, textAlign: 'center' }}>
-                    {t('pages.billing.bank_coming_soon') || 'Bank account linking coming soon'}
-                  </p>
-                </div>
-              )}
-
-              {/* UPI Form */}
-              {selectedPaymentType === 'upi' && (
-                <div className="upi-form" style={{ marginTop: '16px' }}>
-                  <div className="form-group">
-                    <label style={{ color: colors.textMuted }}>{t('pages.billing.upi_id') || 'UPI ID'}</label>
-                    <input
-                      type="text"
-                      placeholder="yourname@upi"
-                      style={{ backgroundColor: colors.background, borderColor: colors.border, color: colors.text }}
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="modal-footer">
-              <button
-                onClick={handleAddPaymentMethod}
-                disabled={addingCard}
-                style={{
-                  width: '100%',
-                  padding: '14px',
-                  backgroundColor: colors.primary,
-                  color: '#fff',
-                  borderRadius: '12px',
-                  fontSize: '16px',
-                  fontWeight: 600,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '8px'
-                }}
-                data-testid="submit-payment-btn"
-              >
-                {addingCard ? <Loader size={20} className="spinner" /> : <Plus size={20} />}
-                {t('pages.billing.add_payment_method') || 'Add Payment Method'}
-              </button>
+      {/* Day Picker Modal */}
+      {showDayPickerModal && (
+        <div className="modal-overlay" onClick={() => setShowDayPickerModal(false)}>
+          <div className="day-picker-modal" style={{ backgroundColor: colors.surface }} onClick={e => e.stopPropagation()}>
+            <h2 style={{ color: colors.text }}>{t('pages.billing.select_payment_day') || 'Select Payment Day'}</h2>
+            <p style={{ color: colors.textMuted }}>{t('pages.billing.choose_day_hint') || 'Choose which day of the month to auto-pay'}</p>
+            
+            <div className="day-grid">
+              {DAY_OPTIONS.map((day) => (
+                <button
+                  key={day}
+                  className={`day-option ${selectedDay === day ? 'selected' : ''}`}
+                  style={{
+                    backgroundColor: selectedDay === day ? colors.primary : colors.background,
+                    borderColor: selectedDay === day ? colors.primary : colors.border,
+                    color: selectedDay === day ? '#fff' : colors.text
+                  }}
+                  onClick={() => handleDayChange(day)}
+                  disabled={savingAutoPay}
+                >
+                  {day}{getOrdinalSuffix(day)}
+                </button>
+              ))}
             </div>
           </div>
         </div>
