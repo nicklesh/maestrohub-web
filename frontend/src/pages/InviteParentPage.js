@@ -51,7 +51,7 @@ export default function InviteParentPage() {
     <div style={{ minHeight: '100vh', backgroundColor: colors.background }}>
       <AppHeader showBack={true} title={t('navigation.invite_parents') || 'Invite Parents'} showUserName={true} />
 
-      <div style={{ maxWidth: '500px', margin: '0 auto' }}>
+      <div style={{ padding: '76px 16px 100px', maxWidth: '500px', margin: '0 auto' }}>
         <div style={{
           backgroundColor: colors.surface,
           borderRadius: '16px',
