@@ -359,6 +359,9 @@
       "child_name": "Enter child's name",
       "age": "Enter age"
     },
+    "hints": {
+      "email_cannot_change": "Email cannot be changed"
+    },
     "validation": {
       "required": "This field is required",
       "fill_all_fields": "Please fill in all fields",
