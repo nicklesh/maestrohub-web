@@ -898,6 +898,7 @@
       "appearance": "Appearance",
       "dark_mode": "Dark Mode",
       "language": "Language",
+      "current_language": "Current Language",
       "notifications": "Notifications",
       "push_notifications": "Push Notifications",
       "email_notifications": "Email Notifications",
