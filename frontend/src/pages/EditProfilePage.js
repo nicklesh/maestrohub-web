@@ -171,6 +171,7 @@ export default function EditProfilePage() {
           {t('buttons.save') || 'Save Changes'}
         </button>
       </form>
+      </div>
     </div>
   );
 }
