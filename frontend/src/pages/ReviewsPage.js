@@ -61,18 +61,10 @@ const ReviewsPage = () => {
 
   return (
     <div className="reviews-page" style={{ backgroundColor: colors.background }}>
-      <header className="reviews-header" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
-        <div className="header-content">
-          <button className="back-btn" onClick={() => navigate(-1)} style={{ color: colors.text }}>
-            <ArrowLeft size={24} />
-          </button>
-          <h1 style={{ color: colors.text }}>{t('pages.reviews.title')}</h1>
-          <div style={{ width: 40 }} />
-        </div>
-      </header>
+      <AppHeader showBack={true} title={t('pages.reviews.title') || 'Reviews'} showUserName={true} />
 
       {/* Tabs */}
-      <div className="tabs-container" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
+      <div className="tabs-container" style={{ backgroundColor: colors.surface, borderColor: colors.border, marginTop: '60px' }}>
         <div className="tabs">
           {TABS.map((tab) => (
             <button
