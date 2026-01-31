@@ -135,26 +135,8 @@ const ProfilePage = () => {
 
   return (
     <div className="profile-page" style={{ backgroundColor: colors.background }}>
-      {/* Header */}
-      <header className="profile-header" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
-        <div className="header-content">
-          <h1 style={{ color: colors.text }}>{t('pages.profile.account_title')}</h1>
-          <button 
-            className="notification-btn" 
-            onClick={() => setShowNotifications(true)}
-            style={{ backgroundColor: colors.gray100 }}
-            data-testid="notifications-btn"
-          >
-            <Bell size={22} color={colors.text} />
-            {unreadCount > 0 && (
-              <span className="notification-badge" style={{ backgroundColor: colors.error }}>
-                {unreadCount}
-              </span>
-            )}
-          </button>
-        </div>
-      </header>
-
+      <AppHeader />
+      
       <main className="profile-main">
         <div className="profile-container">
           {/* User Header */}
