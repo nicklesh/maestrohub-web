@@ -74,9 +74,14 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* App container for bottom nav spacing */
+/* App container for bottom nav and header spacing */
 .app-container {
   min-height: 100vh;
+}
+
+/* Add spacing for fixed header */
+.page-with-header {
+  padding-top: 60px;
 }
 
 /* Add bottom padding to all page containers when bottom nav is present */
