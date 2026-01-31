@@ -85,17 +85,9 @@ const NotificationsSettingsPage = () => {
 
   return (
     <div className="notifications-settings-page" style={{ backgroundColor: colors.background }}>
-      <header className="page-header" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
-        <div className="header-content">
-          <button className="back-btn" onClick={() => navigate(-1)} style={{ color: colors.text }}>
-            <ArrowLeft size={24} />
-          </button>
-          <h1 style={{ color: colors.text }}>{t('pages.settings.notifications')}</h1>
-          {saving && <Loader className="spinner" size={20} color={colors.primary} />}
-        </div>
-      </header>
+      <AppHeader showBack={true} title={t('pages.settings.notifications') || 'Notifications'} showUserName={true} />
 
-      <main className="page-main">
+      <main className="page-main" style={{ paddingTop: '76px' }}>
         <div className="page-container">
           <div className="settings-section" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
             <h3 style={{ color: colors.text }}>Notification Channels</h3>
