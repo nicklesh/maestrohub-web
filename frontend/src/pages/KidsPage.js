@@ -161,27 +161,23 @@ const KidsPage = () => {
 
   return (
     <div className="kids-page" style={{ backgroundColor: colors.background }}>
-      {/* Header */}
-      <header className="kids-header" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
-        <div className="header-content">
-          <button 
-            className="back-btn" 
-            onClick={() => navigate('/home')}
-            style={{ color: colors.text }}
-          >
-            <ArrowLeft size={24} />
-          </button>
+      <AppHeader />
+      
+      {/* Title bar with Add Child button */}
+      <div className="kids-title-bar" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
+        <div className="title-content">
           <h1 style={{ color: colors.text }}>{t('pages.kids.title')}</h1>
           <button 
-            className="add-btn" 
+            className="add-child-btn" 
             onClick={() => openModal()}
             style={{ backgroundColor: colors.primary }}
             data-testid="add-kid-btn"
           >
-            <Plus size={20} color={colors.textInverse} />
+            <Plus size={18} color="#fff" />
+            <span>{t('pages.kids.add_child')}</span>
           </button>
         </div>
-      </header>
+      </div>
 
       {/* Content */}
       <main className="kids-content">
