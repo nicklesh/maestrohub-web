@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Star, ThumbsUp, Loader, User, Calendar } from 'lucide-react';
+import { Star, ThumbsUp, Loader, User, Calendar } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useTranslation } from '../i18n';
+import AppHeader from '../components/AppHeader';
 import api from '../services/api';
 import { format, parseISO } from 'date-fns';
 import './ReviewsPage.css';
