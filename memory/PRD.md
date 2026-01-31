@@ -212,6 +212,58 @@ Visible on all screen sizes (desktop included per user request)
 - All 8 test cases passed
 - Additional translation fix applied to My Kids page by testing agent
 
+### January 31, 2026 - Mobile App Parity Session (Iteration 5)
+**Major UI Overhaul to Match Mobile App:**
+
+1. **New AppHeader Component** - Created comprehensive header matching mobile app:
+   - Left: Avatar circle (with user initial) + Name + Role
+   - Center: MH Logo (inline SVG)
+   - Right: Bell (notifications), Mail (contact), Logout icons
+
+2. **Updated BottomNav** - Now matches mobile app exactly:
+   - Consumer: Home, Search, Bookings, My Kids, Account
+   - Tutor: Dashboard, Calendar, Bookings, Account
+   - Icons use Lucide React (Home, Search, Calendar, Users, User)
+
+3. **Rewrote HomePage** - 4 navigation cards layout:
+   - Search a Coach (Search icon)
+   - Your Bookings (Calendar icon)
+   - My Kids Sessions (Users icon)
+   - View Your Account (User icon)
+   - Pro Tip section at bottom
+
+4. **Rewrote SearchPage** - Category browse with filters:
+   - Search box with placeholder
+   - Browse Categories grid (10 categories)
+   - Category cards with icon + name + subject count
+   - Filter controls: category dropdown, subject dropdown, country toggle
+   - Coach cards with: flag, avatar, name, price, rating, bio, category, subjects, modality
+
+5. **Enhanced TutorDetailPage** - All sections matching mobile:
+   - Profile card: avatar, name, flag badge, rating, modality badge, price
+   - Cross-market info box (if coach from different country)
+   - About section
+   - Subjects pills
+   - Policies section (cancellation, no-show)
+   - Available slots with selection
+   - Book Session button
+
+6. **Updated BookingsPage** - Pill-style tabs:
+   - Upcoming, Past, Rescheduled, Cancelled
+   - Empty state with icon and message
+
+7. **Updated KidsPage** - Add Child bottom sheet:
+   - Name (required), Age, Grade fields
+   - Notification Contact section (Email, Phone)
+   - Checkbox options (reminders, schedules)
+
+8. **Updated ProfilePage** - Uses new AppHeader
+
+**Test Results - Iteration 5:**
+- Frontend: 100%
+- All 13 test cases passed
+- 1 translation fix applied (pages.search.no_results)
+
 ---
 
 ## Prioritized Backlog
