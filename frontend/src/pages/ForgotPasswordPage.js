@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Mail, AlertCircle, Loader, CheckCircle, ArrowLeft } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Mail, AlertCircle, Loader, CheckCircle, ArrowLeft, Lock } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useToast } from '../contexts/ToastContext';
 import { useTranslation } from '../i18n';
 import api from '../services/api';
-import './LoginPage.css';
+import './ForgotPasswordPage.css';
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState('');
@@ -16,6 +16,7 @@ const ForgotPasswordPage = () => {
   const { colors, isDark } = useTheme();
   const { showError, showSuccess } = useToast();
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,28 +42,38 @@ const ForgotPasswordPage = () => {
 
   if (success) {
     return (
-      <div className="login-page" style={{ backgroundColor: colors.background }}>
-        <div className="login-container">
-          <div className="login-form-wrapper">
-            <div className="login-header">
+      <div className="forgot-page" style={{ backgroundColor: colors.background }}>
+        <div className="forgot-container">
+          <div className="forgot-form-wrapper">
+            {/* Logo Section */}
+            <div className="forgot-header">
               <img
                 src={isDark ? '/mh_logo_dark_trimmed.png' : '/mh_logo_trimmed.png'}
                 alt="Maestro Habitat"
-                className="login-logo"
+                className="forgot-logo"
               />
+              <h1 className="app-title" style={{ color: colors.primary }}>
+                {t('branding.app_name')}
+              </h1>
+              <p className="tagline" style={{ color: colors.textMuted }}>
+                {t('branding.tagline')}
+              </p>
             </div>
 
-            <div className="login-form" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
-              <div style={{ textAlign: 'center' }}>
-                <CheckCircle size={64} color={colors.success} style={{ marginBottom: 16 }} />
-                <h2 className="form-title" style={{ color: colors.text }}>
+            {/* Success Card */}
+            <div className="forgot-card" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
+              <div className="success-content">
+                <div className="icon-circle success" style={{ backgroundColor: colors.successLight }}>
+                  <CheckCircle size={32} color={colors.success} />
+                </div>
+                <h2 style={{ color: colors.text }}>
                   {t('auth.forgot_password.check_email')}
                 </h2>
-                <p className="form-subtitle" style={{ color: colors.textMuted, marginBottom: 8 }}>
+                <p style={{ color: colors.textMuted }}>
                   {t('auth.forgot_password.check_email_message')}
                 </p>
-                <p style={{ color: colors.primary, fontWeight: 600, marginBottom: 24 }}>{email}</p>
-                <Link to="/login">
+                <p className="email-text" style={{ color: colors.primary }}>{email}</p>
+                <Link to="/login" style={{ width: '100%' }}>
                   <button className="primary-btn" style={{ backgroundColor: colors.primary }}>
                     {t('auth.forgot_password.back_to_login')}
                   </button>
@@ -76,27 +87,40 @@ const ForgotPasswordPage = () => {
   }
 
   return (
-    <div className="login-page" style={{ backgroundColor: colors.background }}>
-      <div className="login-container">
-        <div className="login-form-wrapper">
-          <div className="login-header">
+    <div className="forgot-page" style={{ backgroundColor: colors.background }}>
+      {/* Back button */}
+      <button className="back-btn" onClick={() => navigate('/login')} style={{ color: colors.text }}>
+        <ArrowLeft size={24} />
+      </button>
+
+      <div className="forgot-container">
+        <div className="forgot-form-wrapper">
+          {/* Logo Section */}
+          <div className="forgot-header">
             <img
               src={isDark ? '/mh_logo_dark_trimmed.png' : '/mh_logo_trimmed.png'}
               alt="Maestro Habitat"
-              className="login-logo"
+              className="forgot-logo"
             />
+            <h1 className="app-title" style={{ color: colors.primary }}>
+              {t('branding.app_name')}
+            </h1>
+            <p className="tagline" style={{ color: colors.textMuted }}>
+              {t('branding.tagline')}
+            </p>
           </div>
 
-          <div className="login-form" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
-            <Link to="/login" style={{ display: 'flex', alignItems: 'center', gap: 8, color: colors.primary, marginBottom: 24 }}>
-              <ArrowLeft size={20} />
-              <span>{t('auth.forgot_password.back_to_login')}</span>
-            </Link>
+          {/* Form Card */}
+          <div className="forgot-card" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
+            {/* Lock Icon */}
+            <div className="icon-circle" style={{ backgroundColor: colors.primaryLight }}>
+              <Lock size={32} color={colors.primary} />
+            </div>
 
-            <h2 className="form-title" style={{ color: colors.text }}>
+            <h2 className="card-title" style={{ color: colors.text }}>
               {t('auth.forgot_password.title')}
             </h2>
-            <p className="form-subtitle" style={{ color: colors.textMuted }}>
+            <p className="card-subtitle" style={{ color: colors.textMuted }}>
               {t('auth.forgot_password.subtitle')}
             </p>
 
@@ -108,14 +132,14 @@ const ForgotPasswordPage = () => {
             )}
 
             <form onSubmit={handleSubmit}>
-              <div className="input-wrapper">
+              <div className="input-wrapper" style={{ borderColor: colors.border, backgroundColor: colors.gray100 }}>
                 <Mail size={20} color={colors.textMuted} />
                 <input
                   type="email"
                   placeholder={t('auth.forgot_password.email_placeholder')}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  style={{ backgroundColor: colors.gray100, color: colors.text, borderColor: colors.border }}
+                  style={{ color: colors.text }}
                   data-testid="forgot-email-input"
                 />
               </div>
@@ -130,6 +154,13 @@ const ForgotPasswordPage = () => {
                 {loading ? <Loader className="spinner-icon" size={20} color="#fff" /> : t('auth.forgot_password.send_reset_link')}
               </button>
             </form>
+
+            <div className="footer-link">
+              <span style={{ color: colors.textMuted }}>{t('auth.forgot_password.remember_password')}</span>
+              <Link to="/login" style={{ color: colors.primary }}>
+                {t('buttons.sign_in')}
+              </Link>
+            </div>
           </div>
         </div>
       </div>
