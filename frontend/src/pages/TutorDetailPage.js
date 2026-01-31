@@ -303,20 +303,27 @@ export default function TutorDetailPage() {
             </div>
           ) : (
             <div className="slots-list">
-              {slots.slice(0, 8).map((slot, index) => (
+              {slots.slice(0, 8).map((slot, index) => {
+                const slotKey = slot.slot_id || slot.start_at || `slot-${index}`;
+                const isSelected = selectedSlot && (
+                  (selectedSlot.slot_id && selectedSlot.slot_id === slot.slot_id) ||
+                  (selectedSlot.start_at && selectedSlot.start_at === slot.start_at)
+                );
+                return (
                 <button
-                  key={slot.slot_id || slot.id || `slot-${index}`}
-                  className={`slot-btn ${selectedSlot?.slot_id === slot.slot_id ? 'selected' : ''}`}
+                  key={slotKey}
+                  className={`slot-btn ${isSelected ? 'selected' : ''}`}
                   style={{
-                    backgroundColor: selectedSlot?.slot_id === slot.slot_id ? colors.primary : colors.primaryLight,
-                    borderColor: selectedSlot?.slot_id === slot.slot_id ? colors.primary : 'transparent',
-                    color: selectedSlot?.slot_id === slot.slot_id ? '#fff' : colors.primary,
+                    backgroundColor: isSelected ? colors.primary : colors.primaryLight,
+                    borderColor: isSelected ? colors.primary : 'transparent',
+                    color: isSelected ? '#fff' : colors.primary,
                   }}
                   onClick={() => setSelectedSlot(slot)}
                 >
                   {slot.display_time || slot.time || `${slot.start_time} - ${slot.end_time}`}
                 </button>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
