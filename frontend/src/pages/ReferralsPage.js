@@ -20,7 +20,6 @@ const ReferralsPage = () => {
   const { colors } = useTheme();
   const { t } = useTranslation();
   const { showSuccess, showError } = useToast();
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetchReferralData();
