@@ -48,7 +48,6 @@ const FAQPage = () => {
 
   const { colors } = useTheme();
   const { t } = useTranslation();
-  const navigate = useNavigate();
 
   const toggleItem = (index) => {
     setExpandedItems((prev) => ({ ...prev, [index]: !prev[index] }));
@@ -58,17 +57,9 @@ const FAQPage = () => {
 
   return (
     <div className="faq-page" style={{ backgroundColor: colors.background }}>
-      <header className="faq-header" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
-        <div className="header-content">
-          <button className="back-btn" onClick={() => navigate(-1)} style={{ color: colors.text }}>
-            <ArrowLeft size={24} />
-          </button>
-          <h1 style={{ color: colors.text }}>{t('pages.faq.title')}</h1>
-          <div style={{ width: 40 }} />
-        </div>
-      </header>
+      <AppHeader showBack={true} title={t('pages.faq.title') || 'FAQ'} showUserName={true} />
 
-      <main className="faq-main">
+      <main className="faq-main" style={{ paddingTop: '76px' }}>
         <div className="faq-container">
           {/* Search */}
           <div className="search-bar" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
