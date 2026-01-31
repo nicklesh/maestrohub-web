@@ -20,6 +20,7 @@ const ReviewsPage = () => {
 
   const { colors } = useTheme();
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchReviews();
