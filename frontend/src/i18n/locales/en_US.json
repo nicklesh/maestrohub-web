@@ -806,7 +806,11 @@
       "schedule_sent_to": "Schedule sent to {{email}}",
       "add_email_first": "Please add an email address for this child first",
       "confirm_remove_title": "Remove Child?",
-      "confirm_remove_message": "Are you sure you want to remove {{name}}? This action cannot be undone."
+      "confirm_remove_message": "Are you sure you want to remove {{name}}? This action cannot be undone.",
+      "notification_contact": "Notification Contact (Optional)",
+      "notification_contact_info": "Add a contact to receive session reminders and schedules for this child.",
+      "auto_send_schedules": "Auto-send quarterly schedules",
+      "grade_placeholder": "Enter grade"
     },
     "tax_reports": {
       "title": "Tax Reports",
