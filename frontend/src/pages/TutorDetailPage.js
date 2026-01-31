@@ -95,7 +95,20 @@ export default function TutorDetailPage() {
       showSuccess(t('pages.tutor_detail.booking_success'));
       navigate('/bookings');
     } catch (err) {
-      showError(err.response?.data?.detail || t('messages.errors.generic'));
+      // Handle different error formats
+      let errorMessage = t('messages.errors.generic');
+      if (err.response?.data?.detail) {
+        const detail = err.response.data.detail;
+        // If detail is an array (validation errors), extract messages
+        if (Array.isArray(detail)) {
+          errorMessage = detail.map(e => e.msg || e.message || String(e)).join(', ');
+        } else if (typeof detail === 'string') {
+          errorMessage = detail;
+        } else if (typeof detail === 'object' && detail.msg) {
+          errorMessage = detail.msg;
+        }
+      }
+      showError(errorMessage);
     } finally {
       setBooking(false);
     }
