@@ -2629,6 +2629,15 @@
     "error_message": "There was an error processing your subscription. Please try again.",
     "generic_error": "An unexpected error occurred. Please try again."
   },
+  "reminders": {
+    "add_reminder": "Add Reminder",
+    "add_first": "Add Your First Reminder",
+    "title_placeholder": "e.g., Session with Coach Sarah",
+    "message_placeholder": "Add notes...",
+    "priority": "Priority",
+    "normal": "Normal",
+    "high": "High"
+  },
   "common": {
     "ok": "OK",
     "yes": "Yes",
