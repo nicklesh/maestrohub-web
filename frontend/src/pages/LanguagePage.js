@@ -1,50 +1,55 @@
 import React from 'react';
-import { ArrowLeft, Languages, Check } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Languages, Check } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useTranslation } from '../i18n';
+import AppHeader from '../components/AppHeader';
 
 const LANGUAGES = [
   { section: 'AMERICAS & EUROPE', items: [
     { code: 'en_US', name: 'English (US)', native: 'English (US)' },
     { code: 'es_ES', name: 'Spanish (Spain)', native: 'Español (España)' },
+    { code: 'es_MX', name: 'Spanish (Mexico)', native: 'Español (México)' },
+    { code: 'pt_BR', name: 'Portuguese (Brazil)', native: 'Português (Brasil)' },
     { code: 'fr_FR', name: 'French (France)', native: 'Français (France)' },
     { code: 'de_DE', name: 'German (Germany)', native: 'Deutsch (Deutschland)' },
+    { code: 'it_IT', name: 'Italian (Italy)', native: 'Italiano (Italia)' },
+    { code: 'nl_NL', name: 'Dutch (Netherlands)', native: 'Nederlands (Nederland)' },
+    { code: 'pl_PL', name: 'Polish (Poland)', native: 'Polski (Polska)' },
+    { code: 'ru_RU', name: 'Russian (Russia)', native: 'Русский (Россия)' },
+  ]},
+  { section: 'ASIAN LANGUAGES', items: [
+    { code: 'zh_CN', name: 'Chinese (Simplified)', native: '中文（简体）' },
+    { code: 'zh_TW', name: 'Chinese (Traditional)', native: '中文（繁體）' },
+    { code: 'ja_JP', name: 'Japanese (Japan)', native: '日本語' },
+    { code: 'ko_KR', name: 'Korean (Korea)', native: '한국어' },
+    { code: 'vi_VN', name: 'Vietnamese (Vietnam)', native: 'Tiếng Việt' },
+    { code: 'th_TH', name: 'Thai (Thailand)', native: 'ไทย' },
   ]},
   { section: 'INDIAN LANGUAGES', items: [
     { code: 'hi_IN', name: 'Hindi (India)', native: 'हिन्दी (भारत)' },
     { code: 'bn_IN', name: 'Bengali (India)', native: 'বাংলা (ভারত)' },
-    { code: 'te_IN', name: 'Telugu (India)', native: 'తెలుగు' },
+    { code: 'te_IN', name: 'Telugu (India)', native: 'తెలుగు (భారతదేశం)' },
+    { code: 'ta_IN', name: 'Tamil (India)', native: 'தமிழ் (இந்தியா)' },
+    { code: 'mr_IN', name: 'Marathi (India)', native: 'मराठी (भारत)' },
+    { code: 'gu_IN', name: 'Gujarati (India)', native: 'ગુજરાતી (ભારત)' },
   ]},
 ];
 
 export default function LanguagePage() {
   const { colors } = useTheme();
   const { t, locale, changeLocale } = useTranslation();
-  const navigate = useNavigate();
 
   const handleLanguageSelect = (code) => {
     changeLocale(code);
   };
 
-  return (
-    <div style={{ minHeight: '100vh', backgroundColor: colors.background, padding: '16px' }}>
-      <header style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '16px',
-        marginBottom: '24px',
-        paddingTop: '8px'
-      }}>
-        <button onClick={() => navigate(-1)} style={{ background: 'none', padding: '8px' }}>
-          <ArrowLeft size={24} color={colors.text} />
-        </button>
-        <h1 style={{ color: colors.text, fontSize: '20px', fontWeight: 600 }}>
-          {t('pages.settings.language')}
-        </h1>
-      </header>
+  const currentLanguage = LANGUAGES.flatMap(s => s.items).find(l => l.code === locale)?.native || 'English (US)';
 
-      <div style={{ maxWidth: '500px', margin: '0 auto' }}>
+  return (
+    <div style={{ minHeight: '100vh', backgroundColor: colors.background }}>
+      <AppHeader showBack={true} title={t('pages.settings.language') || 'Language'} showUserName={true} />
+
+      <div style={{ padding: '76px 16px 100px', maxWidth: '500px', margin: '0 auto' }}>
         {/* Current Language Card */}
         <div style={{
           backgroundColor: colors.surface,
@@ -61,7 +66,7 @@ export default function LanguagePage() {
               {t('pages.settings.current_language') || 'Current Language'}:
             </span>
             <p style={{ color: colors.text, fontWeight: 600 }}>
-              {LANGUAGES.flatMap(s => s.items).find(l => l.code === locale)?.native || 'English (US)'}
+              {currentLanguage}
             </p>
           </div>
         </div>
@@ -93,7 +98,7 @@ export default function LanguagePage() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    padding: '16px',
+                    padding: '14px 16px',
                     backgroundColor: locale === lang.code ? colors.primaryLight : 'transparent',
                     borderBottom: idx < section.items.length - 1 ? `1px solid ${colors.border}` : 'none'
                   }}
