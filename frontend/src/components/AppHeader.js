@@ -10,26 +10,6 @@ import { useTranslation } from '../i18n';
 import api from '../services/api';
 import './AppHeader.css';
 
-// MH Logo component (inline SVG matching the mobile app logo)
-const MHLogo = ({ isDark }) => (
-  <svg width="120" height="48" viewBox="0 0 120 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="60" cy="24" rx="58" ry="22" fill={isDark ? '#1E3A8A' : '#2563EB'} />
-    <text 
-      x="60" 
-      y="32" 
-      textAnchor="middle" 
-      fontFamily="Georgia, serif" 
-      fontSize="28" 
-      fontStyle="italic" 
-      fontWeight="bold"
-      fill="white"
-    >
-      mh
-    </text>
-    <circle cx="95" cy="15" r="6" fill="#F59E0B" />
-  </svg>
-);
-
 export default function AppHeader({ showBack = false, title = '', showUserName = false }) {
   const { user, logout, token } = useAuth();
   const { colors, isDark } = useTheme();
@@ -140,85 +120,90 @@ export default function AppHeader({ showBack = false, title = '', showUserName =
   // Gold color for dark mode envelope
   const envelopeColor = isDark ? '#D4AF37' : colors.text;
 
+  // Choose logo based on theme
+  const logoSrc = isDark ? '/mh_logo_dark_trimmed.png' : '/mh_logo_trimmed.png';
+
   return (
     <>
       <header className="app-header" style={{ backgroundColor: colors.surface, borderBottomColor: colors.border }}>
-        {/* Left - Back Button OR User Info */}
-        <div className="header-left">
-          {showBack ? (
-            <div className="back-container">
-              <button onClick={handleBack} className="back-button" data-testid="header-back-btn">
-                <ArrowLeft size={24} color={colors.text} />
-              </button>
-              {(showUserName && title) && (
-                <span className="header-title" style={{ color: colors.text }}>{title}</span>
-              )}
-              {(showUserName && !title && user?.name) && (
-                <span className="header-title" style={{ color: colors.text }}>{user.name}</span>
-              )}
-            </div>
-          ) : (
-            <div className="user-info">
-              <div className="user-avatar" style={{ backgroundColor: colors.primary }} data-testid="header-user-avatar">
-                <span className="user-avatar-text">{user?.name?.charAt(0) || 'U'}</span>
+        <div className="header-inner">
+          {/* Left - Back Button OR User Info */}
+          <div className="header-left">
+            {showBack ? (
+              <div className="back-container">
+                <button onClick={handleBack} className="back-button" data-testid="header-back-btn">
+                  <ArrowLeft size={24} color={colors.text} />
+                </button>
+                {(showUserName && title) && (
+                  <span className="header-title" style={{ color: colors.text }}>{title}</span>
+                )}
+                {(showUserName && !title && user?.name) && (
+                  <span className="header-title" style={{ color: colors.text }}>{user.name}</span>
+                )}
               </div>
-              <div className="user-details">
-                <span className="user-name" style={{ color: colors.text }}>
-                  {user?.name?.split(' ')[0] || 'User'}
-                </span>
-                <span className="user-role" style={{ color: colors.textMuted }}>
-                  {getRoleDisplay(user?.role || '')}
-                </span>
+            ) : (
+              <div className="user-info">
+                <div className="user-avatar" style={{ backgroundColor: colors.primary }} data-testid="header-user-avatar">
+                  <span className="user-avatar-text">{user?.name?.charAt(0) || 'U'}</span>
+                </div>
+                <div className="user-details">
+                  <span className="user-name" style={{ color: colors.text }}>
+                    {user?.name?.split(' ')[0] || 'User'}
+                  </span>
+                  <span className="user-role" style={{ color: colors.textMuted }}>
+                    {getRoleDisplay(user?.role || '')}
+                  </span>
+                </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
 
-        {/* Center - Logo */}
-        <button onClick={handleLogoPress} className="logo-container" data-testid="header-logo">
-          <MHLogo isDark={isDark} />
-        </button>
-
-        {/* Right - Actions */}
-        <div className="header-right">
-          {/* Notification Bell - only for non-admin users */}
-          {user?.role !== 'admin' && (
-            <button 
-              onClick={handleNotificationsClick}
-              className="icon-button"
-              style={{ backgroundColor: colors.background }}
-              data-testid="header-notifications-btn"
-            >
-              <Bell size={20} color={colors.primary} />
-              {unreadCount > 0 && (
-                <span className="notification-badge" style={{ backgroundColor: colors.error }}>
-                  {unreadCount > 9 ? '9+' : unreadCount}
-                </span>
-              )}
-            </button>
-          )}
-          
-          {/* Contact Us - hide for admin */}
-          {user?.role !== 'admin' && (
-            <button 
-              onClick={() => setShowContactSheet(true)}
-              className="icon-button"
-              style={{ backgroundColor: colors.background }}
-              data-testid="header-contact-btn"
-            >
-              <Mail size={20} color={envelopeColor} />
-            </button>
-          )}
-          
-          {/* Logout */}
-          <button 
-            onClick={handleLogout}
-            className="icon-button"
-            style={{ backgroundColor: colors.background }}
-            data-testid="header-logout-btn"
-          >
-            <LogOut size={20} color={colors.error} />
+          {/* Center - Logo */}
+          <button onClick={handleLogoPress} className="logo-container" data-testid="header-logo">
+            <img src={logoSrc} alt="Maestro Habitat" className="header-logo" />
           </button>
+
+          {/* Right - Actions */}
+          <div className="header-right">
+            {/* Notification Bell - only for non-admin users */}
+            {user?.role !== 'admin' && (
+              <button 
+                onClick={handleNotificationsClick}
+                className="icon-button"
+                style={{ backgroundColor: colors.background }}
+                data-testid="header-notifications-btn"
+              >
+                <Bell size={20} color={colors.primary} />
+                {unreadCount > 0 && (
+                  <span className="notification-badge" style={{ backgroundColor: colors.error }}>
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
+              </button>
+            )}
+            
+            {/* Contact Us - hide for admin */}
+            {user?.role !== 'admin' && (
+              <button 
+                onClick={() => setShowContactSheet(true)}
+                className="icon-button"
+                style={{ backgroundColor: colors.background }}
+                data-testid="header-contact-btn"
+              >
+                <Mail size={20} color={envelopeColor} />
+              </button>
+            )}
+            
+            {/* Logout */}
+            <button 
+              onClick={handleLogout}
+              className="icon-button"
+              style={{ backgroundColor: colors.background }}
+              data-testid="header-logout-btn"
+            >
+              <LogOut size={20} color={colors.error} />
+            </button>
+          </div>
         </div>
       </header>
 
