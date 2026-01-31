@@ -2607,7 +2607,9 @@
       "priority_booking": "Priority booking with coaches",
       "no_fees": "No booking fees",
       "premium_support": "Premium customer support",
-      "exclusive_content": "Access to exclusive content"
+      "exclusive_content": "Access to exclusive content",
+      "family_accounts": "Multiple family member accounts",
+      "session_recording": "Session recording & playback"
     },
     "renews_on": "Renews on {{date}}",
     "cancels_on": "Cancels on {{date}}",
