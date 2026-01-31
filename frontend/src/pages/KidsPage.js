@@ -121,7 +121,7 @@ const KidsPage = () => {
     if (!window.confirm(t('pages.kids.delete_confirm'))) return;
 
     try {
-      await api.delete(`/kids/${kidId}`);
+      await api.delete(`/students/${kidId}`);
       showSuccess(t('pages.kids.delete_success'));
       fetchKids();
     } catch (err) {
