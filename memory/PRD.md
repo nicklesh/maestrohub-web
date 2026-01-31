@@ -60,12 +60,11 @@ Build a webapp from GitHub repo [https://github.com/nicklesh/maestrohub-web.git]
 
 ### Bottom Navigation (Mobile)
 Role-specific navigation matching mobile app design:
-- **Consumer/Parent**: Home, Search, Bookings, Account
-- **Tutor**: Dashboard, Calendar, Students, Settings  
-- **Admin**: Dashboard, Inbox, Coaches, Markets, Reports, Settings
+- **Consumer/Parent**: Home, Search, Bookings, My Kids, Account
+- **Tutor**: Dashboard, Calendar, Bookings, Account  
+- **Admin**: Dashboard, Users, Account
 
-Hidden on: Login, Register, Forgot Password, Reset Password, Verify Email
-Hidden on: Desktop/Tablet (min-width: 769px)
+Visible on all screen sizes (desktop included per user request)
 
 ---
 
