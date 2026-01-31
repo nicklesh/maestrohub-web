@@ -756,7 +756,8 @@
       "leave_review": "Leave Review",
       "booked": "Booked",
       "confirmed": "Confirmed",
-      "student_label": "Student:"
+      "student_label": "Student:",
+      "tab_past": "Past"
     },
     "kids": {
       "title": "My Kids",
