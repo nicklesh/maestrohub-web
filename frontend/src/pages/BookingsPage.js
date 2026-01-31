@@ -209,6 +209,8 @@ const BookingsPage = () => {
           </div>
         )}
       </main>
+      
+      <BottomNav />
     </div>
   );
 };
