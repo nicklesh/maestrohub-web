@@ -28,6 +28,16 @@ import ReviewsPage from './pages/ReviewsPage';
 import FAQPage from './pages/FAQPage';
 import ContactPage from './pages/ContactPage';
 import NotificationsSettingsPage from './pages/NotificationsSettingsPage';
+import EditProfilePage from './pages/EditProfilePage';
+import LanguagePage from './pages/LanguagePage';
+import NotificationsPage from './pages/NotificationsPage';
+import SubscriptionPage from './pages/SubscriptionPage';
+import RemindersPage from './pages/RemindersPage';
+import ReportsPage from './pages/ReportsPage';
+import TaxReportsPage from './pages/TaxReportsPage';
+import InviteParentPage from './pages/InviteParentPage';
+import InviteProviderPage from './pages/InviteProviderPage';
+import BecomeTutorPage from './pages/BecomeTutorPage';
 
 // Tutor Pages
 import TutorDashboardPage from './pages/TutorDashboardPage';
