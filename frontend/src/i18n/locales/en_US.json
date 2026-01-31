@@ -355,7 +355,9 @@
       "learning_goals": "What would you like to achieve in this session?",
       "current_level": "Describe your current skill level",
       "additional_notes": "Any other information for the coach",
-      "bio": "Tell us about yourself..."
+      "bio": "Tell us about yourself...",
+      "child_name": "Enter child's name",
+      "age": "Enter age"
     },
     "validation": {
       "required": "This field is required",
