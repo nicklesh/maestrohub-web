@@ -616,7 +616,8 @@
       "no_tutors_found": "No coaches found",
       "try_adjusting_filters": "Try adjusting your filters",
       "clear_all": "Clear all",
-      "show_global_coaches": "Show coaches from all countries"
+      "show_global_coaches": "Show coaches from all countries",
+      "no_results": "No coaches found"
     },
     "login": {
       "title": "Welcome Back",
