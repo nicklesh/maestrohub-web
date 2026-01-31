@@ -89,7 +89,9 @@ export default function TutorDetailPage() {
       setBooking(true);
       await api.post('/bookings', {
         tutor_id: tutorId,
-        slot_id: selectedSlot.slot_id,
+        slot_id: selectedSlot.slot_id || selectedSlot.start_at,
+        start_at: selectedSlot.start_at,
+        end_at: selectedSlot.end_at,
         topic: tutor.subjects?.[0] || 'Session',
       });
       showSuccess(t('pages.tutor_detail.booking_success'));
