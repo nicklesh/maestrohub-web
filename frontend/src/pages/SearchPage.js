@@ -360,7 +360,12 @@ export default function SearchPage() {
                     <Loader2 size={32} color={colors.primary} className="spinner" />
                   </div>
                 ) : (
-                  categories.map(renderCategoryCard)
+                  // Sort categories to put 'academics' first
+                  [...categories].sort((a, b) => {
+                    if (a.id === 'academics') return -1;
+                    if (b.id === 'academics') return 1;
+                    return 0;
+                  }).map(renderCategoryCard)
                 )}
               </div>
             </div>
