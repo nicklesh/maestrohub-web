@@ -558,7 +558,19 @@
     },
     "search": {
       "title": "Find a Coach",
-      "filters": "Filters",
+      "filters": {
+        "title": "Filters",
+        "topic": "Topic/Subject",
+        "topic_placeholder": "e.g., Piano, Tennis, Math",
+        "price_min": "Min Price",
+        "price_max": "Max Price",
+        "session_type": "Session Type",
+        "all_types": "All Types",
+        "in_person": "In-Person",
+        "online": "Online",
+        "clear": "Clear",
+        "apply": "Apply Filters"
+      },
       "sort_by": "Sort by",
       "sort_relevance": "Relevance",
       "sort_rating": "Highest Rated",
@@ -602,20 +614,7 @@
       "no_tutors_found": "No coaches found",
       "try_adjusting_filters": "Try adjusting your filters",
       "clear_all": "Clear all",
-      "show_global_coaches": "Show coaches from all countries",
-      "filters": {
-        "title": "Filters",
-        "topic": "Topic/Subject",
-        "topic_placeholder": "e.g., Piano, Tennis, Math",
-        "price_min": "Min Price",
-        "price_max": "Max Price",
-        "session_type": "Session Type",
-        "all_types": "All Types",
-        "in_person": "In-Person",
-        "online": "Online",
-        "clear": "Clear",
-        "apply": "Apply Filters"
-      }
+      "show_global_coaches": "Show coaches from all countries"
     },
     "login": {
       "title": "Welcome Back",
@@ -1022,7 +1021,9 @@
       "select_slot": "Please select a time slot",
       "specialties": "Specialties",
       "session_rate": "Session Rate",
-      "booking_success": "Session booked successfully!"
+      "booking_success": "Session booked successfully!",
+      "cross_market_tip": "Choose a coach from your country if you prefer local sessions.",
+      "noshow_policy": "Full charge for no-shows without 24-hour notice"
     },
     "book_session": {
       "title": "Book Session",
