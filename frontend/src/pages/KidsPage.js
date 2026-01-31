@@ -16,6 +16,7 @@ const KidsPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [editingKid, setEditingKid] = useState(null);
   const [formData, setFormData] = useState({ 
+    student_id: null,
     name: '', 
     age: '', 
     grade: '',
