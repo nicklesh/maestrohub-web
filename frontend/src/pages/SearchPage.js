@@ -254,23 +254,20 @@ export default function SearchPage() {
         </div>
       )}
       
-      {/* Market Flag Badge */}
-      {tutor.market_code && (
-        <div className="market-badge" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
-          <span className="market-code" style={{ color: colors.textMuted }}>{tutor.market_code}</span>
-          <FlagIcon countryCode={tutor.market_code} size={14} />
-        </div>
-      )}
-      
       {/* Card Header */}
       <div className="card-header">
         <div className="tutor-avatar" style={{ backgroundColor: colors.primary }}>
           <span>{(tutor.user_name || tutor.name || 'T').charAt(0)}</span>
         </div>
         <div className="card-info">
-          <span className="tutor-name" style={{ color: colors.text }}>
-            {tutor.user_name || tutor.name}
-          </span>
+          <div className="tutor-name-row">
+            <span className="tutor-name" style={{ color: colors.text }}>
+              {tutor.user_name || tutor.name}
+            </span>
+            {tutor.market_code && (
+              <FlagIcon countryCode={tutor.market_code} size={16} />
+            )}
+          </div>
           <div className="rating-row">
             <Star size={14} color="#FFB800" fill="#FFB800" />
             <span className="rating" style={{ color: colors.text }}>
@@ -288,11 +285,6 @@ export default function SearchPage() {
           <span className="price" style={{ color: colors.primary }}>
             {tutor.currency_symbol || '$'}{formatNumber(tutor.display_price || tutor.base_price)}{t('pages.search.per_hour')}
           </span>
-          {tutor.original_price_display && (
-            <span className="original-price" style={{ color: colors.textMuted }}>
-              ({tutor.original_price_display})
-            </span>
-          )}
         </div>
       </div>
 
@@ -319,8 +311,8 @@ export default function SearchPage() {
 
       {/* Modality */}
       <div className="modality-row">
-        {(Array.isArray(tutor.modality) ? tutor.modality : [tutor.modality].filter(Boolean)).map((m) => (
-          <div key={m} className="modality-item">
+        {(Array.isArray(tutor.modality) ? tutor.modality : [tutor.modality].filter(Boolean)).map((m, idx) => (
+          <div key={`${m}-${idx}`} className="modality-item">
             <Video size={14} color={colors.textMuted} />
             <span style={{ color: colors.textMuted }}>{getModalityName(m)}</span>
           </div>
