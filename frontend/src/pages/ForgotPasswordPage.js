@@ -88,6 +88,12 @@ const ForgotPasswordPage = () => {
 
   return (
     <div className="forgot-page" style={{ backgroundColor: colors.background }}>
+      {/* Background */}
+      <div className="login-background">
+        <img src="/login_background.png" alt="" className="bg-image" />
+        <div className="bg-overlay" style={{ backgroundColor: colors.background }} />
+      </div>
+
       {/* Back button */}
       <button className="back-btn" onClick={() => navigate('/login')} style={{ color: colors.text }}>
         <ArrowLeft size={24} />
