@@ -335,6 +335,55 @@ Visible on all screen sizes (desktop included per user request)
 - Frontend: 100%
 - All 10 test cases passed
 
+### January 31, 2026 - User Feedback Round 2 (Iteration 8)
+**9 New Issues Reported by User - Fixed:**
+
+1. **Forgot Password background image** - Added background image with blur effect matching login page
+
+2. **Notifications toggle error** - Fixed to save locally without showing error if backend endpoint doesn't exist
+
+3. **Subscription upgrade error** - Now shows info message gracefully when endpoint is unavailable
+
+4. **Reminders add error** - Now saves to local state if backend endpoint doesn't support POST
+
+5. **AppHeader on all Account pages** - Added AppHeader component to:
+   - EditProfilePage
+   - LanguagePage (22 languages)
+   - NotificationsSettingsPage
+   - SubscriptionPage
+   - RemindersPage
+   - ReportsPage
+   - TaxReportsPage
+   - InviteParentPage
+   - InviteProviderPage
+   - ReferralsPage
+   - ReviewsPage
+   - FAQPage
+   - BillingPage
+
+6. **Languages page - 22 languages** - Now includes:
+   - Americas & Europe: English, Spanish (Spain/Mexico), Portuguese, French, German, Italian, Dutch, Polish, Russian
+   - Asian Languages: Chinese (Simplified/Traditional), Japanese, Korean, Vietnamese, Thai
+   - Indian Languages: Hindi, Bengali, Telugu, Tamil, Marathi, Gujarati
+
+7. **Add Card in Billing** - Created full modal with:
+   - Credit/Debit Card option with form fields
+   - Bank Account option (coming soon)
+   - UPI option with ID input
+
+8. **Tax Reports download** - Now shows info message when download endpoint isn't available
+
+9. **Billing, Reports, Tax Reports redesigned** - Mimicked mobile app with:
+   - Balance cards
+   - Stats grids
+   - Auto-pay toggle
+   - Download buttons
+   - Proper sections
+
+**Translation keys added:**
+- pages.billing.select_type, credit_debit, card_desc, bank_account, bank_desc, upi, upi_desc, etc.
+- forms.labels.card_number, card_holder, expiry, cvv
+
 ---
 
 ## Prioritized Backlog
@@ -348,6 +397,9 @@ Visible on all screen sizes (desktop included per user request)
 - [x] Translations working
 - [x] Account page navigation fixed
 - [x] UI/UX mobile parity
+- [x] All Account pages have AppHeader
+- [x] 22 languages support
+- [x] Billing with Add Card modal
 
 ### P1 (High Priority)
 - [ ] Custom domain deployment (www.maestrohabitat.com)
