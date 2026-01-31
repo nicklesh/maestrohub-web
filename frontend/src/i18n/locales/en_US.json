@@ -683,6 +683,7 @@
     },
     "profile": {
       "title": "My Profile",
+      "profile_info": "Profile Information",
       "account_title": "Account",
       "edit_profile": "Edit Profile",
       "account_settings": "Account Settings",
