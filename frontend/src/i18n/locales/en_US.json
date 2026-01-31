@@ -2701,6 +2701,12 @@
     "password_needs_lowercase": "Password must contain at least one lowercase letter",
     "password_needs_number": "Password must contain at least one number"
   },
+  "reports": {
+    "total_sessions": "Total Sessions",
+    "total_spent": "Total Spent",
+    "coaches_worked": "Coaches Worked With",
+    "no_data": "No report data available yet. Book sessions to see your activity reports."
+  },
   "roles": {
     "admin": "Admin",
     "tutor": "Coach",
