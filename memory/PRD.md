@@ -298,6 +298,43 @@ Visible on all screen sizes (desktop included per user request)
 - Coach Detail page loads without crashing
 - Search page shows country flags on coach cards
 
+### January 31, 2026 - User Feedback Fixes (Iteration 7)
+**13 Issues Reported by User - Fixed:**
+
+1. **Registration page Google sign-in** - Removed Google sign-in button and divider from RegisterPage.js
+
+2. **Add child error** - Fixed KidsPage.js to use `/students` API endpoint instead of `/kids`
+
+3. **Search page 2-column layout** - Updated SearchPage.css with 2-column grid for coach cards
+
+4. **Academics first in categories** - Updated SearchPage.js to sort categories with 'academics' first
+
+5. **Header/footer width** - Fixed AppHeader.css with max-width: 600px on large screens, matching footer
+
+6. **Fixed header positioning** - Changed AppHeader to `position: fixed` and added padding-top to all pages
+
+7. **Country flags in search** - Fixed coach cards to show flag next to name instead of overlapping price
+
+8. **Slot styling** - Updated TutorDetailPage to use light blue (primaryLight) for unselected slots
+
+9. **Booking error handling** - Fixed error handling to properly stringify API validation errors
+
+10. **Edit Profile save** - Fixed endpoint from `/user/profile` to `/profile`
+
+11. **Subscription page** - Rewrote with upgrade functionality, feature list, and premium management
+
+12. **Reminders page** - Added working Add button with modal for creating reminders
+
+13. **Translation keys** - Added missing keys for Kids, Subscription, and Reminders pages
+
+**Bugs Fixed by Testing Agent:**
+- TutorDetailPage.js slot comparison was using undefined `slot_id` - fixed to use `start_at` field
+- Added missing translation keys: pages.kids.years_old, subscription.*, reminders.*, empty_states.no_reminders_title
+
+**Test Results - Iteration 7:**
+- Frontend: 100%
+- All 10 test cases passed
+
 ---
 
 ## Prioritized Backlog
@@ -310,6 +347,7 @@ Visible on all screen sizes (desktop included per user request)
 - [x] All 3 role pages created
 - [x] Translations working
 - [x] Account page navigation fixed
+- [x] UI/UX mobile parity
 
 ### P1 (High Priority)
 - [ ] Custom domain deployment (www.maestrohabitat.com)
