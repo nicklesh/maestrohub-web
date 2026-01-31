@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Gift, Copy, Share2, CheckCircle, Loader, Users, Trophy } from 'lucide-react';
+import { Gift, Copy, Share2, CheckCircle, Loader, Users, Trophy } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useToast } from '../contexts/ToastContext';
 import { useTranslation } from '../i18n';
+import AppHeader from '../components/AppHeader';
 import api from '../services/api';
 import './ReferralsPage.css';
 
