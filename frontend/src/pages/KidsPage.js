@@ -91,17 +91,27 @@ const KidsPage = () => {
       };
 
       if (editingKid) {
-        await api.put(`/kids/${editingKid.kid_id}`, data);
+        await api.put(`/students/${editingKid.student_id || editingKid.kid_id}`, data);
         showSuccess(t('pages.kids.update_success'));
       } else {
-        await api.post('/kids', data);
+        await api.post('/students', data);
         showSuccess(t('pages.kids.add_success'));
       }
 
       fetchKids();
       closeModal();
     } catch (err) {
-      showError(t('messages.errors.generic'));
+      // Handle error properly
+      let errorMessage = t('messages.errors.generic');
+      if (err.response?.data?.detail) {
+        const detail = err.response.data.detail;
+        if (Array.isArray(detail)) {
+          errorMessage = detail.map(e => e.msg || e.message || String(e)).join(', ');
+        } else if (typeof detail === 'string') {
+          errorMessage = detail;
+        }
+      }
+      showError(errorMessage);
     } finally {
       setSaving(false);
     }
