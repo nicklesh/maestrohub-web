@@ -7,7 +7,6 @@ import { I18nProvider } from './i18n';
 
 // Components
 import BottomNav from './components/BottomNav';
-import ChatWidget from './components/ChatWidget';
 
 // Auth Pages
 import LoginPage from './pages/LoginPage';
