@@ -82,14 +82,15 @@ const KidsPage = () => {
 
     try {
       setSaving(true);
+      // Use correct field names that backend expects
       const data = {
         name: formData.name,
         age: formData.age ? parseInt(formData.age) : null,
         grade: formData.grade || null,
         email: formData.email || null,
         phone: formData.phone || null,
-        send_reminders: formData.sendReminders,
-        send_schedules: formData.sendSchedules,
+        notify_upcoming_sessions: formData.sendReminders,
+        auto_send_schedule: formData.sendSchedules,
       };
 
       if (editingKid) {
