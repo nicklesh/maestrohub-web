@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
-  ArrowLeft, Star, MapPin, Clock, Calendar, ChevronRight, Loader2, 
-  Heart, Share2, Globe, Video, AlertCircle, Shield, Users
+  ArrowLeft, Star, MapPin, Clock, Calendar, ChevronLeft, ChevronRight, Loader2, 
+  Heart, Share2, Globe, Video, AlertCircle, Shield, Users, Check
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -32,20 +32,27 @@ const getCountryName = (code) => {
   return countries[code] || code;
 };
 
+// Format price with currency
+const formatPrice = (price, currency, symbol) => {
+  return `${symbol || '$'}${price}`;
+};
+
 export default function TutorDetailPage() {
   const { tutorId } = useParams();
   const [tutor, setTutor] = useState(null);
   const [loading, setLoading] = useState(true);
   const [slots, setSlots] = useState([]);
   const [selectedSlot, setSelectedSlot] = useState(null);
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [booking, setBooking] = useState(false);
+  const [currentMonth, setCurrentMonth] = useState(new Date());
   const [userMarket, setUserMarket] = useState(null);
+  const [loadingSlots, setLoadingSlots] = useState(false);
 
   const { user } = useAuth();
-  const { colors, isDark } = useTheme();
+  const { colors } = useTheme();
   const { t, formatNumber } = useTranslation();
-  const { showSuccess, showError } = useToast();
+  const { showSuccess, showError, showInfo } = useToast();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -53,15 +60,17 @@ export default function TutorDetailPage() {
     fetchUserMarket();
   }, [tutorId]);
 
+  useEffect(() => {
+    if (selectedDate && tutorId) {
+      fetchSlotsForDate(selectedDate);
+    }
+  }, [selectedDate, tutorId]);
+
   const fetchTutorDetails = async () => {
     try {
       setLoading(true);
-      const [tutorRes, slotsRes] = await Promise.all([
-        api.get(`/tutors/${tutorId}`),
-        api.get(`/tutors/${tutorId}/availability`).catch(() => ({ data: { slots: [] } })),
-      ]);
-      setTutor(tutorRes.data);
-      setSlots(slotsRes.data.slots || slotsRes.data.available_slots || []);
+      const response = await api.get(`/tutors/${tutorId}`);
+      setTutor(response.data);
     } catch (err) {
       console.error('Error fetching tutor:', err);
       showError(t('messages.errors.generic'));
@@ -79,35 +88,133 @@ export default function TutorDetailPage() {
     }
   };
 
+  const fetchSlotsForDate = async (date) => {
+    try {
+      setLoadingSlots(true);
+      const dateStr = date.toISOString().split('T')[0];
+      const response = await api.get(`/tutors/${tutorId}/availability`, {
+        params: { date: dateStr }
+      }).catch(() => ({ data: { slots: [] } }));
+      setSlots(response.data.slots || response.data.available_slots || []);
+      setSelectedSlot(null);
+    } catch (err) {
+      setSlots([]);
+    } finally {
+      setLoadingSlots(false);
+    }
+  };
+
+  const getModalityName = (modality) => {
+    switch (modality) {
+      case 'online': return t('pages.search.online');
+      case 'in_person': return t('pages.search.in_person');
+      case 'hybrid': return t('pages.search.hybrid');
+      default: return modality;
+    }
+  };
+
+  // Calendar functions
+  const getDaysInMonth = (date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDay = firstDay.getDay();
+    
+    const days = [];
+    // Previous month days
+    for (let i = 0; i < startingDay; i++) {
+      const prevDate = new Date(year, month, -startingDay + i + 1);
+      days.push({ date: prevDate, isCurrentMonth: false });
+    }
+    // Current month days
+    for (let i = 1; i <= daysInMonth; i++) {
+      days.push({ date: new Date(year, month, i), isCurrentMonth: true });
+    }
+    // Next month days
+    const remainingDays = 42 - days.length;
+    for (let i = 1; i <= remainingDays; i++) {
+      days.push({ date: new Date(year, month + 1, i), isCurrentMonth: false });
+    }
+    return days;
+  };
+
+  const isToday = (date) => {
+    const today = new Date();
+    return date.toDateString() === today.toDateString();
+  };
+
+  const isSelected = (date) => {
+    return selectedDate && date.toDateString() === selectedDate.toDateString();
+  };
+
+  const isPastDate = (date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return date < today;
+  };
+
+  const handleDateSelect = (date) => {
+    if (!isPastDate(date)) {
+      setSelectedDate(date);
+    }
+  };
+
+  const handleMonthChange = (delta) => {
+    const newMonth = new Date(currentMonth);
+    newMonth.setMonth(newMonth.getMonth() + delta);
+    setCurrentMonth(newMonth);
+  };
+
   const handleBooking = async () => {
     if (!selectedSlot) {
-      showError(t('pages.tutor_detail.select_slot'));
+      showError(t('pages.tutor_detail.select_slot') || 'Please select a time slot');
       return;
     }
 
     try {
       setBooking(true);
-      await api.post('/bookings', {
+
+      // Determine the slot start time
+      let startAt = selectedSlot.start_at;
+      if (!startAt && selectedSlot.time) {
+        // If slot only has 'time' like "10:00 AM", construct full datetime
+        const [hours, minutesPart] = selectedSlot.time.split(':');
+        const isPM = selectedSlot.time.includes('PM');
+        let hour = parseInt(hours);
+        if (isPM && hour !== 12) hour += 12;
+        if (!isPM && hour === 12) hour = 0;
+        
+        startAt = new Date(selectedDate);
+        startAt.setHours(hour, parseInt(minutesPart) || 0, 0, 0);
+        startAt = startAt.toISOString();
+      }
+
+      // Create a hold first
+      const holdResponse = await api.post('/booking-holds', {
         tutor_id: tutorId,
-        slot_id: selectedSlot.slot_id || selectedSlot.start_at,
-        start_at: selectedSlot.start_at,
-        end_at: selectedSlot.end_at,
-        topic: tutor.subjects?.[0] || 'Session',
+        start_at: startAt,
+        duration_minutes: tutor?.duration_minutes || 60
       });
-      showSuccess(t('pages.tutor_detail.booking_success'));
-      navigate('/bookings');
+
+      const holdId = holdResponse.data.hold_id;
+
+      // Navigate to booking page with the hold info
+      const startAtEncoded = encodeURIComponent(startAt);
+      const endAt = holdResponse.data.end_at || new Date(new Date(startAt).getTime() + 60 * 60 * 1000).toISOString();
+      const endAtEncoded = encodeURIComponent(endAt);
+      
+      navigate(`/book/${tutorId}?startAt=${startAtEncoded}&endAt=${endAtEncoded}&holdId=${holdId}`);
+
     } catch (err) {
-      // Handle different error formats
       let errorMessage = t('messages.errors.generic');
       if (err.response?.data?.detail) {
         const detail = err.response.data.detail;
-        // If detail is an array (validation errors), extract messages
         if (Array.isArray(detail)) {
           errorMessage = detail.map(e => e.msg || e.message || String(e)).join(', ');
         } else if (typeof detail === 'string') {
           errorMessage = detail;
-        } else if (typeof detail === 'object' && detail.msg) {
-          errorMessage = detail.msg;
         }
       }
       showError(errorMessage);
@@ -116,32 +223,34 @@ export default function TutorDetailPage() {
     }
   };
 
-  const getSubjectName = (subjectId) => {
-    if (!subjectId) return '';
-    const key = `subjects.${subjectId.toLowerCase().replace(/[&\s\-\/]+/g, '_')}`;
-    const translated = t(key);
-    return translated === key ? subjectId : translated;
+  // Render price with cross-market display
+  const renderPrice = () => {
+    if (!tutor) return null;
+    
+    const isCrossMarket = tutor.is_cross_market && tutor.original_price_display;
+    
+    return (
+      <div className="price-display">
+        <span className="main-price" style={{ color: colors.primary }}>
+          {tutor.currency_symbol || '$'}{formatNumber(tutor.display_price || tutor.base_price)}/{t('pages.search.hr') || 'hr'}
+        </span>
+        {isCrossMarket && tutor.original_price_display && (
+          <span className="original-price" style={{ color: colors.textMuted }}>
+            ({tutor.original_price_display})
+          </span>
+        )}
+      </div>
+    );
   };
-
-  const getModalityName = (modality) => {
-    const m = (modality || '').toLowerCase().replace('-', '_');
-    switch (m) {
-      case 'online': return t('pages.search.online');
-      case 'in_person': return t('pages.search.in_person');
-      case 'hybrid': return t('pages.search.hybrid');
-      default: return modality;
-    }
-  };
-
-  // Check if tutor is from a different country
-  const isCrossMarket = tutor?.market_code && userMarket && tutor.market_code !== userMarket;
 
   if (loading) {
     return (
       <div className="tutor-detail-page" style={{ backgroundColor: colors.background }}>
+        <AppHeader showBack={true} />
         <div className="loading-state">
-          <Loader2 className="spinner" size={40} color={colors.primary} />
+          <Loader2 size={32} color={colors.primary} className="spinner" />
         </div>
+        <BottomNav />
       </div>
     );
   }
@@ -149,204 +258,242 @@ export default function TutorDetailPage() {
   if (!tutor) {
     return (
       <div className="tutor-detail-page" style={{ backgroundColor: colors.background }}>
+        <AppHeader showBack={true} />
         <div className="error-state">
-          <h2 style={{ color: colors.text }}>{t('pages.tutor_detail.not_found')}</h2>
-          <button onClick={() => navigate('/search')} className="back-link" style={{ color: colors.primary }}>
-            {t('pages.tutor_detail.back_to_search')}
+          <AlertCircle size={48} color={colors.error} />
+          <h2 style={{ color: colors.text }}>{t('pages.tutor_detail.not_found') || 'Coach not found'}</h2>
+          <button onClick={() => navigate('/search')} style={{ backgroundColor: colors.primary, color: '#fff' }}>
+            {t('buttons.back_to_search') || 'Back to Search'}
           </button>
         </div>
+        <BottomNav />
       </div>
     );
   }
 
+  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                      'July', 'August', 'September', 'October', 'November', 'December'];
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
   return (
     <div className="tutor-detail-page" style={{ backgroundColor: colors.background }}>
-      {/* Header */}
-      <header className="detail-header" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
-        <button className="back-btn" onClick={() => navigate(-1)}>
-          <ArrowLeft size={24} color={colors.text} />
-        </button>
-        <div className="header-actions">
-          <button className="action-btn" style={{ backgroundColor: colors.gray100 }}>
-            <Share2 size={20} color={colors.textMuted} />
-          </button>
-          <button className="action-btn" style={{ backgroundColor: colors.gray100 }}>
-            <Heart size={20} color={colors.textMuted} />
-          </button>
-        </div>
-      </header>
+      <AppHeader showBack={true} title={tutor.user_name || tutor.name} showUserName={false} />
 
-      <main className="detail-content">
-        {/* Cross-Market Info Box */}
-        {isCrossMarket && (
-          <div className="cross-market-info" style={{ backgroundColor: colors.primaryLight, borderColor: colors.primary }}>
-            <div className="cross-market-header">
-              <Globe size={18} color={colors.primary} />
-              <FlagIcon countryCode={tutor.market_code} size={16} />
-              <span style={{ color: colors.primary, fontWeight: 600 }}>
-                {t('pages.tutor_detail.coach_from_country', { country: getCountryName(tutor.market_code) })}
-              </span>
+      <main className="tutor-main" style={{ paddingTop: '60px' }}>
+        {/* Tutor Header Card */}
+        <div className="tutor-header-card" style={{ backgroundColor: colors.surface }}>
+          <div className="avatar-section">
+            <div className="tutor-avatar" style={{ backgroundColor: colors.primary }}>
+              <span>{(tutor.user_name || tutor.name || 'T').charAt(0).toUpperCase()}</span>
             </div>
-            <p style={{ color: colors.textMuted, fontSize: 13, marginTop: 4 }}>
-              {t('pages.tutor_detail.cross_market_tip')}
+            <div className="rating-badge">
+              <Star size={12} color="#FFB800" fill="#FFB800" />
+              <span>{(tutor.rating_avg || 0).toFixed(1)}</span>
+            </div>
+          </div>
+          
+          <div className="tutor-info">
+            <div className="name-row">
+              <h1 style={{ color: colors.text }}>{tutor.user_name || tutor.name}</h1>
+              {tutor.market_code && <FlagIcon countryCode={tutor.market_code} size={20} />}
+            </div>
+            
+            <p className="coach-from" style={{ color: colors.textMuted }}>
+              {t('pages.tutor_detail.coach_from', { country: getCountryName(tutor.market_code) }) || 
+               `Coach from ${getCountryName(tutor.market_code)}`}
             </p>
+
+            {renderPrice()}
+
+            {/* Modality Badges */}
+            <div className="modality-badges">
+              {(Array.isArray(tutor.modality) ? tutor.modality : [tutor.modality].filter(Boolean)).map((m, idx) => (
+                <span 
+                  key={`${m}-${idx}`} 
+                  className="modality-badge" 
+                  style={{ backgroundColor: colors.primaryLight, color: colors.primary }}
+                >
+                  <Video size={12} />
+                  {getModalityName(m)}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* About Section */}
+        <div className="section" style={{ backgroundColor: colors.surface }}>
+          <h2 style={{ color: colors.text }}>{t('pages.tutor_detail.about') || 'About'}</h2>
+          <p className="bio" style={{ color: colors.textMuted }}>{tutor.bio || t('pages.tutor_detail.no_bio')}</p>
+        </div>
+
+        {/* Subjects */}
+        {tutor.subjects?.length > 0 && (
+          <div className="section" style={{ backgroundColor: colors.surface }}>
+            <h2 style={{ color: colors.text }}>{t('pages.tutor_detail.subjects') || 'Subjects'}</h2>
+            <div className="subjects-grid">
+              {tutor.subjects.map((subject, idx) => (
+                <span 
+                  key={idx} 
+                  className="subject-tag" 
+                  style={{ backgroundColor: colors.primaryLight, color: colors.primary }}
+                >
+                  {subject}
+                </span>
+              ))}
+            </div>
           </div>
         )}
 
-        {/* Profile Card */}
-        <div className="profile-section" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
-          {/* Profile Header */}
-          <div className="profile-header">
-            <div className="tutor-avatar" style={{ backgroundColor: colors.primary }}>
-              {tutor.profile_picture ? (
-                <img src={tutor.profile_picture} alt={tutor.name} />
-              ) : (
-                <span>{(tutor.name || 'T').charAt(0).toUpperCase()}</span>
-              )}
-            </div>
-            <div className="profile-info">
-              <div className="name-row">
-                <h1 style={{ color: colors.text }}>{tutor.name}</h1>
-                {tutor.market_code && (
-                  <div className="country-badge" style={{ backgroundColor: colors.gray100 }}>
-                    <FlagIcon countryCode={tutor.market_code} size={14} />
-                    <span style={{ color: colors.textMuted }}>{tutor.market_code}</span>
-                  </div>
-                )}
-              </div>
-              
-              {/* Rating */}
-              <div className="rating-row">
-                <Star size={16} color="#FFB800" fill="#FFB800" />
-                <span className="rating" style={{ color: colors.text }}>
-                  {formatNumber((tutor.rating_avg || tutor.rating || 0).toFixed(1))}
-                </span>
-                <span className="reviews" style={{ color: colors.textMuted }}>
-                  ({formatNumber(tutor.rating_count || 0)} {t('pages.search.reviews')})
-                </span>
-              </div>
-
-              {/* Modality Badge */}
-              <div className="modality-badge" style={{ backgroundColor: colors.primaryLight }}>
-                <Video size={14} color={colors.primary} />
-                <span style={{ color: colors.primary }}>
-                  {getModalityName(Array.isArray(tutor.modality) ? tutor.modality[0] : tutor.modality) || t('pages.search.online')}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Price */}
-          <div className="price-row" style={{ borderTopColor: colors.border }}>
-            <span className="price" style={{ color: colors.primary }}>
-              {tutor.currency_symbol || '$'}{formatNumber(tutor.display_price || tutor.base_price || tutor.session_rate || 0)}{t('pages.search.per_hour')}
-            </span>
-            {tutor.original_price_display && (
-              <span className="original-price" style={{ color: colors.textMuted }}>
-                ({tutor.original_price_display})
+        {/* Calendar Section */}
+        <div className="section calendar-section" style={{ backgroundColor: colors.surface }}>
+          <h2 style={{ color: colors.text }}>
+            <Calendar size={20} />
+            {t('pages.tutor_detail.select_date') || 'Select Date'}
+          </h2>
+          
+          <div className="calendar-container">
+            <div className="calendar-header">
+              <button onClick={() => handleMonthChange(-1)} style={{ color: colors.text }}>
+                <ChevronLeft size={24} />
+              </button>
+              <span style={{ color: colors.text }}>
+                {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
               </span>
-            )}
-          </div>
-
-          {/* About Section */}
-          {tutor.bio && (
-            <div className="section">
-              <h3 style={{ color: colors.text }}>{t('pages.tutor_detail.about')}</h3>
-              <p style={{ color: colors.textMuted }}>{tutor.bio}</p>
+              <button onClick={() => handleMonthChange(1)} style={{ color: colors.text }}>
+                <ChevronRight size={24} />
+              </button>
             </div>
-          )}
-
-          {/* Subjects Section */}
-          {(tutor.subjects?.length > 0 || tutor.topics?.length > 0) && (
-            <div className="section">
-              <h3 style={{ color: colors.text }}>{t('pages.tutor_detail.subjects')}</h3>
-              <div className="subjects-list">
-                {(tutor.subjects || tutor.topics || []).map((subject, idx) => (
-                  <span 
-                    key={idx} 
-                    className="subject-tag" 
-                    style={{ backgroundColor: colors.primaryLight, color: colors.primary }}
+            
+            <div className="calendar-days-header">
+              {dayNames.map(day => (
+                <span key={day} style={{ color: colors.textMuted }}>{day}</span>
+              ))}
+            </div>
+            
+            <div className="calendar-grid">
+              {getDaysInMonth(currentMonth).map((dayObj, idx) => {
+                const { date, isCurrentMonth } = dayObj;
+                const past = isPastDate(date);
+                const today = isToday(date);
+                const selected = isSelected(date);
+                
+                return (
+                  <button
+                    key={idx}
+                    className={`calendar-day ${!isCurrentMonth ? 'other-month' : ''} ${past ? 'past' : ''} ${today ? 'today' : ''} ${selected ? 'selected' : ''}`}
+                    onClick={() => handleDateSelect(date)}
+                    disabled={past || !isCurrentMonth}
+                    style={{
+                      backgroundColor: selected ? colors.primary : 'transparent',
+                      color: selected ? '#fff' : past ? colors.gray300 : !isCurrentMonth ? colors.gray300 : colors.text,
+                      borderColor: today && !selected ? colors.primary : 'transparent'
+                    }}
                   >
-                    {getSubjectName(subject)}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Policies Section */}
-          <div className="section policies-section">
-            <h3 style={{ color: colors.text }}>{t('pages.tutor_detail.policies')}</h3>
-            <div className="policy-item">
-              <Clock size={16} color={colors.textMuted} />
-              <span style={{ color: colors.textMuted }}>
-                {t('pages.tutor_detail.cancellation_policy')}
-              </span>
-            </div>
-            <div className="policy-item">
-              <AlertCircle size={16} color={colors.textMuted} />
-              <span style={{ color: colors.textMuted }}>
-                {t('pages.tutor_detail.noshow_policy')}
-              </span>
+                    {date.getDate()}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
 
-        {/* Available Slots Section */}
-        <div className="slots-section" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
-          <h3 style={{ color: colors.text }}>
-            <Calendar size={18} /> {t('pages.tutor_detail.available_slots')}
-          </h3>
-          
-          {slots.length === 0 ? (
-            <div className="no-slots" style={{ color: colors.textMuted }}>
-              <Calendar size={32} color={colors.gray300} />
-              <p>{t('pages.tutor_detail.no_slots')}</p>
+        {/* Available Slots */}
+        <div className="section slots-section" style={{ backgroundColor: colors.surface }}>
+          <h2 style={{ color: colors.text }}>
+            <Clock size={20} />
+            {t('pages.tutor_detail.available_slots') || 'Available Slots'}
+            {selectedDate && (
+              <span className="date-label" style={{ color: colors.textMuted }}>
+                - {selectedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+              </span>
+            )}
+          </h2>
+
+          {loadingSlots ? (
+            <div className="slots-loading">
+              <Loader2 size={24} color={colors.primary} className="spinner" />
+            </div>
+          ) : slots.length === 0 ? (
+            <div className="no-slots">
+              <Clock size={32} color={colors.gray300} />
+              <p style={{ color: colors.textMuted }}>{t('pages.tutor_detail.no_slots') || 'No slots available for this date'}</p>
             </div>
           ) : (
-            <div className="slots-list">
-              {slots.slice(0, 8).map((slot, index) => {
-                const slotKey = slot.slot_id || slot.start_at || `slot-${index}`;
-                const isSelected = selectedSlot && (
-                  (selectedSlot.slot_id && selectedSlot.slot_id === slot.slot_id) ||
-                  (selectedSlot.start_at && selectedSlot.start_at === slot.start_at)
-                );
+            <div className="slots-grid">
+              {slots.map((slot, index) => {
+                const isSelectedSlot = selectedSlot?.start_at === slot.start_at || 
+                                       selectedSlot?.time === slot.time ||
+                                       selectedSlot?.slot_id === slot.slot_id;
                 return (
-                <button
-                  key={slotKey}
-                  className={`slot-btn ${isSelected ? 'selected' : ''}`}
-                  style={{
-                    backgroundColor: isSelected ? colors.primary : colors.primaryLight,
-                    borderColor: isSelected ? colors.primary : 'transparent',
-                    color: isSelected ? '#fff' : colors.primary,
-                  }}
-                  onClick={() => setSelectedSlot(slot)}
-                >
-                  {slot.display_time || slot.time || `${slot.start_time} - ${slot.end_time}`}
-                </button>
+                  <button
+                    key={slot.slot_id || slot.start_at || index}
+                    className={`slot-btn ${isSelectedSlot ? 'selected' : ''}`}
+                    style={{
+                      backgroundColor: isSelectedSlot ? colors.primary : colors.primaryLight,
+                      borderColor: isSelectedSlot ? colors.primary : 'transparent',
+                      color: isSelectedSlot ? '#fff' : colors.primary,
+                    }}
+                    onClick={() => setSelectedSlot(slot)}
+                  >
+                    {slot.display_time || slot.time || 
+                      (slot.start_at && new Date(slot.start_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }))}
+                    {isSelectedSlot && <Check size={16} />}
+                  </button>
                 );
               })}
             </div>
           )}
         </div>
 
-        {/* Book Button */}
+        {/* Policies */}
+        {tutor.policies && (
+          <div className="section policies-section" style={{ backgroundColor: colors.surface }}>
+            <h2 style={{ color: colors.text }}>
+              <Shield size={20} />
+              {t('pages.tutor_detail.policies') || 'Policies'}
+            </h2>
+            <div className="policy-item">
+              <span className="policy-label" style={{ color: colors.textMuted }}>
+                {t('pages.tutor_detail.cancellation') || 'Cancellation'}:
+              </span>
+              <span style={{ color: colors.text }}>
+                {tutor.policies.cancel_window_hours 
+                  ? `${tutor.policies.cancel_window_hours}h before session`
+                  : 'Flexible'}
+              </span>
+            </div>
+            {tutor.policies.no_show_policy && (
+              <div className="policy-item">
+                <span className="policy-label" style={{ color: colors.textMuted }}>
+                  {t('pages.tutor_detail.no_show') || 'No-show'}:
+                </span>
+                <span style={{ color: colors.text }}>{tutor.policies.no_show_policy}</span>
+              </div>
+            )}
+          </div>
+        )}
+      </main>
+
+      {/* Book Button */}
+      <div className="book-footer" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
+        <div className="book-price">
+          {renderPrice()}
+        </div>
         <button 
           className="book-btn"
           style={{ backgroundColor: colors.primary }}
           onClick={handleBooking}
           disabled={booking || !selectedSlot}
+          data-testid="book-session-btn"
         >
           {booking ? (
             <Loader2 size={20} className="spinner" />
           ) : (
-            <>
-              <Calendar size={20} />
-              <span>{t('pages.tutor_detail.book_session')}</span>
-            </>
+            t('pages.tutor_detail.book_session') || 'Book Session'
           )}
         </button>
-      </main>
+      </div>
 
       <BottomNav />
     </div>
