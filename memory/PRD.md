@@ -409,9 +409,44 @@ Visible on all screen sizes (desktop included per user request)
 - Add child: ✅ WORKING
 - Booking flow navigation: ✅ WORKING
 
-**Minor Issues Remaining:**
-- Some tutors show 'Unknown' instead of name (database data issue)
-- Notifications count endpoint returns 404 (endpoint may not exist)
+### February 1, 2026 - P1/P2 Feature Implementation (Iteration 9)
+**Features Implemented:**
+
+1. **Reminders Page** - Completely rewritten with mobile app parity:
+   - Session reminder hours selection (1h, 2h, 4h, 12h, 24h)
+   - Payment reminder days selection (1, 3, 7 days)
+   - Weekly summary toggle
+   - All settings save to `/reminders/config` endpoint
+
+2. **Subscription Page** - Fully implemented with:
+   - Plan selection (Monthly $9.99/Yearly $99.99)
+   - Payment method selection (PayPal, Google Pay, Apple Pay, Venmo, Card)
+   - Premium features list with proper translations
+   - Cancel subscription modal with confirmation
+   - Reactivate subscription functionality
+   - Free tier information
+
+3. **Tax Reports Page** - Enhanced with:
+   - Year-based cards showing available reports
+   - Generate report functionality
+   - Download PDF functionality
+   - Archived reports request via inbox
+   - Transaction count and total amount display
+
+4. **Notification Settings** - Added backend persistence:
+   - New `/user/notification-settings` GET/PUT endpoints
+   - 6 toggle settings: push, email, SMS, booking reminders, session updates, marketing
+
+5. **Local Currency Display** - Added cross-market price display on SearchPage
+   - Shows user's currency with original currency in parentheses
+
+6. **Translation Keys** - Added missing keys:
+   - `time.one_day`, `time.n_days`
+   - `subscription.feature_*` for all premium features
+
+**Test Results - Iteration 9:**
+- Backend: 100% (21/21 tests passed)
+- Frontend: 100% (all P1/P2 features working)
 
 ---
 
