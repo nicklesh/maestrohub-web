@@ -103,12 +103,12 @@ export default function SubscriptionPage() {
     
     setProcessing(true);
     try {
-      const response = await api.post('/subscription/subscribe', {
+      const response = await api.post('/subscription/create', {
         plan_id: selectedPlan,
         payment_method: selectedPaymentMethod
       });
       
-      if (response.data.success) {
+      if (response.data.success || response.data.subscription_id) {
         showSuccessMessage(
           t('subscription.success_title') || 'Subscription Active!',
           t('subscription.success_message') || 'Welcome to Premium! Enjoy unlimited access.'
