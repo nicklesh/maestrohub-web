@@ -103,9 +103,10 @@ export default function BookingPage() {
         hold_id: currentHoldId,
         student_id: selectedStudent.student_id,
         intake: {
-          goals: goals || null,
-          current_level: currentLevel || null,
-          notes: notes || null
+          goals: goals || 'Not specified',
+          current_level: currentLevel || 'Not specified',
+          notes: notes || null,
+          policy_acknowledged: policyAcknowledged
         }
       };
 
