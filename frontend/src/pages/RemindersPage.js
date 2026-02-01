@@ -1,365 +1,345 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft, AlarmClock, Plus, Trash2, Loader2, X, Clock, Bell } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+import { 
+  AlarmClock, Calendar, CreditCard, Bell, Loader2, 
+  Clock, Settings, ChevronRight 
+} from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useToast } from '../contexts/ToastContext';
 import { useTranslation } from '../i18n';
+import AppHeader from '../components/AppHeader';
+import BottomNav from '../components/BottomNav';
 import api from '../services/api';
 
 export default function RemindersPage() {
   const { colors } = useTheme();
   const { t } = useTranslation();
   const { showSuccess, showError } = useToast();
-  const navigate = useNavigate();
+  
   const [reminders, setReminders] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [formData, setFormData] = useState({
-    title: '',
-    message: '',
-    time: '',
-    priority: 'normal'
+  const [config, setConfig] = useState({
+    session_reminder_hours: 1,
+    payment_reminder_days: 1,
+    weekly_summary: true
   });
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    fetchReminders();
-  }, []);
+  const sessionHourOptions = [1, 2, 4, 12, 24];
+  const paymentDayOptions = [1, 3, 7];
 
-  const fetchReminders = async () => {
+  const loadData = useCallback(async () => {
     try {
-      const response = await api.get('/reminders').catch(() => ({ data: [] }));
-      setReminders(response.data.reminders || response.data || []);
-    } catch (err) {
-      console.error('Failed to fetch reminders:', err);
+      const [remindersRes, configRes] = await Promise.all([
+        api.get('/reminders').catch(() => ({ data: { reminders: [] } })),
+        api.get('/reminders/config').catch(() => ({ data: config }))
+      ]);
+      setReminders(remindersRes.data.reminders || []);
+      if (configRes.data) {
+        setConfig(prev => ({ ...prev, ...configRes.data }));
+      }
+    } catch (error) {
+      console.error('Failed to load reminders:', error);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const handleSave = async () => {
-    if (!formData.title.trim()) {
-      showError(t('forms.validation.title_required') || 'Title is required');
-      return;
-    }
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
+  const saveConfig = async (newConfig) => {
     setSaving(true);
     try {
-      // Try to save to backend, or save locally if endpoint doesn't exist
-      await api.post('/reminders', formData).catch(() => {
-        // Save to local state if backend doesn't support it
-        const newReminder = {
-          id: Date.now().toString(),
-          ...formData,
-          created_at: new Date().toISOString()
-        };
-        setReminders(prev => [newReminder, ...prev]);
-      });
-      showSuccess(t('messages.success.reminder_added') || 'Reminder added');
-      setShowModal(false);
-      setFormData({ title: '', message: '', time: '', priority: 'normal' });
-    } catch (err) {
-      showError(err.response?.data?.detail || t('messages.errors.generic'));
+      await api.put('/reminders/config', newConfig);
+      setConfig(newConfig);
+      showSuccess(t('pages.reminders.settings_saved') || 'Settings saved');
+    } catch (error) {
+      showError(t('pages.reminders.settings_save_failed') || 'Failed to save settings');
     } finally {
       setSaving(false);
     }
   };
 
-  const deleteReminder = async (reminderId) => {
-    if (!window.confirm(t('messages.confirm.delete_reminder') || 'Delete this reminder?')) return;
+  const formatDueDate = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diff = date.getTime() - now.getTime();
+    const hours = Math.ceil(diff / (1000 * 60 * 60));
+    const days = Math.ceil(hours / 24);
 
-    try {
-      await api.delete(`/reminders/${reminderId}`);
-      showSuccess(t('messages.success.reminder_deleted') || 'Reminder deleted');
-      fetchReminders();
-    } catch (err) {
-      showError(t('messages.errors.generic'));
+    if (hours <= 0) return t('pages.reminders.now') || 'Now';
+    if (hours < 24) return t('pages.reminders.in_hours', { count: hours }) || `In ${hours}h`;
+    if (days === 1) return t('pages.reminders.tomorrow') || 'Tomorrow';
+    return t('pages.reminders.in_days', { count: days }) || `In ${days} days`;
+  };
+
+  const getPriorityColor = (priority) => {
+    switch (priority) {
+      case 'high': return colors.error;
+      case 'medium': return colors.warning;
+      default: return colors.primary;
     }
   };
 
-  return (
-    <div style={{ minHeight: '100vh', backgroundColor: colors.background, paddingBottom: '100px' }}>
-      {/* Header */}
-      <header style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '16px',
-        backgroundColor: colors.surface,
-        borderBottom: `1px solid ${colors.border}`,
-        position: 'sticky',
-        top: 0,
-        zIndex: 100
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <button onClick={() => navigate(-1)} style={{ background: 'none', padding: '8px' }}>
-            <ArrowLeft size={24} color={colors.text} />
-          </button>
-          <h1 style={{ color: colors.text, fontSize: '20px', fontWeight: 600 }}>
-            {t('navigation.reminders')}
-          </h1>
-        </div>
-        <button 
-          onClick={() => setShowModal(true)}
-          style={{
-            backgroundColor: colors.primary,
-            color: '#fff',
-            padding: '10px 16px',
-            borderRadius: '20px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            fontSize: '14px',
-            fontWeight: 600
-          }}
-          data-testid="add-reminder-btn"
-        >
-          <Plus size={18} />
-          {t('buttons.add') || 'Add'}
-        </button>
-      </header>
+  const getPriorityBg = (priority) => {
+    switch (priority) {
+      case 'high': return colors.errorLight || '#FECACA';
+      case 'medium': return colors.warningLight || '#FEF3C7';
+      default: return colors.primaryLight || '#DBEAFE';
+    }
+  };
 
-      <div style={{ maxWidth: '600px', margin: '0 auto', padding: '16px' }}>
-        {loading ? (
-          <div style={{ display: 'flex', justifyContent: 'center', padding: '48px' }}>
-            <Loader2 size={32} color={colors.primary} className="spinner" />
-          </div>
-        ) : reminders.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '48px' }}>
-            <AlarmClock size={64} color={colors.gray300} style={{ marginBottom: '16px' }} />
-            <h3 style={{ color: colors.text, marginBottom: '8px' }}>
-              {t('empty_states.no_reminders_title') || 'No reminders yet'}
-            </h3>
-            <p style={{ color: colors.textMuted, marginBottom: '24px' }}>
-              {t('empty_states.no_reminders') || 'Add reminders to stay on track with your sessions'}
+  if (loading) {
+    return (
+      <div style={{ minHeight: '100vh', backgroundColor: colors.background }}>
+        <AppHeader showBack title={t('pages.reminders.title') || 'Reminders'} showUserName />
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          height: 'calc(100vh - 140px)',
+          paddingTop: '60px'
+        }}>
+          <Loader2 size={32} color={colors.primary} className="spinner" />
+        </div>
+        <BottomNav />
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ minHeight: '100vh', backgroundColor: colors.background }}>
+      <AppHeader showBack title={t('pages.reminders.title') || 'Reminders'} showUserName />
+
+      <div style={{ 
+        maxWidth: '560px', 
+        margin: '0 auto', 
+        padding: '76px 16px 100px'
+      }}>
+        {/* Active Reminders Section */}
+        <h3 style={{ 
+          color: colors.text, 
+          fontSize: '16px', 
+          fontWeight: 600, 
+          marginBottom: '12px' 
+        }}>
+          {t('pages.reminders.active_reminders') || 'Active Reminders'}
+        </h3>
+
+        {reminders.length === 0 ? (
+          <div style={{
+            backgroundColor: colors.surface,
+            borderRadius: '12px',
+            padding: '32px',
+            textAlign: 'center',
+            marginBottom: '24px'
+          }}>
+            <AlarmClock size={32} color={colors.textMuted} style={{ marginBottom: '8px' }} />
+            <p style={{ color: colors.textMuted, fontSize: '14px' }}>
+              {t('pages.reminders.no_active_reminders') || 'No active reminders'}
             </p>
-            <button
-              onClick={() => setShowModal(true)}
-              style={{
-                backgroundColor: colors.primary,
-                color: '#fff',
-                padding: '12px 24px',
-                borderRadius: '12px',
-                fontSize: '16px',
-                fontWeight: 600,
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}
-            >
-              <Plus size={20} />
-              {t('reminders.add_first') || 'Add Your First Reminder'}
-            </button>
           </div>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {reminders.map((reminder, idx) => (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
+            {reminders.map((reminder) => (
               <div
-                key={reminder.id || idx}
+                key={reminder.reminder_id}
                 style={{
                   backgroundColor: colors.surface,
-                  borderRadius: '16px',
+                  borderRadius: '12px',
                   padding: '16px',
-                  display: 'flex',
-                  gap: '12px',
-                  alignItems: 'flex-start',
-                  borderLeft: `4px solid ${reminder.priority === 'high' ? colors.error : colors.warning}`
+                  borderLeft: `4px solid ${getPriorityColor(reminder.priority)}`
                 }}
               >
-                <div style={{
-                  width: '44px',
-                  height: '44px',
-                  borderRadius: '12px',
-                  backgroundColor: reminder.priority === 'high' ? colors.errorLight : colors.warningLight,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexShrink: 0
+                <div style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '8px',
+                  marginBottom: '8px'
                 }}>
-                  <AlarmClock size={22} color={reminder.priority === 'high' ? colors.error : colors.warning} />
-                </div>
-                <div style={{ flex: 1 }}>
-                  <h4 style={{ color: colors.text, fontWeight: 600, fontSize: '16px', marginBottom: '4px' }}>
+                  {reminder.type === 'upcoming_session' ? (
+                    <Calendar size={20} color={getPriorityColor(reminder.priority)} />
+                  ) : (
+                    <CreditCard size={20} color={getPriorityColor(reminder.priority)} />
+                  )}
+                  <span style={{ 
+                    flex: 1, 
+                    color: colors.text, 
+                    fontSize: '15px', 
+                    fontWeight: 600 
+                  }}>
                     {reminder.title}
-                  </h4>
-                  {reminder.message && (
-                    <p style={{ color: colors.textMuted, fontSize: '14px', marginBottom: '8px' }}>
-                      {reminder.message}
-                    </p>
-                  )}
-                  {reminder.time && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      <Clock size={14} color={colors.textMuted} />
-                      <span style={{ color: colors.textMuted, fontSize: '13px' }}>{reminder.time}</span>
-                    </div>
-                  )}
+                  </span>
+                  <span style={{ 
+                    color: getPriorityColor(reminder.priority), 
+                    fontSize: '13px', 
+                    fontWeight: 500 
+                  }}>
+                    {formatDueDate(reminder.due_at)}
+                  </span>
                 </div>
-                <button 
-                  onClick={() => deleteReminder(reminder.id)}
-                  style={{ background: 'none', padding: '8px' }}
-                >
-                  <Trash2 size={18} color={colors.textMuted} />
-                </button>
+                <p style={{ color: colors.textMuted, fontSize: '13px', lineHeight: 1.4 }}>
+                  {reminder.message}
+                </p>
               </div>
             ))}
           </div>
         )}
-      </div>
 
-      {/* Add Reminder Modal */}
-      {showModal && (
-        <div 
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'flex-end',
-            justifyContent: 'center',
-            zIndex: 1000
-          }}
-          onClick={() => setShowModal(false)}
-        >
-          <div 
-            style={{
-              width: '100%',
-              maxWidth: '500px',
-              backgroundColor: colors.surface,
-              borderRadius: '20px 20px 0 0',
-              padding: '24px',
-              animation: 'slideUp 0.3s ease-out'
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div style={{ 
-              width: '40px', 
-              height: '4px', 
-              borderRadius: '2px', 
-              backgroundColor: colors.gray300, 
-              margin: '0 auto 16px' 
-            }} />
-            
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <Bell size={24} color={colors.primary} />
-                <h2 style={{ color: colors.text, fontSize: '18px', fontWeight: 600 }}>
-                  {t('reminders.add_reminder') || 'Add Reminder'}
-                </h2>
-              </div>
-              <button onClick={() => setShowModal(false)} style={{ background: 'none', padding: '4px' }}>
-                <X size={24} color={colors.textMuted} />
+        {/* Reminder Settings Section */}
+        <h3 style={{ 
+          color: colors.text, 
+          fontSize: '16px', 
+          fontWeight: 600, 
+          marginBottom: '12px',
+          marginTop: '24px'
+        }}>
+          {t('pages.reminders.reminder_settings') || 'Reminder Settings'}
+        </h3>
+
+        {/* Session Reminders */}
+        <div style={{
+          backgroundColor: colors.surface,
+          borderRadius: '12px',
+          padding: '16px',
+          marginBottom: '12px'
+        }}>
+          <h4 style={{ color: colors.text, fontSize: '15px', fontWeight: 600 }}>
+            {t('pages.reminders.session_reminders') || 'Session Reminders'}
+          </h4>
+          <p style={{ color: colors.textMuted, fontSize: '13px', marginTop: '2px', marginBottom: '12px' }}>
+            {t('pages.reminders.session_reminders_desc') || 'How long before a session should we remind you?'}
+          </p>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            {sessionHourOptions.map((hours) => (
+              <button
+                key={hours}
+                onClick={() => saveConfig({ ...config, session_reminder_hours: hours })}
+                disabled={saving}
+                style={{
+                  padding: '8px 16px',
+                  borderRadius: '20px',
+                  backgroundColor: config.session_reminder_hours === hours 
+                    ? colors.primary 
+                    : colors.background,
+                  color: config.session_reminder_hours === hours 
+                    ? '#fff' 
+                    : colors.text,
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  border: 'none',
+                  cursor: 'pointer',
+                  opacity: saving ? 0.7 : 1,
+                  transition: 'all 0.2s ease'
+                }}
+                data-testid={`session-hours-${hours}`}
+              >
+                {hours}h
               </button>
-            </div>
+            ))}
+          </div>
+        </div>
 
-            <div style={{ marginBottom: '16px' }}>
-              <label style={{ display: 'block', color: colors.textMuted, fontSize: '14px', marginBottom: '6px' }}>
-                {t('forms.labels.title') || 'Title'} *
-              </label>
-              <input
-                type="text"
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                placeholder={t('reminders.title_placeholder') || "e.g., Session with Coach Sarah"}
+        {/* Payment Reminders */}
+        <div style={{
+          backgroundColor: colors.surface,
+          borderRadius: '12px',
+          padding: '16px',
+          marginBottom: '12px'
+        }}>
+          <h4 style={{ color: colors.text, fontSize: '15px', fontWeight: 600 }}>
+            {t('pages.reminders.payment_reminders') || 'Payment Reminders'}
+          </h4>
+          <p style={{ color: colors.textMuted, fontSize: '13px', marginTop: '2px', marginBottom: '12px' }}>
+            {t('pages.reminders.payment_reminders_desc') || 'Remind me about pending payments'}
+          </p>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            {paymentDayOptions.map((days) => (
+              <button
+                key={days}
+                onClick={() => saveConfig({ ...config, payment_reminder_days: days })}
+                disabled={saving}
                 style={{
-                  width: '100%',
-                  padding: '12px 16px',
-                  backgroundColor: colors.background,
-                  border: `1px solid ${colors.border}`,
-                  borderRadius: '12px',
-                  fontSize: '16px',
-                  color: colors.text
+                  padding: '8px 16px',
+                  borderRadius: '20px',
+                  backgroundColor: config.payment_reminder_days === days 
+                    ? colors.primary 
+                    : colors.background,
+                  color: config.payment_reminder_days === days 
+                    ? '#fff' 
+                    : colors.text,
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  border: 'none',
+                  cursor: 'pointer',
+                  opacity: saving ? 0.7 : 1,
+                  transition: 'all 0.2s ease'
                 }}
-                data-testid="reminder-title-input"
-              />
-            </div>
+                data-testid={`payment-days-${days}`}
+              >
+                {days === 1 
+                  ? (t('time.one_day') || '1 day') 
+                  : (t('time.n_days', { count: days }) || `${days} days`)}
+              </button>
+            ))}
+          </div>
+        </div>
 
-            <div style={{ marginBottom: '16px' }}>
-              <label style={{ display: 'block', color: colors.textMuted, fontSize: '14px', marginBottom: '6px' }}>
-                {t('forms.labels.message') || 'Message'}
-              </label>
-              <textarea
-                value={formData.message}
-                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                placeholder={t('reminders.message_placeholder') || "Add notes..."}
-                rows={3}
-                style={{
-                  width: '100%',
-                  padding: '12px 16px',
-                  backgroundColor: colors.background,
-                  border: `1px solid ${colors.border}`,
-                  borderRadius: '12px',
-                  fontSize: '16px',
-                  color: colors.text,
-                  resize: 'vertical'
-                }}
-              />
+        {/* Weekly Summary Toggle */}
+        <div style={{
+          backgroundColor: colors.surface,
+          borderRadius: '12px',
+          padding: '16px',
+          marginBottom: '12px'
+        }}>
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'space-between' 
+          }}>
+            <div style={{ flex: 1, marginRight: '12px' }}>
+              <h4 style={{ color: colors.text, fontSize: '15px', fontWeight: 600 }}>
+                {t('pages.reminders.weekly_summary') || 'Weekly Summary'}
+              </h4>
+              <p style={{ color: colors.textMuted, fontSize: '13px', marginTop: '2px' }}>
+                {t('pages.reminders.weekly_summary_desc') || 'Receive a weekly email with your upcoming sessions'}
+              </p>
             </div>
-
-            <div style={{ marginBottom: '16px' }}>
-              <label style={{ display: 'block', color: colors.textMuted, fontSize: '14px', marginBottom: '6px' }}>
-                {t('reminders.priority') || 'Priority'}
-              </label>
-              <div style={{ display: 'flex', gap: '12px' }}>
-                {['normal', 'high'].map((p) => (
-                  <button
-                    key={p}
-                    onClick={() => setFormData({ ...formData, priority: p })}
-                    style={{
-                      flex: 1,
-                      padding: '12px',
-                      borderRadius: '12px',
-                      backgroundColor: formData.priority === p 
-                        ? (p === 'high' ? colors.errorLight : colors.primaryLight)
-                        : colors.background,
-                      border: `1px solid ${formData.priority === p 
-                        ? (p === 'high' ? colors.error : colors.primary)
-                        : colors.border}`,
-                      color: formData.priority === p 
-                        ? (p === 'high' ? colors.error : colors.primary)
-                        : colors.text,
-                      fontWeight: formData.priority === p ? 600 : 400
-                    }}
-                  >
-                    {p === 'high' ? (t('reminders.high') || 'High') : (t('reminders.normal') || 'Normal')}
-                  </button>
-                ))}
-              </div>
-            </div>
-
             <button
-              onClick={handleSave}
+              onClick={() => saveConfig({ ...config, weekly_summary: !config.weekly_summary })}
               disabled={saving}
               style={{
-                width: '100%',
-                padding: '16px',
-                backgroundColor: colors.primary,
-                color: '#fff',
+                width: '50px',
+                height: '28px',
                 borderRadius: '14px',
-                fontSize: '17px',
-                fontWeight: 600,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                opacity: saving ? 0.7 : 1
+                backgroundColor: config.weekly_summary ? colors.primary : colors.gray300,
+                position: 'relative',
+                cursor: 'pointer',
+                border: 'none',
+                transition: 'background-color 0.2s ease'
               }}
-              data-testid="save-reminder-btn"
+              data-testid="weekly-summary-toggle"
             >
-              {saving ? <Loader2 size={20} className="spinner" /> : <Plus size={20} />}
-              {t('reminders.add_reminder') || 'Add Reminder'}
+              <div style={{
+                width: '24px',
+                height: '24px',
+                borderRadius: '12px',
+                backgroundColor: '#fff',
+                position: 'absolute',
+                top: '2px',
+                left: config.weekly_summary ? '24px' : '2px',
+                transition: 'left 0.2s ease',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.2)'
+              }} />
             </button>
           </div>
         </div>
-      )}
+      </div>
+
+      <BottomNav />
 
       <style>{`
-        @keyframes slideUp {
-          from { transform: translateY(100%); }
-          to { transform: translateY(0); }
-        }
         .spinner { animation: spin 1s linear infinite; }
         @keyframes spin {
           from { transform: rotate(0deg); }
