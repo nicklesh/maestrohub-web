@@ -291,7 +291,11 @@ const BillingPage = () => {
                           className="provider-icon"
                           style={{ backgroundColor: config.color + '15' }}
                         >
-                          <span style={{ fontSize: '24px' }}>{config.icon}</span>
+                          {config.logo ? (
+                            <img src={config.logo} alt={config.name} style={{ width: '28px', height: 'auto', maxHeight: '28px', objectFit: 'contain' }} />
+                          ) : (
+                            <CreditCard size={24} color={config.color} />
+                          )}
                         </div>
                         <div className="provider-info">
                           <h4 style={{ color: colors.text }}>{provider.display_name}</h4>
