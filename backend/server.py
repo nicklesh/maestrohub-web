@@ -1752,6 +1752,46 @@ async def change_password(data: PasswordChange, request: Request):
     
     return {"success": True, "message": "Password changed successfully"}
 
+# Notification Settings Model
+class NotificationSettings(BaseModel):
+    push_enabled: bool = True
+    email_enabled: bool = True
+    sms_enabled: bool = False
+    booking_reminders: bool = True
+    marketing_emails: bool = False
+    session_updates: bool = True
+
+@api_router.get("/user/notification-settings")
+async def get_notification_settings(request: Request):
+    """Get user notification preferences"""
+    user = await require_auth(request)
+    
+    user_doc = await get_user_doc(user.user_id)
+    if not user_doc:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Return notification settings or defaults
+    settings = user_doc.get("notification_settings", {
+        "push_enabled": True,
+        "email_enabled": True,
+        "sms_enabled": False,
+        "booking_reminders": True,
+        "marketing_emails": False,
+        "session_updates": True
+    })
+    
+    return settings
+
+@api_router.put("/user/notification-settings")
+async def update_notification_settings(data: NotificationSettings, request: Request):
+    """Update user notification preferences"""
+    user = await require_auth(request)
+    
+    settings_dict = data.dict()
+    await update_user_doc(user.user_id, {"$set": {"notification_settings": settings_dict}})
+    
+    return {"success": True, "message": "Notification settings updated", **settings_dict}
+
 # ============== BILLING & PAYMENT METHODS ==============
 
 class PaymentMethodAdd(BaseModel):
