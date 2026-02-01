@@ -2902,5 +2902,17 @@
     "just_now": "Just now",
     "one_day": "1 day",
     "n_days": "{{count}} days"
+  },
+  "chat": {
+    "title": "Chat Support",
+    "available": "Always available",
+    "help": "Help",
+    "welcome_message": "Hi there! 👋 I'm your Maestro Habitat assistant. I can help you with:\n\n• Booking sessions with coaches\n• Understanding subscription plans\n• Account and profile settings\n• Finding the right coach\n\nHow can I help you today?",
+    "placeholder": "Type your message...",
+    "disclaimer": "For personalized advice, please contact your coach directly.",
+    "error_sending": "Failed to send message. Please try again.",
+    "error_response": "I'm sorry, I'm having trouble responding right now. Please try again or contact your coach for immediate assistance.",
+    "clear": "Clear chat",
+    "minimize": "Minimize"
   }
 }
