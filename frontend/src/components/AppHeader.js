@@ -281,6 +281,11 @@ export default function AppHeader({ showBack = false, title = '', showUserName =
           </div>
         </div>
       )}
+
+      {/* Ask Maestro Chat Window */}
+      {showChatWindow && (
+        <ChatWindow onClose={() => setShowChatWindow(false)} />
+      )}
     </>
   );
 }
