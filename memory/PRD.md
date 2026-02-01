@@ -384,6 +384,35 @@ Visible on all screen sizes (desktop included per user request)
 - pages.billing.select_type, credit_debit, card_desc, bank_account, bank_desc, upi, upi_desc, etc.
 - forms.labels.card_number, card_holder, expiry, cvv
 
+### February 1, 2026 - Critical Bug Fixes (Iteration 8)
+**Issues Fixed:**
+
+1. **Profile Save Bug** - Fixed backend `/profile` endpoint to correctly lookup users by ObjectId instead of non-existent user_id field. Now profile changes (name, phone) are saved correctly.
+
+2. **Add a Child Bug** - Fixed frontend KidsPage.js to use correct field names expected by backend:
+   - Changed `send_reminders` to `notify_upcoming_sessions`
+   - Changed `send_schedules` to `auto_send_schedule`
+
+3. **Booking Flow Route** - Added missing `/book/:tutorId` route to App.js and imported BookingPage component.
+
+4. **Booking Intake Form** - Fixed BookingPage.js to include `policy_acknowledged` field in intake object which was required by backend.
+
+5. **Translation Keys** - Testing agent fixed missing translation keys:
+   - `pages.tutor_detail.coach_from`
+   - `pages.tutor_detail.cancellation`
+   - `pages.tutor_detail.no_show`
+
+**Test Results - Iteration 8:**
+- Backend: 85% (17/20 tests passed)
+- Frontend: 95% (all core flows working)
+- Profile save: ✅ WORKING
+- Add child: ✅ WORKING
+- Booking flow navigation: ✅ WORKING
+
+**Minor Issues Remaining:**
+- Some tutors show 'Unknown' instead of name (database data issue)
+- Notifications count endpoint returns 404 (endpoint may not exist)
+
 ---
 
 ## Prioritized Backlog
@@ -400,17 +429,23 @@ Visible on all screen sizes (desktop included per user request)
 - [x] All Account pages have AppHeader
 - [x] 22 languages support
 - [x] Billing with Add Card modal
+- [x] Profile save functionality
+- [x] Add child functionality
+- [x] Booking flow route
 
 ### P1 (High Priority)
 - [ ] Custom domain deployment (www.maestrohabitat.com)
 - [ ] Payment integration (Stripe)
 - [ ] Booking notifications
-- [ ] Real-time updates
+- [ ] Reminders page full implementation
+- [ ] Subscription upgrade/downgrade functionality
+- [ ] Local currency display for international coaches
 
 ### P2 (Medium Priority)
 - [ ] Reviews/ratings system (backend integration)
 - [ ] Real-time chat
 - [ ] Push notifications
+- [ ] Tax reports download
 - [ ] Multi-language support (Spanish, Hindi, etc.)
 
 ### P3 (Low Priority)
@@ -421,10 +456,10 @@ Visible on all screen sizes (desktop included per user request)
 ---
 
 ## Next Tasks
-1. **Deploy to Custom Domain** - Use Emergent deployment with www.maestrohabitat.com
-2. Integrate Stripe for payments
-3. Add booking confirmation emails
-4. Implement real-time session updates
+1. Implement Reminders page with date/frequency selection
+2. Complete Subscription page with upgrade/downgrade logic
+3. Add local currency display for international coaches
+4. Deploy to Custom Domain (www.maestrohabitat.com)
 
 ---
 
