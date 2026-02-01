@@ -19,6 +19,7 @@ export default function AppHeader({ showBack = false, title = '', showUserName =
   const navigate = useNavigate();
   
   const [showContactSheet, setShowContactSheet] = useState(false);
+  const [showChatWindow, setShowChatWindow] = useState(false);
   const [contactSubject, setContactSubject] = useState('');
   const [contactMessage, setContactMessage] = useState('');
   const [submittingContact, setSubmittingContact] = useState(false);
