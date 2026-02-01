@@ -1715,9 +1715,14 @@ async def update_profile(data: ProfileUpdate, request: Request):
     
     await update_user_doc(user.user_id, {"$set": update_data})
     
-    # Get updated user
-    updated = await db.users.find_one({"user_id": user.user_id}, {"_id": 0, "password_hash": 0})
-    return updated
+    # Get updated user - use ObjectId lookup which is how users are stored
+    updated = await get_user_doc(user.user_id)
+    if updated:
+        # Convert _id to user_id string and remove sensitive data
+        updated["user_id"] = str(updated.pop("_id"))
+        updated.pop("password_hash", None)
+        return updated
+    return {"success": True, "message": "Profile updated"}
 
 @api_router.post("/profile/change-password")
 async def change_password(data: PasswordChange, request: Request):
