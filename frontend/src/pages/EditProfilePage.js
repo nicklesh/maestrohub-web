@@ -9,7 +9,7 @@ import api from '../services/api';
 import AppHeader from '../components/AppHeader';
 
 export default function EditProfilePage() {
-  const { user, updateUser } = useAuth();
+  const { user, refreshUser } = useAuth();
   const { colors } = useTheme();
   const { showSuccess, showError } = useToast();
   const { t } = useTranslation();
@@ -25,9 +25,10 @@ export default function EditProfilePage() {
     e.preventDefault();
     setSaving(true);
     try {
-      const response = await api.put('/profile', formData);
-      if (updateUser) {
-        updateUser(response.data);
+      await api.put('/profile', formData);
+      // Refresh user data in the context
+      if (refreshUser) {
+        await refreshUser();
       }
       showSuccess(t('messages.success.profile_updated') || 'Profile updated successfully');
       navigate('/profile');
