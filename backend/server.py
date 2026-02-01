@@ -9322,13 +9322,14 @@ async def send_chat_message(data: ChatMessage, request: Request):
     session_id = data.session_id or f"chat_{user.user_id if user else 'guest'}_{uuid.uuid4().hex[:8]}"
     
     # Get or create chat instance
-    openai_key = os.environ.get("OPENAI_API_KEY", "")
-    if not openai_key:
+    # Try Emergent LLM key first, then OpenAI key
+    llm_key = os.environ.get("EMERGENT_LLM_KEY") or os.environ.get("OPENAI_API_KEY", "")
+    if not llm_key:
         raise HTTPException(status_code=500, detail="Chatbot not configured")
     
     if session_id not in chat_sessions:
         chat_sessions[session_id] = LlmChat(
-            api_key=openai_key,
+            api_key=llm_key,
             session_id=session_id,
             system_message=CHATBOT_SYSTEM_PROMPT
         ).with_model("openai", "gpt-4o-mini")  # Use cost-effective model
