@@ -20,6 +20,7 @@ import HomePage from './pages/HomePage';
 import SearchPage from './pages/SearchPage';
 import ProfilePage from './pages/ProfilePage';
 import BookingsPage from './pages/BookingsPage';
+import BookingPage from './pages/BookingPage';
 import KidsPage from './pages/KidsPage';
 import TutorDetailPage from './pages/TutorDetailPage';
 import BillingPage from './pages/BillingPage';
