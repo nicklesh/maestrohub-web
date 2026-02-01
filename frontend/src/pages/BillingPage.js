@@ -7,17 +7,53 @@ import AppHeader from '../components/AppHeader';
 import api from '../services/api';
 import './BillingPage.css';
 
-// Payment provider icons and colors
+// Payment provider logos - using real images from CDNs
 const PROVIDER_CONFIG = {
-  paypal: { name: 'PayPal', color: '#003087', icon: '💳' },
-  google_pay: { name: 'Google Pay', color: '#4285F4', icon: '🔵' },
-  apple_pay: { name: 'Apple Pay', color: '#000000', icon: '🍎' },
-  venmo: { name: 'Venmo', color: '#008CFF', icon: '💸' },
-  zelle: { name: 'Zelle', color: '#6D1ED4', icon: '⚡' },
-  phonepe: { name: 'PhonePe', color: '#5F259F', icon: '📱' },
-  paytm: { name: 'Paytm', color: '#00BAF2', icon: '💰' },
-  amazon_pay: { name: 'Amazon Pay', color: '#FF9900', icon: '🛒' },
-  stripe: { name: 'Stripe', color: '#635BFF', icon: '💳' },
+  paypal: { 
+    name: 'PayPal', 
+    color: '#003087', 
+    logo: 'https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-100px.png'
+  },
+  google_pay: { 
+    name: 'Google Pay', 
+    color: '#4285F4', 
+    logo: 'https://www.gstatic.com/instantbuy/svg/dark_gpay.svg'
+  },
+  apple_pay: { 
+    name: 'Apple Pay', 
+    color: '#000000', 
+    logo: 'https://www.apple.com/v/apple-pay/o/images/overview/og_image__gh9n0y3c4dum_large.png'
+  },
+  venmo: { 
+    name: 'Venmo', 
+    color: '#008CFF', 
+    logo: 'https://images.ctfassets.net/gkyt4bl1j2fs/3OxsKnqRjxBNjyU0EoNPZx/4b57c3cb1d67f5cfb8e22dc71b9e6ff5/Venmo_Logo_Blue.png'
+  },
+  zelle: { 
+    name: 'Zelle', 
+    color: '#6D1ED4', 
+    logo: 'https://www.zellepay.com/sites/default/files/Zelle-logo-tagline-horizontal-purple.png'
+  },
+  phonepe: { 
+    name: 'PhonePe', 
+    color: '#5F259F', 
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/PhonePe_Logo.png/800px-PhonePe_Logo.png'
+  },
+  paytm: { 
+    name: 'Paytm', 
+    color: '#00BAF2', 
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Paytm_Logo_%28standalone%29.svg/1200px-Paytm_Logo_%28standalone%29.svg.png'
+  },
+  amazon_pay: { 
+    name: 'Amazon Pay', 
+    color: '#FF9900', 
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Amazon_Pay_logo.svg/1200px-Amazon_Pay_logo.svg.png'
+  },
+  stripe: { 
+    name: 'Stripe', 
+    color: '#635BFF', 
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Stripe_Logo%2C_revised_2016.svg/2560px-Stripe_Logo%2C_revised_2016.svg.png'
+  },
 };
 
 const DAY_OPTIONS = [1, 5, 10, 15, 20, 25, 28];
