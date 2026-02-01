@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useToast } from '../contexts/ToastContext';
 import { useTranslation } from '../i18n';
+import AppHeader from '../components/AppHeader';
 import api from '../services/api';
 
 export default function SubscriptionPage() {
