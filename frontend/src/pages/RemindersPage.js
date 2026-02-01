@@ -31,11 +31,11 @@ export default function RemindersPage() {
     try {
       const [remindersRes, configRes] = await Promise.all([
         api.get('/reminders').catch(() => ({ data: { reminders: [] } })),
-        api.get('/reminders/config').catch(() => ({ data: config }))
+        api.get('/reminders/config').catch(() => ({ data: null }))
       ]);
       setReminders(remindersRes.data.reminders || []);
       if (configRes.data) {
-        setConfig(prev => ({ ...prev, ...configRes.data }));
+        setConfig(configRes.data);
       }
     } catch (error) {
       console.error('Failed to load reminders:', error);
