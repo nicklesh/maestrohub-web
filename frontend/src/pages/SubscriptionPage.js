@@ -76,7 +76,7 @@ export default function SubscriptionPage() {
 
   const fetchSubscription = async () => {
     try {
-      const response = await api.get('/subscription').catch(() => ({ data: null }));
+      const response = await api.get('/subscription/status').catch(() => ({ data: null }));
       setSubscription(response.data);
     } catch (err) {
       console.error('Failed to fetch subscription:', err);
