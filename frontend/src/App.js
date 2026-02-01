@@ -40,6 +40,7 @@ import TaxReportsPage from './pages/TaxReportsPage';
 import InviteParentPage from './pages/InviteParentPage';
 import InviteProviderPage from './pages/InviteProviderPage';
 import BecomeTutorPage from './pages/BecomeTutorPage';
+import BookingSuccessPage from './pages/BookingSuccessPage';
 
 // Tutor Pages
 import TutorDashboardPage from './pages/TutorDashboardPage';
