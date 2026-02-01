@@ -2656,6 +2656,10 @@
   },
   "common": {
     "ok": "OK",
+    "minutes": "minutes",
+    "minute": "minute",
+    "hours": "hours",
+    "hour": "hour",
     "yes": "Yes",
     "no": "No",
     "done": "Done",
