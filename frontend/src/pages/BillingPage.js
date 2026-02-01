@@ -443,7 +443,11 @@ const BillingPage = () => {
                     data-testid={`link-${provider.id}`}
                   >
                     <div className="provider-icon" style={{ backgroundColor: config.color + '15' }}>
-                      <span style={{ fontSize: '24px' }}>{config.icon}</span>
+                      {config.logo ? (
+                        <img src={config.logo} alt={config.name} style={{ width: '28px', height: 'auto', maxHeight: '28px', objectFit: 'contain' }} />
+                      ) : (
+                        <CreditCard size={24} color={config.color} />
+                      )}
                     </div>
                     <span className="provider-name" style={{ color: colors.text }}>{config.name}</span>
                     {isLinking ? (
