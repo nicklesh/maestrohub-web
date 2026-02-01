@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Bell, Mail, LogOut, ArrowLeft, X, Loader2
+  Bell, Mail, LogOut, ArrowLeft, X, Loader2, MessageCircle
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useToast } from '../contexts/ToastContext';
 import { useTranslation } from '../i18n';
 import api from '../services/api';
+import ChatWindow from './ChatWindow';
 import './AppHeader.css';
 
 export default function AppHeader({ showBack = false, title = '', showUserName = false }) {
