@@ -9277,6 +9277,307 @@ async def check_feature_access(feature: str, request: Request):
         "upgrade_required": not has_access
     }
 
+# ============== AI CHATBOT ==============
+
+# Store chat sessions in memory (in production, use Redis or database)
+chat_sessions: Dict[str, LlmChat] = {}
+
+CHATBOT_SYSTEM_PROMPT = """You are a helpful customer support assistant for Maestro Habitat, an online tutoring and coaching platform.
+
+Your role is to help users with:
+- General questions about the platform
+- How to book sessions with coaches
+- Understanding subscription plans and pricing
+- Account settings and profile management
+- Technical support for using the platform
+- Finding the right coach for their needs
+
+IMPORTANT SAFETY GUIDELINES:
+1. NEVER provide medical, legal, financial, or professional compliance advice
+2. NEVER make promises about specific outcomes or guarantees
+3. If a question involves health, legal matters, financial advice, safety concerns, or any potentially sensitive topic, politely redirect the user to contact their coach directly for personalized guidance
+4. Always be helpful, friendly, and professional
+5. If you don't know something, say so and suggest contacting support
+
+Example redirects:
+- "For questions about specific learning outcomes or educational assessments, I'd recommend discussing this directly with your coach who can provide personalized guidance."
+- "That's a great question that would be best addressed by your coach who knows your specific situation."
+
+Remember: You're here to help with platform usage, not to provide professional advice in specialized fields."""
+
+class ChatMessage(BaseModel):
+    message: str
+    session_id: Optional[str] = None
+
+class ChatResponse(BaseModel):
+    response: str
+    session_id: str
+
+@api_router.post("/chat/message", response_model=ChatResponse)
+async def send_chat_message(data: ChatMessage, request: Request):
+    """Send a message to the AI chatbot"""
+    user = await get_current_user(request)
+    
+    # Create or get session ID
+    session_id = data.session_id or f"chat_{user.user_id if user else 'guest'}_{uuid.uuid4().hex[:8]}"
+    
+    # Get or create chat instance
+    openai_key = os.environ.get("OPENAI_API_KEY", "")
+    if not openai_key:
+        raise HTTPException(status_code=500, detail="Chatbot not configured")
+    
+    if session_id not in chat_sessions:
+        chat_sessions[session_id] = LlmChat(
+            api_key=openai_key,
+            session_id=session_id,
+            system_message=CHATBOT_SYSTEM_PROMPT
+        ).with_model("openai", "gpt-4o-mini")  # Use cost-effective model
+    
+    chat = chat_sessions[session_id]
+    
+    try:
+        user_message = UserMessage(text=data.message)
+        response = await chat.send_message(user_message)
+        
+        # Store chat message in database for history
+        await db.chat_messages.insert_one({
+            "session_id": session_id,
+            "user_id": user.user_id if user else None,
+            "role": "user",
+            "content": data.message,
+            "created_at": datetime.now(timezone.utc)
+        })
+        await db.chat_messages.insert_one({
+            "session_id": session_id,
+            "user_id": user.user_id if user else None,
+            "role": "assistant",
+            "content": response,
+            "created_at": datetime.now(timezone.utc)
+        })
+        
+        return ChatResponse(response=response, session_id=session_id)
+    except Exception as e:
+        print(f"Chat error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to get response from chatbot")
+
+@api_router.get("/chat/history/{session_id}")
+async def get_chat_history(session_id: str, request: Request):
+    """Get chat history for a session"""
+    user = await get_current_user(request)
+    
+    messages = await db.chat_messages.find(
+        {"session_id": session_id},
+        {"_id": 0}
+    ).sort("created_at", 1).to_list(100)
+    
+    return {"messages": messages, "session_id": session_id}
+
+@api_router.delete("/chat/session/{session_id}")
+async def clear_chat_session(session_id: str, request: Request):
+    """Clear a chat session"""
+    user = await require_auth(request)
+    
+    # Remove from memory
+    if session_id in chat_sessions:
+        del chat_sessions[session_id]
+    
+    # Remove from database
+    await db.chat_messages.delete_many({"session_id": session_id})
+    
+    return {"success": True, "message": "Chat session cleared"}
+
+# ============== STRIPE CHECKOUT ==============
+
+class CheckoutRequest(BaseModel):
+    booking_hold_id: str
+    origin_url: str
+
+@api_router.post("/checkout/create-session")
+async def create_checkout_session(data: CheckoutRequest, request: Request):
+    """Create a Stripe checkout session for booking payment"""
+    user = await require_auth(request)
+    
+    stripe_key = os.environ.get("STRIPE_API_KEY", "")
+    if not stripe_key:
+        raise HTTPException(status_code=500, detail="Payment system not configured")
+    
+    # Get the booking hold
+    hold = await db.booking_holds.find_one({"hold_id": data.booking_hold_id})
+    if not hold:
+        raise HTTPException(status_code=404, detail="Booking hold not found")
+    
+    if hold.get("user_id") != user.user_id:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    # Get tutor info for pricing
+    tutor = await db.tutors.find_one({"tutor_id": hold.get("tutor_id")})
+    if not tutor:
+        raise HTTPException(status_code=404, detail="Tutor not found")
+    
+    amount = float(tutor.get("base_price", 50.0))
+    currency = tutor.get("currency", "USD").lower()
+    
+    # Build URLs
+    success_url = f"{data.origin_url}/booking-success?session_id={{CHECKOUT_SESSION_ID}}&hold_id={data.booking_hold_id}"
+    cancel_url = f"{data.origin_url}/book/{hold.get('tutor_id')}?cancelled=true"
+    
+    try:
+        # Initialize Stripe checkout
+        webhook_url = f"{str(request.base_url)}api/webhook/stripe"
+        stripe_checkout = StripeCheckout(api_key=stripe_key, webhook_url=webhook_url)
+        
+        # Create checkout session
+        checkout_request = CheckoutSessionRequest(
+            amount=amount,
+            currency=currency,
+            success_url=success_url,
+            cancel_url=cancel_url,
+            metadata={
+                "booking_hold_id": data.booking_hold_id,
+                "user_id": user.user_id,
+                "tutor_id": hold.get("tutor_id"),
+                "tutor_name": tutor.get("user_name", "Coach")
+            }
+        )
+        
+        session = await stripe_checkout.create_checkout_session(checkout_request)
+        
+        # Store payment transaction
+        await db.payment_transactions.insert_one({
+            "transaction_id": f"txn_{uuid.uuid4().hex[:12]}",
+            "session_id": session.session_id,
+            "user_id": user.user_id,
+            "booking_hold_id": data.booking_hold_id,
+            "amount": amount,
+            "currency": currency,
+            "status": "pending",
+            "payment_status": "initiated",
+            "created_at": datetime.now(timezone.utc)
+        })
+        
+        return {
+            "checkout_url": session.url,
+            "session_id": session.session_id
+        }
+    except Exception as e:
+        print(f"Stripe checkout error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to create checkout session")
+
+@api_router.get("/checkout/status/{session_id}")
+async def get_checkout_status(session_id: str, request: Request):
+    """Get the status of a checkout session"""
+    user = await require_auth(request)
+    
+    stripe_key = os.environ.get("STRIPE_API_KEY", "")
+    if not stripe_key:
+        raise HTTPException(status_code=500, detail="Payment system not configured")
+    
+    try:
+        webhook_url = f"{str(request.base_url)}api/webhook/stripe"
+        stripe_checkout = StripeCheckout(api_key=stripe_key, webhook_url=webhook_url)
+        
+        status = await stripe_checkout.get_checkout_status(session_id)
+        
+        # Update transaction in database
+        await db.payment_transactions.update_one(
+            {"session_id": session_id},
+            {"$set": {
+                "status": status.status,
+                "payment_status": status.payment_status,
+                "updated_at": datetime.now(timezone.utc)
+            }}
+        )
+        
+        return {
+            "status": status.status,
+            "payment_status": status.payment_status,
+            "amount_total": status.amount_total,
+            "currency": status.currency,
+            "metadata": status.metadata
+        }
+    except Exception as e:
+        print(f"Checkout status error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to get checkout status")
+
+@api_router.post("/webhook/stripe")
+async def stripe_webhook(request: Request):
+    """Handle Stripe webhooks"""
+    stripe_key = os.environ.get("STRIPE_API_KEY", "")
+    if not stripe_key:
+        raise HTTPException(status_code=500, detail="Payment system not configured")
+    
+    try:
+        body = await request.body()
+        signature = request.headers.get("Stripe-Signature", "")
+        
+        webhook_url = f"{str(request.base_url)}api/webhook/stripe"
+        stripe_checkout = StripeCheckout(api_key=stripe_key, webhook_url=webhook_url)
+        
+        webhook_response = await stripe_checkout.handle_webhook(body, signature)
+        
+        # Process the webhook event
+        if webhook_response.payment_status == "paid":
+            # Update transaction
+            await db.payment_transactions.update_one(
+                {"session_id": webhook_response.session_id},
+                {"$set": {
+                    "status": "completed",
+                    "payment_status": "paid",
+                    "updated_at": datetime.now(timezone.utc)
+                }}
+            )
+            
+            # Get transaction to find booking hold
+            transaction = await db.payment_transactions.find_one({"session_id": webhook_response.session_id})
+            if transaction:
+                # Mark booking hold as paid
+                await db.booking_holds.update_one(
+                    {"hold_id": transaction.get("booking_hold_id")},
+                    {"$set": {"payment_status": "paid"}}
+                )
+        
+        return {"received": True}
+    except Exception as e:
+        print(f"Webhook error: {e}")
+        return {"received": True, "error": str(e)}
+
+# ============== PUSH NOTIFICATIONS ==============
+
+class PushSubscription(BaseModel):
+    endpoint: str
+    keys: Dict[str, str]
+
+@api_router.post("/push/subscribe")
+async def subscribe_push(data: PushSubscription, request: Request):
+    """Subscribe to push notifications"""
+    user = await require_auth(request)
+    
+    await db.push_subscriptions.update_one(
+        {"user_id": user.user_id},
+        {"$set": {
+            "user_id": user.user_id,
+            "endpoint": data.endpoint,
+            "keys": data.keys,
+            "created_at": datetime.now(timezone.utc),
+            "active": True
+        }},
+        upsert=True
+    )
+    
+    return {"success": True, "message": "Push subscription saved"}
+
+@api_router.delete("/push/unsubscribe")
+async def unsubscribe_push(request: Request):
+    """Unsubscribe from push notifications"""
+    user = await require_auth(request)
+    
+    await db.push_subscriptions.update_one(
+        {"user_id": user.user_id},
+        {"$set": {"active": False}}
+    )
+    
+    return {"success": True, "message": "Push subscription removed"}
+
 
 # Include router - MUST be after all @api_router endpoints are defined
 app.include_router(api_router)
