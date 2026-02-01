@@ -23,7 +23,7 @@ import sys
 import os
 
 # Configuration
-BASE_URL = "https://maestro-web-1.preview.emergentagent.com/api"
+BASE_URL = "https://edu-platform-171.preview.emergentagent.com/api"
 TIMEOUT = 30
 
 # Test credentials from the request

@@ -2,7 +2,7 @@
 
 ## Overview
 This document captures all the UI elements, icons, and layouts from the mobile app preview at:
-https://maestro-web-1.preview.emergentagent.com
+https://edu-platform-171.preview.emergentagent.com
 
 Test credentials:
 - Email: parent1@test.com

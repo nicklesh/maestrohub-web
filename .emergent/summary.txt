@@ -1,203 +1,194 @@
 <analysis>**original_problem_statement:**
-The user wants to convert a React Native/Expo application from a GitHub repository into a pure React web application.
-The final web app should be deployed with the custom domain .
-The user explicitly requested not to use Expo.
+The user wants to convert a React Native/Expo application into a pure React web application. The final web app should have feature, theme, and UX parity with the original mobile app and be deployed to .
 
 **PRODUCT REQUIREMENTS:**
 1.  **Framework**: Pure React.
 2.  **Deployment**: Through the Emergent webapp deployment service.
 3.  **Authentication**: Use the existing custom JWT-based authentication.
 4.  **Parity**: The features, theme, and overall user experience of the web app must be identical to the original native application.
-5.  **Backend**: Reuse the existing backend APIs and integrations from the provided codebase.
-6.  **Roles**: The application must support all features for three distinct user roles: Consumer/Parent, Tutor, and Admin.
-7.  **UI/UX**: Replicate the mobile UI, including a bottom navigation bar for authenticated users, and ensure all pages and components match the mobile reference.
+5.  **Backend**: Reuse the existing backend APIs and database.
+6.  **Roles**: The application must support all features for Consumer/Parent, Tutor, and Admin roles.
+7.  **UI/UX**: Replicate the mobile UI precisely, including header, footer, icons, color palette, layouts, and component behavior for all pages. The app must be responsive.
+8.  **Translations**: Ensure all text is translated, referencing the original mobile app's translation files.
 
 **User's preferred language**: English
 
 **what currently exists?**
-A partially converted React web application. The initial React Native codebase was cloned, and a new pure React frontend was scaffolded. The existing FastAPI backend was moved and is running successfully.
-
-The new React app includes:
-- A complete project structure with necessary dependencies installed.
-- Contexts for Auth, Theme, Toast, and i18n.
-- A significant number of pages created for all three user roles (Consumer, Tutor, Admin).
-- A  component that mimics the mobile app's footer navigation.
-- A comprehensive translation file ().
+A partially converted React web application that has undergone several rounds of UI/UX improvements to match the reference mobile app. The agent recently completed a large batch of fixes based on user feedback, including adding a consistent header to all account pages, fixing broken navigation, and correcting the UI on the Search, Forgot Password, and Billing pages. A major refactor of the booking process has been started, with  being rewritten to include a calendar for date selection before showing time slots, mimicking the mobile app's flow.
 
 **Last working item**:
-The agent was systematically addressing a detailed list of bugs and missing features reported by the user.
+The agent was in the middle of addressing a new, extensive list of 9 critical issues and feature requests from the user. This new feedback interrupted the previous finish flow and has reset priorities.
 
-- **Last item agent was working:** The agent was rewriting the Account/Profile page to match the mobile application's design and functionality. It had just finished overwriting  based on the original React Native component's code. The corresponding CSS has not been updated, and the functionality has not been tested.
-- **Status:** IN PROGRESS
-- **Agent Testing Done:** N
-- **Which testing method agent to use?** both
-- **User Testing Done:** N
+-   **Last item agent was working:** Refactoring the entire booking process. The agent discovered the mobile app uses a two-step flow ( then ). It has rewritten  to include a calendar and initiate the first step (creating a hold). It was about to create the new dedicated booking page to handle the second step.
+-   **Status:** IN PROGRESS
+-   **Agent Testing Done:** N
+-   **Which testing method agent to use?** Frontend testing agent (once the new booking flow is complete).
+-   **User Testing Done:** N
 
 **All Pending/In progress Issue list**:
-This list is based on the user's last detailed feedback message. The agent was actively working on these when the session ended.
+This list is based on the user's most recent feedback (message #437) and is the highest priority.
 
--   **Issue 1:** The Account page () is functionally incomplete and needs to replicate the mobile version. (P0 - HIGHEST)
--   **Issue 2:** The bottom navigation footer is missing the My Kids link and doesn't display correctly on desktop browsers. (P1)
--   **Issue 3:** On the Find a Coach (Search) page, coach cards are missing several data points (Country Flag, price, category pills), and the search box placeholder is not translated. (P1)
--   **Issue 4:** The Coach Details page throws an error on load, likely due to missing translations. (P1)
--   **Issue 5:** The Bookings page has untranslated tab labels and is missing the Rescheduled tab. The empty state messages are also not translated. (P1)
+-   **Issue 1:** The booking process fails with a Field required error. (P0 - CRITICAL BLOCKER)
+-   **Issue 2:** Profile changes (name, phone number) are not saved despite a success message. (P0)
+-   **Issue 3:** Notification settings are not saved after toggling. (P0)
+-   **Issue 4:** The Add a child feature fails with an error. (P0)
+-   **Issue 5:** The subscription Upgrade Plan shows a success message but the state is not saved, and it lacks the flip-to-downgrade functionality. (P1)
+-   **Issue 6:** The  feature is not saving data and is missing core functionality (date/frequency selection). (P1)
+-   **Issue 7:** Prices for coaches in other countries are not displayed in their local currency. (P1)
+-   **Issue 8:** The calendar component is missing from the  before the available slots. (P1 - Part of the in-progress booking refactor)
+-   **Issue 9:** The Add Card functionality in payment methods is not working, and other payment options need to be mimicked from the mobile app. (P2)
+-   **Issue 10:** Unable to download tax reports. (P2)
+-   **Issue 11:** The registration page still contains a Google Sign-In link. (P2)
 
 **Issues Detail:**
--   **Issue 1: Incomplete Account/Profile Page**
-    -   **Attempted fixes:** The agent has rewritten  to mirror the logic and structure of the original React Native component.
+-   **Issue 1: Booking fails with Field required error**
+    -   **Attempted fixes:** The agent identified that the backend requires a two-step booking process ( then ). A refactor is in progress to address this.  has been rewritten.
     -   **Next debug checklist:**
-        1.  Update  to style the new JSX structure in .
-        2.  Verify that all necessary translations for the profile page exist in .
-        3.  Perform a full functional test of the page after logging in as a consumer, ensuring all links and data displays are correct.
-    -   **Why fix this issue and what will be achieved with the fix?** To complete a core piece of user-facing functionality and meet the requirement of replicating the mobile app's features.
+        1.  Create a new page component at  that will be navigated to after a time slot is selected on .
+        2.  This new page should accept the , , and  details.
+        3.  Implement the UI for student selection, intake form, and payment method confirmation on .
+        4.  On final submission, call  with the  and other required fields.
+    -   **Why fix this issue and what will be achieved with the fix?** This is a critical blocker for the app's core functionality. Fixing it will enable users to book sessions with tutors.
     -   **Status:** IN PROGRESS
-    -   **Is recurring issue?** N
-    -   **Should Test frontend/backend/both after fix?** Frontend
-    -   **Blocked on other issue:** None
-
--   **Issue 2: Bottom Navigation Bugs**
-    -   **Attempted fixes:** The agent edited  to add the My Kids link and modified  to be visible on desktop. The translation key for My Kids was also corrected in .
-    -   **Next debug checklist:**
-        1.  Restart the frontend and test as a logged-in user.
-        2.  Verify the My Kids link appears in the consumer's bottom navigation.
-        3.  Verify the entire navigation bar is visible and functional on a desktop screen size.
-    -   **Why fix this issue and what will be achieved with the fix?** This fixes a primary navigation issue and ensures UI consistency across devices as requested by the user.
-    -   **Status:** IN PROGRESS
-    -   **Is recurring issue?** N
-    -   **Should Test frontend/backend/both after fix?** Frontend
-    -   **Blocked on other issue:** None
-
--   **Issue 3: Search Page UI/Data Missing**
-    -   **Attempted fixes:** The agent rewrote  to include the missing data elements in the coach cards and updated the corresponding CSS. It also added translation keys for search filters.
-    -   **Next debug checklist:**
-        1.  Test the search page to confirm that coach cards now display , , , translated price, and pills for categories/subjects.
-        2.  Verify the API response contains this data; if not, the backend may need adjustment.
-        3.  Check that the search input placeholder is correctly translated.
-    -   **Why fix this issue and what will be achieved with the fix?** To restore critical information to the coach search results, which is a core function of the application.
-    -   **Status:** IN PROGRESS
-    -   **Is recurring issue?** N
+    -   **Is recurring issue?** Y
     -   **Should Test frontend/backend/both after fix?** Both
     -   **Blocked on other issue:** None
 
--   **Issue 4: Coach Detail Page Error**
-    -   **Attempted fixes:** The agent identified missing translation keys (, ) and added them to .
+-   **Issue 2 & 3: Profile & Notification settings are not saved**
+    -   **Attempted fixes:** The agent previously corrected API endpoints but the data persistence issue remains.
     -   **Next debug checklist:**
-        1.  Navigate to a coach detail page and verify the error no longer appears.
-        2.  Confirm that the page content loads correctly.
-    -   **Why fix this issue and what will be achieved with the fix?** This unblocks a critical user flow, allowing users to view details about a specific coach.
-    -   **Status:** IN PROGRESS
-    -   **Is recurring issue?** N
-    -   **Should Test frontend/backend/both after fix?** Frontend
-    -   **Blocked on other issue:** None
-
--   **Issue 5: Bookings Page UI/Translation Bugs**
-    -   **Attempted fixes:** The agent edited  to add the Rescheduled tab and use the translation hook. It also added the specific translation keys (, etc.) to .
-    -   **Next debug checklist:**
-        1.  Navigate to the bookings page as a logged-in user.
-        2.  Verify the Rescheduled tab is present.
-        3.  Verify all tab labels are correctly translated.
-        4.  Verify the empty state messages are translated.
-    -   **Why fix this issue and what will be achieved with the fix?** To fix UI and language issues on a key page for managing sessions.
-    -   **Status:** IN PROGRESS
-    -   **Is recurring issue?** N
+        1.  Inspect the  function in  and the toggle handlers in .
+        2.  Use  to verify the payload being sent to the  and  (or equivalent) endpoints.
+        3.  Check the network response in the browser console for any errors from the backend.
+        4.  Ensure the frontend state is being updated from the API response, not just optimistically.
+    -   **Why fix this issue and what will be achieved with the fix?** Allows users to manage their account information, a basic and essential feature.
+    -   **Status:** NOT STARTED
+    -   **Is recurring issue?** Y
     -   **Should Test frontend/backend/both after fix?** Frontend
     -   **Blocked on other issue:** None
 
 **In progress Task List**:
--   **Task 1: Complete Bug Squashing Session**
-    -   **Where to resume:** The agent has just completed a series of file edits to address the user's bug list. The immediate next step is to restart the services and begin testing each fix, starting with the .
-    -   **What will be achieved with this?** This will resolve all known issues reported by the user, bringing the web app much closer to the required mobile app parity.
+-   **Task 1: Complete the Booking Flow Refactor**
+    -   **Where to resume:** The agent has rewritten . The next step is to create the new  component which will handle the second step of the booking process (student selection, intake form, final confirmation). The route for this page also needs to be added to .
+    -   **What will be achieved with this?** A fully functional booking system that matches the mobile app's two-step process, resolving the critical Field required error.
     -   **Status:** IN PROGRESS
     -   **Should Test frontend/backend/both after fix?** Both
     -   **Blocked on something:** None
 
 **Upcoming and Future Tasks**
 -   **Upcoming Tasks:**
-    -   **P0: Comprehensive Testing**: After fixing the current batch of issues, run the  with test cases covering all roles (Consumer, Tutor, Admin) and all the newly fixed pages to ensure no regressions were introduced.
-    -   **P1: Final Codebase Audit**: Perform a final audit comparing the web app's page structure and features against the original React Native codebase to catch any remaining discrepancies.
+    -   **P0: Implement API Persistence**: Systematically debug and fix all features where data is not being saved (Profile, Notifications, Subscriptions, Reminders). This is the highest priority after the booking flow.
+    -   **P1: Implement Local Currency Display**: Add logic to  and  to show prices in the tutor's local currency, with the user's home currency in parentheses.
+    -   **P1: Replicate Mobile Functionality**: Fully implement the  page (with date/frequency selection) and  page (with upgrade/downgrade logic) by referencing .
+    -   **P2: Update Payment Provider Logos**: Download and use real logos for all payment providers listed on the .
 -   **Future Tasks:**
-    -   **P0: Deployment**: Deploy the final, tested web application to the user's custom domain  using the Emergent deployment service.
+    -   **P1: Comprehensive End-to-End Testing**: Once all P0/P1 issues are resolved, call the  for a full regression test.
+    -   **P2: Deployment**: Deploy the final, tested application to the user's custom domain.
 
 **Completed work in this session**
-- **React Native to Pure React Conversion (Initial):**
-    - Cloned the original GitHub repository.
-    - Set up a new pure React frontend project structure.
-    - Copied and configured the existing FastAPI backend.
-- **Page and Component Creation:**
-    - Created placeholder pages and CSS for all three roles (Admin, Consumer, Tutor).
-    - Implemented a  component to serve as the footer, based on user-provided images.
-- **Initial Bug Fixes & Feature Additions:**
-    - Added a large number of missing pages that were identified after the first user review.
-    - Updated  with routes for all new pages.
-    - Added the bottom navigation bar to all authenticated pages.
+-   **Account Pages Overhaul**:
+    -   Added the standard  component to all 13 account-related pages (, , , , , , etc.) for a consistent look and feel.
+    -   Created placeholder pages and added routes in  to fix all broken navigation links from the main account menu.
+-   **Search & Tutor Page UI Fixes**:
+    -   **Search Page**: Implemented a 2-column grid for coach cards, placed Academics as the first category, and fixed the card layout to correctly display the country flag and price without overlap.
+    -   **Tutor Detail Page**: Corrected a  prop warning and fixed the styling for selected/unselected time slots.
+-   **Kids/Students Page Fixes**:
+    -   Corrected API endpoints from  to  and updated the component to use the correct .
+-   **Layout & Styling**:
+    -   Made  and  fixed-position with a consistent max-width.
+    -   Added necessary padding to pages to prevent content from being obscured by the fixed header.
+-   **Billing Page Refactor**:
+    -   Rewrote the  to remove the direct credit card form and instead show a list of payment providers (Stripe, PayPal, Google Pay, etc.), matching the mobile app's behavior.
+-   **Language Page Expansion**: Updated the page to correctly display all 22 required languages, grouped by region.
+-   **Favicon Update**: Successfully updated the webapp's favicon from a user-provided file.
+
+**Earlier issues found/mentioned but not fixed**
+-   All previously known issues are now captured in the new **All Pending/In progress Issue list** based on the user's latest, most comprehensive feedback.
+
+**Known issue recurrence from previous fork**
+-   **Issue recurrence in previous fork**: Objects are not valid as a React child error on the .
+-   **Recurrence count**: 2+
+-   **Status:** RESOLVED for the page load, but reappeared as a new error when trying to book a slot. The current booking flow refactor (Task 1) is designed to solve this class of error permanently by structuring the data flow correctly.
 
 **Code Architecture**
 
 
 **Key Technical Concepts**
--   **Frontend**: React, React Router, Tailwind CSS, Axios, React Context API for state management.
+-   **Frontend**: React, React Router, Axios, React Context API.
 -   **Backend**: FastAPI, Python.
--   **Database**: MongoDB (configured via  in ).
--   **Architecture**: Monorepo-style structure with separate  and  directories. The conversion involves replacing React Native components with web-standard equivalents (e.g.,  -> ,  -> ).
+-   **Database**: MongoDB Atlas.
+-   **Booking Flow**: The agent has discovered and is now implementing the correct two-step booking process required by the backend:
+    1.  : Creates a temporary hold on a selected time slot.
+    2.  : Confirms the booking using the  obtained from the first step.
 
 **key DB schema**
-The database schema is implicitly defined by the backend API and models. The agent has not directly interacted with or modified the schema. It is using the existing backend as-is.
+-   , , , , .
 
 **changes in tech stack**
--   The primary change is the frontend technology stack, moving from **React Native/Expo** to **pure React** for the web.
+-   None.
 
 **All files of reference**
--   **/app/frontend/src/pages/ProfilePage.js**: Just overwritten to match mobile functionality. Needs CSS and testing.
--   **/app/frontend/src/pages/SearchPage.js**: Rewritten to add more data to coach cards. Needs testing.
--   **/app/frontend/src/pages/BookingsPage.js**: Edited to add a tab and fix translations. Needs testing.
--   **/app/frontend/src/components/BottomNav.js**: Edited to add a link and fix display issues. Needs testing.
--   **/app/frontend/src/i18n/locales/en_US.json**: Modified multiple times to add missing translation keys for various pages.
--   **/app/frontend/src/App.js**: Contains all the client-side routing logic for the application.
+-   **/app/frontend/src/pages/TutorDetailPage.js**: **Crucial file.** Has been rewritten to include a calendar and initiate the booking hold.
+-   **/app/temp_mobile/frontend/app/(consumer)/book/[tutorId].tsx**: **Crucial reference** for implementing the new  page and the second step of the booking flow.
+-   **/app/temp_mobile/frontend/app/(consumer)/edit-profile.tsx**: Reference for debugging the non-saving profile form.
+-   **/app/backend/server.py**: Source of truth for all API endpoints, especially  and .
+-   **/app/frontend/src/pages/EditProfilePage.js**: Needs debugging to fix the data saving issue.
+-   **/app/frontend/src/pages/SubscriptionPage.js**: Needs to be implemented to match the mobile app's functionality.
+-   **/app/frontend/src/pages/RemindersPage.js**: Needs to be implemented with date/frequency selection.
 
 **Areas that need refactoring**:
--   **/app/frontend/src/pages/ProfilePage.css**: This file is now out of sync with its corresponding JS file () which was completely rewritten. It needs to be updated or rewritten to style the new component structure.
--   Many CSS files were created as empty placeholders alongside their JS page components. While some have been populated, a general review for consistent styling and cleanup might be beneficial later.
+-   The pages for , , , and  have placeholder UIs and need to be fully implemented with correct API calls and logic to match the mobile application.
+-   API error handling needs to be standardized across the application, especially for save actions, to provide clear user feedback.
 
 **key api endpoints**
--   The agent is reusing the backend as-is. All API endpoints are prefixed with  and are defined in . The frontend interacts with them via an Axios instance configured with .
+-   : Used for saving user profile changes. Needs debugging.
+-   : Step 1 of the booking process.
+-   : Step 2 of the booking process (requires ).
+-   , : For managing children. Needs debugging.
+-   : The likely endpoint for saving notification preferences. Needs verification and debugging.
 
 **Critical Info for New Agent**
--   You are in the middle of a large bug-fixing session. Do not start new tasks. Your priority is to validate all the recent code changes made to address the user's last feedback.
--   Start by updating the CSS for the rewritten  located at .
--   After updating the CSS, restart the services and test every single item from the All Pending/In progress Issue list to ensure the fixes work as intended.
--   The user expects a high degree of fidelity with the original mobile app. Use the code in  as the source of truth for functionality and UI layout.
--   After verifying all fixes, use the testing agent for a full regression test before reporting back to the user.
+-   **Your top priority is the new list of 9+ issues from the user (message #437).** Previous plans are now obsolete.
+-   **Focus on completing the booking flow refactor.** The  is done. You must now create the new  page to handle the second step (student selection, etc.) and call  with the . This is the fix for the Field required error.
+-   **Data is not saving in multiple features.** This is a critical theme in the user's feedback. You must debug the API calls for Profile, Notifications, and Subscriptions. Use the mobile app source code in  as the definitive guide for API payloads and endpoints. Do not trust that the current web implementation is correct.
+-   **Replicate mobile app functionality exactly.** For features like Reminders (date/frequency selection), Subscriptions (upgrade/downgrade), and local currency display, you MUST consult the mobile reference code and screenshots to ensure 1-to-1 parity.
+
+**documents and test reports created in this job**
+-   /app/test_reports/iteration_6.json
+-   /app/test_reports/iteration_7.json
+-   /app/memory/PRD.md
 
 **Last 10 User Messages and any pending HUMAN messages**
-1.  **User:** Lists numerous bugs: missing My Kids in footer, footer not on desktop, missing data on coach cards, search placeholder not translated, error on coach detail page, untranslated/missing tabs on bookings page, and incomplete Account page. (PENDING)
-2.  **Agent:** Acknowledges the issues and begins work.
-3.  **User:** Reports missing footer and asks for all mobile screen changes to be applied to the web app. Provides reference images. (Resolved, but led to the current bug list).
-4.  **Agent:** Finishes implementing all pages and claims completion.
-5.  **User:** Asks agent to ensure all pages for all 3 roles are created and translations are working. (Resolved, but agent missed details).
-6.  **Agent:** Finishes initial conversion and claims completion.
-7.  **User:** Says the repo is public now. (Resolved).
-8.  **Agent:** Asks user to confirm repo is public after a failed clone attempt.
-9.  **User:** Provides answers to the agent's initial clarifying questions (React, JWT, Emergent deploy, same theme, reuse backend). (Resolved).
-10. **Agent:** Asks initial clarifying questions.
+1.  **User**: Asks to update payment methods with real logos, fix price display for international coaches, add a calendar to the booking flow, and reports several bugs: Field required on booking, profile/notifications not saving, subscription/reminders not working correctly. (PENDING - CURRENT TASK)
+2.  **User**: Clarifies that the app should not store credit/debit card details directly and asks the agent to replicate the payment provider model from the mobile app. (DONE - BillingPage was rewritten)
+3.  **User**: Provides a new list of 9 issues including bugs on registration page, add child flow, search page layout, header/footer width, coach card UI, slot styling, booking errors, and non-functional account pages. (PARTIALLY ADDRESSED, but superseded by the latest feedback)
+4.  **User**: Asks to update the favicon. (DONE)
+5.  **User**: Provides a list of 13 issues and feature requests, which prompted a large round of fixes. (ADDRESSED, but new issues arose)
+6.  **User**: Provides more feedback after a major UI overhaul. (ADDRESSED)
+7.  **User**: Instructs the agent to mimic mobile app functionality, theme, and responsiveness exactly. (ACKNOWLEDGED)
+8.  **User**: Confirms agent can proceed with UI overhaul. (ACKNOWLEDGED)
+9.  **User**: Asks agent to capture screenshots for reference. (DONE)
+10. **User**: Provides a detailed 11-point list of UI changes and bugs, which initiated the major UI overhaul. (ADDRESSED, but new issues arose)
 
 **Project Health Check:**
--   **Broken**: The  and  are out of sync. Several pages have known UI/data/translation bugs as listed by the user. The application is not in a deliverable state.
--   **Mocked**: No functionality is mocked. The agent is building against the live backend.
+-   **Broken**: Booking, Profile Save, Notification Save, Subscription Save, Reminder Save, Add Child.
+-   **Mocked**: Payment provider links on the Billing page are placeholders. The Reports and Tax Reports pages are not functional.
 
 **3rd Party Integrations**
-- No new 3rd party integrations have been added. The project is using the integrations that were already present in the original backend codebase. The agent has not interacted with them directly.
+-   **Resend**: For sending emails.
+-   **Payment Providers (Stripe, PayPal, etc.)**: The UI has been updated to show these options, but no actual SDK or API integration has been implemented. The app only links out conceptually.
 
 **Testing status**
--   **Testing agent used after significant changes:** YES (used 3 times, but the last batch of fixes has not been tested).
+-   **Testing agent used after significant changes:** YES. The last run was .
 -   **Troubleshoot agent used after agent stuck in loop:** NO
 -   **Test files created:** None.
--   **Known regressions:** The user's latest message details several regressions and incomplete features from the initial conversion.
+-   **Known regressions:** The user has reported multiple regressions where features that appeared to work (or were newly implemented) are not saving data to the backend.
 
 **Credentials to test flow:**
--   Credentials are not explicitly mentioned but the testing agent was able to register and log in. The agent should re-use the same logic (register a new user for testing).
+-    / 
 
 **What agent forgot to execute**
--   The agent has repeatedly called  prematurely before fully testing all features and achieving parity with the mobile app as requested.
--   The agent did not create CSS for the newly rewritten .
--   The core request of deploying to  has not been started.
--   The agent has not performed a comprehensive test of all the fixes made in the last session.</analysis>
+-   The agent has not yet created the new  page, which is the critical next step for the booking refactor.
+-   The agent did not fix the Google Sign-In link on the **Registration** page (only the Login page).
+-   The agent has not implemented the logic for displaying prices in local currencies for international coaches.
+-   The agent has not fully implemented the functionality for , , , or  pages beyond creating the UI shells.</analysis>
