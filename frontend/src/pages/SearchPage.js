@@ -285,6 +285,11 @@ export default function SearchPage() {
           <span className="price" style={{ color: colors.primary }}>
             {tutor.currency_symbol || '$'}{formatNumber(tutor.display_price || tutor.base_price)}{t('pages.search.per_hour')}
           </span>
+          {tutor.is_cross_market && tutor.original_price_display && (
+            <span className="original-price" style={{ color: colors.textMuted, fontSize: '12px', marginLeft: '4px' }}>
+              ({tutor.original_price_display})
+            </span>
+          )}
         </div>
       </div>
 
