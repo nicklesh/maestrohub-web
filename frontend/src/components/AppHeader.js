@@ -167,6 +167,17 @@ export default function AppHeader({ showBack = false, title = '', showUserName =
 
           {/* Right - Actions */}
           <div className="header-right">
+            {/* Ask Maestro Chat - for all users */}
+            <button 
+              onClick={() => setShowChatWindow(true)}
+              className="icon-button"
+              style={{ backgroundColor: colors.background }}
+              data-testid="header-chat-btn"
+              title="Ask Maestro"
+            >
+              <MessageCircle size={20} color={colors.primary} />
+            </button>
+
             {/* Notification Bell - only for non-admin users */}
             {user?.role !== 'admin' && (
               <button 
