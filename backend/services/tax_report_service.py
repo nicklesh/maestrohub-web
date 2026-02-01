@@ -181,8 +181,11 @@ class TaxReportService:
     async def generate_monthly_report(self, user_id: str, user_type: str,
                                       year: int, month: int) -> Dict:
         """Generate a monthly summary report for a user"""
-        # Get user info
-        user = await self.db.users.find_one({"user_id": user_id}, {"_id": 0})
+        # Get user info - try both ObjectId and user_id field
+        try:
+            user = await self.db.users.find_one({"_id": ObjectId(user_id)})
+        except:
+            user = await self.db.users.find_one({"user_id": user_id})
         if not user:
             return {"success": False, "error": "User not found"}
         
