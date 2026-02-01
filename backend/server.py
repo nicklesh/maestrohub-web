@@ -68,6 +68,12 @@ from exchange_rate_service import (
 from services.tax_report_service import TaxReportService
 from services.referral_service import ReferralService
 
+# Import AI Chatbot
+from emergentintegrations.llm.chat import LlmChat, UserMessage
+
+# Import Stripe Checkout
+from emergentintegrations.payments.stripe.checkout import StripeCheckout, CheckoutSessionResponse, CheckoutStatusResponse, CheckoutSessionRequest
+
 # Import enhanced logging
 from services.logging_service import setup_logging, get_logger, log_request, log_error, log_event
 from services.kid_notification_service import KidNotificationService
