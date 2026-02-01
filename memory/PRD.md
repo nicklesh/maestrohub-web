@@ -468,33 +468,30 @@ Visible on all screen sizes (desktop included per user request)
 - [x] Add child functionality
 - [x] Booking flow route
 
-### P1 (High Priority)
-- [ ] Custom domain deployment (www.maestrohabitat.com)
-- [ ] Payment integration (Stripe)
-- [ ] Booking notifications
-- [ ] Reminders page full implementation
-- [ ] Subscription upgrade/downgrade functionality
-- [ ] Local currency display for international coaches
+### P1 (High Priority) - DONE
+- [x] Reminders page with date/frequency selection
+- [x] Subscription page with upgrade/downgrade logic
+- [x] Local currency display for international coaches
+- [x] Notification settings persistence
 
-### P2 (Medium Priority)
+### P2 (Medium Priority) - DONE
+- [x] Tax reports page with download functionality
+
+### P3 (Remaining)
+- [ ] Custom domain deployment (www.maestrohabitat.com)
+- [ ] Payment integration (Stripe - functional, not just UI)
 - [ ] Reviews/ratings system (backend integration)
 - [ ] Real-time chat
 - [ ] Push notifications
-- [ ] Tax reports download
-- [ ] Multi-language support (Spanish, Hindi, etc.)
-
-### P3 (Low Priority)
-- [ ] Advanced analytics
-- [ ] Export/reporting features
-- [ ] Social sharing
+- [ ] Booking confirmation emails
 
 ---
 
 ## Next Tasks
-1. Implement Reminders page with date/frequency selection
-2. Complete Subscription page with upgrade/downgrade logic
-3. Add local currency display for international coaches
-4. Deploy to Custom Domain (www.maestrohabitat.com)
+1. Deploy to Custom Domain (www.maestrohabitat.com)
+2. Integrate Stripe for actual payment processing
+3. Add booking confirmation emails
+4. Implement real-time session updates
 
 ---
 
