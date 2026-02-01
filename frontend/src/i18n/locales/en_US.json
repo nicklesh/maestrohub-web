@@ -65,6 +65,31 @@
       "resend_email": "Didn't receive the email? Resend"
     }
   },
+  "booking": {
+    "title": "Book Session",
+    "step_student": "Student",
+    "step_intake": "Details",
+    "step_confirm": "Confirm",
+    "select_student": "Select Student",
+    "select_student_desc": "Who is this session for?",
+    "no_students": "No students added yet",
+    "add_student": "Add Student",
+    "session_details": "Session Details",
+    "session_details_desc": "Help your coach prepare for the session",
+    "learning_goals": "Learning Goals",
+    "goals_placeholder": "What do you want to achieve?",
+    "current_level": "Current Level",
+    "level_placeholder": "Beginner, Intermediate, Advanced",
+    "additional_notes": "Additional Notes",
+    "notes_placeholder": "Any specific topics or questions?",
+    "confirm_booking": "Confirm Booking",
+    "student": "Student",
+    "date_time": "Date & Time",
+    "duration": "Duration",
+    "total": "Total",
+    "policy_acknowledge": "I acknowledge the cancellation policy. Cancellations within 24 hours may be charged.",
+    "confirm_pay": "Confirm & Pay"
+  },
   "modality": {
     "online": "Online",
     "in_person": "In-Person",
