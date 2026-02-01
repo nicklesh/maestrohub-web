@@ -2891,6 +2891,8 @@
     "yesterday": "Yesterday",
     "now": "Now",
     "day_short": "d",
-    "just_now": "Just now"
+    "just_now": "Just now",
+    "one_day": "1 day",
+    "n_days": "{{count}} days"
   }
 }
