@@ -159,6 +159,7 @@ function AppRoutes() {
           <Route path="/kids" element={<ProtectedRoute allowedRoles={['consumer', 'parent']}><KidsPage /></ProtectedRoute>} />
           <Route path="/tutor/:tutorId" element={<ProtectedRoute><TutorDetailPage /></ProtectedRoute>} />
           <Route path="/book/:tutorId" element={<ProtectedRoute><BookingPage /></ProtectedRoute>} />
+          <Route path="/booking-success" element={<ProtectedRoute><BookingSuccessPage /></ProtectedRoute>} />
           <Route path="/billing" element={<ProtectedRoute><BillingPage /></ProtectedRoute>} />
           <Route path="/referrals" element={<ProtectedRoute><ReferralsPage /></ProtectedRoute>} />
           <Route path="/reviews" element={<ProtectedRoute><ReviewsPage /></ProtectedRoute>} />
