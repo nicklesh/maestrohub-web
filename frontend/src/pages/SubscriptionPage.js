@@ -61,27 +61,9 @@ export default function SubscriptionPage() {
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: colors.background, paddingBottom: '100px' }}>
-      {/* Header */}
-      <header style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '16px',
-        padding: '16px',
-        backgroundColor: colors.surface,
-        borderBottom: `1px solid ${colors.border}`,
-        position: 'sticky',
-        top: 0,
-        zIndex: 100
-      }}>
-        <button onClick={() => navigate(-1)} style={{ background: 'none', padding: '8px' }}>
-          <ArrowLeft size={24} color={colors.text} />
-        </button>
-        <h1 style={{ color: colors.text, fontSize: '20px', fontWeight: 600, flex: 1 }}>
-          {t('subscription.title') || 'Subscription'}
-        </h1>
-      </header>
+      <AppHeader showBack={true} title={t('subscription.title') || 'Subscription'} showUserName={true} />
 
-      <div style={{ maxWidth: '500px', margin: '0 auto', padding: '16px' }}>
+      <div style={{ maxWidth: '500px', margin: '0 auto', padding: '76px 16px 16px' }}>
         {loading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: '48px' }}>
             <Loader2 size={32} color={colors.primary} className="spinner" />
