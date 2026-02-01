@@ -192,6 +192,9 @@ function AppRoutes() {
         
         {/* Bottom Navigation - shown on all authenticated pages */}
         {user && !hideBottomNav && <BottomNav />}
+        
+        {/* Chat Widget - shown for logged-in users */}
+        {user && !hideBottomNav && <ChatWidget />}
       </div>
     </ThemeLoader>
   );
