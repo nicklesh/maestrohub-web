@@ -16,6 +16,7 @@ from reportlab.lib.units import inch
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 import base64
+from bson import ObjectId
 
 logger = logging.getLogger(__name__)
 
